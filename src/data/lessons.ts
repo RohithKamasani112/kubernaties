@@ -39,6 +39,41 @@ export interface Lesson {
   content: LessonContent;
 }
 
+// Diagram Learning Interfaces
+export interface DiagramResource {
+  title: string;
+  url: string;
+  type: 'docs' | 'article' | 'video' | 'tutorial';
+  description?: string;
+}
+
+export interface DiagramComponent {
+  id: string;
+  name: string;
+  description: string;
+  detailedDescription: string;
+  category: string;
+  subcategory?: string;
+  resources: DiagramResource[];
+  relatedComponents: string[];
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  tags: string[];
+  position: { x: number; y: number };
+  color: string;
+  icon: string;
+}
+
+export interface DiagramCategory {
+  id: string;
+  name: string;
+  description: string;
+  color: string;
+  position: { x: number; y: number };
+  components: DiagramComponent[];
+  estimatedTime: string;
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+}
+
 export const lessons: Lesson[] = [
   {
     id: 1,

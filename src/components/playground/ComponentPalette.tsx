@@ -40,11 +40,14 @@ import {
   Lightbulb
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useKubernetesStore } from '../../store/kubernetesStore';
 
 const ComponentPalette: React.FC = () => {
+  const { nodes } = useKubernetesStore();
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['workloads', 'networking']);
   const [searchQuery, setSearchQuery] = useState('');
   const [showLearningTips, setShowLearningTips] = useState(false);
+  const isEmpty = nodes.length === 0;
   const [componentCounts, setComponentCounts] = useState<Record<string, number>>({
     pod: 1,
     deployment: 1,
@@ -255,6 +258,21 @@ const ComponentPalette: React.FC = () => {
             <Lightbulb className="w-4 h-4" />
           </button>
         </div>
+
+        {/* Subtle Empty State Hint */}
+        {isEmpty && (
+          <motion.div
+            className="mb-3 p-2 bg-blue-50/50 border border-blue-100 rounded-md"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2 }}
+          >
+            <p className="text-xs text-blue-700 text-center">
+              👋 Start by dragging a component
+            </p>
+          </motion.div>
+        )}
+
         <p className="text-xs text-slate-600 mb-4 font-medium">Drag & drop to build your architecture</p>
 
         {/* Search */}
@@ -316,8 +334,14 @@ const ComponentPalette: React.FC = () => {
                       <motion.div
                         key={component.id}
                         initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.2, delay: componentIndex * 0.05 }}
+                        animate={{
+                          opacity: 1,
+                          x: 0
+                        }}
+                        transition={{
+                          duration: 0.2,
+                          delay: componentIndex * 0.05
+                        }}
                         draggable
                         onDragStart={(e) => handleDragStart(e, component.id)}
                         className="p-3 border border-slate-200 rounded-lg cursor-grab active:cursor-grabbing hover:border-blue-300 hover:shadow-md hover:shadow-blue-100/50 transition-all duration-200 group bg-white relative hover:scale-[1.01] component-card"

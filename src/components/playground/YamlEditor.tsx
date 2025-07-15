@@ -10,11 +10,12 @@ import * as yaml from 'js-yaml';
 interface YamlEditorProps {
   height?: number;
   onHeightChange?: (height: number) => void;
+  initialYaml?: string;
 }
 
-const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange }) => {
+const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, initialYaml }) => {
   const { nodes, edges, updateFromYaml } = useKubernetesStore();
-  const [yamlContent, setYamlContent] = useState('');
+  const [yamlContent, setYamlContent] = useState(initialYaml || '');
   const [isUpdating, setIsUpdating] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -24,7 +25,16 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange })
   const [isGenerating, setIsGenerating] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [currentHeight, setCurrentHeight] = useState(height);
+  const [isManualEdit, setIsManualEdit] = useState(false); // Track if user is manually editing
   const dragRef = useRef<HTMLDivElement>(null);
+
+  // Handle initial YAML content
+  useEffect(() => {
+    if (initialYaml && initialYaml !== yamlContent) {
+      setYamlContent(initialYaml);
+      validateYaml(initialYaml);
+    }
+  }, [initialYaml]);
   const startY = useRef<number>(0);
   const startHeight = useRef<number>(0);
 
@@ -51,8 +61,13 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange })
     document.addEventListener('mouseup', handleMouseUp);
   }, [currentHeight, onHeightChange]);
 
-  // Generate YAML when nodes change
+  // Generate YAML when nodes change (only if not manually editing)
   useEffect(() => {
+    // Don't auto-generate if user is manually editing YAML
+    if (isManualEdit) {
+      return;
+    }
+
     setIsGenerating(true);
 
     // Add a small delay to show the loading effect
@@ -70,7 +85,7 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange })
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [nodes, edges]);
+  }, [nodes, edges, isManualEdit]);
 
   const validateYaml = (yamlText: string) => {
     const errors: string[] = [];
@@ -148,6 +163,7 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange })
   const handleYamlChange = (value: string | undefined) => {
     if (value !== undefined) {
       setYamlContent(value);
+      setIsManualEdit(true); // Mark as manual edit when user types
       validateYaml(value);
     }
   };
@@ -165,6 +181,7 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange })
       // Apply the YAML changes to update the canvas
       await new Promise(resolve => setTimeout(resolve, 500)); // Brief processing delay
       updateFromYaml(yamlContent);
+      setIsManualEdit(false); // Reset manual edit flag after successful application
       toast.success('YAML applied successfully! Canvas updated.', {
         icon: '✅',
         duration: 3000,
@@ -204,6 +221,7 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange })
       reader.onload = (e) => {
         const content = e.target?.result as string;
         setYamlContent(content);
+        setIsManualEdit(true); // Mark as manual edit when file is uploaded
         validateYaml(content);
         toast.success('YAML file loaded successfully!');
       };
@@ -243,6 +261,7 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange })
       reader.onload = (event) => {
         const content = event.target?.result as string;
         setYamlContent(content);
+        setIsManualEdit(true); // Mark as manual edit when file is uploaded
         validateYaml(content);
         toast.success(`YAML file "${yamlFile.name}" loaded successfully!`, {
           icon: '📁',
@@ -335,9 +354,11 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange })
           </div>
           <div>
             <h3 className="text-sm font-bold text-slate-900">
-              🚀 Generated YAML Manifest
+              {isManualEdit ? '✏️ Custom YAML Manifest' : '🚀 Generated YAML Manifest'}
             </h3>
-            <p className="text-xs text-slate-600">Live-generated from your architecture</p>
+            <p className="text-xs text-slate-600">
+              {isManualEdit ? 'Manually edited - click Apply to visualize' : 'Live-generated from your architecture'}
+            </p>
           </div>
           {isGenerating ? (
             <motion.span
@@ -350,11 +371,15 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange })
             </motion.span>
           ) : (
             <motion.span
-              className="px-3 py-1 bg-gradient-to-r from-emerald-500 to-green-500 text-white text-xs rounded-full font-semibold shadow-sm"
+              className={`px-3 py-1 text-white text-xs rounded-full font-semibold shadow-sm ${
+                isManualEdit
+                  ? 'bg-gradient-to-r from-orange-500 to-red-500'
+                  : 'bg-gradient-to-r from-emerald-500 to-green-500'
+              }`}
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              {yamlContent.split('\n').length} lines • Auto-sync
+              {yamlContent.split('\n').length} lines • {isManualEdit ? 'Manual Edit' : 'Auto-sync'}
             </motion.span>
           )}
           {yamlContent && yamlContent.trim() !== '' && !yamlContent.startsWith('#') && (
@@ -424,6 +449,16 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange })
               className="hidden"
             />
           </label>
+          {isManualEdit && (
+            <button
+              onClick={() => setIsManualEdit(false)}
+              className="flex items-center space-x-2 px-3 py-2 bg-emerald-500 text-white text-sm rounded-lg hover:bg-emerald-600 transition-colors"
+              title="Switch back to auto-generation mode"
+            >
+              <RefreshCw className="w-4 h-4" />
+              <span>Auto-Sync</span>
+            </button>
+          )}
           <button
             onClick={handleApplyYaml}
             disabled={isUpdating}

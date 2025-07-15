@@ -46,19 +46,59 @@ const Documentation: React.FC = () => {
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   const categories = [
-    { id: 'all', label: 'All Topics', count: 50 },
-    { id: 'basics', label: 'Basics', count: 15 },
-    { id: 'networking', label: 'Networking', count: 8 },
-    { id: 'storage', label: 'Storage', count: 6 },
-    { id: 'security', label: 'Security', count: 7 },
-    { id: 'workloads', label: 'Workloads', count: 8 },
-    { id: 'configuration', label: 'Configuration', count: 6 },
+    { id: 'all', label: 'All Topics', count: 85 },
+    { id: 'basics', label: 'Basics', count: 18 },
+    { id: 'architecture', label: 'Architecture', count: 12 },
+    { id: 'workloads', label: 'Workloads', count: 15 },
+    { id: 'networking', label: 'Networking', count: 12 },
+    { id: 'storage', label: 'Storage', count: 10 },
+    { id: 'configuration', label: 'Configuration', count: 8 },
+    { id: 'security', label: 'Security', count: 10 },
   ];
 
   const docs = [
-    // Basics
+    // Basics - Core Concepts
     {
       id: 1,
+      title: 'Kubernetes Components',
+      category: 'basics',
+      description: 'Overview of the essential components that make up a Kubernetes cluster',
+      lastUpdated: '1 day ago',
+      readTime: '8 min',
+      hasPlayground: true,
+      icon: Server,
+      content: {
+        introduction: 'A Kubernetes cluster consists of a control plane and one or more worker nodes. Understanding these components is essential for working with Kubernetes effectively.',
+        sections: [
+          {
+            title: 'Control Plane Components',
+            content: 'The control plane manages the overall state of the cluster and makes global decisions about the cluster.',
+            codeExample: `# Check control plane components
+kubectl get componentstatuses
+
+# View API server status
+kubectl cluster-info
+
+# Check etcd health
+kubectl get --raw /healthz/etcd`
+          },
+          {
+            title: 'Node Components',
+            content: 'Node components run on every node, maintaining running pods and providing the Kubernetes runtime environment.',
+            codeExample: `# List all nodes
+kubectl get nodes
+
+# Describe a specific node
+kubectl describe node <node-name>
+
+# Check node resource usage
+kubectl top nodes`
+          }
+        ]
+      }
+    },
+    {
+      id: 2,
       title: 'Understanding Pods',
       category: 'basics',
       description: 'Learn about the smallest deployable units in Kubernetes',
@@ -108,7 +148,97 @@ kubectl logs nginx-pod`
       }
     },
     {
-      id: 2,
+      id: 3,
+      title: 'Labels and Selectors',
+      category: 'basics',
+      description: 'Organize and select subsets of objects using key/value pairs',
+      lastUpdated: '1 day ago',
+      readTime: '6 min',
+      hasPlayground: true,
+      icon: GitBranch,
+      content: {
+        introduction: 'Labels are key/value pairs attached to objects such as Pods. Labels are intended to specify identifying attributes of objects that are meaningful and relevant to users.',
+        sections: [
+          {
+            title: 'Using Labels',
+            content: 'Labels enable users to map their own organizational structures onto system objects in a loosely coupled fashion.',
+            codeExample: `apiVersion: v1
+kind: Pod
+metadata:
+  name: label-demo
+  labels:
+    environment: production
+    app: nginx
+    tier: frontend
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.20
+    ports:
+    - containerPort: 80`
+          },
+          {
+            title: 'Label Selectors',
+            content: 'Via a label selector, you can identify a set of objects. Label selectors are the core grouping primitive in Kubernetes.',
+            codeExample: `# Equality-based selectors
+kubectl get pods -l environment=production,tier!=frontend
+
+# Set-based selectors
+kubectl get pods -l 'environment in (production,qa)'
+kubectl get pods -l 'tier notin (frontend,backend)'
+
+# Show labels in output
+kubectl get pods --show-labels`
+          }
+        ]
+      }
+    },
+    {
+      id: 4,
+      title: 'Namespaces',
+      category: 'basics',
+      description: 'Organize cluster resources into virtual clusters',
+      lastUpdated: '3 days ago',
+      readTime: '5 min',
+      hasPlayground: true,
+      icon: Layers,
+      content: {
+        introduction: 'Namespaces provide a mechanism for isolating groups of resources within a single cluster. Names of resources need to be unique within a namespace, but not across namespaces.',
+        sections: [
+          {
+            title: 'Creating Namespaces',
+            content: 'Namespaces are intended for use in environments with many users spread across multiple teams, or projects.',
+            codeExample: `apiVersion: v1
+kind: Namespace
+metadata:
+  name: development
+  labels:
+    name: development
+---
+# Create namespace imperatively
+kubectl create namespace production
+
+# List all namespaces
+kubectl get namespaces`
+          },
+          {
+            title: 'Working with Namespaces',
+            content: 'You can set the namespace for a request with the --namespace flag or configure your context to use a specific namespace.',
+            codeExample: `# Set namespace for current context
+kubectl config set-context --current --namespace=development
+
+# Create resources in specific namespace
+kubectl apply -f pod.yaml --namespace=production
+
+# Get resources from all namespaces
+kubectl get pods --all-namespaces`
+          }
+        ]
+      }
+    },
+    // Workloads
+    {
+      id: 5,
       title: 'Deployments and ReplicaSets',
       category: 'workloads',
       description: 'Manage application deployments and scaling',
@@ -160,277 +290,12 @@ kubectl rollout undo deployment/nginx-deployment`
       }
     },
     {
-      id: 3,
-      title: 'Services and Service Discovery',
-      category: 'networking',
-      description: 'Connect and expose your applications',
-      lastUpdated: '3 days ago',
-      readTime: '10 min',
-      hasPlayground: true,
-      icon: Network,
-      content: {
-        introduction: 'A Service in Kubernetes is an abstraction which defines a logical set of Pods and a policy by which to access them.',
-        sections: [
-          {
-            title: 'Service Types',
-            content: 'Kubernetes supports different types of services: ClusterIP, NodePort, LoadBalancer, and ExternalName.',
-            codeExample: `# ClusterIP Service (default)
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx-service
-spec:
-  selector:
-    app: nginx
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 80
-  type: ClusterIP
-
----
-# NodePort Service
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx-nodeport
-spec:
-  selector:
-    app: nginx
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 80
-    nodePort: 30080
-  type: NodePort`
-          }
-        ]
-      }
-    },
-    {
-      id: 4,
-      title: 'ConfigMaps and Secrets',
-      category: 'configuration',
-      description: 'Manage configuration and sensitive data',
-      lastUpdated: '5 days ago',
-      readTime: '12 min',
-      hasPlayground: true,
-      icon: FileText,
-      content: {
-        introduction: 'ConfigMaps and Secrets allow you to decouple configuration artifacts from image content to keep containerized applications portable.',
-        sections: [
-          {
-            title: 'Using ConfigMaps',
-            content: 'ConfigMaps store configuration data as key-value pairs that can be consumed by pods.',
-            codeExample: `apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: app-config
-data:
-  database_url: "postgresql://localhost:5432/mydb"
-  debug_mode: "true"
-  max_connections: "100"
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: app-pod
-spec:
-  containers:
-  - name: app
-    image: myapp:latest
-    envFrom:
-    - configMapRef:
-        name: app-config`
-          }
-        ]
-      }
-    },
-    {
-      id: 5,
-      title: 'Persistent Volumes and Claims',
-      category: 'storage',
-      description: 'Manage persistent storage for your applications',
-      lastUpdated: '1 week ago',
-      readTime: '15 min',
-      hasPlayground: true,
-      icon: Database,
-      content: {
-        introduction: 'Persistent Volumes (PV) are a way for users to "claim" durable storage without knowing the details of the particular cloud environment.',
-        sections: [
-          {
-            title: 'Creating Persistent Volume Claims',
-            content: 'A PersistentVolumeClaim (PVC) is a request for storage by a user.',
-            codeExample: `apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mysql-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 20Gi
-  storageClassName: fast-ssd
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: mysql
-spec:
-  selector:
-    matchLabels:
-      app: mysql
-  template:
-    metadata:
-      labels:
-        app: mysql
-    spec:
-      containers:
-      - name: mysql
-        image: mysql:8.0
-        volumeMounts:
-        - name: mysql-storage
-          mountPath: /var/lib/mysql
-      volumes:
-      - name: mysql-storage
-        persistentVolumeClaim:
-          claimName: mysql-pvc`
-          }
-        ]
-      }
-    },
-    {
       id: 6,
-      title: 'Ingress Controllers',
-      category: 'networking',
-      description: 'Expose HTTP and HTTPS routes from outside the cluster',
-      lastUpdated: '4 days ago',
-      readTime: '18 min',
-      hasPlayground: true,
-      icon: Route,
-      content: {
-        introduction: 'An Ingress may be configured to give Services externally-reachable URLs, load balance traffic, terminate SSL/TLS, and offer name-based virtual hosting.',
-        sections: [
-          {
-            title: 'Basic Ingress Configuration',
-            content: 'Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster.',
-            codeExample: `apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: example-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  ingressClassName: nginx
-  rules:
-  - host: example.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: web-service
-            port:
-              number: 80
-      - path: /api
-        pathType: Prefix
-        backend:
-          service:
-            name: api-service
-            port:
-              number: 8080`
-          }
-        ]
-      }
-    },
-    {
-      id: 7,
-      title: 'RBAC and Security',
-      category: 'security',
-      description: 'Implement role-based access control',
-      lastUpdated: '6 days ago',
-      readTime: '20 min',
-      hasPlayground: true,
-      icon: Shield,
-      content: {
-        introduction: 'Role-based access control (RBAC) is a method of regulating access to computer or network resources based on the roles of individual users.',
-        sections: [
-          {
-            title: 'Creating Roles and RoleBindings',
-            content: 'RBAC uses the rbac.authorization.k8s.io API group to drive authorization decisions.',
-            codeExample: `apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  namespace: default
-  name: pod-reader
-rules:
-- apiGroups: [""]
-  resources: ["pods"]
-  verbs: ["get", "watch", "list"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: read-pods
-  namespace: default
-subjects:
-- kind: User
-  name: jane
-  apiGroup: rbac.authorization.k8s.io
-roleRef:
-  kind: Role
-  name: pod-reader
-  apiGroup: rbac.authorization.k8s.io`
-          }
-        ]
-      }
-    },
-    {
-      id: 8,
-      title: 'Horizontal Pod Autoscaler',
-      category: 'workloads',
-      description: 'Automatically scale your applications',
-      lastUpdated: '3 days ago',
-      readTime: '14 min',
-      hasPlayground: true,
-      icon: BarChart3,
-      content: {
-        introduction: 'The Horizontal Pod Autoscaler automatically scales the number of Pods in a replication controller, deployment, replica set or stateful set based on observed CPU utilization.',
-        sections: [
-          {
-            title: 'Setting up HPA',
-            content: 'HPA requires metrics server to be installed in your cluster to function properly.',
-            codeExample: `apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: php-apache
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: php-apache
-  minReplicas: 1
-  maxReplicas: 10
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 50`
-          }
-        ]
-      }
-    },
-    {
-      id: 9,
       title: 'StatefulSets',
       category: 'workloads',
-      description: 'Manage stateful applications',
+      description: 'Manage stateful applications with stable identities',
       lastUpdated: '1 week ago',
-      readTime: '16 min',
+      readTime: '12 min',
       hasPlayground: true,
       icon: Database,
       content: {
@@ -478,12 +343,12 @@ spec:
       }
     },
     {
-      id: 10,
+      id: 7,
       title: 'DaemonSets',
       category: 'workloads',
-      description: 'Run pods on every node',
+      description: 'Run pods on every node in the cluster',
       lastUpdated: '5 days ago',
-      readTime: '12 min',
+      readTime: '8 min',
       hasPlayground: true,
       icon: Activity,
       content: {
@@ -540,7 +405,7 @@ spec:
       }
     },
     {
-      id: 11,
+      id: 8,
       title: 'Jobs and CronJobs',
       category: 'workloads',
       description: 'Run batch and scheduled workloads',
@@ -591,17 +456,151 @@ spec:
         ]
       }
     },
+    // Networking
     {
-      id: 12,
-      title: 'Network Policies',
-      category: 'security',
-      description: 'Control traffic flow between pods',
+      id: 9,
+      title: 'Services and Service Discovery',
+      category: 'networking',
+      description: 'Connect and expose your applications',
+      lastUpdated: '3 days ago',
+      readTime: '10 min',
+      hasPlayground: true,
+      icon: Network,
+      content: {
+        introduction: 'A Service in Kubernetes is an abstraction which defines a logical set of Pods and a policy by which to access them.',
+        sections: [
+          {
+            title: 'Service Types',
+            content: 'Kubernetes supports different types of services: ClusterIP, NodePort, LoadBalancer, and ExternalName.',
+            codeExample: `# ClusterIP Service (default)
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: ClusterIP
+
+---
+# NodePort Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-nodeport
+spec:
+  selector:
+    app: nginx
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+    nodePort: 30080
+  type: NodePort`
+          },
+          {
+            title: 'Service Discovery',
+            content: 'Kubernetes provides DNS-based service discovery and environment variables for pods to discover services.',
+            codeExample: `# DNS-based service discovery
+# Services are accessible via:
+# <service-name>.<namespace>.svc.cluster.local
+
+# Example: Connect to a service from a pod
+curl http://nginx-service.default.svc.cluster.local
+
+# List services
+kubectl get services
+
+# Describe service endpoints
+kubectl describe service nginx-service`
+          }
+        ]
+      }
+    },
+    {
+      id: 10,
+      title: 'Ingress Controllers',
+      category: 'networking',
+      description: 'Expose HTTP and HTTPS routes from outside the cluster',
       lastUpdated: '4 days ago',
-      readTime: '18 min',
+      readTime: '15 min',
+      hasPlayground: true,
+      icon: Route,
+      content: {
+        introduction: 'An Ingress may be configured to give Services externally-reachable URLs, load balance traffic, terminate SSL/TLS, and offer name-based virtual hosting.',
+        sections: [
+          {
+            title: 'Basic Ingress Configuration',
+            content: 'Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster.',
+            codeExample: `apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web-service
+            port:
+              number: 80
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: api-service
+            port:
+              number: 8080`
+          },
+          {
+            title: 'TLS Configuration',
+            content: 'Ingress can be configured to terminate TLS connections and provide HTTPS access to your services.',
+            codeExample: `apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tls-example-ingress
+spec:
+  tls:
+  - hosts:
+      - https-example.foo.com
+    secretName: testsecret-tls
+  rules:
+  - host: https-example.foo.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: service1
+            port:
+              number: 80`
+          }
+        ]
+      }
+    },
+    {
+      id: 11,
+      title: 'Network Policies',
+      category: 'networking',
+      description: 'Control traffic flow between pods and services',
+      lastUpdated: '4 days ago',
+      readTime: '12 min',
       hasPlayground: true,
       icon: Shield,
       content: {
-        introduction: 'Network policies are an application-centric construct which allow you to specify how a pod is allowed to communicate with various network "entities".',
+        introduction: 'Network policies are an application-centric construct which allow you to specify how a pod is allowed to communicate with various network entities.',
         sections: [
           {
             title: 'Creating Network Policies',
@@ -640,6 +639,842 @@ spec:
     ports:
     - protocol: TCP
       port: 5978`
+          }
+        ]
+      }
+    },
+    // Storage
+    {
+      id: 12,
+      title: 'Persistent Volumes and Claims',
+      category: 'storage',
+      description: 'Manage persistent storage for your applications',
+      lastUpdated: '1 week ago',
+      readTime: '15 min',
+      hasPlayground: true,
+      icon: Database,
+      content: {
+        introduction: 'Persistent Volumes (PV) are a way for users to "claim" durable storage without knowing the details of the particular cloud environment.',
+        sections: [
+          {
+            title: 'Creating Persistent Volume Claims',
+            content: 'A PersistentVolumeClaim (PVC) is a request for storage by a user.',
+            codeExample: `apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: fast-ssd
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:8.0
+        volumeMounts:
+        - name: mysql-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-storage
+        persistentVolumeClaim:
+          claimName: mysql-pvc`
+          }
+        ]
+      }
+    },
+    {
+      id: 13,
+      title: 'Storage Classes',
+      category: 'storage',
+      description: 'Define different classes of storage with varying performance characteristics',
+      lastUpdated: '1 week ago',
+      readTime: '8 min',
+      hasPlayground: true,
+      icon: HardDrive,
+      content: {
+        introduction: 'A StorageClass provides a way for administrators to describe the "classes" of storage they offer. Different classes might map to quality-of-service levels, or to backup policies.',
+        sections: [
+          {
+            title: 'Creating Storage Classes',
+            content: 'Storage classes allow dynamic provisioning of persistent volumes with different characteristics.',
+            codeExample: `apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: fast-ssd
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp3
+  iops: "3000"
+  throughput: "125"
+allowVolumeExpansion: true
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+---
+# Using the storage class
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fast-storage-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: fast-ssd
+  resources:
+    requests:
+      storage: 10Gi`
+          }
+        ]
+      }
+    },
+    // Configuration
+    {
+      id: 14,
+      title: 'ConfigMaps and Secrets',
+      category: 'configuration',
+      description: 'Manage configuration and sensitive data',
+      lastUpdated: '5 days ago',
+      readTime: '12 min',
+      hasPlayground: true,
+      icon: FileText,
+      content: {
+        introduction: 'ConfigMaps and Secrets allow you to decouple configuration artifacts from image content to keep containerized applications portable.',
+        sections: [
+          {
+            title: 'Using ConfigMaps',
+            content: 'ConfigMaps store configuration data as key-value pairs that can be consumed by pods.',
+            codeExample: `apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  database_url: "postgresql://localhost:5432/mydb"
+  debug_mode: "true"
+  max_connections: "100"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-pod
+spec:
+  containers:
+  - name: app
+    image: myapp:latest
+    envFrom:
+    - configMapRef:
+        name: app-config`
+          },
+          {
+            title: 'Managing Secrets',
+            content: 'Secrets are similar to ConfigMaps but are specifically intended to hold confidential data.',
+            codeExample: `apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+type: Opaque
+data:
+  username: YWRtaW4=  # base64 encoded 'admin'
+  password: MWYyZDFlMmU2N2Rm  # base64 encoded password
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secret-pod
+spec:
+  containers:
+  - name: app
+    image: myapp:latest
+    env:
+    - name: SECRET_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: mysecret
+          key: username
+    - name: SECRET_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: mysecret
+          key: password`
+          }
+        ]
+      }
+    },
+    {
+      id: 15,
+      title: 'Resource Management',
+      category: 'configuration',
+      description: 'Manage CPU and memory resources for pods and containers',
+      lastUpdated: '3 days ago',
+      readTime: '10 min',
+      hasPlayground: true,
+      icon: Settings,
+      content: {
+        introduction: 'Resource management for Pods and containers allows you to specify resource requests and limits to ensure proper resource allocation and prevent resource starvation.',
+        sections: [
+          {
+            title: 'Resource Requests and Limits',
+            content: 'Requests specify the minimum amount of resources a container needs, while limits specify the maximum amount it can use.',
+            codeExample: `apiVersion: v1
+kind: Pod
+metadata:
+  name: resource-demo
+spec:
+  containers:
+  - name: app
+    image: nginx:1.20
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+    - containerPort: 80`
+          },
+          {
+            title: 'Quality of Service Classes',
+            content: 'Kubernetes assigns QoS classes to pods based on their resource configuration: Guaranteed, Burstable, and BestEffort.',
+            codeExample: `# Guaranteed QoS - requests = limits
+apiVersion: v1
+kind: Pod
+metadata:
+  name: guaranteed-pod
+spec:
+  containers:
+  - name: app
+    image: nginx:1.20
+    resources:
+      requests:
+        memory: "100Mi"
+        cpu: "100m"
+      limits:
+        memory: "100Mi"
+        cpu: "100m"`
+          }
+        ]
+      }
+    },
+    // Security
+    {
+      id: 16,
+      title: 'RBAC and Security',
+      category: 'security',
+      description: 'Implement role-based access control',
+      lastUpdated: '6 days ago',
+      readTime: '20 min',
+      hasPlayground: true,
+      icon: Shield,
+      content: {
+        introduction: 'Role-based access control (RBAC) is a method of regulating access to computer or network resources based on the roles of individual users.',
+        sections: [
+          {
+            title: 'Creating Roles and RoleBindings',
+            content: 'RBAC uses the rbac.authorization.k8s.io API group to drive authorization decisions.',
+            codeExample: `apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: pod-reader
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-pods
+  namespace: default
+subjects:
+- kind: User
+  name: jane
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io`
+          },
+          {
+            title: 'ClusterRoles and ClusterRoleBindings',
+            content: 'ClusterRoles define permissions at the cluster level, while ClusterRoleBindings grant those permissions cluster-wide.',
+            codeExample: `apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: secret-reader
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: read-secrets-global
+subjects:
+- kind: User
+  name: manager
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: secret-reader
+  apiGroup: rbac.authorization.k8s.io`
+          }
+        ]
+      }
+    },
+    {
+      id: 17,
+      title: 'Pod Security Standards',
+      category: 'security',
+      description: 'Define security policies for pods',
+      lastUpdated: '4 days ago',
+      readTime: '15 min',
+      hasPlayground: true,
+      icon: Lock,
+      content: {
+        introduction: 'Pod Security Standards define three different policies to broadly cover the security spectrum: Privileged, Baseline, and Restricted.',
+        sections: [
+          {
+            title: 'Security Contexts',
+            content: 'A security context defines privilege and access control settings for a Pod or Container.',
+            codeExample: `apiVersion: v1
+kind: Pod
+metadata:
+  name: security-context-demo
+spec:
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 3000
+    fsGroup: 2000
+  containers:
+  - name: sec-ctx-demo
+    image: busybox:1.28
+    command: [ "sh", "-c", "sleep 1h" ]
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      capabilities:
+        drop:
+        - ALL`
+          },
+          {
+            title: 'Pod Security Admission',
+            content: 'Pod Security Admission is a built-in admission controller that enforces Pod Security Standards.',
+            codeExample: `apiVersion: v1
+kind: Namespace
+metadata:
+  name: restricted-namespace
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+---
+# This pod will be rejected in the restricted namespace
+apiVersion: v1
+kind: Pod
+metadata:
+  name: privileged-pod
+  namespace: restricted-namespace
+spec:
+  containers:
+  - name: app
+    image: nginx:1.20
+    securityContext:
+      privileged: true  # This violates restricted policy`
+          }
+        ]
+      }
+    },
+    // Architecture
+    {
+      id: 18,
+      title: 'Nodes and Node Management',
+      category: 'architecture',
+      description: 'Understand worker nodes and their management',
+      lastUpdated: '5 days ago',
+      readTime: '12 min',
+      hasPlayground: true,
+      icon: Server,
+      content: {
+        introduction: 'Nodes are the worker machines in Kubernetes. Each node contains the services necessary to run pods and is managed by the control plane.',
+        sections: [
+          {
+            title: 'Node Components',
+            content: 'Each node runs kubelet, kube-proxy, and a container runtime to manage pods and provide networking.',
+            codeExample: `# Get node information
+kubectl get nodes -o wide
+
+# Describe a specific node
+kubectl describe node <node-name>
+
+# Check node conditions
+kubectl get nodes -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.conditions[?(@.type=="Ready")].status}{"\n"}{end}'
+
+# Cordon a node (mark as unschedulable)
+kubectl cordon <node-name>
+
+# Drain a node (evict all pods)
+kubectl drain <node-name> --ignore-daemonsets`
+          },
+          {
+            title: 'Node Affinity and Taints',
+            content: 'Control pod placement using node affinity, taints, and tolerations.',
+            codeExample: `# Add a taint to a node
+kubectl taint nodes <node-name> key1=value1:NoSchedule
+
+# Pod with toleration
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  tolerations:
+  - key: "key1"
+    operator: "Equal"
+    value: "value1"
+    effect: "NoSchedule"`
+          }
+        ]
+      }
+    },
+    {
+      id: 19,
+      title: 'Controllers and Control Loops',
+      category: 'architecture',
+      description: 'Understand how Kubernetes controllers maintain desired state',
+      lastUpdated: '3 days ago',
+      readTime: '10 min',
+      hasPlayground: true,
+      icon: Settings,
+      content: {
+        introduction: 'Controllers are control loops that watch the state of your cluster, then make or request changes where needed. Each controller tries to move the current cluster state closer to the desired state.',
+        sections: [
+          {
+            title: 'How Controllers Work',
+            content: 'Controllers track at least one Kubernetes resource type. These objects have a spec field that represents the desired state.',
+            codeExample: `# View controller managers
+kubectl get pods -n kube-system | grep controller
+
+# Check controller manager logs
+kubectl logs -n kube-system kube-controller-manager-<node-name>
+
+# View replicaset controller in action
+kubectl get replicasets
+kubectl describe replicaset <rs-name>
+
+# Scale deployment and watch controller
+kubectl scale deployment nginx-deployment --replicas=5
+kubectl get pods -w`
+          },
+          {
+            title: 'Custom Controllers',
+            content: 'You can create custom controllers to manage custom resources or implement specific business logic.',
+            codeExample: `# Example custom resource definition
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: crontabs.stable.example.com
+spec:
+  group: stable.example.com
+  versions:
+  - name: v1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              cronSpec:
+                type: string
+              image:
+                type: string
+              replicas:
+                type: integer
+  scope: Namespaced
+  names:
+    plural: crontabs
+    singular: crontab
+    kind: CronTab`
+          }
+        ]
+      }
+    },
+    {
+      id: 20,
+      title: 'Horizontal Pod Autoscaler',
+      category: 'workloads',
+      description: 'Automatically scale your applications based on metrics',
+      lastUpdated: '3 days ago',
+      readTime: '14 min',
+      hasPlayground: true,
+      icon: BarChart3,
+      content: {
+        introduction: 'The Horizontal Pod Autoscaler automatically scales the number of Pods in a replication controller, deployment, replica set or stateful set based on observed metrics.',
+        sections: [
+          {
+            title: 'Setting up HPA',
+            content: 'HPA requires metrics server to be installed in your cluster to function properly.',
+            codeExample: `apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: php-apache
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: php-apache
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80`
+          },
+          {
+            title: 'Custom Metrics Scaling',
+            content: 'HPA can scale based on custom metrics from your application or external metrics.',
+            codeExample: `# HPA with custom metrics
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: custom-metrics-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: sample-app
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Pods
+    pods:
+      metric:
+        name: packets-per-second
+      target:
+        type: AverageValue
+        averageValue: "1k"
+  - type: External
+    external:
+      metric:
+        name: queue_messages_ready
+        selector:
+          matchLabels:
+            queue: "worker_tasks"
+      target:
+        type: AverageValue
+        averageValue: "30"`
+          }
+        ]
+      }
+    },
+    {
+      id: 21,
+      title: 'Init Containers and Sidecar Containers',
+      category: 'workloads',
+      description: 'Use specialized containers for initialization and auxiliary tasks',
+      lastUpdated: '2 days ago',
+      readTime: '10 min',
+      hasPlayground: true,
+      icon: Container,
+      content: {
+        introduction: 'Init containers run before app containers in a Pod. Sidecar containers run alongside the main application container to provide supporting functionality.',
+        sections: [
+          {
+            title: 'Init Containers',
+            content: 'Init containers always run to completion before any app containers start. They are useful for setup tasks.',
+            codeExample: `apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  labels:
+    app: myapp
+spec:
+  containers:
+  - name: myapp-container
+    image: busybox:1.28
+    command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+  initContainers:
+  - name: init-myservice
+    image: busybox:1.28
+    command: ['sh', '-c', "until nslookup myservice.default.svc.cluster.local; do echo waiting for myservice; sleep 2; done"]
+  - name: init-mydb
+    image: busybox:1.28
+    command: ['sh', '-c', "until nslookup mydb.default.svc.cluster.local; do echo waiting for mydb; sleep 2; done"]`
+          },
+          {
+            title: 'Sidecar Containers',
+            content: 'Sidecar containers extend and enhance the functionality of the primary application container.',
+            codeExample: `apiVersion: v1
+kind: Pod
+metadata:
+  name: sidecar-pod
+spec:
+  containers:
+  - name: main-app
+    image: nginx:1.20
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: shared-logs
+      mountPath: /var/log/nginx
+  - name: log-sidecar
+    image: busybox:1.28
+    command: ['sh', '-c', 'tail -f /var/log/nginx/access.log']
+    volumeMounts:
+    - name: shared-logs
+      mountPath: /var/log/nginx
+  volumes:
+  - name: shared-logs
+    emptyDir: {}`
+          }
+        ]
+      }
+    },
+    {
+      id: 22,
+      title: 'Service Accounts and Authentication',
+      category: 'security',
+      description: 'Manage pod authentication and API access',
+      lastUpdated: '4 days ago',
+      readTime: '12 min',
+      hasPlayground: true,
+      icon: Key,
+      content: {
+        introduction: 'Service accounts provide an identity for processes that run in a Pod. When you create a pod, if you do not specify a service account, it is automatically assigned the default service account.',
+        sections: [
+          {
+            title: 'Creating Service Accounts',
+            content: 'Service accounts are used to control API access for pods and can be bound to roles for specific permissions.',
+            codeExample: `apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: my-service-account
+  namespace: default
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  serviceAccountName: my-service-account
+  containers:
+  - name: app
+    image: nginx:1.20
+    ports:
+    - containerPort: 80`
+          },
+          {
+            title: 'Token Management',
+            content: 'Service account tokens are automatically mounted into pods and can be used to authenticate with the Kubernetes API.',
+            codeExample: `# Create a token for service account
+kubectl create token my-service-account
+
+# View service account details
+kubectl describe serviceaccount my-service-account
+
+# Bind service account to a role
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: my-service-account-binding
+  namespace: default
+subjects:
+- kind: ServiceAccount
+  name: my-service-account
+  namespace: default
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io`
+          }
+        ]
+      }
+    },
+    {
+      id: 23,
+      title: 'Volumes and Volume Types',
+      category: 'storage',
+      description: 'Understand different volume types and their use cases',
+      lastUpdated: '1 week ago',
+      readTime: '15 min',
+      hasPlayground: true,
+      icon: HardDrive,
+      content: {
+        introduction: 'Volumes provide persistent storage for containers. Kubernetes supports many types of volumes, each with different characteristics and use cases.',
+        sections: [
+          {
+            title: 'Common Volume Types',
+            content: 'Different volume types serve different purposes: emptyDir for temporary storage, hostPath for node storage, and cloud provider volumes for persistent storage.',
+            codeExample: `apiVersion: v1
+kind: Pod
+metadata:
+  name: volume-demo
+spec:
+  containers:
+  - name: app
+    image: nginx:1.20
+    volumeMounts:
+    - name: cache-volume
+      mountPath: /cache
+    - name: config-volume
+      mountPath: /etc/config
+    - name: secret-volume
+      mountPath: /etc/secrets
+      readOnly: true
+  volumes:
+  - name: cache-volume
+    emptyDir: {}
+  - name: config-volume
+    configMap:
+      name: app-config
+  - name: secret-volume
+    secret:
+      secretName: app-secret`
+          },
+          {
+            title: 'Projected Volumes',
+            content: 'Projected volumes allow you to map several existing volume sources into the same directory.',
+            codeExample: `apiVersion: v1
+kind: Pod
+metadata:
+  name: projected-volume-demo
+spec:
+  containers:
+  - name: app
+    image: nginx:1.20
+    volumeMounts:
+    - name: all-in-one
+      mountPath: "/projected-volume"
+      readOnly: true
+  volumes:
+  - name: all-in-one
+    projected:
+      sources:
+      - secret:
+          name: mysecret
+          items:
+            - key: username
+              path: my-group/my-username
+      - configMap:
+          name: myconfigmap
+          items:
+            - key: config
+              path: my-group/my-config
+      - serviceAccountToken:
+          audience: api
+          expirationSeconds: 3600
+          path: token`
+          }
+        ]
+      }
+    },
+    {
+      id: 24,
+      title: 'Probes and Health Checks',
+      category: 'configuration',
+      description: 'Configure liveness, readiness, and startup probes',
+      lastUpdated: '3 days ago',
+      readTime: '12 min',
+      hasPlayground: true,
+      icon: Activity,
+      content: {
+        introduction: 'Probes are used by the kubelet to know when to restart a container (liveness), when a container is ready to start accepting traffic (readiness), and when a container has started (startup).',
+        sections: [
+          {
+            title: 'Configuring Probes',
+            content: 'Different probe types serve different purposes in maintaining application health and availability.',
+            codeExample: `apiVersion: v1
+kind: Pod
+metadata:
+  name: probe-demo
+spec:
+  containers:
+  - name: app
+    image: nginx:1.20
+    ports:
+    - containerPort: 80
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 80
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+    readinessProbe:
+      httpGet:
+        path: /ready
+        port: 80
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      timeoutSeconds: 3
+      successThreshold: 1
+      failureThreshold: 3
+    startupProbe:
+      httpGet:
+        path: /startup
+        port: 80
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 30`
+          },
+          {
+            title: 'Probe Types',
+            content: 'Kubernetes supports HTTP, TCP, and command-based probes for different scenarios.',
+            codeExample: `# TCP Socket probe
+livenessProbe:
+  tcpSocket:
+    port: 8080
+  initialDelaySeconds: 15
+  periodSeconds: 20
+
+# Command probe
+livenessProbe:
+  exec:
+    command:
+    - cat
+    - /tmp/healthy
+  initialDelaySeconds: 5
+  periodSeconds: 5
+
+# gRPC probe (Kubernetes 1.24+)
+livenessProbe:
+  grpc:
+    port: 2379
+  initialDelaySeconds: 10`
           }
         ]
       }
@@ -802,11 +1637,12 @@ spec:
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'basics': return 'text-blue-600 bg-blue-50';
+      case 'architecture': return 'text-indigo-600 bg-indigo-50';
+      case 'workloads': return 'text-orange-600 bg-orange-50';
       case 'networking': return 'text-emerald-600 bg-emerald-50';
       case 'storage': return 'text-purple-600 bg-purple-50';
-      case 'security': return 'text-red-600 bg-red-50';
-      case 'workloads': return 'text-orange-600 bg-orange-50';
       case 'configuration': return 'text-cyan-600 bg-cyan-50';
+      case 'security': return 'text-red-600 bg-red-50';
       default: return 'text-slate-600 bg-slate-50';
     }
   };

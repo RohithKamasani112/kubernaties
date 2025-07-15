@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { RotateCcw, Save, Play, Pause, BookOpen } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import { useKubernetesStore } from '../store/kubernetesStore';
 import KubernetesCanvas from '../components/playground/KubernetesCanvas';
 import YamlEditor from '../components/playground/YamlEditor';
@@ -12,9 +13,40 @@ import ExamplesGallery from '../components/playground/ExamplesGallery';
 import toast from 'react-hot-toast';
 
 const Playground: React.FC = () => {
-  const { nodes, edges, clearCanvas, simulationStatus, setSimulationStatus } = useKubernetesStore();
+  const { nodes, edges, clearCanvas, simulationStatus, setSimulationStatus, updateFromYaml } = useKubernetesStore();
   const [showExamplesGallery, setShowExamplesGallery] = React.useState(false);
   const [yamlEditorHeight, setYamlEditorHeight] = React.useState(224);
+  const [initialYaml, setInitialYaml] = React.useState<string>('');
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Handle YAML parameter from URL (from documentation "Try It" button)
+  useEffect(() => {
+    const yamlParam = searchParams.get('yaml');
+    if (yamlParam) {
+      try {
+        const decodedYaml = decodeURIComponent(yamlParam);
+        // Set the initial YAML for the editor
+        setInitialYaml(decodedYaml);
+        // Apply the YAML to the playground
+        updateFromYaml(decodedYaml);
+        toast.success('YAML from documentation loaded successfully!', {
+          icon: '📄',
+          duration: 4000,
+        });
+        // Clear the URL parameter after processing
+        setSearchParams(prev => {
+          const newParams = new URLSearchParams(prev);
+          newParams.delete('yaml');
+          return newParams;
+        });
+      } catch (error) {
+        console.error('Error processing YAML from URL:', error);
+        toast.error('Failed to load YAML from documentation. Please check the format.', {
+          duration: 4000,
+        });
+      }
+    }
+  }, [searchParams, setSearchParams, updateFromYaml]);
 
   const handleResetFlow = () => {
     if (nodes.length === 0) {
@@ -165,6 +197,7 @@ const Playground: React.FC = () => {
             <YamlEditor
               height={yamlEditorHeight}
               onHeightChange={setYamlEditorHeight}
+              initialYaml={initialYaml}
             />
           </motion.div>
         </div>

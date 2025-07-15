@@ -1108,6 +1108,11 @@ const KubernetesCanvas: React.FC = () => {
         capacity: '100Gi',
         accessMode: 'ReadWriteOnce',
         storageClass: 'standard'
+      },
+      storageclass: {
+        name: `my-storageclass-${Math.random().toString(36).substr(2, 5)}`,
+        provisioner: 'kubernetes.io/no-provisioner',
+        volumeBindingMode: 'WaitForFirstConsumer'
       }
     };
     return configs[type] || { name: `${type}-${Math.random().toString(36).substr(2, 5)}` };
@@ -1253,15 +1258,42 @@ const KubernetesCanvas: React.FC = () => {
   // Status updates temporarily disabled to prevent infinite loops
 
   const handleNodesChange = useCallback((changes: any) => {
-    // Only log actual drag end events to avoid spam
+    // Apply changes to React Flow state first
+    onNodesChange(changes);
+
+    // Force edge refresh when nodes are moved
+    const positionChanges = changes.filter((change: any) => change.type === 'position');
+    if (positionChanges.length > 0) {
+      // Force re-render of edges by updating them
+      setFlowEdges(prev => [...prev]);
+    }
+
+    // Update store with new positions when dragging ends
     const dragEndChanges = changes.filter((change: any) =>
       change.type === 'position' && change.dragging === false
     );
+
     if (dragEndChanges.length > 0) {
       console.log('Node drag completed:', dragEndChanges.map((c: any) => c.id));
+
+      // Get the current nodes from React Flow state and update positions
+      setTimeout(() => {
+        const currentNodes = flowNodes.map(node => {
+          const change = dragEndChanges.find((c: any) => c.id === node.id);
+          if (change && change.position) {
+            return {
+              ...node,
+              position: change.position
+            };
+          }
+          return node;
+        });
+
+        // Update store with new positions
+        updateNodes(currentNodes);
+      }, 100); // Small delay to ensure React Flow state is updated
     }
-    onNodesChange(changes);
-  }, [onNodesChange]);
+  }, [onNodesChange, flowNodes, updateNodes, setFlowEdges]);
 
   const handleEdgesChange = useCallback((changes: any) => {
     onEdgesChange(changes);
@@ -1323,28 +1355,41 @@ const KubernetesCanvas: React.FC = () => {
 
       </motion.div>
 
-      {/* Empty State */}
+      {/* Minimal Empty State */}
       {flowNodes.length === 0 && (
         <motion.div
-          className="absolute inset-0 flex items-center justify-center pointer-events-none"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          className="absolute inset-0 flex items-center justify-center pointer-events-none z-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
         >
-          <div className="text-center">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          <motion.div
+            className="text-center p-6 bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200 shadow-lg max-w-sm"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.8 }}
+          >
+            <motion.div
+              className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center"
+              animate={{
+                scale: [1, 1.1, 1],
+                rotate: [0, 5, -5, 0],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M9 21V9l3-2 3 2v12" />
               </svg>
-            </div>
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">
-              Start Building Your Application
-            </h3>
-            <p className="text-slate-600 max-w-md">
-              Drag components from the left panel to create your Kubernetes architecture.
-              Connect them to see how they work together!
+            </motion.div>
+            <h3 className="text-xl font-bold text-slate-900 mb-2">Start Building</h3>
+            <p className="text-slate-600 text-sm leading-relaxed">
+              Drag components from the left panel to create your Kubernetes architecture
             </p>
-          </div>
+          </motion.div>
         </motion.div>
       )}
     </div>

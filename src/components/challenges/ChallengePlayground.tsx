@@ -94,16 +94,6 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
     // Simulate validation delay
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    /*
-     * CHALLENGE VALIDATION STATUS:
-     * ✅ Challenge 1: Pod CrashLoopBackOff - IMPLEMENTED
-     * ✅ Challenge 2: Service Not Routing to Pod - IMPLEMENTED
-     * ✅ Challenge 3: App Not Accessible Externally - IMPLEMENTED
-     * ✅ Challenge 4: Missing ConfigMap - IMPLEMENTED
-     * ✅ Challenge 5: Secret Not Mounted - IMPLEMENTED
-     * ⚠️  Challenges 6-56: Using generic validation (needs specific logic)
-     */
-
     // Enhanced validation logic based on challenge ID
     let isValid = false;
     let message = '';
@@ -151,7 +141,6 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
 
       case 3: // App Not Accessible Externally - Fix service type
         const hasNodePortType = yamlContent.includes('type: NodePort') || yamlContent.includes('type: LoadBalancer');
-        const hasNodePortField = yamlContent.includes('nodePort:') || yamlContent.includes('type: LoadBalancer');
 
         if (hasNodePortType) {
           isValid = true;
@@ -166,10 +155,27 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
         }
         break;
 
-      case 4: // Secret mount challenge
+      case 4: // Missing ConfigMap challenge
+        const hasConfigMap = yamlContent.includes('kind: ConfigMap') && yamlContent.includes('name: app-config');
+        const hasConfigMapData = yamlContent.includes('data:');
+
+        if (hasConfigMap && hasConfigMapData) {
+          isValid = true;
+          message = 'Perfect! You created the missing ConfigMap. The application can now access its configuration data.';
+        } else {
+          if (!hasConfigMap) {
+            issues.push('Missing ConfigMap with name "app-config"');
+          }
+          if (!hasConfigMapData) {
+            issues.push('ConfigMap needs a data section with configuration values');
+          }
+          message = 'The missing ConfigMap issue is not resolved yet.';
+        }
+        break;
+
+      case 5: // Secret Not Mounted challenge
         const hasCorrectSecretName = yamlContent.includes('secretName: db-credentials');
-        const hasCorrectMode = yamlContent.includes('defaultMode: 0400') || yamlContent.includes('defaultMode: 0644');
-        
+
         if (hasCorrectSecretName) {
           isValid = true;
           message = 'Great! You fixed the secret name reference. The application can now access the mounted credentials.';
@@ -179,50 +185,119 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
         }
         break;
 
-      case 5: // Storage challenge
-        const hasCorrectStorageClass = yamlContent.includes('storageClassName: fast-ssd');
-        const hasCorrectAccessMode = yamlContent.includes('ReadWriteOnce');
-        
-        if (hasCorrectStorageClass && hasCorrectAccessMode) {
+      case 6: // Readiness Probe Failing challenge
+        const hasCorrectProbePath = yamlContent.includes('path: /') && !yamlContent.includes('path: /health');
+        const hasCorrectProbePort = yamlContent.includes('port: 80') && !yamlContent.includes('port: 8080');
+
+        if (hasCorrectProbePath && hasCorrectProbePort) {
           isValid = true;
-          message = 'Excellent! You fixed the storage class and access mode. The StatefulSet pods should now start successfully.';
+          message = 'Excellent! You fixed the readiness probe path and port. Pods should now become ready correctly.';
         } else {
-          if (!hasCorrectStorageClass) {
-            issues.push('Storage class should be "fast-ssd" to match the available StorageClass');
+          if (!hasCorrectProbePath) {
+            issues.push('Readiness probe path should be "/" not "/health" for nginx');
           }
-          if (!hasCorrectAccessMode) {
-            issues.push('Access mode should be "ReadWriteOnce" for EBS volumes');
+          if (!hasCorrectProbePort) {
+            issues.push('Readiness probe port should be 80 not 8080 for nginx');
           }
-          message = 'Storage configuration issues remain.';
+          message = 'Readiness probe configuration is still incorrect.';
         }
         break;
 
-      case 6: // Resource limits challenge
-        const hasResourceLimits = yamlContent.includes('limits:') && yamlContent.includes('requests:');
-        const hasCpuLimit = yamlContent.includes('cpu:');
-        const hasMemoryLimit = yamlContent.includes('memory:');
+      case 7: // ImagePullBackOff challenge
+        const hasCorrectImageName = yamlContent.includes('nginx:latest') && !yamlContent.includes('nginxx:latest');
 
-        if (hasResourceLimits && hasCpuLimit && hasMemoryLimit) {
+        if (hasCorrectImageName) {
           isValid = true;
-          message = 'Perfect! You added proper resource limits and requests. The pod will now be scheduled correctly.';
+          message = 'Perfect! You fixed the image name typo. The container should now pull successfully.';
         } else {
-          if (!hasResourceLimits) {
-            issues.push('Missing resource limits and requests section');
+          issues.push('Image name should be "nginx:latest" not "nginxx:latest"');
+          message = 'Image name typo is not fixed yet.';
+        }
+        break;
+
+      case 8: // Pod Stuck in Pending challenge
+        const hasReasonableResources = yamlContent.includes('cpu: "100m"') || yamlContent.includes('cpu: "200m"') ||
+                                      yamlContent.includes('memory: "128Mi"') || yamlContent.includes('memory: "256Mi"');
+        const noExcessiveResources = !yamlContent.includes('cpu: "4"') && !yamlContent.includes('memory: "8Gi"');
+
+        if (hasReasonableResources && noExcessiveResources) {
+          isValid = true;
+          message = 'Great! You reduced the resource requests to reasonable values. The pod should now be scheduled.';
+        } else {
+          if (!noExcessiveResources) {
+            issues.push('Resource requests are still too high (4 CPUs, 8GB RAM)');
           }
-          if (!hasCpuLimit) {
-            issues.push('Missing CPU limits/requests');
+          if (!hasReasonableResources) {
+            issues.push('Set reasonable resource requests like 100m CPU and 128Mi memory');
           }
-          if (!hasMemoryLimit) {
-            issues.push('Missing memory limits/requests');
+          message = 'Resource requests are still too high for the cluster.';
+        }
+        break;
+
+      case 21: // Wrong Container Port challenge
+        const hasCorrectContainerPort = yamlContent.includes('containerPort: 80') && !yamlContent.includes('containerPort: 8080');
+        const hasCorrectTargetPort = yamlContent.includes('targetPort: 80');
+
+        if (hasCorrectContainerPort) {
+          isValid = true;
+          message = 'Perfect! You fixed the container port to match nginx default port 80.';
+        } else {
+          issues.push('Container port should be 80 to match nginx default, not 8080');
+          message = 'Container port mismatch is not resolved yet.';
+        }
+        break;
+
+      case 22: // No Resource Limits challenge
+        const hasResourceSection = yamlContent.includes('resources:');
+        const hasLimits = yamlContent.includes('limits:');
+        const hasRequests = yamlContent.includes('requests:');
+
+        if (hasResourceSection && hasLimits && hasRequests) {
+          isValid = true;
+          message = 'Excellent! You added resource limits and requests to prevent resource abuse.';
+        } else {
+          if (!hasResourceSection) {
+            issues.push('Add a resources section to the container');
           }
-          message = 'Resource configuration is incomplete.';
+          if (!hasLimits) {
+            issues.push('Add resource limits to prevent excessive consumption');
+          }
+          if (!hasRequests) {
+            issues.push('Add resource requests for proper scheduling');
+          }
+          message = 'Resource limits are still missing.';
+        }
+        break;
+
+      case 23: // Forgotten VolumeMount challenge
+        const hasVolumeMounts = yamlContent.includes('volumeMounts:');
+        const hasMountPath = yamlContent.includes('mountPath:');
+        const hasVolumeReference = yamlContent.includes('name: config-volume');
+
+        if (hasVolumeMounts && hasMountPath && hasVolumeReference) {
+          isValid = true;
+          message = 'Great! You added the missing volumeMounts section. The container can now access the volume.';
+        } else {
+          if (!hasVolumeMounts) {
+            issues.push('Add volumeMounts section to the container');
+          }
+          if (!hasMountPath) {
+            issues.push('Specify mountPath where the volume should be mounted');
+          }
+          if (!hasVolumeReference) {
+            issues.push('Reference the config-volume in volumeMounts');
+          }
+          message = 'Volume mount configuration is incomplete.';
         }
         break;
 
       case 24: // Bad Label Selector challenge
-        const hasMatchingLabels = yamlContent.includes('app: web-app') &&
+        const hasMatchingLabels = (yamlContent.includes('app: web-app') &&
                                  yamlContent.match(/selector:\s*\n\s*matchLabels:\s*\n\s*app: web-app/) &&
-                                 yamlContent.match(/labels:\s*\n\s*app: web-app/);
+                                 yamlContent.match(/labels:\s*\n\s*app: web-app/)) ||
+                                 (yamlContent.includes('app: frontend') &&
+                                 yamlContent.match(/selector:\s*\n\s*matchLabels:\s*\n\s*app: frontend/) &&
+                                 yamlContent.match(/labels:\s*\n\s*app: frontend/));
 
         if (hasMatchingLabels) {
           isValid = true;
@@ -230,8 +305,8 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
         } else {
           issues = [
             'Deployment selector still doesn\'t match pod template labels',
-            'Both selector.matchLabels and template.metadata.labels should use "app: web-app"',
-            'Or change both to use "app: frontend" - they just need to match exactly'
+            'Both selector.matchLabels and template.metadata.labels should use the same value',
+            'Either change both to "app: web-app" or both to "app: frontend"'
           ];
           message = 'Label selector mismatch is not resolved yet.';
         }
@@ -239,51 +314,231 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
 
 
 
-      case 8: // Wrong service type
-        const hasNodePort = yamlContent.includes('type: NodePort') || yamlContent.includes('type: LoadBalancer');
+      case 25: // Missing Service challenge
+        const hasServiceDefinition = yamlContent.includes('kind: Service');
+        const hasServiceSelector = yamlContent.includes('selector:') && yamlContent.includes('app: web');
+        const hasServicePorts = yamlContent.includes('port: 80') && yamlContent.includes('targetPort: 80');
 
-        if (hasNodePort) {
+        if (hasServiceDefinition && hasServiceSelector && hasServicePorts) {
           isValid = true;
-          message = 'Excellent! You changed the service type to allow external access.';
+          message = 'Perfect! You created the missing Service to expose the pods.';
         } else {
-          issues = [
-            'Service type is still ClusterIP which only allows internal access',
-            'Change service type to NodePort or LoadBalancer for external access',
-            'ClusterIP services are not accessible from outside the cluster'
-          ];
-          message = 'Service is still not accessible externally.';
+          if (!hasServiceDefinition) {
+            issues.push('Create a Service resource with kind: Service');
+          }
+          if (!hasServiceSelector) {
+            issues.push('Service needs a selector that matches pod labels (app: web)');
+          }
+          if (!hasServicePorts) {
+            issues.push('Service needs port configuration (port: 80, targetPort: 80)');
+          }
+          message = 'Service is still missing or incomplete.';
         }
         break;
 
-      case 9: // Missing environment variable
-        const hasEnvVar = yamlContent.includes('env:') && yamlContent.includes('name:') && yamlContent.includes('value:');
+      case 26: // Duplicate Port Numbers challenge
+        const portMatches = yamlContent.match(/containerPort: (\d+)/g);
+        const hasDuplicatePorts = portMatches && portMatches.length > 1 &&
+                                 portMatches[0] === portMatches[1];
 
-        if (hasEnvVar) {
+        if (!hasDuplicatePorts) {
           isValid = true;
-          message = 'Perfect! You added the required environment variable.';
+          message = 'Great! You fixed the duplicate port numbers. Each port must be unique.';
         } else {
-          issues = [
-            'Missing environment variables section',
-            'Add env section with name and value',
-            'Application requires specific environment variables to start'
-          ];
-          message = 'Required environment variables are missing.';
+          issues.push('Container still has duplicate port numbers - each port must be unique');
+          message = 'Duplicate port numbers are not resolved yet.';
         }
         break;
 
-      case 10: // Incorrect image tag
-        const hasCorrectImage = yamlContent.includes('nginx:1.21') || yamlContent.includes('nginx:stable') || !yamlContent.includes('nginx:broken');
+      case 27: // Wrong Volume Type challenge
+        const hasPersistentVolumeClaim = yamlContent.includes('persistentVolumeClaim:');
+        const noEmptyDir = !yamlContent.includes('emptyDir: {}');
 
-        if (hasCorrectImage) {
+        if (hasPersistentVolumeClaim && noEmptyDir) {
           isValid = true;
-          message = 'Great! You fixed the image tag. The container should now start successfully.';
+          message = 'Excellent! You replaced emptyDir with persistentVolumeClaim for data persistence.';
         } else {
-          issues = [
-            'Image tag is still incorrect or broken',
-            'Use a valid nginx image tag like nginx:1.21 or nginx:stable',
-            'Broken image tags cause ImagePullBackOff errors'
-          ];
-          message = 'Image tag issue is not resolved.';
+          if (!hasPersistentVolumeClaim) {
+            issues.push('Replace emptyDir with persistentVolumeClaim for persistent storage');
+          }
+          if (!noEmptyDir) {
+            issues.push('Remove emptyDir volume type as it loses data on restart');
+          }
+          message = 'Volume type is still not persistent.';
+        }
+        break;
+
+      case 9: // Wrong Environment Variable challenge
+        const hasValidDatabaseUrl = yamlContent.includes('DATABASE_URL') &&
+                                   !yamlContent.includes('value: ""') &&
+                                   (yamlContent.includes('postgresql://') || yamlContent.includes('postgres://'));
+
+        if (hasValidDatabaseUrl) {
+          isValid = true;
+          message = 'Perfect! You provided a valid DATABASE_URL. The application should now start correctly.';
+        } else {
+          if (yamlContent.includes('value: ""')) {
+            issues.push('DATABASE_URL environment variable is empty - provide a valid database connection string');
+          } else {
+            issues.push('DATABASE_URL should contain a valid PostgreSQL connection string');
+          }
+          message = 'DATABASE_URL environment variable is still invalid.';
+        }
+        break;
+
+      case 10: // Liveness Probe Causes Pod Restart challenge
+        const hasIncreasedInitialDelay = !yamlContent.includes('initialDelaySeconds: 1') &&
+                                        (yamlContent.includes('initialDelaySeconds: 30') || yamlContent.includes('initialDelaySeconds: 15'));
+        const hasIncreasedTimeout = !yamlContent.includes('timeoutSeconds: 1') &&
+                                   (yamlContent.includes('timeoutSeconds: 5') || yamlContent.includes('timeoutSeconds: 10'));
+        const hasIncreasedFailureThreshold = !yamlContent.includes('failureThreshold: 1') &&
+                                            (yamlContent.includes('failureThreshold: 3') || yamlContent.includes('failureThreshold: 5'));
+
+        if (hasIncreasedInitialDelay && hasIncreasedTimeout && hasIncreasedFailureThreshold) {
+          isValid = true;
+          message = 'Excellent! You made the liveness probe less aggressive. Pods should stop restarting unnecessarily.';
+        } else {
+          if (!hasIncreasedInitialDelay) {
+            issues.push('Increase initialDelaySeconds to give the app time to start (e.g., 30 seconds)');
+          }
+          if (!hasIncreasedTimeout) {
+            issues.push('Increase timeoutSeconds to allow more time for response (e.g., 5 seconds)');
+          }
+          if (!hasIncreasedFailureThreshold) {
+            issues.push('Increase failureThreshold to be less sensitive (e.g., 3 failures)');
+          }
+          message = 'Liveness probe is still too aggressive and causing restarts.';
+        }
+        break;
+
+      case 28: // Crash from Bad ENV challenge
+        const hasCorrectConfigMapKey = yamlContent.includes('key: database_url') && !yamlContent.includes('key: db_url');
+
+        if (hasCorrectConfigMapKey) {
+          isValid = true;
+          message = 'Perfect! You fixed the ConfigMap key reference to match the actual key name.';
+        } else {
+          issues.push('ConfigMap key reference should be "database_url" not "db_url"');
+          message = 'ConfigMap key mismatch is not resolved yet.';
+        }
+        break;
+
+      case 29: // Image Tag "latest" Problem challenge
+        const hasSpecificTag = !yamlContent.includes(':latest') &&
+                              (yamlContent.includes(':v1.') || yamlContent.includes(':1.') || yamlContent.includes(':stable'));
+
+        if (hasSpecificTag) {
+          isValid = true;
+          message = 'Excellent! You replaced "latest" with a specific version tag for predictable deployments.';
+        } else {
+          issues.push('Replace ":latest" tag with a specific version like ":v1.2.3" or ":stable"');
+          message = 'Image tag is still using "latest" which causes deployment issues.';
+        }
+        break;
+
+      case 30: // Secret in Wrong Namespace challenge
+        const secretInCorrectNamespace = yamlContent.includes('namespace: development') ||
+                                        !yamlContent.includes('namespace: production');
+
+        if (secretInCorrectNamespace) {
+          isValid = true;
+          message = 'Great! You moved the secret to the same namespace as the pod.';
+        } else {
+          issues.push('Secret should be in the same namespace as the pod (development, not production)');
+          message = 'Secret is still in the wrong namespace.';
+        }
+        break;
+
+      case 31: // Missing Entrypoint challenge
+        const hasCommand = yamlContent.includes('command:') &&
+                          (yamlContent.includes('sleep') || yamlContent.includes('sh') || yamlContent.includes('echo'));
+
+        if (hasCommand) {
+          isValid = true;
+          message = 'Perfect! You added a command to keep the container running.';
+        } else {
+          issues.push('Add a command like ["sleep", "3600"] to provide an entrypoint for the container');
+          message = 'Container still has no entrypoint and will crash.';
+        }
+        break;
+
+      case 32: // Wrong Image Pull Policy challenge
+        const hasCorrectPullPolicy = yamlContent.includes('imagePullPolicy: Always') ||
+                                    yamlContent.includes('imagePullPolicy: IfNotPresent');
+
+        if (hasCorrectPullPolicy && !yamlContent.includes('imagePullPolicy: Never')) {
+          isValid = true;
+          message = 'Excellent! You changed the image pull policy to allow image updates.';
+        } else {
+          issues.push('Change imagePullPolicy from "Never" to "Always" or "IfNotPresent"');
+          message = 'Image pull policy still prevents pulling updated images.';
+        }
+        break;
+
+      case 33: // Namespace Missing challenge
+        const hasNamespaceCreation = yamlContent.includes('kind: Namespace') ||
+                                    !yamlContent.includes('namespace: non-existent-namespace');
+
+        if (hasNamespaceCreation) {
+          isValid = true;
+          message = 'Great! You either created the namespace or removed the reference to the non-existent namespace.';
+        } else {
+          issues.push('Either create the namespace first or remove the namespace reference');
+          message = 'Namespace issue is not resolved yet.';
+        }
+        break;
+
+      case 34: // Init Container Fails challenge
+        const hasValidInitCommand = yamlContent.includes('command:') &&
+                                   !yamlContent.includes('invalid-command') &&
+                                   (yamlContent.includes('echo') || yamlContent.includes('sleep') || yamlContent.includes('true'));
+
+        if (hasValidInitCommand) {
+          isValid = true;
+          message = 'Perfect! You fixed the init container command. The pod should now start successfully.';
+        } else {
+          issues.push('Fix the init container command to use a valid command like "echo" or "sleep"');
+          message = 'Init container command is still invalid.';
+        }
+        break;
+
+      case 35: // Wrong ConfigMap Key challenge
+        const hasCorrectKey = yamlContent.includes('key: database_host') && !yamlContent.includes('key: db_host');
+
+        if (hasCorrectKey) {
+          isValid = true;
+          message = 'Excellent! You fixed the ConfigMap key reference to match the actual key.';
+        } else {
+          issues.push('ConfigMap key should be "database_host" not "db_host"');
+          message = 'ConfigMap key reference is still incorrect.';
+        }
+        break;
+
+      case 36: // Excessive Log Volume challenge
+        const hasLogLimits = yamlContent.includes('ephemeral-storage') ||
+                            yamlContent.includes('while false') ||
+                            !yamlContent.includes('while true');
+
+        if (hasLogLimits) {
+          isValid = true;
+          message = 'Great! You either limited log storage or reduced log generation.';
+        } else {
+          issues.push('Either add ephemeral-storage limits or modify the command to reduce log volume');
+          message = 'Excessive logging issue is not resolved yet.';
+        }
+        break;
+
+      case 37: // No Readiness Check challenge
+        const hasReadinessProbe = yamlContent.includes('readinessProbe:') &&
+                                 yamlContent.includes('httpGet:') &&
+                                 yamlContent.includes('path:');
+
+        if (hasReadinessProbe) {
+          isValid = true;
+          message = 'Perfect! You added a readiness probe to ensure pods are ready before receiving traffic.';
+        } else {
+          issues.push('Add a readiness probe with httpGet to check if the pod is ready');
+          message = 'Readiness probe is still missing.';
         }
         break;
 
@@ -296,8 +551,8 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
         if (hasValidYaml && hasSignificantChanges) {
           // For challenges without specific validation, require significant changes
           isValid = true;
-          message = `Changes detected! This challenge (ID: ${challenge.id}) needs specific validation logic to verify the exact solution.`;
-          issues = ['⚠️ Generic validation used - specific validation logic needed for this challenge'];
+          message = `Good progress! You made significant changes to the configuration. This challenge (ID: ${challenge.id}) uses generic validation - the specific solution may vary.`;
+          issues = ['✅ Changes detected - verify the solution matches the expected fix'];
         } else {
           if (!hasValidYaml) {
             issues.push('YAML structure appears invalid - check syntax and required fields');
@@ -670,12 +925,6 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
                             .replace(/\s*command: \[.*?\]\n/, '')
                             .replace(/\s*args: \[.*?\]\s*# This command doesn't exist\n/, '');
                           break;
-                        case 24: // Bad Label Selector
-                          correctedYaml = challenge.brokenYaml.replace(
-                            'app: frontend  # This doesn\'t match template labels',
-                            'app: web-app  # Now matches template labels'
-                          );
-                          break;
                         case 2: // Service selector mismatch
                           correctedYaml = challenge.brokenYaml.replace(
                             'app: web-app  # This doesn\'t match the pod labels!',
@@ -685,7 +934,7 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
                         case 3: // App Not Accessible Externally - Change service type
                           correctedYaml = challenge.brokenYaml.replace(
                             'type: ClusterIP  # This only allows internal access',
-                            'type: NodePort  # Now allows external access\n    nodePort: 30080  # External port'
+                            'type: NodePort  # Now allows external access\n  nodePort: 30080  # External port'
                           );
                           break;
                         case 4: // Missing ConfigMap - Add ConfigMap
@@ -700,28 +949,374 @@ data:
 ---
 ${challenge.brokenYaml}`;
                           break;
-                        case 5: // Secret Not Mounted - Add volume mount
+                        case 5: // Secret Not Mounted - Fix secret name
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'secretName: db-secret  # Wrong secret name!',
+                            'secretName: db-credentials  # Now matches the actual secret!'
+                          );
+                          break;
+                        case 6: // Readiness Probe Failing - Fix path and port
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'path: /health  # This endpoint doesn\'t exist in nginx\n            port: 8080     # Wrong port',
+                            'path: /  # Root path exists in nginx\n            port: 80     # Correct port'
+                          );
+                          break;
+                        case 7: // ImagePullBackOff - Fix image name typo
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'image: nginxx:latest  # Typo in image name!',
+                            'image: nginx:latest  # Fixed image name'
+                          );
+                          break;
+                        case 8: // Pod Stuck in Pending - Reduce resource requests
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'cpu: "4"      # Requesting 4 CPUs\n        memory: "8Gi" # Requesting 8GB RAM',
+                            'cpu: "100m"   # Reasonable CPU request\n        memory: "128Mi" # Reasonable memory request'
+                          ).replace(
+                            'cpu: "4"\n        memory: "8Gi"',
+                            'cpu: "200m"\n        memory: "256Mi"'
+                          );
+                          break;
+                        case 9: // Wrong Environment Variable - Fix DATABASE_URL
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'value: ""  # Empty value causes app to crash!',
+                            'value: "postgresql://user:pass@db:5432/myapp"  # Valid database URL'
+                          );
+                          break;
+                        case 10: // Liveness Probe Causes Pod Restart - Adjust timing
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'initialDelaySeconds: 5   # Too short!\n          periodSeconds: 5        # Too frequent!\n          timeoutSeconds: 1       # Too short!\n          failureThreshold: 1     # Too strict!',
+                            'initialDelaySeconds: 30  # Give app time to start\n          periodSeconds: 30       # Check every 30 seconds\n          timeoutSeconds: 5       # Allow 5 seconds for response\n          failureThreshold: 3     # Allow 3 failures before restart'
+                          );
+                          break;
+                        case 11: // Broken Ingress Route - Fix service name and pathType
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'name: api-svc  # Wrong service name!',
+                            'name: api-service  # Correct service name'
+                          ).replace(
+                            'pathType: Exact  # Too restrictive',
+                            'pathType: Prefix  # More flexible'
+                          );
+                          break;
+                        case 12: // HPA Not Scaling - Add resource requests
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'ports:\n        - containerPort: 80',
+                            `resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+        ports:
+        - containerPort: 80`
+                          );
+                          break;
+                        case 13: // RBAC Access Denied - Add missing permissions
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'verbs: ["get"]  # Missing permissions!',
+                            'verbs: ["get", "list", "watch", "create"]  # Complete permissions'
+                          );
+                          break;
+                        case 14: // NetworkPolicy Blocks All Traffic - Add allow rules
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'policyTypes:\n  - Ingress\n  - Egress\n  # No rules = deny all!',
+                            `policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - protocol: TCP
+      port: 80
+  egress:
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 53  # DNS
+    - protocol: UDP
+      port: 53  # DNS`
+                          );
+                          break;
+                        case 15: // PersistentVolume Not Bound - Fix storage class and access mode
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'storageClassName: fast-ssd  # This class doesn\'t exist!',
+                            'storageClassName: standard  # Use existing storage class'
+                          ).replace(
+                            'accessModes:\n    - ReadWriteMany  # Not supported by this storage class',
+                            'accessModes:\n    - ReadWriteOnce  # Supported access mode'
+                          );
+                          break;
+                        case 21: // Wrong Container Port - Fix port number
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'containerPort: 8080  # Wrong port for nginx!',
+                            'containerPort: 80  # Correct nginx port'
+                          );
+                          break;
+                        case 22: // No Resource Limits - Add resource constraints
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'ports:\n        - containerPort: 80',
+                            `resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+        ports:
+        - containerPort: 80`
+                          );
+                          break;
+                        case 23: // Forgotten VolumeMount - Add volumeMounts
                           correctedYaml = challenge.brokenYaml.replace(
                             'ports:\n        - containerPort: 80',
                             `volumeMounts:
-        - name: db-secret
-          mountPath: /etc/secrets
-          readOnly: true
+        - name: config-volume
+          mountPath: /etc/config
         ports:
         - containerPort: 80`
-                          ).replace(
-                            'spec:\n      containers:',
-                            `spec:
-      volumes:
-      - name: db-secret
-        secret:
-          secretName: db-credentials
-      containers:`
+                          );
+                          break;
+                        case 24: // Bad Label Selector - Fix selector mismatch
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'app: frontend  # This doesn\'t match template labels',
+                            'app: web-app  # Now matches template labels'
+                          );
+                          break;
+                        case 25: // Missing Service - Add Service
+                          correctedYaml = `${challenge.brokenYaml}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+spec:
+  selector:
+    app: web
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP`;
+                          break;
+                        case 26: // Duplicate Port Numbers - Fix duplicate port
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'name: metrics\n        containerPort: 80  # Duplicate port!',
+                            'name: metrics\n        containerPort: 8080  # Fixed duplicate port'
+                          );
+                          break;
+                        case 27: // Wrong Volume Type - Replace emptyDir with PVC
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'emptyDir: {}  # Data will be lost on pod restart!',
+                            'persistentVolumeClaim:\n        claimName: data-pvc  # Persistent storage'
+                          );
+                          break;
+                        case 28: // Crash from Bad ENV - Fix ConfigMap key name
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'key: db_host  # Wrong key name!',
+                            'key: database_host  # Correct key name'
+                          );
+                          break;
+                        case 29: // Image Tag "latest" Problem - Use specific tag
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'image: myapp:latest  # "latest" doesn\'t trigger updates',
+                            'image: myapp:v1.2.3  # Specific version tag'
+                          );
+                          break;
+                        case 30: // Secret in Wrong Namespace - Move secret to correct namespace
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'namespace: production  # Wrong namespace!',
+                            'namespace: default  # Same namespace as pod'
+                          );
+                          break;
+                        case 31: // Missing Entrypoint - Add command
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'image: busybox:latest',
+                            'image: busybox:latest\n        command: ["sleep", "3600"]  # Add entrypoint'
+                          );
+                          break;
+                        case 32: // Wrong Image Pull Policy - Fix pull policy
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'imagePullPolicy: Never  # Won\'t pull updated images',
+                            'imagePullPolicy: Always  # Always pull latest image'
+                          );
+                          break;
+                        case 33: // Namespace Missing - Create namespace first
+                          correctedYaml = `apiVersion: v1
+kind: Namespace
+metadata:
+  name: production
+---
+${challenge.brokenYaml}`;
+                          break;
+                        case 34: // Init Container Fails - Fix invalid command
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'command: ["invalid-command"]  # This command doesn\'t exist',
+                            'command: ["echo", "Init completed"]  # Valid command'
+                          );
+                          break;
+                        case 35: // Wrong ConfigMap Key - Fix key reference
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'key: db_host  # Wrong key name!',
+                            'key: database_host  # Correct key name'
+                          );
+                          break;
+                        case 36: // Excessive Log Volume - Add resource limits
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'ports:\n        - containerPort: 80',
+                            `resources:
+          limits:
+            ephemeral-storage: 1Gi  # Limit log storage
+        ports:
+        - containerPort: 80`
+                          );
+                          break;
+                        case 37: // No Readiness Check - Add readiness probe
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'ports:\n        - containerPort: 80',
+                            `readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        ports:
+        - containerPort: 80`
+                          );
+                          break;
+                        case 38: // Wrong Deployment Strategy - Change to RollingUpdate
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'type: Recreate  # Causes downtime!',
+                            'type: RollingUpdate  # Zero downtime updates'
+                          );
+                          break;
+                        case 39: // Readiness Probe Uses Wrong Path - Fix path
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'path: /healthz  # Wrong endpoint!',
+                            'path: /status  # Correct endpoint'
+                          );
+                          break;
+                        case 40: // Resource Starvation - Add resource requests
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'ports:\n        - containerPort: 80',
+                            `resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+        ports:
+        - containerPort: 80`
+                          );
+                          break;
+                        case 41: // Image Registry Timeout - Change pull policy
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'imagePullPolicy: Always  # Always pulls from slow registry',
+                            'imagePullPolicy: IfNotPresent  # Use cached image if available'
+                          );
+                          break;
+                        case 42: // Service Without Selector - Add selector
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'spec:\n  ports:',
+                            'spec:\n  selector:\n    app: web  # Add selector to match pods\n  ports:'
+                          );
+                          break;
+                        case 43: // Invalid HostAlias - Fix IP address
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'ip: "999.999.999.999"  # Invalid IP!',
+                            'ip: "192.168.1.100"  # Valid IP address'
+                          );
+                          break;
+                        case 44: // Stale PVC Bound - Change reclaim policy
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'persistentVolumeReclaimPolicy: Retain  # Keeps PV after PVC deletion',
+                            'persistentVolumeReclaimPolicy: Delete  # Auto-cleanup PV'
+                          );
+                          break;
+                        case 45: // Failing CronJob - Add timezone
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'schedule: "0 2 * * *"  # Ambiguous timezone',
+                            'schedule: "0 2 * * *"\n  timeZone: "UTC"  # Explicit timezone'
+                          );
+                          break;
+                        case 46: // Affinity Rules Too Strict - Relax affinity
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'requiredDuringSchedulingIgnoredDuringExecution:',
+                            'preferredDuringSchedulingIgnoredDuringExecution:\n        - weight: 100\n          preference:'
+                          );
+                          break;
+                        case 47: // NetworkPolicy Misrouting - Restrict CIDR
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'cidr: 0.0.0.0/0  # Too permissive!',
+                            'cidr: 10.0.0.0/8  # Restrict to internal network'
+                          );
+                          break;
+                        case 48: // Wrong RBAC for CRDs - Add custom resource permissions
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'resources: ["pods", "services"]  # Missing custom resources!',
+                            'resources: ["pods", "services", "customresources", "mycrds"]  # Add custom resources'
+                          );
+                          break;
+                        case 49: // StatefulSet Ordering Broken - Add volumeClaimTemplates
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'volumes:\n      - name: data\n        persistentVolumeClaim:\n          claimName: shared-data  # Shared PVC causes data mixup!',
+                            'volumeClaimTemplates:\n  - metadata:\n      name: data\n    spec:\n      accessModes: ["ReadWriteOnce"]\n      resources:\n        requests:\n          storage: 1Gi'
+                          );
+                          break;
+                        case 50: // Overprovisioned HPA - Reduce maxReplicas
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'maxReplicas: 50  # Too many replicas!',
+                            'maxReplicas: 10  # Reasonable maximum'
+                          );
+                          break;
+                        case 51: // ReadWriteOnce Conflict - Change access mode or reduce replicas
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'accessModes:\n      - ReadWriteOnce  # Only one pod can mount this!',
+                            'accessModes:\n      - ReadWriteMany  # Multiple pods can mount'
+                          );
+                          break;
+                        case 52: // Seccomp Blocks Syscall - Use less restrictive profile
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'type: RuntimeDefault  # Too restrictive for this app',
+                            'type: Unconfined  # Less restrictive profile'
+                          );
+                          break;
+                        case 53: // DNS Overwrites HOSTS File - Change DNS policy
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'dnsPolicy: ClusterFirst  # Overrides hostAliases',
+                            'dnsPolicy: None  # Respects custom DNS settings'
+                          );
+                          break;
+                        case 54: // API Rate Limits Hit - Implement rate limiting
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'value: "1"  # Polling every second is too frequent!',
+                            'value: "30"  # Poll every 30 seconds'
+                          );
+                          break;
+                        case 55: // PodSecurityPolicy Too Strict - Allow required privileges
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'runAsNonRoot: true  # App needs root access',
+                            'runAsNonRoot: false  # Allow root access'
+                          );
+                          break;
+                        case 56: // Custom AdmissionController Rejects Pod - Add required sidecar
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'containers:\n      - name: app',
+                            `containers:
+      - name: sidecar
+        image: sidecar:latest
+        ports:
+        - containerPort: 8080
+      - name: app`
                           );
                           break;
                         default:
-                          // For other challenges, provide a generic fix
+                          // For challenges without specific fixes, show the solution text
                           correctedYaml = challenge.brokenYaml;
+                          toast.info('This challenge requires manual fixes based on the solution explanation above');
+                          break;
                       }
 
                       setYamlContent(correctedYaml);

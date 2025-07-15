@@ -12,7 +12,9 @@ import {
   User,
   ChevronLeft,
   ChevronRight,
-  Lightbulb
+  Lightbulb,
+  Heart,
+  Network
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -46,12 +48,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   }, []);
 
   const navItems = [
-    { path: '/', icon: Home, label: 'Dashboard', color: 'text-blue-600' },
+    { path: '/', icon: Home, label: 'Home', color: 'text-blue-600' },
     { path: '/playground', icon: PlayCircle, label: 'Playground', color: 'text-emerald-600' },
+    // { path: '/k8s-explained', icon: Network, label: 'K8s Explained', color: 'text-cyan-600' },
     { path: '/examples', icon: Lightbulb, label: 'Examples', color: 'text-yellow-600' },
     { path: '/lessons', icon: BookOpen, label: 'Lessons', color: 'text-purple-600' },
     { path: '/challenges', icon: Target, label: 'Challenges', color: 'text-orange-600' },
     { path: '/docs', icon: FileText, label: 'Docs', color: 'text-slate-600' },
+    { path: '/about', icon: Heart, label: 'About', color: 'text-pink-600' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -111,8 +115,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   exit={{ opacity: 0, width: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <h1 className="text-xl font-bold text-slate-900">KubeLab</h1>
-                  <p className="text-xs text-slate-500">Interactive Learning</p>
+                  <h1 className="text-xl font-bold text-slate-900">KubeQuest</h1>
+                  <p className="text-xs text-slate-500">From container basics to cluster mastery</p>
                 </motion.div>
               )}
             </AnimatePresence>

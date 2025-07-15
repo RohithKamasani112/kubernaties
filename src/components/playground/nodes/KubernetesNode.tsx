@@ -13,6 +13,8 @@ import {
   AlertCircle,
   CheckCircle,
   Clock,
+  Database,
+  Play,
   Edit3,
   Check,
   X,
@@ -41,6 +43,12 @@ const KubernetesNode: React.FC<NodeProps<NodeData>> = ({ data, selected, id }) =
       configmap: FileText,
       secret: Lock,
       pvc: HardDrive,
+      persistentvolume: HardDrive,
+      storageclass: Settings,
+      statefulset: Database,
+      daemonset: Layers,
+      job: Play,
+      cronjob: Clock,
     };
     return icons[type] || Box;
   };
