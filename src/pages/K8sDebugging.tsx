@@ -180,62 +180,62 @@ const K8sDebugging: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Header */}
+      {/* Header - Optimized for 100% zoom */}
       <motion.div
-        className="bg-white border-b border-slate-200 px-6 py-4 shadow-sm"
+        className="bg-white border-b border-slate-200 px-4 py-3 shadow-sm"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-red-600 rounded-xl flex items-center justify-center">
-                <Bug className="w-6 h-6 text-white" />
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-red-600 rounded-lg flex items-center justify-center">
+                <Bug className="w-4 h-4 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-slate-900">K8s Debugging Lab</h1>
-                <p className="text-sm text-slate-600">Production-grade debugging simulation</p>
+                <h1 className="text-lg font-bold text-slate-900">K8s Debugging Lab</h1>
+                <p className="text-xs text-slate-600">Production-grade debugging simulation</p>
               </div>
             </div>
-            
+
             {currentScenario && (
-              <div className="flex items-center space-x-2 px-3 py-1 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
-                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                <span className="text-sm font-medium text-blue-700">{currentScenario.name}</span>
-                <span className="text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
+              <div className="flex items-center space-x-1 px-2 py-1 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-md border border-blue-200">
+                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
+                <span className="text-xs font-medium text-blue-700">{currentScenario.name}</span>
+                <span className="text-xs text-blue-600 bg-blue-100 px-1.5 py-0.5 rounded-full">
                   {currentScenario.difficulty}
                 </span>
               </div>
             )}
 
-            <div className="flex items-center space-x-2 px-3 py-1 bg-green-50 rounded-lg border border-green-200">
-              <span className="text-sm font-medium text-green-700">43 Scenarios Available</span>
+            <div className="flex items-center space-x-1 px-2 py-1 bg-green-50 rounded-md border border-green-200">
+              <span className="text-xs font-medium text-green-700">43 Scenarios Available</span>
               <span className="text-xs text-green-600">🎯</span>
             </div>
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2">
             {/* Simulation Controls */}
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1">
               <button
                 onClick={handleSimulationToggle}
                 disabled={!selectedScenario}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                className={`flex items-center space-x-1 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
                   isSimulationRunning
                     ? 'bg-orange-500 hover:bg-orange-600 text-white'
                     : 'bg-green-500 hover:bg-green-600 text-white disabled:bg-slate-300 disabled:text-slate-500'
                 }`}
               >
-                {isSimulationRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                {isSimulationRunning ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
                 <span>{isSimulationRunning ? 'Pause' : 'Start'}</span>
               </button>
-              
+
               <button
                 onClick={handleReset}
-                className="flex items-center space-x-2 px-4 py-2 bg-slate-500 hover:bg-slate-600 text-white rounded-lg font-medium transition-all"
+                className="flex items-center space-x-1 px-3 py-1.5 bg-slate-500 hover:bg-slate-600 text-white rounded-md text-sm font-medium transition-all"
               >
-                <RotateCcw className="w-4 h-4" />
+                <RotateCcw className="w-3 h-3" />
                 <span>Reset</span>
               </button>
             </div>
@@ -243,38 +243,38 @@ const K8sDebugging: React.FC = () => {
             {/* Scenario Selector */}
             <button
               onClick={() => setShowScenarioPanel(true)}
-              className="flex items-center space-x-2 px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-medium transition-all"
+              className="flex items-center space-x-1 px-3 py-1.5 bg-purple-500 hover:bg-purple-600 text-white rounded-md text-sm font-medium transition-all"
             >
-              <Target className="w-4 h-4" />
+              <Target className="w-3 h-3" />
               <span>Scenarios</span>
             </button>
 
             {/* Hints Toggle */}
             <button
               onClick={() => setShowHints(!showHints)}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all ${
+              className={`flex items-center space-x-1 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
                 showHints
                   ? 'bg-yellow-500 hover:bg-yellow-600 text-white'
                   : 'bg-slate-200 hover:bg-slate-300 text-slate-700'
               }`}
             >
-              <Zap className="w-4 h-4" />
+              <Zap className="w-3 h-3" />
               <span>Hints</span>
             </button>
 
             {/* Status Indicator */}
-            <div className="flex items-center space-x-2">
-              <div className={`w-3 h-3 rounded-full ${
+            <div className="flex items-center space-x-1">
+              <div className={`w-2 h-2 rounded-full ${
                 simulationStatus === 'running' ? 'bg-green-500 animate-pulse' :
                 simulationStatus === 'error' ? 'bg-red-500' : 'bg-slate-400'
               }`}></div>
-              <span className="text-sm text-slate-600 capitalize">{simulationStatus}</span>
+              <span className="text-xs text-slate-600 capitalize">{simulationStatus}</span>
             </div>
           </div>
         </div>
       </motion.div>
 
-      <div className="flex h-[calc(100vh-80px)]">
+      <div className="flex h-[calc(100vh-64px)]">
         {/* Scenario Selector Sidebar */}
         {false && (
           <motion.div
@@ -318,8 +318,8 @@ const K8sDebugging: React.FC = () => {
         <div className="flex-1 flex flex-col">
           {selectedScenario && (
             <>
-              {/* Panel Navigation */}
-              <div className="bg-white border-b border-slate-200 px-6 py-3">
+              {/* Panel Navigation - Compact */}
+              <div className="bg-white border-b border-slate-200 px-4 py-2">
                 <div className="flex items-center space-x-1">
                   {panels.map((panel) => {
                     const Icon = panel.icon;
@@ -327,13 +327,13 @@ const K8sDebugging: React.FC = () => {
                       <button
                         key={panel.id}
                         onClick={() => handlePanelChange(panel.id)}
-                        className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                        className={`flex items-center space-x-1 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
                           activePanel === panel.id
                             ? 'bg-blue-50 text-blue-700 border border-blue-200'
                             : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                         }`}
                       >
-                        <Icon className={`w-4 h-4 ${activePanel === panel.id ? panel.color : ''}`} />
+                        <Icon className={`w-3 h-3 ${activePanel === panel.id ? panel.color : ''}`} />
                         <span>{panel.label}</span>
                       </button>
                     );
@@ -347,11 +347,11 @@ const K8sDebugging: React.FC = () => {
                   {renderActivePanel()}
                 </div>
 
-                {/* Hints Panel */}
+                {/* Hints Panel - Compact */}
                 <AnimatePresence>
                   {showHints && (
                     <motion.div
-                      className="w-80 border-l border-slate-200"
+                      className="w-72 border-l border-slate-200"
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}

@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Optimized for 100% zoom - Base styles */
+@layer base {
+  html {
+    font-size: 14px; /* Slightly smaller base font for better 100% zoom experience */
+  }
+
+  body {
+    font-size: 0.875rem; /* 14px equivalent */
+    line-height: 1.4;
+  }
+}
+
 /* Custom scrollbar styles for component palette */
 .component-palette-scroll::-webkit-scrollbar {
   width: 6px;
@@ -28,6 +40,29 @@
 
 .component-card:hover {
   transform: translateY(-2px) scale(1.02);
+}
+
+/* Compact layout utilities for 100% zoom */
+@layer utilities {
+  .compact-spacing {
+    @apply space-y-2;
+  }
+
+  .compact-padding {
+    @apply p-2;
+  }
+
+  .compact-text {
+    @apply text-xs;
+  }
+
+  .compact-button {
+    @apply px-2 py-1 text-xs;
+  }
+
+  .compact-icon {
+    @apply w-3 h-3;
+  }
 }
 
 /* Enhanced gradient backgrounds */

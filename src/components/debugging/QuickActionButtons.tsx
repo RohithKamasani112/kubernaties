@@ -491,32 +491,32 @@ const QuickActionButtons: React.FC<QuickActionButtonsProps> = ({
       animate={{ opacity: 1, y: 0 }}
       className="bg-white border border-slate-200 rounded-lg shadow-sm"
     >
-      {/* Header */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-slate-200 p-4 rounded-t-lg">
+      {/* Header - Compact */}
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-slate-200 p-3 rounded-t-lg">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Zap className="w-5 h-5 text-blue-600" />
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-blue-100 rounded-md flex items-center justify-center">
+              <Zap className="w-4 h-4 text-blue-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-slate-900">Quick Actions</h3>
-              <p className="text-sm text-slate-600">Production-grade debugging commands</p>
+              <h3 className="text-sm font-semibold text-slate-900">Quick Actions</h3>
+              <p className="text-xs text-slate-600">Production-grade debugging commands</p>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-sm font-medium text-slate-700">{selectedResource.type}</div>
+            <div className="text-xs font-medium text-slate-700">{selectedResource.type}</div>
             <div className="text-xs text-slate-500">{selectedResource.name}</div>
           </div>
         </div>
       </div>
 
-      {/* Categorized Commands */}
-      <div className="p-4 space-y-6">
+      {/* Categorized Commands - Compact */}
+      <div className="p-3 space-y-4">
         {Object.entries(groupedCommands).map(([category, categoryCommands]) => (
           <div key={category}>
-            <div className="flex items-center space-x-2 mb-3">
+            <div className="flex items-center space-x-1 mb-2">
               {getCategoryIcon(category)}
-              <h4 className="font-medium text-slate-700 capitalize">
+              <h4 className="text-sm font-medium text-slate-700 capitalize">
                 {category === 'inspection' ? '🔍 Inspection' :
                  category === 'debugging' ? '🐛 Debugging' :
                  category === 'modification' ? '⚙️ Modification' :
@@ -528,7 +528,7 @@ const QuickActionButtons: React.FC<QuickActionButtonsProps> = ({
               <span className="text-xs text-slate-400">{categoryCommands.length} commands</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {categoryCommands.map((cmd) => {
                 const Icon = cmd.icon;
                 const executing = isExecuting === cmd.id;
@@ -536,35 +536,35 @@ const QuickActionButtons: React.FC<QuickActionButtonsProps> = ({
                 return (
                   <motion.div
                     key={cmd.id}
-                    whileHover={{ scale: executing ? 1 : 1.02 }}
-                    whileTap={{ scale: executing ? 1 : 0.98 }}
+                    whileHover={{ scale: executing ? 1 : 1.01 }}
+                    whileTap={{ scale: executing ? 1 : 0.99 }}
                     className="relative"
                   >
                     <button
                       onClick={() => handleQuickAction(cmd.id, cmd.command)}
                       disabled={executing}
-                      className={`w-full p-3 border rounded-lg text-left group relative overflow-hidden ${getColorClasses(cmd.color, executing)}`}
+                      className={`w-full p-2 border rounded-md text-left group relative overflow-hidden ${getColorClasses(cmd.color, executing)}`}
                       title={cmd.description}
                     >
-                      <div className="flex items-center space-x-2 mb-2">
+                      <div className="flex items-center space-x-1 mb-1">
                         {executing ? (
-                          <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+                          <div className="w-3 h-3 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
                         ) : (
-                          <Icon className="w-4 h-4" />
+                          <Icon className="w-3 h-3" />
                         )}
-                        <span className="font-medium text-sm">{cmd.label}</span>
+                        <span className="font-medium text-xs">{cmd.label}</span>
                       </div>
 
                       <div className="flex items-center justify-between">
-                        <code className="text-xs bg-black bg-opacity-10 px-2 py-1 rounded font-mono truncate flex-1 mr-2">
-                          {cmd.command.length > 30 ? `${cmd.command.substring(0, 30)}...` : cmd.command}
+                        <code className="text-xs bg-black bg-opacity-10 px-1.5 py-0.5 rounded font-mono truncate flex-1 mr-1">
+                          {cmd.command.length > 25 ? `${cmd.command.substring(0, 25)}...` : cmd.command}
                         </code>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             copyToClipboard(cmd.command);
                           }}
-                          className="p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black hover:bg-opacity-10 rounded"
+                          className="p-0.5 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black hover:bg-opacity-10 rounded"
                           title="Copy command"
                         >
                           <Copy className="w-3 h-3" />
