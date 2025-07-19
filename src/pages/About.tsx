@@ -24,13 +24,13 @@ const About: React.FC = () => {
   // SEO optimization for About page
   useEffect(() => {
     // Update page title and meta description for About page
-    document.title = "About Samwi - Free Kubernetes Learning Platform | Our Mission & Values";
+    document.title = "About Samwi - Kubernetes Learning Platform | Our Mission & Values";
 
     // Update meta description
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute('content',
-        'Learn about Samwi\'s mission to democratize Kubernetes and DevOps education. Discover our commitment to providing free, high-quality learning resources for everyone, everywhere.'
+        'Learn about Samwi\'s mission to democratize Kubernetes and DevOps education. Discover our commitment to providing high-quality learning resources for everyone, everywhere.'
       );
     }
 
@@ -39,7 +39,7 @@ const About: React.FC = () => {
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "Samwi",
-      "description": "Free Kubernetes and DevOps learning platform providing interactive tutorials, hands-on labs, and community support",
+      "description": "Kubernetes and DevOps learning platform providing interactive tutorials, hands-on labs, and community support",
       "url": "https://samwi.dev",
       "logo": "https://samwi.dev/logo.png",
       "foundingDate": "2024",
@@ -51,12 +51,6 @@ const About: React.FC = () => {
         "@type": "ContactPoint",
         "contactType": "customer service",
         "email": "hello@samwi.dev"
-      },
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD",
-        "description": "Free Kubernetes learning platform"
       }
     };
 
@@ -69,12 +63,12 @@ const About: React.FC = () => {
     // Cleanup function
     return () => {
       // Reset title when leaving page
-      document.title = "Samwi - Free Kubernetes Learning Platform | DevOps Education";
+      document.title = "Samwi - Kubernetes Learning Platform | DevOps Education";
 
       // Reset meta description
       if (metaDescription) {
         metaDescription.setAttribute('content',
-          'Learn Kubernetes for free with Samwi\'s interactive platform. Master DevOps, container orchestration, and cloud-native technologies through hands-on labs, tutorials, and community support.'
+          'Learn Kubernetes with Samwi\'s interactive platform. Master DevOps, container orchestration, and cloud-native technologies through hands-on labs, tutorials, and community support.'
         );
       }
 
@@ -89,7 +83,7 @@ const About: React.FC = () => {
   const stats = [
     { number: 'NEW', label: 'Fresh Learning Journey', icon: Users },
     { number: 'FOCUSED', label: 'Quality-First Approach', icon: BookOpen },
-    { number: '100%', label: 'Free Forever', icon: Globe },
+    { number: 'ACCESSIBLE', label: 'Learning for Everyone', icon: Globe },
     { number: 'GROWING', label: 'Community Building', icon: Heart }
   ];
 
@@ -151,8 +145,8 @@ const About: React.FC = () => {
               </h1>
 
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Born from a simple belief: <strong>quality education should never be behind a paywall</strong>.
-                Samwi is your gateway to <strong>carefully crafted, free learning experiences</strong> - starting with
+                Born from a simple belief: <strong>quality education should be accessible to everyone</strong>.
+                Samwi is your gateway to <strong>carefully crafted learning experiences</strong> - starting with
                 <strong> Kubernetes and DevOps fundamentals</strong>, and expanding into <strong>emerging technologies</strong> as we grow together.
               </p>
 
@@ -163,7 +157,7 @@ const About: React.FC = () => {
                     className="inline-flex items-center space-x-3 px-6 py-3 bg-gradient-to-r from-sky-300 to-blue-400 text-white font-medium rounded-xl hover:from-sky-400 hover:to-blue-500 transition-all duration-300 shadow-md"
                   >
                     <Play className="w-5 h-5" />
-                    <span>Start Learning Free</span>
+                    <span>Start Learning</span>
                     <ArrowRight className="w-5 h-5" />
                   </Link>
                 </motion.div>
@@ -205,9 +199,9 @@ const About: React.FC = () => {
                 </p>
 
                 <p className="leading-relaxed">
-                  Our commitment goes beyond just being free. We're obsessed with delivering
-                  <strong> the best learning experience possible</strong> - interactive environments,
-                  real-world scenarios, and hands-on labs that prepare you for the future of technology.
+                  Our commitment is to deliver <strong>the best learning experience possible</strong> -
+                  interactive environments, real-world scenarios, and hands-on labs that prepare you
+                  for the future of technology.
                 </p>
 
                 <div className="bg-sky-50 rounded-xl p-4 border-l-4 border-sky-300">
@@ -247,14 +241,14 @@ const About: React.FC = () => {
                 </p>
 
                 <p className="leading-relaxed">
-                  We're building the most comprehensive <strong>free learning platform</strong> for emerging technologies
+                  We're building the most comprehensive <strong>learning platform</strong> for emerging technologies
                   that combines theoretical knowledge with practical, hands-on experience across multiple domains.
                 </p>
 
                 <div className="bg-sky-50 rounded-xl p-4">
                   <h3 className="font-medium text-sky-700 mb-2">What Makes Us Different:</h3>
                   <ul className="space-y-2 text-sky-600">
-                    <li className="flex items-center"><Star className="w-4 h-4 mr-2" />100% Free, Forever</li>
+                    <li className="flex items-center"><Star className="w-4 h-4 mr-2" />Accessible to Everyone</li>
                     <li className="flex items-center"><Star className="w-4 h-4 mr-2" />Multi-Technology Focus</li>
                     <li className="flex items-center"><Star className="w-4 h-4 mr-2" />Interactive Learning Labs</li>
                     <li className="flex items-center"><Star className="w-4 h-4 mr-2" />Future-Ready Skills</li>
@@ -278,8 +272,8 @@ const About: React.FC = () => {
 
               <div className="space-y-4">
                 <p className="text-lg leading-relaxed text-gray-600">
-                  Being free doesn't mean compromising on quality. We're committed to delivering
-                  <strong> the best learning experience</strong> across all technology domains.
+                  We're committed to delivering <strong>the best learning experience</strong>
+                  across all technology domains without compromising on quality.
                 </p>
 
                 <div className="space-y-3">
@@ -375,7 +369,7 @@ const About: React.FC = () => {
               The Samwi Learning Experience
             </h2>
             <p className="text-xl text-gray-500 max-w-4xl mx-auto">
-              Join our <strong>growing community of early learners</strong> who are shaping the future of <strong>free tech education</strong>
+              Join our <strong>growing community of early learners</strong> who are shaping the future of <strong>tech education</strong>
             </p>
           </motion.div>
 
@@ -518,12 +512,12 @@ const About: React.FC = () => {
             viewport={{ once: true }}
           >
             <h2 className="text-4xl md:text-5xl font-medium text-gray-700 mb-8">
-              The Future of Free Learning
+              The Future of Learning
             </h2>
             <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-12">
               🚀 <strong>We're just getting started!</strong> Beginning with our <strong>foundational Kubernetes course</strong>,
               we're building something special - where <strong>quality beats quantity</strong>.
-              Join us as <strong>founding learners</strong> and help shape the future of free tech education together!
+              Join us as <strong>founding learners</strong> and help shape the future of tech education together!
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
@@ -554,7 +548,7 @@ const About: React.FC = () => {
                   className="inline-flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-sky-300 to-blue-400 text-white font-medium rounded-2xl hover:from-sky-400 hover:to-blue-500 transition-all duration-300 shadow-md hover:shadow-lg"
                 >
                   <Play className="w-5 h-5" />
-                  <span>Explore Free Courses</span>
+                  <span>Explore Courses</span>
                   <ArrowRight className="w-5 h-5" />
                 </Link>
               </motion.div>

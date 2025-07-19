@@ -182,10 +182,14 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
       await new Promise(resolve => setTimeout(resolve, 500)); // Brief processing delay
       updateFromYaml(yamlContent);
       setIsManualEdit(false); // Reset manual edit flag after successful application
-      toast.success('YAML applied successfully! Canvas updated.', {
-        icon: '✅',
-        duration: 3000,
-      });
+
+      // Show consolidated success notification after a brief delay
+      setTimeout(() => {
+        toast.success('✅ YAML applied successfully! Canvas updated.', {
+          icon: '✅',
+          duration: 3000,
+        });
+      }, 800);
     } catch (error) {
       console.error('Error applying YAML:', error);
       toast.error('Error applying YAML. Please check syntax and try again.', {

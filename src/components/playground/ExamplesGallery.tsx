@@ -79,10 +79,18 @@ const ExamplesGallery: React.FC<ExamplesGalleryProps> = ({ isVisible, onClose })
     try {
       clearCanvas();
       updateFromYaml(example.yaml);
-      toast.success(`Loaded "${example.title}" example`, {
-        icon: '🚀',
-        duration: 3000,
-      });
+
+      // Show a single consolidated notification after a brief delay to ensure loading is complete
+      setTimeout(() => {
+        toast.success(`✅ Loaded "${example.title}" example successfully!`, {
+          icon: '🚀',
+          duration: 4000,
+          style: {
+            maxWidth: '400px',
+          },
+        });
+      }, 800);
+
       onClose();
     } catch (error) {
       console.error('Error loading example:', error);

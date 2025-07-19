@@ -144,10 +144,10 @@ const Lessons: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-slate-100">
+      <div className="max-w-7xl mx-auto px-6 py-6">
         {/* Header */}
-        <div className="relative text-center mb-12">
+        <div className="relative text-center mb-8">
           {/* Small K8s Architecture Button - Top Right */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -181,7 +181,7 @@ const Lessons: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-4xl md:text-5xl font-bold text-gray-900 mb-4"
+            className="text-3xl md:text-4xl font-bold text-gray-900 mb-3"
           >
             Kubernetes Learning Path
           </motion.h1>
@@ -189,7 +189,7 @@ const Lessons: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl text-gray-600 max-w-2xl mx-auto mb-8"
+            className="text-lg text-gray-600 max-w-2xl mx-auto mb-6"
           >
             Follow our structured path from beginner to expert. Each phase builds on the previous one.
           </motion.p>
@@ -284,12 +284,12 @@ const Lessons: React.FC = () => {
 
         {/* Learning Roadmap */}
         {!searchQuery && (
-          <div className="space-y-8">
+          <div className="space-y-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-center mb-12"
+              className="text-center mb-8"
             >
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 Start Your Journey Here
@@ -308,7 +308,7 @@ const Lessons: React.FC = () => {
                 className="relative"
               >
                 {/* Phase Header */}
-                <div className={`${phase.bgColor} ${phase.borderColor} border-2 rounded-xl p-6 mb-6`}>
+                <div className={`${phase.bgColor} ${phase.borderColor} border-2 rounded-xl p-5 mb-4`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <div className={`w-12 h-12 bg-gradient-to-r ${phase.color} rounded-lg flex items-center justify-center`}>
@@ -337,7 +337,7 @@ const Lessons: React.FC = () => {
                 </div>
 
                 {/* Lessons Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                   {phase.lessons.map((lesson, lessonIndex) => (
                     <motion.div
                       key={lesson.id}

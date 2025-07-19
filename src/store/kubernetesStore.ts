@@ -6,6 +6,7 @@ interface KubernetesState {
   nodes: Node[];
   edges: Edge[];
   simulationStatus: 'running' | 'stopped' | 'error';
+  isLoadingFromYaml: boolean;
   addNode: (node: Node) => void;
   updateNodes: (nodes: Node[]) => void;
   addEdgeToStore: (edge: Edge) => void;
@@ -21,6 +22,7 @@ export const useKubernetesStore = create<KubernetesState>((set, get) => ({
   nodes: [],
   edges: [],
   simulationStatus: 'stopped',
+  isLoadingFromYaml: false,
 
   addNode: (node) => {
     set((state) => ({
@@ -88,6 +90,9 @@ export const useKubernetesStore = create<KubernetesState>((set, get) => ({
 
   updateFromYaml: (yamlContent) => {
     try {
+      // Set loading state to suppress notifications
+      set({ isLoadingFromYaml: true });
+
       // Parse YAML and convert to nodes/edges
       const yamlDocs = yamlContent.split('---').filter(doc => doc.trim());
       const newNodes: Node[] = [];
@@ -576,11 +581,13 @@ export const useKubernetesStore = create<KubernetesState>((set, get) => ({
       set({
         nodes: newNodes,
         edges: newEdges,
-        simulationStatus: newNodes.length > 0 ? 'running' : 'stopped'
+        simulationStatus: newNodes.length > 0 ? 'running' : 'stopped',
+        isLoadingFromYaml: false
       });
 
     } catch (error) {
       console.error('Failed to update from YAML:', error);
+      set({ isLoadingFromYaml: false });
       throw new Error('Invalid YAML format');
     }
   },

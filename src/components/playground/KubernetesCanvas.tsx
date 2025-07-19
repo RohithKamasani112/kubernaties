@@ -19,6 +19,7 @@ import { motion } from 'framer-motion';
 import { useKubernetesStore } from '../../store/kubernetesStore';
 import KubernetesNode from './nodes/KubernetesNode';
 import TrafficAnimation from './TrafficAnimation';
+import PlaygroundTutorialAnimations from './PlaygroundTutorialAnimations';
 import toast from 'react-hot-toast';
 
 // Error Boundary Component
@@ -75,14 +76,32 @@ const nodeTypes = {
 const KubernetesCanvas: React.FC = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
-  const { nodes, edges, addNode, updateNodes, addEdgeToStore, updateEdges, removeNode } = useKubernetesStore();
+  const { nodes, edges, addNode, updateNodes, addEdgeToStore, updateEdges, removeNode, isLoadingFromYaml } = useKubernetesStore();
 
   const [flowNodes, setFlowNodes, onNodesChange] = useNodesState(nodes);
   const [flowEdges, setFlowEdges, onEdgesChange] = useEdgesState(edges);
   const [previousNodes, setPreviousNodes] = useState<Node[]>(nodes);
+  const [showTutorialAnimations, setShowTutorialAnimations] = useState(false);
+  const [isFirstTimeUser, setIsFirstTimeUser] = useState(false);
+
+  // Auto-show tutorial animations when canvas is empty (after a delay)
+  useEffect(() => {
+    if (flowNodes.length === 0 && !isLoadingFromYaml) {
+      const timer = setTimeout(() => {
+        setShowTutorialAnimations(true);
+        setIsFirstTimeUser(true); // Mark as first-time for subtle animation
+      }, 2000); // Show after 2 seconds of empty canvas
+
+      return () => clearTimeout(timer);
+    } else if (flowNodes.length > 0) {
+      // Hide animations when user starts adding components
+      setShowTutorialAnimations(false);
+      setIsFirstTimeUser(false);
+    }
+  }, [flowNodes.length, isLoadingFromYaml]);
 
   // Dynamic pod management based on deployment replicas
-  const managePods = useCallback((deploymentNode: Node) => {
+  const managePods = useCallback((deploymentNode: Node, suppressNotifications = false) => {
     try {
       if (!deploymentNode || !deploymentNode.id || !deploymentNode.data) {
         console.warn('Invalid deployment node provided to managePods');
@@ -198,17 +217,11 @@ const KubernetesCanvas: React.FC = () => {
           }
         });
 
-        // Show user-friendly notification
-        toast.success(
-          `Created ${podsNeeded} additional pod(s) to match deployment replicas (${replicas}). ` +
-          `Total pods: ${currentPodCount} existing + ${podsNeeded} new = ${replicas}`,
-          { duration: 4000 }
-        );
-
-        if (newPods.length > 0) {
-          toast.success(`Created ${newPods.length} additional pod(s) to match deployment replicas (${replicas})`, {
+        // Show single user-friendly notification (only if not suppressed)
+        if (newPods.length > 0 && !suppressNotifications) {
+          toast.success(`Created ${newPods.length} pod(s) to match deployment replicas (${replicas})`, {
             icon: '🚀',
-            duration: 3000,
+            duration: 2000,
           });
         }
 
@@ -231,10 +244,12 @@ const KubernetesCanvas: React.FC = () => {
           updateEdges(updatedEdges);
         }
 
-        toast.success(`Removed ${podsToRemove.length} pod(s) to match deployment replicas (${replicas})`, {
-          icon: '🗑️',
-          duration: 3000,
-        });
+        if (!suppressNotifications) {
+          toast.success(`Removed ${podsToRemove.length} pod(s) to match deployment replicas (${replicas})`, {
+            icon: '🗑️',
+            duration: 2000,
+          });
+        }
       }
     } catch (error) {
       console.error('Error in managePods:', error);
@@ -245,10 +260,10 @@ const KubernetesCanvas: React.FC = () => {
   }, [flowNodes, flowEdges, setFlowEdges, updateEdges, addNode, addEdgeToStore, removeNode]);
 
   // Function to clean up pod counts for all deployments
-  const cleanupPodCounts = useCallback(() => {
+  const cleanupPodCounts = useCallback((suppressNotifications = false) => {
     const deployments = flowNodes.filter(node => node.data.componentType === 'deployment');
     deployments.forEach(deployment => {
-      setTimeout(() => managePods(deployment), 100);
+      setTimeout(() => managePods(deployment, suppressNotifications), 100);
     });
   }, [flowNodes, managePods]);
 
@@ -271,25 +286,42 @@ const KubernetesCanvas: React.FC = () => {
         JSON.stringify(currentNodeIds) !== JSON.stringify(newNodeIds)) {
 
       // Clear any potential visual artifacts before updating
-      if (reactFlowInstance) {
-        reactFlowInstance.fitView({ duration: 0 });
-      }
+      // Removed automatic fitView to prevent unwanted zooming when adding components
 
       setFlowNodes(nodesWithDragProps);
 
       // Trigger pod cleanup after nodes are updated
       if (nodes.length > flowNodes.length) {
-        setTimeout(() => cleanupPodCounts(), 500);
+        // Check if this is a bulk load (like loading an example) - suppress notifications
+        const isLargeUpdate = nodes.length - flowNodes.length > 2;
+        const suppressNotifications = isLargeUpdate || isLoadingFromYaml;
 
-        // Also check for new deployments and create their pods
-        const newDeployments = nodes.filter(node =>
-          node.data.componentType === 'deployment' &&
-          !flowNodes.find(existing => existing.id === node.id)
-        );
+        // Only show notifications for single component additions, not bulk loads
+        if (!suppressNotifications) {
+          setTimeout(() => cleanupPodCounts(false), 500);
 
-        newDeployments.forEach(deployment => {
-          setTimeout(() => managePods(deployment), 600);
-        });
+          // Also check for new deployments and create their pods
+          const newDeployments = nodes.filter(node =>
+            node.data.componentType === 'deployment' &&
+            !flowNodes.find(existing => existing.id === node.id)
+          );
+
+          newDeployments.forEach(deployment => {
+            setTimeout(() => managePods(deployment, false), 600);
+          });
+        } else {
+          // For bulk loads, suppress all notifications
+          setTimeout(() => cleanupPodCounts(true), 500);
+
+          const newDeployments = nodes.filter(node =>
+            node.data.componentType === 'deployment' &&
+            !flowNodes.find(existing => existing.id === node.id)
+          );
+
+          newDeployments.forEach(deployment => {
+            setTimeout(() => managePods(deployment, true), 600);
+          });
+        }
       }
     }
   }, [nodes, flowNodes, setFlowNodes, reactFlowInstance]);
@@ -1181,11 +1213,13 @@ const KubernetesCanvas: React.FC = () => {
         // Add node to store
         addNode(newNode);
 
-        // Show success toast
-        toast.success(`${type.charAt(0).toUpperCase() + type.slice(1)} added to canvas`, {
-          icon: '🎯',
-          duration: 2000,
-        });
+        // Show success toast only if not loading from YAML (to avoid spam during bulk loads)
+        if (!isLoadingFromYaml) {
+          toast.success(`${type.charAt(0).toUpperCase() + type.slice(1)} added to canvas`, {
+            icon: '🎯',
+            duration: 2000,
+          });
+        }
       } catch (error) {
         console.error('Error in onDrop:', error);
         toast.error('Failed to add component. Please try again.', {
@@ -1356,7 +1390,9 @@ const KubernetesCanvas: React.FC = () => {
           zoomOnScroll={true}
           zoomOnPinch={true}
           preventScrolling={false}
-          fitView
+          defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
+          minZoom={0.3}
+          maxZoom={2}
           className="bg-slate-50"
         >
           <Background variant={BackgroundVariant.Dots} gap={20} size={1} />
@@ -1382,8 +1418,34 @@ const KubernetesCanvas: React.FC = () => {
         {/* Traffic Animation Overlay */}
         <TrafficAnimation nodes={flowNodes} edges={flowEdges} />
 
-
       </motion.div>
+
+      {/* Tutorial Animations - Moved outside ReactFlow container */}
+      <PlaygroundTutorialAnimations
+        showAnimations={showTutorialAnimations}
+        onClose={() => {
+          setShowTutorialAnimations(false);
+          setIsFirstTimeUser(false);
+        }}
+        isFirstTime={isFirstTimeUser}
+      />
+
+      {/* Floating Drag & Drop Message - Positioned perfectly */}
+      {flowNodes.length === 0 && !isLoadingFromYaml && (
+        <motion.div
+          className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 1.5, duration: 0.6, type: "spring", bounce: 0.3 }}
+        >
+          <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-full text-sm font-semibold shadow-xl border-2 border-white/20">
+            <div className="flex items-center space-x-2">
+              <span className="animate-bounce">👆</span>
+              <span>Drag and Drop Components from Sidebar</span>
+            </div>
+          </div>
+        </motion.div>
+      )}
 
       {/* Minimal Empty State */}
       {flowNodes.length === 0 && (
@@ -1394,34 +1456,62 @@ const KubernetesCanvas: React.FC = () => {
           transition={{ delay: 0.5 }}
         >
           <motion.div
-            className="text-center p-6 bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200 shadow-lg max-w-sm"
+            className="text-center p-4 bg-white/70 backdrop-blur-sm rounded-lg border border-slate-200 shadow-md max-w-xs"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.8 }}
           >
             <motion.div
-              className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center"
+              className="w-12 h-12 mx-auto mb-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center"
               animate={{
-                scale: [1, 1.1, 1],
-                rotate: [0, 5, -5, 0],
+                scale: [1, 1.05, 1],
+                rotate: [0, 3, -3, 0],
               }}
               transition={{
-                duration: 3,
+                duration: 4,
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
             >
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M9 21V9l3-2 3 2v12" />
               </svg>
             </motion.div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">Start Building</h3>
-            <p className="text-slate-600 text-sm leading-relaxed">
-              Drag components from the left panel to create your Kubernetes architecture
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">Start Building</h3>
+            <p className="text-slate-700 text-sm font-medium leading-relaxed mb-1">
+              🎯 Drag and Drop Components
             </p>
+            <p className="text-slate-600 text-xs leading-relaxed mb-3">
+              Drag components from the sidebar to create your architecture
+            </p>
+            <button
+              onClick={() => {
+                setShowTutorialAnimations(true);
+                setIsFirstTimeUser(false); // Manual tutorial
+              }}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors duration-200 pointer-events-auto"
+            >
+              Show Tutorial
+            </button>
           </motion.div>
         </motion.div>
       )}
+
+      {/* Help Button - Always visible */}
+      <motion.button
+        onClick={() => {
+          setShowTutorialAnimations(true);
+          setIsFirstTimeUser(false); // Manual tutorial, not first-time
+        }}
+        className="absolute top-4 right-4 bg-white/90 hover:bg-white text-slate-700 p-3 rounded-full shadow-lg transition-all duration-200 z-10"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        title="Show tutorial animations"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </motion.button>
     </div>
   );
 };

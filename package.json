@@ -12,7 +12,7 @@
   "dependencies": {
     "@monaco-editor/react": "^4.6.0",
     "@types/react-router-dom": "^5.3.3",
-    "clsx": "^2.0.0",
+    "clsx": "^2.1.1",
     "framer-motion": "^10.16.16",
     "html2canvas": "^1.4.1",
     "js-yaml": "^4.1.0",
@@ -23,6 +23,7 @@
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^7.6.3",
     "reactflow": "^11.10.4",
+    "tailwind-merge": "^3.3.1",
     "zustand": "^4.4.7"
   },
   "devDependencies": {

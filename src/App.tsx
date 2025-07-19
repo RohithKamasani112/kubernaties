@@ -12,11 +12,13 @@ import Lessons from './pages/Lessons';
 import Challenges from './pages/Challenges';
 import Documentation from './pages/Documentation';
 import About from './pages/About';
+import ArchLearning from './pages/ArchLearning';
+import { TabButtonDemo } from './components/ui/TabButtonDemo';
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-slate-100">
         <Layout>
           <Routes>
             <Route path="/" element={<Dashboard />} />
@@ -26,6 +28,8 @@ function App() {
             <Route path="/examples" element={<Examples />} />
             <Route path="/lessons" element={<Lessons />} />
             <Route path="/challenges" element={<Challenges />} />
+            <Route path="/arch-learning" element={<ArchLearning />} />
+          <Route path="/tab-demo" element={<TabButtonDemo />} />
             <Route path="/docs" element={<Documentation />} />
             <Route path="/about" element={<About />} />
           </Routes>

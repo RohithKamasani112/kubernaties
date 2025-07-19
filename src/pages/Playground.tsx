@@ -29,10 +29,14 @@ const Playground: React.FC = () => {
         setInitialYaml(decodedYaml);
         // Apply the YAML to the playground
         updateFromYaml(decodedYaml);
-        toast.success('YAML from documentation loaded successfully!', {
-          icon: '📄',
-          duration: 4000,
-        });
+
+        // Show consolidated notification after loading is complete
+        setTimeout(() => {
+          toast.success('✅ YAML from documentation loaded successfully!', {
+            icon: '📄',
+            duration: 4000,
+          });
+        }, 800);
         // Clear the URL parameter after processing
         setSearchParams(prev => {
           const newParams = new URLSearchParams(prev);

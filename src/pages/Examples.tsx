@@ -68,9 +68,10 @@ const Examples: React.FC = () => {
       const playgroundUrl = `/playground?yaml=${encodeURIComponent(design.yaml)}`;
       navigate(playgroundUrl);
 
-      toast.success(`Loaded "${design.title}" into playground!`, {
+      // Show a brief notification since the user is navigating away
+      toast.success(`Loading "${design.title}" into playground...`, {
         icon: '🚀',
-        duration: 3000,
+        duration: 2000,
       });
     } catch (error) {
       console.error('Error loading design:', error);
@@ -97,12 +98,7 @@ const Examples: React.FC = () => {
 
 
 
-  const stats = [
-    { label: 'Perfect Designs', value: perfectDesigns.length, icon: BookOpen, color: 'text-blue-600 bg-blue-50' },
-    { label: 'Difficulty Levels', value: '5', icon: Target, color: 'text-orange-600 bg-orange-50' },
-    { label: 'Categories', value: '4', icon: Lightbulb, color: 'text-yellow-600 bg-yellow-50' },
-    { label: 'With Architecture', value: '100%', icon: Layers, color: 'text-emerald-600 bg-emerald-50' },
-  ];
+
 
   return (
     <div className="h-screen bg-gradient-to-br from-slate-50 to-blue-50 overflow-hidden">
@@ -266,32 +262,7 @@ const Examples: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* Stats */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
-          {stats.map((stat, index) => {
-            const Icon = stat.icon;
-            return (
-              <motion.div
-                key={stat.label}
-                className="bg-white rounded-xl p-6 shadow-sm border border-slate-200"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
-              >
-                <div className={`w-12 h-12 rounded-lg ${stat.color} flex items-center justify-center mb-4`}>
-                  <Icon className="w-6 h-6" />
-                </div>
-                <div className="text-2xl font-bold text-slate-900 mb-1">{stat.value}</div>
-                <div className="text-sm text-slate-600">{stat.label}</div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+
 
         {/* Search */}
         <motion.div

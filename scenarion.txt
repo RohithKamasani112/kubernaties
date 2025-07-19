@@ -1,0 +1,642 @@
+GENERAL FORMAT FOR SCENARIOS
+Scenario Title: Clear name
+
+User Prompt (Input): The natural language query to give to the LLM
+
+Expected Output (for diagram generation):
+
+Services involved
+
+Architecture overview
+
+Optional: Export format (e.g., Terraform, PNG, YAML)
+
+🔰 BEGINNER SCENARIOS
+1. Static Website Hosting on AWS
+User Prompt:
+
+“Build me a simple architecture to host a static website on AWS.”
+
+Expected Output:
+
+S3 (static hosting), CloudFront (CDN), Route 53, IAM policy
+
+Basic flow diagram with request routing
+
+Export as PNG + Terraform
+
+2. Basic VM Hosting on Azure
+User Prompt:
+
+“I want to deploy a web server on Azure with basic security and availability.”
+
+Expected Output:
+
+Azure Virtual Machine, Azure Load Balancer, NSG, Storage Account
+
+Diagram showing user → LB → VM
+
+Include auto-shutdown and cost tip
+
+🌐 INTERMEDIATE SCENARIOS
+3. Scalable Web App on GCP
+User Prompt:
+
+“Create a scalable architecture for a React web app with a Node.js backend on GCP.”
+
+Expected Output:
+
+Cloud Run or GKE, Cloud Storage, Firestore, Cloud Load Balancer
+
+CI/CD via Cloud Build
+
+Suggest service connections + region tips
+
+4. Serverless API on AWS
+User Prompt:
+
+“Design a serverless REST API on AWS.”
+
+Expected Output:
+
+API Gateway → Lambda → DynamoDB
+
+CloudWatch for logging, Cognito for auth
+
+Animated flow: user request → backend response
+
+5. Kubernetes Deployment with CI/CD
+User Prompt:
+
+“Build me a Kubernetes-based architecture for microservices with CI/CD on Azure.”
+
+Expected Output:
+
+AKS cluster, Azure Container Registry, Azure DevOps pipelines
+
+Ingress Controller, Prometheus, Grafana
+
+Export: YAML deployment files + diagram
+
+⚙️ ADVANCED/ENTERPRISE SCENARIOS
+6. Multi-Region Failover (AWS)
+User Prompt:
+
+“Show a multi-region disaster recovery setup for a production workload on AWS.”
+
+Expected Output:
+
+RDS with cross-region read replica, S3 cross-region replication
+
+Route 53 health checks & failover routing
+
+CloudFormation diagram export + cost warning
+
+7. Data Lake & Analytics Pipeline (Azure)
+User Prompt:
+
+“Create a data lake and ETL pipeline for big data processing on Azure.”
+
+Expected Output:
+
+Azure Data Lake Gen2, Data Factory, Synapse Analytics
+
+Blob Storage, Databricks for ML prep
+
+Diagram: data ingestion → processing → storage → analytics
+
+8. Real-Time IoT Architecture (GCP)
+User Prompt:
+
+“Design an IoT architecture for thousands of devices sending data in real-time to GCP.”
+
+Expected Output:
+
+IoT Core, Pub/Sub, Dataflow, BigQuery
+
+Cloud Functions for transformation
+
+Export: GCP architecture diagram + monitoring stack
+
+9. SaaS Multi-Tenant Architecture
+User Prompt:
+
+“I need a multi-tenant SaaS architecture that supports scaling, isolation, and monitoring.”
+
+Expected Output:
+
+Tenant isolation with Kubernetes namespaces
+
+Shared services (auth, billing)
+
+Monitoring (Prometheus), logging (ELK/GCP Logs)
+
+Optional: Federation support (OAuth)
+
+10. Secure ML Deployment on AWS
+User Prompt:
+
+“Deploy a machine learning model with secure APIs and role-based access control on AWS.”
+
+Expected Output:
+
+Sagemaker endpoint, API Gateway, Lambda auth (JWT), IAM roles
+
+CloudTrail for auditing
+
+Include cost estimation for inference
+
+🛠️ Export Options (Mention in Prompt)
+You can include this at the end of prompts:
+
+“Export as: Terraform code + Architecture Diagram (PNG/SVG)”
+
+“Generate deployment YAML files for Kubernetes”
+
+“Include animation of data flow”
+
+“Show regional placement of services”
+
+---------
+11. Zero Trust Architecture on Azure
+Prompt:
+
+"Design a zero trust network architecture on Azure for internal applications with identity enforcement and segmentation."
+
+Expected Output:
+
+Azure AD, Conditional Access, Azure Firewall, Azure Bastion
+
+Segmented VNets with NSGs
+
+Visual policy flow and identity checkpoints
+
+12. PCI-Compliant E-commerce App on AWS
+Prompt:
+
+"Build a PCI-DSS compliant architecture for an e-commerce app on AWS."
+
+Expected Output:
+
+ALB → ECS (Fargate), RDS with encryption
+
+WAF, CloudTrail, GuardDuty, IAM roles
+
+Segmented network zones, secure vaults
+
+Export: Diagram + Compliance Checklist
+
+🤖 MACHINE LEARNING / AI
+13. End-to-End ML Pipeline on GCP
+Prompt:
+
+"Show an end-to-end machine learning workflow on GCP from data ingestion to model training and deployment."
+
+Expected Output:
+
+BigQuery → Dataflow → AI Platform Training → Model Registry → Cloud Run
+
+Optionally include notebooks and GPU support
+
+14. Real-Time ML Inference with Auto-Scaling
+Prompt:
+
+"Design a low-latency ML inference architecture on Azure that auto-scales based on request load."
+
+Expected Output:
+
+Azure Kubernetes Service + KEDA
+
+Azure ML endpoint or ONNX
+
+Azure Monitor with alerts
+
+Export: YAML + inference flow animation
+
+🌍 MULTI-CLOUD / HYBRID SCENARIOS
+15. Hybrid Cloud with On-Prem and AWS
+Prompt:
+
+"Design a hybrid cloud architecture with an on-prem data center connected to AWS."
+
+Expected Output:
+
+Direct Connect, VPN, Transit Gateway
+
+Identity federation
+
+Shared DNS and logging
+
+Diagram showing traffic and failover paths
+
+16. Multi-Cloud Redundancy (AWS + GCP)
+Prompt:
+
+"Build a highly available web app across AWS and GCP with DNS-based routing and shared storage."
+
+Expected Output:
+
+AWS ALB + GCP Load Balancer
+
+Route 53 + Cloud DNS with latency-based routing
+
+Shared object storage sync (e.g., S3 ↔ GCS)
+
+Monitoring stack across both clouds
+
+🧪 DEVOPS & OBSERVABILITY
+17. CI/CD Pipeline with Blue/Green Deployment
+Prompt:
+
+"Create a CI/CD pipeline architecture with blue-green deployments on Kubernetes using GitHub Actions."
+
+Expected Output:
+
+GitHub Actions → ArgoCD → AKS/EKS
+
+Canary/blue-green strategy with preview URLs
+
+Monitoring via Prometheus + Grafana
+
+18. Full Observability Stack on AWS
+Prompt:
+
+"Show an observability architecture with logging, metrics, and tracing for a microservices app on AWS."
+
+Expected Output:
+
+CloudWatch Logs, X-Ray, CloudTrail
+
+OpenTelemetry or Datadog integration
+
+Diagram with data pipelines for each layer
+
+🛰️ IoT & EDGE COMPUTING
+19. Edge Computing with AWS Greengrass
+Prompt:
+
+"Design an edge computing architecture using AWS IoT Greengrass for industrial sensors."
+
+Expected Output:
+
+Edge devices → Greengrass → IoT Core → Lambda
+
+Secure MQTT messaging
+
+Local processing + cloud sync
+
+Export: Sequence flow animation
+
+20. Smart Home Data Flow with GCP
+Prompt:
+
+"Create a smart home architecture using GCP to process sensor data and control devices."
+
+Expected Output:
+
+IoT Core → Pub/Sub → Cloud Functions → Firestore
+
+Firebase for user control dashboard
+
+Diagram shows sensor → cloud → app loop
+
+📦 CONTAINERIZATION / MICROSERVICES
+21. Microservices on GKE with Istio
+Prompt:
+
+"Show a secure microservices architecture on GKE using Istio for service mesh."
+
+Expected Output:
+
+GKE, Istio Ingress Gateway, Envoy proxies
+
+mTLS between services, observability stack
+
+Monitoring: Kiali, Grafana
+
+Export: Istio YAML + traffic animation
+
+22. ECS + Fargate for RESTful APIs
+Prompt:
+
+"Build a container-based REST API architecture using AWS ECS and Fargate."
+
+Expected Output:
+
+API Gateway → Fargate service → RDS
+
+IAM policies, scaling setup
+
+CloudWatch for logging
+
+🛍 E-COMMERCE & ENTERPRISE
+23. Global E-Commerce Platform on Azure
+Prompt:
+
+"Design a globally distributed e-commerce platform on Azure with user personalization."
+
+Expected Output:
+
+Azure Front Door, Cosmos DB, Azure Functions
+
+Azure CDN, Redis Cache
+
+Identity and geo-replication strategies
+
+24. Enterprise CMS on AWS with DR
+Prompt:
+
+"Create an enterprise CMS architecture on AWS with disaster recovery and auto-scaling."
+
+Expected Output:
+
+EC2 + RDS + S3 for storage
+
+CloudFront, WAF, Route 53
+
+Multi-AZ + backup replication
+
+Export: CloudFormation template
+
+
+1. Hello World Server on AWS EC2
+Prompt:
+
+"Deploy a simple web server on an EC2 instance using default settings."
+
+Output:
+
+EC2, Security Group, Elastic IP
+
+Architecture shows external HTTP access
+
+2. Azure Static Web App with GitHub Integration
+Prompt:
+
+"Set up a static web app hosted on Azure with GitHub CI integration."
+
+Output:
+
+Azure Static Web Apps, GitHub
+
+Flow from code → deploy → URL
+
+3. GCP Cloud Functions Triggered by Pub/Sub
+Prompt:
+
+"Trigger a GCP Cloud Function from a Pub/Sub event."
+
+Output:
+
+Pub/Sub → Cloud Function
+
+Flow shows message delivery and execution
+
+4. AWS Cloud9 for Development Environment
+Prompt:
+
+"Create a cloud-based IDE using AWS Cloud9 for dev work."
+
+Output:
+
+Cloud9 IDE + IAM Role
+
+Architecture with private subnet access
+
+5. Object Storage with Azure Blob Storage
+Prompt:
+
+"Store and retrieve files using Azure Blob Storage."
+
+Output:
+
+Storage Account → Blob Service
+
+Includes SAS token access flow
+
+🔁 INTERMEDIATE SCENARIOS (Practical)
+6. GCP Cloud Scheduler + Cloud Run
+Prompt:
+
+"Schedule background jobs using Cloud Scheduler and run them in Cloud Run."
+
+Output:
+
+Cloud Scheduler → Cloud Run (containerized task)
+
+Show periodic triggering pattern
+
+7. AWS App Runner for Container Deployment
+Prompt:
+
+"Use AWS App Runner to deploy a Docker container."
+
+Output:
+
+GitHub → App Runner → Load Balanced Endpoint
+
+CI/CD and managed compute visualized
+
+8. Azure Logic Apps for No-Code Automation
+Prompt:
+
+"Automate form submissions to email using Logic Apps."
+
+Output:
+
+HTTP Trigger → Workflow → Outlook Email
+
+No-code logic blocks visualized
+
+9. Event-Driven GCP Architecture with Firestore
+Prompt:
+
+"Trigger actions in GCP when a Firestore record changes."
+
+Output:
+
+Firestore → Cloud Function
+
+Realtime update visual animation
+
+10. AWS Step Functions for Workflow Orchestration
+Prompt:
+
+"Orchestrate multiple Lambda steps using AWS Step Functions."
+
+Output:
+
+Visual state machine
+
+Lambda chaining with failure handling
+
+🌐 MULTI-SERVICE & DOMAIN-FOCUSED SCENARIOS
+11. Azure Chatbot Deployment
+Prompt:
+
+"Deploy a chatbot on Azure that connects to Teams and uses LUIS for NLP."
+
+Output:
+
+Azure Bot Service + LUIS + Teams
+
+Flow diagram of user → NLP → response
+
+12. GCP Cloud Run + Firebase Auth
+Prompt:
+
+"Secure a Cloud Run backend with Firebase Auth for a mobile app."
+
+Output:
+
+Mobile → Firebase Auth → Cloud Run
+
+Token flow and validation
+
+13. AWS SQS + Lambda Queue Processing
+Prompt:
+
+"Process background jobs in a queue using AWS SQS and Lambda."
+
+Output:
+
+SQS → Lambda (batch) → DynamoDB
+
+Dead-letter queue optional
+
+14. Azure Content Delivery with Azure Front Door
+Prompt:
+
+"Distribute content globally using Azure Front Door and a backend web app."
+
+Output:
+
+Front Door → App Service or VM
+
+Caching + failover
+
+15. GCP Vision API for Image Analysis
+Prompt:
+
+"Analyze uploaded images using GCP Vision API."
+
+Output:
+
+Storage Trigger → Cloud Function → Vision API
+
+JSON result output flow
+
+🚀 ADVANCED SCENARIOS (Enterprise & Production)
+16. Immutable Infrastructure with AWS Auto Scaling Groups
+Prompt:
+
+"Deploy and rotate EC2 instances using immutable infrastructure principles."
+
+Output:
+
+Launch Templates → ASG → ALB
+
+Rolling updates flow
+
+17. CI/CD with GitLab and GCP GKE
+Prompt:
+
+"Set up GitLab CI/CD to deploy microservices to GCP GKE."
+
+Output:
+
+GitLab Runners → GKE cluster
+
+Helm deployment visual
+
+18. Azure Sentinel for Threat Detection
+Prompt:
+
+"Design a cloud security monitoring system using Azure Sentinel."
+
+Output:
+
+Log Sources → Log Analytics → Sentinel Dashboard
+
+Incident and alert flow
+
+19. Cross-Region GCP BigQuery Replication
+Prompt:
+
+"Set up BigQuery data replication across GCP regions."
+
+Output:
+
+Dataset A → Scheduled Transfer → Dataset B
+
+Redundancy and query federation
+
+20. Serverless Kafka on AWS with MSK Serverless
+Prompt:
+
+"Use AWS MSK Serverless to process streaming data without provisioning brokers."
+
+Output:
+
+MSK → Lambda → S3 or Kinesis
+
+Flow of event streaming
+
+🧠 ARCHITECTURE THINKING & DESIGN PATTERNS
+21. Monolith to Microservices Refactor
+Prompt:
+
+"Refactor a monolithic app into microservices hosted on Kubernetes."
+
+Output:
+
+Before and after diagrams
+
+Service decomposition map
+
+22. Data Mesh on AWS
+Prompt:
+
+"Design a data mesh architecture across business units on AWS."
+
+Output:
+
+Multiple S3 buckets, Lake Formation, Athena
+
+Federated access policies
+
+23. Azure B2C Identity Platform for Multi-Tenant Auth
+Prompt:
+
+"Securely manage user identities for multiple organizations using Azure AD B2C."
+
+Output:
+
+Azure AD B2C → App Services
+
+Identity flows with branding per tenant
+
+24. GCP Secret Manager + Workload Identity Federation
+Prompt:
+
+"Access secrets securely on GCP from an external GitHub Actions pipeline."
+
+Output:
+
+OIDC setup, IAM bindings, Secret Manager
+
+Diagram of secret retrieval
+
+25. Cost-Aware Architecture Comparison (AWS vs Azure)
+Prompt:
+
+"Compare the architecture and cost implications of running a scalable API on AWS and Azure."
+
+Output:
+
+Side-by-side diagrams
+
+Service pricing + scaling insights
+
+Exportable report or PDF
+

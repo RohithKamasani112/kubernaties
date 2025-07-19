@@ -120,34 +120,34 @@ const LearningGuide: React.FC = () => {
 
   return (
     <motion.div
-      className="fixed bottom-4 right-4 w-80 bg-white rounded-xl shadow-xl border border-slate-200 z-50"
+      className="fixed bottom-4 right-4 w-64 bg-white rounded-lg shadow-lg border border-slate-200 z-50"
       initial={{ x: 100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-slate-200">
+      <div className="flex items-center justify-between p-3 border-b border-slate-200">
         <div className="flex items-center space-x-2">
-          <BookOpen className="w-5 h-5 text-blue-600" />
-          <h3 className="font-semibold text-slate-900">Learning Guide</h3>
+          <BookOpen className="w-4 h-4 text-blue-600" />
+          <h3 className="text-sm font-semibold text-slate-900">Learning Guide</h3>
         </div>
         <button
           onClick={() => setIsVisible(false)}
           className="p-1 text-slate-400 hover:text-slate-600 rounded"
         >
-          <X className="w-4 h-4" />
+          <X className="w-3 h-3" />
         </button>
       </div>
 
       {/* Progress Bar */}
-      <div className="p-4 border-b border-slate-200">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-slate-700">Progress</span>
-          <span className="text-sm text-slate-500">{Math.round(getProgress())}%</span>
+      <div className="p-3 border-b border-slate-200">
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-xs font-medium text-slate-700">Progress</span>
+          <span className="text-xs text-slate-500">{Math.round(getProgress())}%</span>
         </div>
-        <div className="w-full bg-slate-200 rounded-full h-2">
+        <div className="w-full bg-slate-200 rounded-full h-1.5">
           <motion.div
-            className="bg-blue-600 h-2 rounded-full"
+            className="bg-blue-600 h-1.5 rounded-full"
             initial={{ width: 0 }}
             animate={{ width: `${getProgress()}%` }}
             transition={{ duration: 0.5 }}
@@ -156,50 +156,50 @@ const LearningGuide: React.FC = () => {
       </div>
 
       {/* Steps */}
-      <div className="max-h-80 overflow-y-auto">
+      <div className="max-h-60 overflow-y-auto">
         {learningSteps.map((step, index) => (
           <motion.div
             key={step.id}
-            className={`p-4 border-b border-slate-100 last:border-b-0 ${
+            className={`p-3 border-b border-slate-100 last:border-b-0 ${
               step.completed ? 'bg-emerald-50' : index === currentStep ? 'bg-blue-50' : ''
             }`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
           >
-            <div className="flex items-start space-x-3">
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
-                step.completed 
-                  ? 'bg-emerald-500 text-white' 
-                  : index === currentStep 
-                  ? 'bg-blue-500 text-white' 
+            <div className="flex items-start space-x-2">
+              <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
+                step.completed
+                  ? 'bg-emerald-500 text-white'
+                  : index === currentStep
+                  ? 'bg-blue-500 text-white'
                   : 'bg-slate-200 text-slate-500'
               }`}>
                 {step.completed ? (
-                  <CheckCircle className="w-4 h-4" />
+                  <CheckCircle className="w-3 h-3" />
                 ) : (
                   <span className="text-xs font-medium">{index + 1}</span>
                 )}
               </div>
-              
+
               <div className="flex-1 min-w-0">
-                <h4 className={`text-sm font-medium ${
+                <h4 className={`text-xs font-medium ${
                   step.completed ? 'text-emerald-800' : 'text-slate-900'
                 }`}>
                   {step.title}
                 </h4>
-                <p className="text-xs text-slate-600 mt-1">
+                <p className="text-xs text-slate-600 mt-0.5 leading-tight">
                   {step.description}
                 </p>
-                
+
                 {!step.completed && index === currentStep && (
-                  <div className="mt-2 flex items-center space-x-2">
+                  <div className="mt-1 flex items-center space-x-2">
                     <button
                       onClick={() => showHint(step)}
                       className="flex items-center space-x-1 text-xs text-blue-600 hover:text-blue-700"
                     >
                       <Lightbulb className="w-3 h-3" />
-                      <span>Show hint</span>
+                      <span>Hint</span>
                     </button>
                   </div>
                 )}
@@ -211,12 +211,12 @@ const LearningGuide: React.FC = () => {
 
       {/* Footer */}
       {getProgress() === 100 && (
-        <div className="p-4 bg-emerald-50 border-t border-emerald-200">
+        <div className="p-3 bg-emerald-50 border-t border-emerald-200">
           <div className="flex items-center space-x-2 text-emerald-800">
-            <Target className="w-4 h-4" />
-            <span className="text-sm font-medium">Congratulations! 🎉</span>
+            <Target className="w-3 h-3" />
+            <span className="text-xs font-medium">Congratulations! 🎉</span>
           </div>
-          <p className="text-xs text-emerald-700 mt-1">
+          <p className="text-xs text-emerald-700 mt-0.5 leading-tight">
             You've completed the basic Kubernetes learning path!
           </p>
         </div>
