@@ -12,6 +12,11 @@ export const generateYamlFromNodes = (nodes: Node[], edges: Edge[]): string => {
     const config = node.data.config;
     const componentType = node.data.componentType;
 
+    // Skip user nodes as they're not real Kubernetes resources
+    if (componentType === 'user') {
+      return;
+    }
+
     switch (componentType) {
       case 'pod':
         resources.push(generatePodYaml(config));
@@ -54,6 +59,9 @@ export const generateYamlFromNodes = (nodes: Node[], edges: Edge[]): string => {
         break;
       case 'pv':
         resources.push(generatePVYaml(config));
+        break;
+      case 'namespace':
+        resources.push(generateNamespaceYaml(config));
         break;
       case 'storageclass':
         resources.push(generateStorageClassYaml(config));
@@ -616,3 +624,12 @@ const generateVPAYaml = (config: any) => ({
     }
   }
 });
+
+function generateNamespaceYaml(config: any): string {
+  return `apiVersion: v1
+kind: Namespace
+metadata:
+  name: ${config.name || 'example-namespace'}
+  labels:
+    environment: ${config.environment || 'development'}`;
+}

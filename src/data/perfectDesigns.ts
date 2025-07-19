@@ -56,45 +56,30 @@ kind: Pod
 metadata:
   name: static-website
   labels:
-    app: website
+    app: nginx-static
 spec:
   containers:
   - name: nginx
-    image: nginx:latest
+    image: nginx:alpine
+    volumeMounts:
+    - name: html
+      mountPath: /usr/share/nginx/html
     ports:
     - containerPort: 80
-    volumeMounts:
-    - name: html-content
-      mountPath: /usr/share/nginx/html
   volumes:
-  - name: html-content
+  - name: html
     configMap:
-      name: website-content
+      name: static-html
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: website-content
+  name: static-html
+  labels:
+    app: nginx-static
 data:
   index.html: |
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>My Static Website</title>
-        <style>
-            body { font-family: Arial, sans-serif; margin: 40px; }
-            .container { max-width: 800px; margin: 0 auto; }
-            h1 { color: #333; }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1>Welcome to My Static Website</h1>
-            <p>This is a simple static website running on Kubernetes!</p>
-            <p>Served by NGINX in a Pod.</p>
-        </div>
-    </body>
-    </html>`,
+    <html><body><h1>Hello from NGINX Static Site</h1></body></html>`,
     learningObjectives: [
       'Understand basic Pod structure',
       'Learn container port configuration',
@@ -140,38 +125,18 @@ data:
     },
     concepts: ['Services', 'NodePort', 'Node Networking', 'External Access'],
     problems: ['Wrong port in service = no access', 'NodePort range limitations', 'Security exposure'],
-    yaml: `apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:latest
-        ports:
-        - containerPort: 80
----
-apiVersion: v1
+    yaml: `apiVersion: v1
 kind: Service
 metadata:
   name: nginx-nodeport
 spec:
   type: NodePort
   selector:
-    app: nginx
+    app: nginx-static
   ports:
-  - port: 80
-    targetPort: 80
-    nodePort: 30080  # Accessible on any node at port 30080`,
+    - port: 80
+      targetPort: 80
+      nodePort: 30080`,
     learningObjectives: [
       'Understand Service types',
       'Learn NodePort networking',
@@ -220,40 +185,34 @@ spec:
     yaml: `apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web-app
+  name: nginx-deployment
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: web
+      app: nginx-clusterip
   template:
     metadata:
       labels:
-        app: web
+        app: nginx-clusterip
     spec:
       containers:
       - name: nginx
-        image: nginx:latest
+        image: nginx:alpine
         ports:
         - containerPort: 80
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 5
-          periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: web-service
+  name: nginx-clusterip-service
 spec:
   type: ClusterIP
   selector:
-    app: web
+    app: nginx-clusterip
   ports:
-  - port: 80
-    targetPort: 80`,
+    - port: 80
+      targetPort: 80`,
     learningObjectives: [
       'Understand deployment scaling',
       'Learn ClusterIP service behavior',
@@ -299,37 +258,12 @@ spec:
     },
     concepts: ['Multi-tier app', 'DNS inside cluster', 'Service Discovery', 'API Communication'],
     problems: ['Wrong Service name → 500 errors', 'CORS issues', 'Network policies blocking traffic'],
-    yaml: `# Frontend Deployment
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: frontend
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: frontend
-  template:
-    metadata:
-      labels:
-        app: frontend
-    spec:
-      containers:
-      - name: react-app
-        image: nginx:latest
-        ports:
-        - containerPort: 80
-        env:
-        - name: BACKEND_URL
-          value: "http://backend-service:5000"
----
-# Backend Deployment
-apiVersion: apps/v1
+    yaml: `apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: backend
@@ -339,51 +273,53 @@ spec:
         app: backend
     spec:
       containers:
-      - name: flask-app
-        image: python:3.9-slim
+      - name: backend
+        image: python:3.9
+        command: ["python", "-m", "http.server", "5000"]
         ports:
         - containerPort: 5000
-        command: ["python", "-c"]
-        args:
-        - |
-          from flask import Flask, jsonify
-          from flask_cors import CORS
-          app = Flask(__name__)
-          CORS(app)
-          @app.route('/api/health')
-          def health():
-              return jsonify({'status': 'healthy', 'service': 'backend'})
-          @app.route('/api/data')
-          def data():
-              return jsonify({'message': 'Hello from backend!', 'data': [1,2,3,4,5]})
-          app.run(host='0.0.0.0', port=5000)
 ---
-# Frontend Service
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-service
+  name: backend
 spec:
-  type: NodePort
-  selector:
-    app: frontend
-  ports:
-  - port: 80
-    targetPort: 80
-    nodePort: 30080
----
-# Backend Service
-apiVersion: v1
-kind: Service
-metadata:
-  name: backend-service
-spec:
-  type: ClusterIP
   selector:
     app: backend
   ports:
   - port: 5000
-    targetPort: 5000`,
+    targetPort: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: nginx
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  selector:
+    app: frontend
+  ports:
+  - port: 80
+    targetPort: 80`,
     learningObjectives: [
       'Understand multi-tier architecture',
       'Learn internal service communication',
@@ -430,49 +366,44 @@ spec:
     concepts: ['PVC', 'PV', 'StorageClasses', 'Data Persistence'],
     problems: ['PV mismatch = Pod stuck pending', 'Storage class issues', 'Access mode conflicts'],
     yaml: `apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: app-data-pvc
+  name: local-pvc
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
-  storageClassName: standard
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
-  name: data-app
+  name: pv-demo
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: data-app
-  template:
-    metadata:
-      labels:
-        app: data-app
-    spec:
-      containers:
-      - name: app
-        image: busybox:latest
-        command: ['sh', '-c']
-        args:
-        - |
-          while true; do
-            echo "$(date): Writing to persistent storage" >> /data/app.log
-            echo "Data written to /data/app.log"
-            sleep 30
-          done
-        volumeMounts:
-        - name: data-volume
-          mountPath: /data
-      volumes:
-      - name: data-volume
-        persistentVolumeClaim:
-          claimName: app-data-pvc`,
+  containers:
+  - name: app
+    image: busybox
+    command: ["sh", "-c", "echo Hello > /data/test.txt; sleep 3600"]
+    volumeMounts:
+    - mountPath: "/data"
+      name: storage
+  volumes:
+  - name: storage
+    persistentVolumeClaim:
+      claimName: local-pvc`,
     learningObjectives: [
       'Understand persistent storage concepts',
       'Learn PVC and PV relationship',
@@ -522,70 +453,24 @@ spec:
 kind: ConfigMap
 metadata:
   name: app-config
+  labels:
+    app: config-demo
 data:
-  database_host: "postgres.example.com"
-  database_port: "5432"
-  database_name: "myapp"
-  log_level: "INFO"
-  feature_flags: "feature1=true,feature2=false"
+  APP_MODE: production
+  LOG_LEVEL: debug
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
-  name: config-app
+  name: config-demo
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: config-app
-  template:
-    metadata:
-      labels:
-        app: config-app
-    spec:
-      containers:
-      - name: app
-        image: busybox:latest
-        command: ['sh', '-c']
-        args:
-        - |
-          echo "=== Application Configuration ==="
-          echo "Database Host: $DATABASE_HOST"
-          echo "Database Port: $DATABASE_PORT"
-          echo "Database Name: $DATABASE_NAME"
-          echo "Log Level: $LOG_LEVEL"
-          echo "Feature Flags: $FEATURE_FLAGS"
-          echo "=== Starting Application ==="
-          while true; do
-            echo "App running with config..."
-            sleep 60
-          done
-        env:
-        - name: DATABASE_HOST
-          valueFrom:
-            configMapKeyRef:
-              name: app-config
-              key: database_host
-        - name: DATABASE_PORT
-          valueFrom:
-            configMapKeyRef:
-              name: app-config
-              key: database_port
-        - name: DATABASE_NAME
-          valueFrom:
-            configMapKeyRef:
-              name: app-config
-              key: database_name
-        - name: LOG_LEVEL
-          valueFrom:
-            configMapKeyRef:
-              name: app-config
-              key: log_level
-        - name: FEATURE_FLAGS
-          valueFrom:
-            configMapKeyRef:
-              name: app-config
-              key: feature_flags`,
+  containers:
+  - name: demo
+    image: busybox
+    command: ["sh", "-c", "env; sleep 3600"]
+    envFrom:
+    - configMapRef:
+        name: app-config`,
     learningObjectives: [
       'Understand ConfigMap usage patterns',
       'Learn environment variable injection',
@@ -635,80 +520,37 @@ spec:
     },
     concepts: ['Service Mesh', 'mTLS', 'Circuit Breaker', 'Distributed Tracing', 'Observability'],
     problems: ['Secure communication', 'Advanced debugging', 'Performance monitoring', 'Service discovery'],
-    yaml: `# Istio Gateway
-apiVersion: networking.istio.io/v1beta1
-kind: Gateway
-metadata:
-  name: microservices-gateway
-spec:
-  selector:
-    istio: ingressgateway
-  servers:
-  - port:
-      number: 80
-      name: http
-      protocol: HTTP
-    hosts:
-    - "*"
----
-# Virtual Service
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
-metadata:
-  name: microservices-vs
-spec:
-  hosts:
-  - "*"
-  gateways:
-  - microservices-gateway
-  http:
-  - match:
-    - uri:
-        prefix: /api/users
-    route:
-    - destination:
-        host: user-service
-        port:
-          number: 8080
----
-# Destination Rule with Circuit Breaker
-apiVersion: networking.istio.io/v1beta1
-kind: DestinationRule
-metadata:
-  name: user-service-dr
-spec:
-  host: user-service
-  trafficPolicy:
-    circuitBreaker:
-      consecutiveErrors: 3
-      interval: 30s
-      baseEjectionTime: 30s
----
-# User Service Deployment
-apiVersion: apps/v1
+    yaml: `apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-service
+  name: service-a
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
-      app: user-service
+      app: service-a
   template:
     metadata:
       labels:
-        app: user-service
-      annotations:
-        sidecar.istio.io/inject: "true"
+        app: service-a
     spec:
       containers:
-      - name: user-service
-        image: microservices/user-service:v1.0
+      - name: app
+        image: hashicorp/http-echo
+        args: ["-text=Service A"]
         ports:
-        - containerPort: 8080
-        env:
-        - name: JAEGER_ENDPOINT
-          value: "http://jaeger-collector:14268/api/traces"`,
+        - containerPort: 5678
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-a
+spec:
+  selector:
+    app: service-a
+  ports:
+  - port: 80
+    targetPort: 5678`,
     learningObjectives: [
       'Understand service mesh architecture',
       'Implement mTLS for secure communication',
@@ -760,59 +602,24 @@ spec:
     },
     concepts: ['GitOps', 'Declarative Infrastructure', 'Continuous Deployment', 'Drift Detection', 'Helm Charts'],
     problems: ['Automated delivery', 'Configuration drift', 'Rollback capabilities', 'Multi-environment deployment'],
-    yaml: `# ArgoCD Application
-apiVersion: argoproj.io/v1alpha1
+    yaml: `apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: web-app
+  name: guestbook
   namespace: argocd
 spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
   project: default
   source:
-    repoURL: https://github.com/company/web-app-helm
+    repoURL: https://github.com/argoproj/argocd-example-apps
     targetRevision: HEAD
-    path: charts/web-app
-    helm:
-      valueFiles:
-      - values-prod.yaml
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: production
+    path: guestbook
   syncPolicy:
     automated:
       prune: true
-      selfHeal: true
-    syncOptions:
-    - CreateNamespace=true
----
-# Application Deployment (managed by ArgoCD)
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: web-app
-  namespace: production
-spec:
-  replicas: 5
-  selector:
-    matchLabels:
-      app: web-app
-  template:
-    metadata:
-      labels:
-        app: web-app
-    spec:
-      containers:
-      - name: web-app
-        image: company/web-app:v2.1.0
-        ports:
-        - containerPort: 8080
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"`,
+      selfHeal: true`,
     learningObjectives: [
       'Implement GitOps workflow with ArgoCD',
       'Configure automated sync policies',
@@ -864,71 +671,32 @@ spec:
     },
     concepts: ['Horizontal Pod Autoscaling', 'Load Balancing', 'Session Persistence', 'High Availability', 'Caching'],
     problems: ['Auto-scaling based on demand', 'Session management', 'Cache performance', 'Load distribution'],
-    yaml: `# HPA for Backend
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: backend-hpa
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: backend
-  minReplicas: 3
-  maxReplicas: 20
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
-  - type: Resource
-    resource:
-      name: memory
-      target:
-        type: Utilization
-        averageUtilization: 80
----
-# Backend Deployment
-apiVersion: apps/v1
+    yaml: `apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
+  name: webapp
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
-      app: backend
+      app: webapp
   template:
     metadata:
       labels:
-        app: backend
+        app: webapp
     spec:
       containers:
-      - name: backend
-        image: company/backend:v1.2.0
+      - name: web
+        image: nginx
         ports:
-        - containerPort: 8080
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        env:
-        - name: REDIS_URL
-          value: "redis://redis-service:6379"
+        - containerPort: 80
 ---
-# Redis StatefulSet
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: redis
 spec:
-  serviceName: redis-service
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: redis
@@ -939,20 +707,38 @@ spec:
     spec:
       containers:
       - name: redis
-        image: redis:7-alpine
+        image: redis
         ports:
         - containerPort: 6379
-        volumeMounts:
-        - name: redis-data
-          mountPath: /data
-  volumeClaimTemplates:
-  - metadata:
-      name: redis-data
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 10Gi`,
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  selector:
+    app: redis
+  ports:
+  - port: 6379
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: webapp-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: webapp
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 60`,
     learningObjectives: [
       'Configure Horizontal Pod Autoscaler',
       'Implement Redis for session management',
@@ -1891,65 +1677,23 @@ spec:
     },
     concepts: ['Ingress', 'Path-based Routing', 'Load Balancing', 'HTTP Routing'],
     problems: ['External access', 'URL routing', 'SSL termination', 'Traffic distribution'],
-    yaml: `# Ingress Resource
-apiVersion: networking.k8s.io/v1
+    yaml: `apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: web-app-ingress
+  name: simple-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: myapp.example.com
-    http:
+  - http:
       paths:
-      - path: /api
+      - path: /nginx
         pathType: Prefix
         backend:
           service:
-            name: api-service
+            name: nginx-nodeport
             port:
-              number: 80
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: frontend-service
-            port:
-              number: 80
----
-# Backend Service
-apiVersion: v1
-kind: Service
-metadata:
-  name: api-service
-spec:
-  selector:
-    app: api
-  ports:
-  - port: 80
-    targetPort: 8080
----
-# Backend Deployment
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: api-deployment
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: api
-  template:
-    metadata:
-      labels:
-        app: api
-    spec:
-      containers:
-      - name: api
-        image: nginx:latest
-        ports:
-        - containerPort: 8080`,
+              number: 80`,
     learningObjectives: [
       'Configure Ingress for external access',
       'Understand path-based routing',
@@ -2000,41 +1744,22 @@ spec:
     },
     concepts: ['Path Matching', 'Ingress Rules', 'HTTP Status Codes', 'Debugging'],
     problems: ['Path configuration', 'URL rewriting', 'Route debugging', 'Error handling'],
-    yaml: `# Misconfigured Ingress (Wrong Path)
-apiVersion: networking.k8s.io/v1
+    yaml: `apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: broken-ingress
+  name: bad-ingress
 spec:
   rules:
-  - host: myapp.example.com
-    http:
+  - http:
       paths:
-      - path: /wrong-path  # Should be /api
+      - path: /wrongpath
         pathType: Prefix
         backend:
           service:
-            name: api-service
+            name: myservice
             port:
               number: 80
----
-# Correct Ingress Configuration
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: fixed-ingress
-spec:
-  rules:
-  - host: myapp.example.com
-    http:
-      paths:
-      - path: /api
-        pathType: Prefix
-        backend:
-          service:
-            name: api-service
-            port:
-              number: 80`,
+# Assume app expects "/app" but ingress routes "/wrongpath"`,
     learningObjectives: [
       'Identify path matching issues',
       'Debug Ingress configuration',
@@ -2172,45 +1897,31 @@ spec:
     },
     concepts: ['Service Types', 'ClusterIP', 'Internal Networking', 'External Access'],
     problems: ['Service exposure', 'Network accessibility', 'Service types', 'External connectivity'],
-    yaml: `# ClusterIP Service (Internal Only)
-apiVersion: v1
+    yaml: `apiVersion: v1
 kind: Service
 metadata:
   name: internal-service
 spec:
-  type: ClusterIP  # Default, only accessible within cluster
+  type: ClusterIP
   selector:
-    app: web-app
+    app: internal-app
   ports:
-  - port: 80
-    targetPort: 8080
+    - port: 8080
 ---
-# NodePort Service (External Access)
 apiVersion: v1
-kind: Service
+kind: Pod
 metadata:
-  name: external-service
+  name: internal-app
+  labels:
+    app: internal-app
 spec:
-  type: NodePort  # Accessible from outside cluster
-  selector:
-    app: web-app
-  ports:
-  - port: 80
-    targetPort: 8080
-    nodePort: 30080  # External port on nodes
----
-# LoadBalancer Service (Cloud Provider)
-apiVersion: v1
-kind: Service
-metadata:
-  name: loadbalancer-service
-spec:
-  type: LoadBalancer  # Cloud provider load balancer
-  selector:
-    app: web-app
-  ports:
-  - port: 80
-    targetPort: 8080`,
+  containers:
+  - name: app
+    image: hashicorp/http-echo
+    args:
+    - "-text=Hello Internal"
+    ports:
+    - containerPort: 8080`,
     learningObjectives: [
       'Understand service types',
       'Configure external access',
@@ -2328,49 +2039,38 @@ spec:
     },
     concepts: ['LoadBalancer', 'Cloud Integration', 'External IP', 'Load Distribution'],
     problems: ['External access', 'Load balancing', 'Cloud provider integration', 'High availability'],
-    yaml: `# LoadBalancer Service
-apiVersion: v1
-kind: Service
-metadata:
-  name: loadbalancer-service
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-type: nlb
-    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
-spec:
-  type: LoadBalancer
-  selector:
-    app: web-app
-  ports:
-  - port: 80
-    targetPort: 8080
-    protocol: TCP
----
-# Backend Deployment
-apiVersion: apps/v1
+    yaml: `apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web-app
+  name: lb-app
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
-      app: web-app
+      app: lb-app
   template:
     metadata:
       labels:
-        app: web-app
+        app: lb-app
     spec:
       containers:
-      - name: web
-        image: nginx:latest
+      - name: app
+        image: hashicorp/http-echo
+        args: ["-text=Hello from LoadBalancer"]
         ports:
-        - containerPort: 8080
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 10`,
+        - containerPort: 5678
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lb-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: lb-app
+  ports:
+    - port: 80
+      targetPort: 5678`,
     learningObjectives: [
       'Configure LoadBalancer services',
       'Understand cloud provider integration',
@@ -2517,67 +2217,15 @@ spec:
     },
     concepts: ['Pod Lifecycle', 'Restart Policies', 'Application Debugging', 'Container Health'],
     problems: ['Application stability', 'Resource management', 'Error handling', 'Debugging crashes'],
-    yaml: `# Deployment with Crashing Container
-apiVersion: apps/v1
-kind: Deployment
+    yaml: `apiVersion: v1
+kind: Pod
 metadata:
-  name: crashloop-app
+  name: crashing-pod
 spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: crashloop-app
-  template:
-    metadata:
-      labels:
-        app: crashloop-app
-    spec:
-      containers:
-      - name: app
-        image: busybox:latest
-        command: ["/bin/sh"]
-        args: ["-c", "echo 'Starting app...'; sleep 10; echo 'Crashing!'; exit 1"]
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "250m"
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
-      restartPolicy: Always  # Default behavior
----
-# Fixed Version with Proper Health Checks
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: stable-app
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: stable-app
-  template:
-    metadata:
-      labels:
-        app: stable-app
-    spec:
-      containers:
-      - name: app
-        image: nginx:latest
-        ports:
-        - containerPort: 80
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 5
-          periodSeconds: 5`,
+  containers:
+  - name: crash
+    image: busybox
+    command: ["sh", "-c", "exit 1"]`,
     learningObjectives: [
       'Understand pod restart policies',
       'Debug application crashes',
@@ -2848,64 +2496,14 @@ spec:
     },
     concepts: ['Container Images', 'Image Registries', 'Pod Lifecycle', 'Image Pull Policies'],
     problems: ['Image management', 'Registry access', 'Image naming', 'Authentication'],
-    yaml: `# Pod with Wrong Image
-apiVersion: v1
+    yaml: `apiVersion: v1
 kind: Pod
 metadata:
-  name: broken-image-pod
+  name: bad-image
 spec:
   containers:
   - name: app
-    image: nginx:nonexistent-tag  # This tag doesn't exist
-    ports:
-    - containerPort: 80
----
-# Pod with Private Registry (Missing Credentials)
-apiVersion: v1
-kind: Pod
-metadata:
-  name: private-registry-pod
-spec:
-  containers:
-  - name: app
-    image: private-registry.com/myapp:latest  # Requires authentication
-    ports:
-    - containerPort: 8080
----
-# Fixed Pod with Correct Image
-apiVersion: v1
-kind: Pod
-metadata:
-  name: working-pod
-spec:
-  containers:
-  - name: app
-    image: nginx:latest  # Correct, existing image
-    ports:
-    - containerPort: 80
-    imagePullPolicy: IfNotPresent
----
-# Pod with Private Registry (With Credentials)
-apiVersion: v1
-kind: Secret
-metadata:
-  name: registry-credentials
-type: kubernetes.io/dockerconfigjson
-data:
-  .dockerconfigjson: eyJhdXRocyI6eyJwcml2YXRlLXJlZ2lzdHJ5LmNvbSI6eyJ1c2VybmFtZSI6InVzZXIiLCJwYXNzd29yZCI6InBhc3MiLCJhdXRoIjoiZFhObGNqcHdZWE56In19fQ==
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: private-registry-fixed
-spec:
-  containers:
-  - name: app
-    image: private-registry.com/myapp:latest
-    ports:
-    - containerPort: 8080
-  imagePullSecrets:
-  - name: registry-credentials`,
+    image: nonexisting/image:latest`,
     learningObjectives: [
       'Understand image pull process',
       'Debug image pull failures',
@@ -3060,85 +2658,24 @@ spec:
     },
     concepts: ['Horizontal Pod Autoscaler', 'Metrics Server', 'CPU Utilization', 'Auto Scaling'],
     problems: ['Load management', 'Resource optimization', 'Performance scaling', 'Cost efficiency'],
-    yaml: `# Deployment with Resource Requests (Required for HPA)
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: web-app
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: web-app
-  template:
-    metadata:
-      labels:
-        app: web-app
-    spec:
-      containers:
-      - name: web
-        image: nginx:latest
-        ports:
-        - containerPort: 80
-        resources:
-          requests:
-            cpu: 100m      # Required for HPA
-            memory: 128Mi
-          limits:
-            cpu: 500m
-            memory: 256Mi
----
-# Horizontal Pod Autoscaler
-apiVersion: autoscaling/v2
+    yaml: `apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: web-app-hpa
+  name: hpa-demo
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: web-app
-  minReplicas: 2
-  maxReplicas: 10
+    name: backend
+  minReplicas: 1
+  maxReplicas: 5
   metrics:
   - type: Resource
     resource:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 70  # Scale when CPU > 70%
-  - type: Resource
-    resource:
-      name: memory
-      target:
-        type: Utilization
-        averageUtilization: 80  # Scale when Memory > 80%
-  behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-      policies:
-      - type: Percent
-        value: 100
-        periodSeconds: 15
-    scaleDown:
-      stabilizationWindowSeconds: 300
-      policies:
-      - type: Percent
-        value: 10
-        periodSeconds: 60
----
-# Service for Load Balancing
-apiVersion: v1
-kind: Service
-metadata:
-  name: web-app-service
-spec:
-  selector:
-    app: web-app
-  ports:
-  - port: 80
-    targetPort: 80
-  type: LoadBalancer`,
+        averageUtilization: 50`,
     learningObjectives: [
       'Configure Horizontal Pod Autoscaler',
       'Understand scaling metrics',
@@ -3159,6 +2696,966 @@ spec:
         'Check metrics: kubectl top pods',
         'Verify metrics server: kubectl get pods -n kube-system',
         'Monitor scaling events: kubectl get events'
+      ]
+    }
+  },
+
+  // Additional Examples from Playground Gallery
+  {
+    id: 'hello-world-app',
+    title: 'Hello World App',
+    description: 'Simple application with Pod, ConfigMap, and Service - perfect for beginners',
+    category: 'Basic',
+    difficulty: 1,
+    estimatedTime: '5 min',
+    architecture: {
+      components: ['Pod', 'ConfigMap', 'Service'],
+      flow: ['ConfigMap → Pod → Service → External Access'],
+      diagram: 'hello-world'
+    },
+    animation: {
+      description: 'ConfigMap provides environment variables to Pod, Service exposes Pod',
+      steps: [
+        'ConfigMap created with message',
+        'Pod starts with environment variables',
+        'Service exposes pod on port 80',
+        'External traffic routed to pod'
+      ],
+      trafficFlow: 'External → Service:80 → Pod:8080'
+    },
+    concepts: ['Pod', 'ConfigMap', 'Service', 'Environment Variables'],
+    problems: ['Basic configuration', 'Service networking', 'Environment injection'],
+    yaml: `apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hello-config
+data:
+  MESSAGE: "Hello from Kubernetes!"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hello-pod
+  labels:
+    app: hello
+spec:
+  containers:
+  - name: hello
+    image: nginx:alpine
+    ports:
+    - containerPort: 8080
+    env:
+    - name: MESSAGE
+      valueFrom:
+        configMapKeyRef:
+          name: hello-config
+          key: MESSAGE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-service
+spec:
+  selector:
+    app: hello
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080`,
+    learningObjectives: [
+      'Understand basic Pod configuration',
+      'Learn how ConfigMaps inject environment variables',
+      'Explore Service networking basics'
+    ],
+    realWorldUseCase: 'Simple web applications, microservices, development environments',
+    troubleshooting: {
+      commonIssues: [
+        'ConfigMap not found',
+        'Environment variables not set',
+        'Service selector mismatch',
+        'Port configuration errors'
+      ],
+      debuggingSteps: [
+        'Check ConfigMap: kubectl get configmap hello-config',
+        'Verify pod environment: kubectl exec hello-pod -- env',
+        'Check service endpoints: kubectl get endpoints hello-service',
+        'Test connectivity: kubectl port-forward svc/hello-service 8080:80'
+      ]
+    }
+  },
+
+  {
+    id: 'cronjob-rbac',
+    title: 'CronJob + RBAC + ServiceAccount',
+    description: 'Scheduled tasks with proper security and role-based access control',
+    category: 'Advanced',
+    difficulty: 4,
+    estimatedTime: '20 min',
+    architecture: {
+      components: ['CronJob', 'ServiceAccount', 'Role', 'RoleBinding', 'Pod'],
+      flow: ['CronJob → Pod → ServiceAccount → RBAC → Kubernetes API'],
+      diagram: 'cronjob-rbac'
+    },
+    animation: {
+      description: 'CronJob creates pods with specific ServiceAccount and RBAC permissions',
+      steps: [
+        'CronJob triggers on schedule',
+        'Pod created with ServiceAccount',
+        'RBAC validates permissions',
+        'Task executes with limited access',
+        'Pod completes and terminates'
+      ],
+      trafficFlow: 'CronJob → Pod → ServiceAccount → RBAC → API Server'
+    },
+    concepts: ['CronJob', 'RBAC', 'ServiceAccount', 'Security', 'Scheduling'],
+    problems: ['Security', 'Access control', 'Scheduled tasks', 'Permissions'],
+    yaml: `apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cleanup-sa
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: cleanup-role
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["list", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: cleanup-binding
+subjects:
+- kind: ServiceAccount
+  name: cleanup-sa
+roleRef:
+  kind: Role
+  name: cleanup-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cleanup-job
+spec:
+  schedule: "0 2 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: cleanup-sa
+          containers:
+          - name: cleanup
+            image: busybox
+            command: ["sh", "-c", "echo Cleaning logs"]
+          restartPolicy: OnFailure`,
+    learningObjectives: [
+      'Understand RBAC concepts',
+      'Configure ServiceAccounts',
+      'Schedule automated tasks',
+      'Implement security best practices'
+    ],
+    realWorldUseCase: 'Automated cleanup tasks, backup jobs, maintenance scripts',
+    troubleshooting: {
+      commonIssues: [
+        'RBAC permission denied',
+        'ServiceAccount not found',
+        'CronJob not triggering',
+        'Pod security context issues'
+      ],
+      debuggingSteps: [
+        'Check CronJob status: kubectl get cronjob',
+        'View job history: kubectl get jobs',
+        'Check RBAC: kubectl auth can-i --list --as=system:serviceaccount:default:cleanup-sa',
+        'View pod logs: kubectl logs -l job-name=cleanup-job'
+      ]
+    }
+  },
+
+  {
+    id: 'daemonset-logging',
+    title: 'DaemonSet for Log Collection',
+    description: 'Deploy log collection agent on every node using DaemonSet',
+    category: 'Advanced',
+    difficulty: 3,
+    estimatedTime: '15 min',
+    architecture: {
+      components: ['DaemonSet', 'Node', 'HostPath Volume', 'Log Agent'],
+      flow: ['DaemonSet → Pod per Node → HostPath → Log Collection'],
+      diagram: 'daemonset-logging'
+    },
+    animation: {
+      description: 'DaemonSet ensures one log collection pod runs on every node',
+      steps: [
+        'DaemonSet created',
+        'Pod scheduled on each node',
+        'HostPath volume mounted',
+        'Log agent collects node logs',
+        'Logs forwarded to central system'
+      ],
+      trafficFlow: 'Node Logs → HostPath → Pod → Log Aggregator'
+    },
+    concepts: ['DaemonSet', 'HostPath', 'Node-level services', 'Logging'],
+    problems: ['Node-level deployment', 'Log collection', 'Host access'],
+    yaml: `apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: log-collector
+spec:
+  selector:
+    matchLabels:
+      app: log-collector
+  template:
+    metadata:
+      labels:
+        app: log-collector
+    spec:
+      containers:
+      - name: log-agent
+        image: fluent/fluent-bit:latest
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+          readOnly: true
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log`,
+    learningObjectives: [
+      'Understand DaemonSet behavior',
+      'Learn HostPath volume usage',
+      'Implement node-level services',
+      'Configure log collection'
+    ],
+    realWorldUseCase: 'Log collection, monitoring agents, security scanners, node maintenance',
+    troubleshooting: {
+      commonIssues: [
+        'DaemonSet not on all nodes',
+        'HostPath permission denied',
+        'Resource constraints',
+        'Node selector issues'
+      ],
+      debuggingSteps: [
+        'Check DaemonSet status: kubectl get daemonset',
+        'View pod distribution: kubectl get pods -o wide',
+        'Check node labels: kubectl get nodes --show-labels',
+        'Verify volume mounts: kubectl describe pod <pod-name>'
+      ]
+    }
+  },
+
+  {
+    id: 'network-policy',
+    title: 'Network Policy - Security Isolation',
+    description: 'Restrict network traffic between pods for enhanced security',
+    category: 'Advanced',
+    difficulty: 4,
+    estimatedTime: '18 min',
+    architecture: {
+      components: ['NetworkPolicy', 'Frontend Pod', 'Backend Pod', 'Database Pod'],
+      flow: ['NetworkPolicy → Traffic Rules → Pod Communication'],
+      diagram: 'network-policy'
+    },
+    animation: {
+      description: 'NetworkPolicy controls which pods can communicate with each other',
+      steps: [
+        'NetworkPolicy created',
+        'Traffic rules applied',
+        'Frontend can access backend',
+        'Backend can access database',
+        'Direct frontend-database blocked'
+      ],
+      trafficFlow: 'Frontend → Backend → Database (Controlled by NetworkPolicy)'
+    },
+    concepts: ['NetworkPolicy', 'Security', 'Pod isolation', 'Traffic control'],
+    problems: ['Network security', 'Pod isolation', 'Traffic filtering'],
+    yaml: `apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+  policyTypes:
+  - Ingress`,
+    learningObjectives: [
+      'Understand NetworkPolicy concepts',
+      'Implement pod-to-pod security',
+      'Configure traffic isolation',
+      'Design secure network architecture'
+    ],
+    realWorldUseCase: 'Multi-tenant applications, security compliance, microservices isolation',
+    troubleshooting: {
+      commonIssues: [
+        'NetworkPolicy not enforced',
+        'CNI plugin compatibility',
+        'Overly restrictive rules',
+        'Policy conflicts'
+      ],
+      debuggingSteps: [
+        'Check NetworkPolicy: kubectl get networkpolicy',
+        'Test connectivity: kubectl exec -it <pod> -- nc -zv <target-ip> <port>',
+        'Verify CNI support: kubectl get nodes -o wide',
+        'Check pod labels: kubectl get pods --show-labels'
+      ]
+    }
+  },
+
+  {
+    id: 'init-containers',
+    title: 'Init Containers',
+    description: 'Use init containers for pre-start tasks like DB migration or setup',
+    category: 'Intermediate',
+    difficulty: 2,
+    estimatedTime: '12 min',
+    architecture: {
+      components: ['Init Container', 'Main Container', 'Shared Volume'],
+      flow: ['Init Container → Setup Tasks → Main Container Start'],
+      diagram: 'init-containers'
+    },
+    animation: {
+      description: 'Init containers run to completion before main containers start',
+      steps: [
+        'Pod created',
+        'Init container starts',
+        'Setup tasks completed',
+        'Init container exits',
+        'Main container starts'
+      ],
+      trafficFlow: 'Init Container → Setup → Main Container'
+    },
+    concepts: ['Init Containers', 'Pod lifecycle', 'Setup tasks', 'Dependencies'],
+    problems: ['Initialization', 'Dependencies', 'Setup tasks'],
+    yaml: `apiVersion: v1
+kind: Pod
+metadata:
+  name: init-demo
+spec:
+  initContainers:
+  - name: setup
+    image: busybox
+    command: ['sh', '-c', 'echo Setting up... && sleep 5']
+  containers:
+  - name: app
+    image: nginx
+    ports:
+    - containerPort: 80`,
+    learningObjectives: [
+      'Understand init container lifecycle',
+      'Implement setup dependencies',
+      'Configure pre-start tasks',
+      'Handle initialization failures'
+    ],
+    realWorldUseCase: 'Database migrations, configuration setup, dependency checks',
+    troubleshooting: {
+      commonIssues: [
+        'Init container fails',
+        'Long initialization time',
+        'Resource conflicts',
+        'Volume mount issues'
+      ],
+      debuggingSteps: [
+        'Check init container logs: kubectl logs <pod> -c <init-container>',
+        'View pod events: kubectl describe pod <pod>',
+        'Check init container status: kubectl get pod <pod> -o yaml',
+        'Monitor initialization: kubectl get pod <pod> -w'
+      ]
+    }
+  },
+
+  {
+    id: 'volume-types-demo',
+    title: 'Volume Types (EmptyDir, ConfigMap, Secret)',
+    description: 'Demonstrate different volume types and mounting strategies',
+    category: 'Intermediate',
+    difficulty: 3,
+    estimatedTime: '15 min',
+    architecture: {
+      components: ['Pod', 'EmptyDir Volume', 'ConfigMap Volume', 'Secret Volume'],
+      flow: ['Volumes → Mount Points → Container Access'],
+      diagram: 'volume-types'
+    },
+    animation: {
+      description: 'Different volume types provide various data sources to containers',
+      steps: [
+        'Pod created with multiple volumes',
+        'EmptyDir provides temporary storage',
+        'ConfigMap mounts configuration files',
+        'Secret mounts sensitive data',
+        'Container accesses all volumes'
+      ],
+      trafficFlow: 'Volumes → Mount Points → Container File System'
+    },
+    concepts: ['Volumes', 'EmptyDir', 'ConfigMap', 'Secret', 'Storage'],
+    problems: ['Data persistence', 'Configuration management', 'Secret handling'],
+    yaml: `apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  config.yaml: |
+    app:
+      name: demo
+      port: 8080
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secret
+type: Opaque
+data:
+  password: cGFzc3dvcmQ=  # password
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: volume-demo
+spec:
+  volumes:
+  - name: tmp-volume
+    emptyDir: {}
+  - name: config-volume
+    configMap:
+      name: app-config
+  - name: secret-volume
+    secret:
+      secretName: app-secret
+  containers:
+  - name: app
+    image: nginx
+    volumeMounts:
+    - mountPath: /tmp/cache
+      name: tmp-volume
+    - mountPath: /etc/config
+      name: config-volume
+    - mountPath: /etc/secrets
+      name: secret-volume
+      readOnly: true`,
+    learningObjectives: [
+      'Understand different volume types',
+      'Configure volume mounts',
+      'Manage configuration and secrets',
+      'Implement data persistence strategies'
+    ],
+    realWorldUseCase: 'Configuration management, temporary storage, secret handling, data sharing',
+    troubleshooting: {
+      commonIssues: [
+        'Volume mount failures',
+        'Permission denied errors',
+        'ConfigMap/Secret not found',
+        'Path conflicts'
+      ],
+      debuggingSteps: [
+        'Check volume mounts: kubectl describe pod <pod>',
+        'Verify ConfigMap: kubectl get configmap <name> -o yaml',
+        'Check Secret: kubectl get secret <name> -o yaml',
+        'Inspect container filesystem: kubectl exec -it <pod> -- ls -la /path'
+      ]
+    }
+  },
+
+  {
+    id: 'rolling-update-rollback',
+    title: 'Rolling Update & Rollback',
+    description: 'Demonstrate deployment updates, failures, and automatic rollback',
+    category: 'Intermediate',
+    difficulty: 3,
+    estimatedTime: '18 min',
+    architecture: {
+      components: ['Deployment', 'ReplicaSet', 'Pods', 'Rolling Update Strategy'],
+      flow: ['New Version → Rolling Update → Health Check → Rollback if Failed'],
+      diagram: 'rolling-update'
+    },
+    animation: {
+      description: 'Deployment gradually replaces old pods with new ones, rolls back on failure',
+      steps: [
+        'Deployment update triggered',
+        'New ReplicaSet created',
+        'Pods gradually replaced',
+        'Health checks performed',
+        'Rollback if update fails'
+      ],
+      trafficFlow: 'Old Pods → Gradual Replacement → New Pods (or Rollback)'
+    },
+    concepts: ['Deployment', 'Rolling Updates', 'Rollback', 'Zero Downtime'],
+    problems: ['Deployment strategy', 'Version management', 'Rollback scenarios'],
+    yaml: `apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rolling-demo
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      containers:
+      - name: demo
+        image: busybox:1
+        command: ["sh", "-c", "echo Version1; sleep 3600"]`,
+    learningObjectives: [
+      'Understand rolling update strategy',
+      'Configure deployment parameters',
+      'Implement rollback procedures',
+      'Achieve zero-downtime deployments'
+    ],
+    realWorldUseCase: 'Application updates, version management, production deployments',
+    troubleshooting: {
+      commonIssues: [
+        'Update stuck in progress',
+        'Rollback not working',
+        'Health check failures',
+        'Resource constraints during update'
+      ],
+      debuggingSteps: [
+        'Check deployment status: kubectl rollout status deployment/rolling-demo',
+        'View rollout history: kubectl rollout history deployment/rolling-demo',
+        'Rollback: kubectl rollout undo deployment/rolling-demo',
+        'Monitor pods: kubectl get pods -w'
+      ]
+    }
+  },
+
+  {
+    id: 'headless-service-statefulset',
+    title: 'Headless Service + StatefulSet',
+    description: 'Demonstrate headless services and StatefulSet pod discovery',
+    category: 'Advanced',
+    difficulty: 4,
+    estimatedTime: '20 min',
+    architecture: {
+      components: ['StatefulSet', 'Headless Service', 'Persistent Volumes', 'DNS'],
+      flow: ['StatefulSet → Ordered Pods → Headless Service → DNS Records'],
+      diagram: 'headless-statefulset'
+    },
+    animation: {
+      description: 'StatefulSet creates ordered pods with stable network identities via headless service',
+      steps: [
+        'StatefulSet created',
+        'Pods created in order (0, 1, 2)',
+        'Headless service provides DNS',
+        'Each pod gets stable hostname',
+        'Direct pod-to-pod communication'
+      ],
+      trafficFlow: 'Client → DNS → Specific Pod (web-0, web-1, web-2)'
+    },
+    concepts: ['StatefulSet', 'Headless Service', 'DNS', 'Stable Identity'],
+    problems: ['Stateful applications', 'Pod identity', 'Service discovery'],
+    yaml: `apiVersion: v1
+kind: Service
+metadata:
+  name: web-headless
+spec:
+  clusterIP: None
+  selector:
+    app: web
+  ports:
+  - port: 80
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: web
+spec:
+  serviceName: web-headless
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10`,
+    learningObjectives: [
+      'Understand StatefulSet behavior',
+      'Configure headless services',
+      'Implement stable pod identities',
+      'Use DNS for service discovery'
+    ],
+    realWorldUseCase: 'Databases, distributed systems, clustered applications',
+    troubleshooting: {
+      commonIssues: [
+        'Pods not starting in order',
+        'DNS resolution failures',
+        'PVC binding issues',
+        'Headless service misconfiguration'
+      ],
+      debuggingSteps: [
+        'Check StatefulSet status: kubectl get statefulset',
+        'Test DNS: kubectl run -it --rm debug --image=busybox -- nslookup web-0.web-headless',
+        'Check service: kubectl get svc web-headless',
+        'View pod order: kubectl get pods -l app=web'
+      ]
+    }
+  },
+
+  {
+    id: 'pod-disruption-budget',
+    title: 'Pod Disruption Budget',
+    description: 'Prevent too many pod disruptions during maintenance',
+    category: 'Production',
+    difficulty: 4,
+    estimatedTime: '15 min',
+    architecture: {
+      components: ['PodDisruptionBudget', 'Deployment', 'Pods', 'Node Maintenance'],
+      flow: ['PDB → Limits Disruptions → Maintains Availability'],
+      diagram: 'pod-disruption-budget'
+    },
+    animation: {
+      description: 'PDB ensures minimum number of pods remain available during disruptions',
+      steps: [
+        'PDB created with minAvailable',
+        'Node maintenance triggered',
+        'PDB blocks excessive disruptions',
+        'Minimum pods maintained',
+        'Maintenance completes safely'
+      ],
+      trafficFlow: 'Node Maintenance → PDB Check → Controlled Pod Eviction'
+    },
+    concepts: ['PodDisruptionBudget', 'High Availability', 'Maintenance', 'Disruptions'],
+    problems: ['Availability', 'Maintenance windows', 'Disruption control'],
+    yaml: `apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: web-pdb
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: web
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80`,
+    learningObjectives: [
+      'Understand disruption budgets',
+      'Configure availability requirements',
+      'Handle maintenance scenarios',
+      'Implement high availability patterns'
+    ],
+    realWorldUseCase: 'Production maintenance, cluster upgrades, node replacements',
+    troubleshooting: {
+      commonIssues: [
+        'PDB blocking all evictions',
+        'Insufficient replicas for PDB',
+        'Selector mismatch',
+        'Maintenance stuck'
+      ],
+      debuggingSteps: [
+        'Check PDB status: kubectl get pdb',
+        'View disruption details: kubectl describe pdb web-pdb',
+        'Check pod distribution: kubectl get pods -o wide',
+        'Monitor evictions: kubectl get events'
+      ]
+    }
+  },
+
+  {
+    id: 'resource-quota-limits',
+    title: 'ResourceQuota + LimitRange',
+    description: 'Control resource usage with quotas and limits',
+    category: 'Production',
+    difficulty: 4,
+    estimatedTime: '18 min',
+    architecture: {
+      components: ['ResourceQuota', 'LimitRange', 'Namespace', 'Pods'],
+      flow: ['ResourceQuota → Namespace Limits → LimitRange → Pod Constraints'],
+      diagram: 'resource-quota'
+    },
+    animation: {
+      description: 'ResourceQuota and LimitRange control resource consumption in namespace',
+      steps: [
+        'ResourceQuota set for namespace',
+        'LimitRange defines pod limits',
+        'Pod creation checked against limits',
+        'Resource usage tracked',
+        'Quota enforcement applied'
+      ],
+      trafficFlow: 'Pod Request → LimitRange Check → ResourceQuota Check → Admission'
+    },
+    concepts: ['ResourceQuota', 'LimitRange', 'Resource Management', 'Governance'],
+    problems: ['Resource governance', 'Multi-tenancy', 'Cost control'],
+    yaml: `apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: compute-quota
+spec:
+  hard:
+    requests.cpu: "4"
+    requests.memory: 8Gi
+    limits.cpu: "8"
+    limits.memory: 16Gi
+    pods: "10"
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: limit-range
+spec:
+  limits:
+  - default:
+      cpu: "500m"
+      memory: "512Mi"
+    defaultRequest:
+      cpu: "250m"
+      memory: "128Mi"
+    type: Container`,
+    learningObjectives: [
+      'Understand resource quotas',
+      'Configure limit ranges',
+      'Implement resource governance',
+      'Control multi-tenant environments'
+    ],
+    realWorldUseCase: 'Multi-tenant clusters, cost control, resource governance',
+    troubleshooting: {
+      commonIssues: [
+        'Pod creation blocked by quota',
+        'Resource limits too restrictive',
+        'Quota exceeded',
+        'LimitRange conflicts'
+      ],
+      debuggingSteps: [
+        'Check quota usage: kubectl describe quota',
+        'View limit range: kubectl describe limitrange',
+        'Check pod resources: kubectl describe pod <pod>',
+        'Monitor resource usage: kubectl top pods'
+      ]
+    }
+  },
+
+  {
+    id: 'ingress-tls-cert-manager',
+    title: 'Ingress with TLS + Cert-Manager',
+    description: 'Set up HTTPS with automatic certificate management',
+    category: 'Production',
+    difficulty: 5,
+    estimatedTime: '25 min',
+    architecture: {
+      components: ['Ingress', 'TLS Certificate', 'Cert-Manager', 'Let\'s Encrypt'],
+      flow: ['Ingress → TLS Termination → Cert-Manager → Auto Certificate'],
+      diagram: 'ingress-tls'
+    },
+    animation: {
+      description: 'Cert-Manager automatically provisions and renews TLS certificates for Ingress',
+      steps: [
+        'Ingress created with TLS config',
+        'Cert-Manager detects certificate need',
+        'ACME challenge initiated',
+        'Certificate issued by Let\'s Encrypt',
+        'TLS termination enabled'
+      ],
+      trafficFlow: 'HTTPS Request → Ingress TLS → Certificate → Backend Service'
+    },
+    concepts: ['Ingress', 'TLS', 'Cert-Manager', 'HTTPS', 'Security'],
+    problems: ['TLS termination', 'Certificate management', 'HTTPS setup'],
+    yaml: `apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: admin@example.com
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  tls:
+  - hosts:
+    - example.com
+    secretName: web-tls
+  rules:
+  - host: example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web-service
+            port:
+              number: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+spec:
+  selector:
+    app: web
+  ports:
+  - port: 80
+    targetPort: 80`,
+    learningObjectives: [
+      'Configure TLS termination',
+      'Set up automatic certificate management',
+      'Implement HTTPS security',
+      'Use cert-manager with Let\'s Encrypt'
+    ],
+    realWorldUseCase: 'Production web applications, API endpoints, secure communications',
+    troubleshooting: {
+      commonIssues: [
+        'Certificate not issued',
+        'ACME challenge failures',
+        'DNS validation issues',
+        'TLS handshake errors'
+      ],
+      debuggingSteps: [
+        'Check certificate: kubectl get certificate',
+        'View cert-manager logs: kubectl logs -n cert-manager deployment/cert-manager',
+        'Check challenge: kubectl get challenge',
+        'Test TLS: openssl s_client -connect example.com:443'
+      ]
+    }
+  },
+
+  {
+    id: 'simple-hpa-example',
+    title: 'Horizontal Pod Autoscaler (HPA)',
+    description: 'CPU-based autoscaling for API deployment with configurable thresholds',
+    category: 'Intermediate',
+    difficulty: 3,
+    estimatedTime: '15 min',
+    architecture: {
+      components: ['HPA', 'Deployment', 'Metrics Server', 'Pods'],
+      flow: ['Metrics → HPA → Scaling Decision → Pod Adjustment'],
+      diagram: 'hpa-simple'
+    },
+    animation: {
+      description: 'HPA monitors CPU usage and automatically scales pods up or down',
+      steps: [
+        'HPA monitors CPU metrics',
+        'CPU threshold exceeded',
+        'HPA scales up pods',
+        'Load distributed across pods',
+        'CPU normalizes, pods scale down'
+      ],
+      trafficFlow: 'Load → CPU Metrics → HPA → Pod Scaling'
+    },
+    concepts: ['HPA', 'Autoscaling', 'CPU Metrics', 'Performance'],
+    problems: ['Performance scaling', 'Resource optimization', 'Load handling'],
+    yaml: `apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+      - name: api
+        image: nginx
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: api-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api-deployment
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70`,
+    learningObjectives: [
+      'Configure horizontal pod autoscaling',
+      'Set up CPU-based scaling',
+      'Understand scaling thresholds',
+      'Monitor autoscaling behavior'
+    ],
+    realWorldUseCase: 'API services, web applications, variable load handling',
+    troubleshooting: {
+      commonIssues: [
+        'HPA not scaling',
+        'Metrics server not available',
+        'Resource requests not set',
+        'Scaling thrashing'
+      ],
+      debuggingSteps: [
+        'Check HPA status: kubectl get hpa',
+        'View HPA details: kubectl describe hpa api-hpa',
+        'Check metrics: kubectl top pods',
+        'Verify metrics server: kubectl get pods -n kube-system'
       ]
     }
   }

@@ -5,6 +5,7 @@ import Layout from './components/Layout';
 import CollaboratorsButton from './components/CollaboratorsButton';
 import Dashboard from './pages/Dashboard';
 import Playground from './pages/Playground';
+import K8sDebugging from './pages/K8sDebugging';
 // import K8sExplained from './pages/K8sExplained';
 import Examples from './pages/Examples';
 import Lessons from './pages/Lessons';
@@ -20,6 +21,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/playground" element={<Playground />} />
+            <Route path="/k8s-debugging" element={<K8sDebugging />} />
             {/* <Route path="/k8s-explained" element={<K8sExplained />} /> */}
             <Route path="/examples" element={<Examples />} />
             <Route path="/lessons" element={<Lessons />} />

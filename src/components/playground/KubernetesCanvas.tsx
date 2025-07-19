@@ -147,7 +147,7 @@ const KubernetesCanvas: React.FC = () => {
             id: podId,
             type: 'kubernetes',
             position: {
-              x: deploymentNode.position.x + 200 + (podIndex * 150),
+              x: deploymentNode.position.x + 200 + (i * 180), // Use i instead of podIndex for better spacing
               y: deploymentNode.position.y + 100
             },
             draggable: true,
@@ -257,7 +257,9 @@ const KubernetesCanvas: React.FC = () => {
     const nodesWithDragProps = nodes.map(node => ({
       ...node,
       draggable: true,
-      selectable: true
+      selectable: true,
+      // Add a unique key to force proper re-rendering
+      key: `${node.id}-${node.data.componentType}`
     }));
 
     // Only update if the number of nodes changed or if node IDs/types changed
@@ -267,14 +269,30 @@ const KubernetesCanvas: React.FC = () => {
 
     if (nodes.length !== flowNodes.length ||
         JSON.stringify(currentNodeIds) !== JSON.stringify(newNodeIds)) {
+
+      // Clear any potential visual artifacts before updating
+      if (reactFlowInstance) {
+        reactFlowInstance.fitView({ duration: 0 });
+      }
+
       setFlowNodes(nodesWithDragProps);
 
       // Trigger pod cleanup after nodes are updated
       if (nodes.length > flowNodes.length) {
         setTimeout(() => cleanupPodCounts(), 500);
+
+        // Also check for new deployments and create their pods
+        const newDeployments = nodes.filter(node =>
+          node.data.componentType === 'deployment' &&
+          !flowNodes.find(existing => existing.id === node.id)
+        );
+
+        newDeployments.forEach(deployment => {
+          setTimeout(() => managePods(deployment), 600);
+        });
       }
     }
-  }, [nodes, flowNodes, setFlowNodes]);
+  }, [nodes, flowNodes, setFlowNodes, reactFlowInstance]);
 
   // Watch for replica count changes and trigger pod management
   useEffect(() => {
@@ -1261,39 +1279,51 @@ const KubernetesCanvas: React.FC = () => {
     // Apply changes to React Flow state first
     onNodesChange(changes);
 
-    // Force edge refresh when nodes are moved
+    // Handle different types of changes
     const positionChanges = changes.filter((change: any) => change.type === 'position');
-    if (positionChanges.length > 0) {
-      // Force re-render of edges by updating them
-      setFlowEdges(prev => [...prev]);
-    }
-
-    // Update store with new positions when dragging ends
     const dragEndChanges = changes.filter((change: any) =>
       change.type === 'position' && change.dragging === false
     );
+    const dragStartChanges = changes.filter((change: any) =>
+      change.type === 'position' && change.dragging === true
+    );
 
+    // Force edge refresh when nodes are moved
+    if (positionChanges.length > 0) {
+      setFlowEdges(prev => [...prev]);
+    }
+
+    // Clear any stale visual artifacts when drag starts
+    if (dragStartChanges.length > 0) {
+      // Force a re-render to clear any stuck visual elements
+      setFlowNodes(prev => [...prev]);
+    }
+
+    // Update store with new positions when dragging ends
     if (dragEndChanges.length > 0) {
       console.log('Node drag completed:', dragEndChanges.map((c: any) => c.id));
 
-      // Get the current nodes from React Flow state and update positions
-      setTimeout(() => {
-        const currentNodes = flowNodes.map(node => {
-          const change = dragEndChanges.find((c: any) => c.id === node.id);
-          if (change && change.position) {
-            return {
-              ...node,
-              position: change.position
-            };
-          }
-          return node;
-        });
+      // Immediately update the store with the new positions
+      const updatedNodes = flowNodes.map(node => {
+        const change = dragEndChanges.find((c: any) => c.id === node.id);
+        if (change && change.position) {
+          return {
+            ...node,
+            position: change.position
+          };
+        }
+        return node;
+      });
 
-        // Update store with new positions
-        updateNodes(currentNodes);
-      }, 100); // Small delay to ensure React Flow state is updated
+      // Update store immediately to prevent visual artifacts
+      updateNodes(updatedNodes);
+
+      // Force a complete re-render to ensure visual consistency
+      setTimeout(() => {
+        setFlowNodes(prev => [...prev]);
+      }, 50);
     }
-  }, [onNodesChange, flowNodes, updateNodes, setFlowEdges]);
+  }, [onNodesChange, flowNodes, updateNodes, setFlowEdges, setFlowNodes]);
 
   const handleEdgesChange = useCallback((changes: any) => {
     onEdgesChange(changes);

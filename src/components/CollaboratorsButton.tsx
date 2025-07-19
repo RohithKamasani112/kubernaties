@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Users, X } from 'lucide-react';
 import { collaborators } from '../data/collaborators';
 
 const CollaboratorsButton: React.FC = () => {
+  const location = useLocation();
+
+  // Hide on interactive pages to avoid obstructing the interface
+  const hiddenPaths = ['/k8s-debugging', '/playground'];
+  if (hiddenPaths.includes(location.pathname)) {
+    return null;
+  }
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);

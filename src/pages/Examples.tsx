@@ -22,7 +22,6 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { perfectDesigns, PerfectDesign } from '../data/perfectDesigns';
-import { useKubernetesStore } from '../store/kubernetesStore';
 import ArchitectureDiagram from '../components/ArchitectureDiagram';
 import toast from 'react-hot-toast';
 
@@ -33,7 +32,7 @@ const Examples: React.FC = () => {
   const [selectedDesign, setSelectedDesign] = useState<PerfectDesign | null>(null);
   const [showArchitecture, setShowArchitecture] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { updateNodes, updateEdges, clearCanvas } = useKubernetesStore();
+  // No longer need store functions since we're using URL parameters
 
   const categories = [
     { id: 'all', name: 'All Perfect Designs', count: perfectDesigns.length, color: 'bg-slate-100 text-slate-700', icon: '📚' },
@@ -65,43 +64,14 @@ const Examples: React.FC = () => {
 
   const loadDesignIntoPlayground = async (design: PerfectDesign) => {
     try {
-      // Clear existing canvas
-      clearCanvas();
+      // Navigate to playground with YAML parameter (same approach as documentation)
+      const playgroundUrl = `/playground?yaml=${encodeURIComponent(design.yaml)}`;
+      navigate(playgroundUrl);
 
-      // Create a simple node representation for the playground
-      const nodes = design.architecture.components.map((component, index) => ({
-        id: `${design.id}-${index}`,
-        type: 'kubernetesNode',
-        position: { x: 100 + index * 200, y: 100 },
-        data: {
-          label: component,
-          nodeType: component.toLowerCase().includes('pod') ? 'pod' :
-                   component.toLowerCase().includes('service') ? 'service' :
-                   component.toLowerCase().includes('volume') ? 'volume' : 'other',
-          config: {
-            name: component.toLowerCase().replace(/\s+/g, '-'),
-            namespace: 'default',
-            labels: {},
-            annotations: {}
-          }
-        }
-      }));
-
-      // Create edges to show flow
-      const edges = design.architecture.flow.slice(0, -1).map((_, index) => ({
-        id: `edge-${index}`,
-        source: `${design.id}-${index}`,
-        target: `${design.id}-${index + 1}`,
-        type: 'smoothstep',
-        animated: true,
-        style: { stroke: '#3b82f6', strokeWidth: 2 }
-      }));
-
-      updateNodes(nodes);
-      updateEdges(edges);
-
-      toast.success(`Loaded "${design.title}" into playground!`);
-      navigate('/playground');
+      toast.success(`Loaded "${design.title}" into playground!`, {
+        icon: '🚀',
+        duration: 3000,
+      });
     } catch (error) {
       console.error('Error loading design:', error);
       toast.error('Failed to load design into playground');

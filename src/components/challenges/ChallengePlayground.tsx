@@ -55,33 +55,291 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
     setRealTimeValidation({ hasChanges: false, isLikelyCorrect: false });
   }, [challenge]);
 
-  // Real-time validation as user types
+  // Real-time validation as user types - MUST match the full validation logic
   useEffect(() => {
     const hasChanges = yamlContent !== challenge.brokenYaml;
     let isLikelyCorrect = false;
 
     if (hasChanges) {
-      // Quick validation without full validation logic
+      // Real-time validation that matches the full validation logic exactly
       switch (challenge.id) {
-        case 1: // Pod CrashLoopBackOff
-          isLikelyCorrect = !yamlContent.includes('wrong-command') &&
-                           (!yamlContent.includes('command:') || !yamlContent.includes('args:'));
+        case 1: // Pod CrashLoopBackOff - Fix container command
+          const hasRemovedCommand = !yamlContent.includes('command:') || !yamlContent.includes('wrong-command');
+          const hasRemovedArgs = !yamlContent.includes('args:') || !yamlContent.includes('wrong-command');
+          const hasNginxImage = yamlContent.includes('nginx:latest');
+          isLikelyCorrect = hasRemovedCommand && hasRemovedArgs && hasNginxImage;
           break;
-        case 2: // Service selector
-          isLikelyCorrect = yamlContent.includes('app: web-application') &&
-                           yamlContent.match(/selector:\s*\n\s*app: web-application/);
+
+        case 2: // Service Not Routing to Pod - Fix service selector
+          const hasCorrectServiceSelector = yamlContent.includes('app: web-application') &&
+                                           yamlContent.match(/selector:\s*\n\s*app: web-application/);
+          const hasDeploymentLabels = yamlContent.includes('app: web-application') &&
+                                     yamlContent.match(/labels:\s*\n\s*app: web-application/);
+          isLikelyCorrect = hasCorrectServiceSelector && hasDeploymentLabels;
           break;
-        case 3: // External access
+
+        case 3: // App Not Accessible Externally - Fix service type
           isLikelyCorrect = yamlContent.includes('type: NodePort') || yamlContent.includes('type: LoadBalancer');
           break;
-        case 4: // Missing ConfigMap
-          isLikelyCorrect = yamlContent.includes('kind: ConfigMap') && yamlContent.includes('name: app-config');
+
+        case 4: // Missing ConfigMap challenge
+          const hasConfigMap = yamlContent.includes('kind: ConfigMap') && yamlContent.includes('name: app-config');
+          const hasConfigMapData = yamlContent.includes('data:');
+          isLikelyCorrect = hasConfigMap && hasConfigMapData;
           break;
-        case 5: // Secret mounting
-          isLikelyCorrect = yamlContent.includes('volumeMounts:') && yamlContent.includes('mountPath:');
+
+        case 5: // Secret Not Mounted challenge
+          isLikelyCorrect = yamlContent.includes('secretName: db-credentials');
           break;
+
+        case 6: // Readiness Probe Failing challenge
+          const hasCorrectProbePath = yamlContent.includes('path: /') && !yamlContent.includes('path: /health');
+          const hasCorrectProbePort = yamlContent.includes('port: 80') && !yamlContent.includes('port: 8080');
+          isLikelyCorrect = hasCorrectProbePath && hasCorrectProbePort;
+          break;
+
+        case 7: // ImagePullBackOff challenge
+          isLikelyCorrect = yamlContent.includes('nginx:latest') && !yamlContent.includes('nginxx:latest');
+          break;
+
+        case 8: // Pod Stuck in Pending challenge
+          const hasReasonableResources = yamlContent.includes('cpu: "100m"') || yamlContent.includes('cpu: "200m"') ||
+                                        yamlContent.includes('memory: "128Mi"') || yamlContent.includes('memory: "256Mi"');
+          const noExcessiveResources = !yamlContent.includes('cpu: "4"') && !yamlContent.includes('memory: "8Gi"');
+          isLikelyCorrect = hasReasonableResources && noExcessiveResources;
+          break;
+
+        case 9: // Wrong Environment Variable challenge
+          const hasValidDatabaseUrl = yamlContent.includes('DATABASE_URL') &&
+                                     !yamlContent.includes('value: ""') &&
+                                     (yamlContent.includes('postgresql://') || yamlContent.includes('postgres://'));
+          isLikelyCorrect = hasValidDatabaseUrl;
+          break;
+
+        case 10: // Liveness Probe Causes Pod Restart challenge
+          const hasIncreasedInitialDelay = !yamlContent.includes('initialDelaySeconds: 1') &&
+                                          (yamlContent.includes('initialDelaySeconds: 30') || yamlContent.includes('initialDelaySeconds: 15'));
+          const hasIncreasedTimeout = !yamlContent.includes('timeoutSeconds: 1') &&
+                                     (yamlContent.includes('timeoutSeconds: 5') || yamlContent.includes('timeoutSeconds: 10'));
+          const hasIncreasedFailureThreshold = !yamlContent.includes('failureThreshold: 1') &&
+                                              (yamlContent.includes('failureThreshold: 3') || yamlContent.includes('failureThreshold: 5'));
+          isLikelyCorrect = hasIncreasedInitialDelay && hasIncreasedTimeout && hasIncreasedFailureThreshold;
+          break;
+
+        case 11: // Broken Ingress Route challenge
+          const hasCorrectIngressPath = yamlContent.includes('path: /app') && !yamlContent.includes('path: /wrong');
+          const hasCorrectServiceName = yamlContent.includes('name: web-service') && !yamlContent.includes('name: wrong-service');
+          isLikelyCorrect = hasCorrectIngressPath && hasCorrectServiceName;
+          break;
+
+        case 12: // HPA Not Scaling challenge
+          const hasResourceLimits12 = yamlContent.includes('limits:') && yamlContent.includes('cpu:');
+          const hasHPAMetrics = yamlContent.includes('targetCPUUtilizationPercentage') || yamlContent.includes('metrics:');
+          isLikelyCorrect = hasResourceLimits12 && hasHPAMetrics;
+          break;
+
+        case 13: // RBAC Access Denied challenge
+          const hasRoleBinding = yamlContent.includes('kind: RoleBinding') || yamlContent.includes('kind: ClusterRoleBinding');
+          const hasServiceAccountRef = yamlContent.includes('kind: ServiceAccount');
+          isLikelyCorrect = hasRoleBinding && hasServiceAccountRef;
+          break;
+
+        case 14: // NetworkPolicy Blocks All Traffic challenge
+          const hasAllowPolicy = yamlContent.includes('policyTypes:') && yamlContent.includes('Ingress');
+          const hasFromSelector = yamlContent.includes('from:') || yamlContent.includes('namespaceSelector:');
+          isLikelyCorrect = hasAllowPolicy && hasFromSelector;
+          break;
+
+        case 15: // PersistentVolume Not Bound challenge
+          const hasMatchingStorageClass = yamlContent.includes('storageClassName: fast-ssd');
+          const hasMatchingSize = yamlContent.includes('storage: 10Gi');
+          isLikelyCorrect = hasMatchingStorageClass && hasMatchingSize;
+          break;
+
+        case 21: // Wrong Container Port challenge
+          isLikelyCorrect = yamlContent.includes('containerPort: 80') && !yamlContent.includes('containerPort: 8080');
+          break;
+
+        case 22: // No Resource Limits challenge
+          const hasResourceSection = yamlContent.includes('resources:');
+          const hasLimits = yamlContent.includes('limits:');
+          const hasRequests = yamlContent.includes('requests:');
+          isLikelyCorrect = hasResourceSection && hasLimits && hasRequests;
+          break;
+
+        case 23: // Forgotten VolumeMount challenge
+          const hasVolumeMounts = yamlContent.includes('volumeMounts:');
+          const hasMountPath = yamlContent.includes('mountPath:');
+          const hasVolumeReference = yamlContent.includes('name: config-volume');
+          isLikelyCorrect = hasVolumeMounts && hasMountPath && hasVolumeReference;
+          break;
+
+        case 24: // Bad Label Selector challenge
+          const hasMatchingLabels = (yamlContent.includes('app: web-app') &&
+                                   yamlContent.match(/selector:\s*\n\s*matchLabels:\s*\n\s*app: web-app/) &&
+                                   yamlContent.match(/labels:\s*\n\s*app: web-app/)) ||
+                                   (yamlContent.includes('app: frontend') &&
+                                   yamlContent.match(/selector:\s*\n\s*matchLabels:\s*\n\s*app: frontend/) &&
+                                   yamlContent.match(/labels:\s*\n\s*app: frontend/));
+          isLikelyCorrect = hasMatchingLabels;
+          break;
+
+        case 25: // Missing Service challenge
+          const hasServiceDefinition = yamlContent.includes('kind: Service');
+          const hasServiceSelector = yamlContent.includes('selector:') && yamlContent.includes('app: web');
+          const hasServicePorts = yamlContent.includes('port: 80') && yamlContent.includes('targetPort: 80');
+          isLikelyCorrect = hasServiceDefinition && hasServiceSelector && hasServicePorts;
+          break;
+
+        case 26: // Duplicate Port Numbers challenge
+          const portMatches = yamlContent.match(/containerPort: (\d+)/g);
+          const hasDuplicatePorts = portMatches && portMatches.length > 1 &&
+                                   portMatches[0] === portMatches[1];
+          isLikelyCorrect = !hasDuplicatePorts;
+          break;
+
+        case 27: // Wrong Volume Type challenge
+          const hasPersistentVolumeClaim = yamlContent.includes('persistentVolumeClaim:');
+          const noEmptyDir = !yamlContent.includes('emptyDir: {}');
+          isLikelyCorrect = hasPersistentVolumeClaim && noEmptyDir;
+          break;
+
+        case 28: // Crash from Bad ENV challenge
+          isLikelyCorrect = yamlContent.includes('key: database_url') && !yamlContent.includes('key: db_url');
+          break;
+
+        case 29: // Image Tag "latest" Problem challenge
+          isLikelyCorrect = !yamlContent.includes(':latest') &&
+                           (yamlContent.includes(':v1.') || yamlContent.includes(':1.') || yamlContent.includes(':stable'));
+          break;
+
+        case 30: // Secret in Wrong Namespace challenge
+          isLikelyCorrect = yamlContent.includes('namespace: development') ||
+                           !yamlContent.includes('namespace: production');
+          break;
+
+        case 31: // Missing Entrypoint challenge
+          isLikelyCorrect = yamlContent.includes('command:') &&
+                           (yamlContent.includes('sleep') || yamlContent.includes('sh') || yamlContent.includes('echo'));
+          break;
+
+        case 32: // Wrong Image Pull Policy challenge
+          const hasCorrectPullPolicy = yamlContent.includes('imagePullPolicy: Always') ||
+                                      yamlContent.includes('imagePullPolicy: IfNotPresent');
+          isLikelyCorrect = hasCorrectPullPolicy && !yamlContent.includes('imagePullPolicy: Never');
+          break;
+
+        case 33: // Namespace Missing challenge
+          isLikelyCorrect = yamlContent.includes('kind: Namespace') ||
+                           !yamlContent.includes('namespace: non-existent-namespace');
+          break;
+
+        case 34: // Init Container Fails challenge
+          isLikelyCorrect = yamlContent.includes('command:') &&
+                           !yamlContent.includes('invalid-command') &&
+                           (yamlContent.includes('echo') || yamlContent.includes('sleep') || yamlContent.includes('true'));
+          break;
+
+        case 35: // Wrong ConfigMap Key challenge
+          isLikelyCorrect = yamlContent.includes('key: database_host') && !yamlContent.includes('key: db_host');
+          break;
+
+        case 36: // Excessive Log Volume challenge
+          isLikelyCorrect = yamlContent.includes('ephemeral-storage') ||
+                           yamlContent.includes('while false') ||
+                           !yamlContent.includes('while true');
+          break;
+
+        case 37: // No Readiness Check challenge
+          isLikelyCorrect = yamlContent.includes('readinessProbe:') &&
+                           yamlContent.includes('httpGet:') &&
+                           yamlContent.includes('path:');
+          break;
+
+        case 38: // Wrong Deployment Strategy challenge
+          isLikelyCorrect = yamlContent.includes('type: RollingUpdate') && !yamlContent.includes('type: Recreate');
+          break;
+
+        case 39: // Readiness Probe Uses Wrong Path challenge
+          isLikelyCorrect = yamlContent.includes('path: /status') && !yamlContent.includes('path: /healthz');
+          break;
+
+        case 40: // Resource Starvation challenge
+          const hasResourceSection40 = yamlContent.includes('resources:');
+          const hasLimits40 = yamlContent.includes('limits:');
+          const hasRequests40 = yamlContent.includes('requests:');
+          isLikelyCorrect = hasResourceSection40 && hasLimits40 && hasRequests40;
+          break;
+
+        case 41: // Image Registry Timeout challenge
+          isLikelyCorrect = yamlContent.includes('imagePullPolicy: IfNotPresent') && !yamlContent.includes('imagePullPolicy: Always');
+          break;
+
+        case 42: // Service Without Selector challenge
+          isLikelyCorrect = yamlContent.includes('selector:') && yamlContent.includes('app: web');
+          break;
+
+        case 43: // Invalid HostAlias challenge
+          isLikelyCorrect = !yamlContent.includes('999.999.999.999') && yamlContent.includes('192.168.1.100');
+          break;
+
+        case 44: // Stale PVC Bound challenge
+          isLikelyCorrect = yamlContent.includes('persistentVolumeReclaimPolicy: Delete') && !yamlContent.includes('persistentVolumeReclaimPolicy: Retain');
+          break;
+
+        case 45: // Failing CronJob challenge
+          isLikelyCorrect = yamlContent.includes('timeZone:') && yamlContent.includes('UTC');
+          break;
+
+        case 46: // Affinity Rules Too Strict challenge
+          isLikelyCorrect = yamlContent.includes('preferredDuringSchedulingIgnoredDuringExecution') && !yamlContent.includes('requiredDuringSchedulingIgnoredDuringExecution');
+          break;
+
+        case 47: // NetworkPolicy Misrouting challenge
+          isLikelyCorrect = yamlContent.includes('cidr: 10.0.0.0/8') && !yamlContent.includes('cidr: 0.0.0.0/0');
+          break;
+
+        case 48: // Wrong RBAC for CRDs challenge
+          isLikelyCorrect = yamlContent.includes('customresources') || yamlContent.includes('mycrds');
+          break;
+
+        case 49: // StatefulSet Ordering Broken challenge
+          isLikelyCorrect = yamlContent.includes('volumeClaimTemplates:') && !yamlContent.includes('persistentVolumeClaim:');
+          break;
+
+        case 50: // Overprovisioned HPA challenge
+          isLikelyCorrect = yamlContent.includes('maxReplicas: 10') && !yamlContent.includes('maxReplicas: 50');
+          break;
+
+        case 51: // ReadWriteOnce Conflict challenge
+          isLikelyCorrect = yamlContent.includes('ReadWriteMany') && !yamlContent.includes('ReadWriteOnce');
+          break;
+
+        case 52: // Seccomp Blocks Syscall challenge
+          isLikelyCorrect = yamlContent.includes('type: Unconfined') && !yamlContent.includes('type: RuntimeDefault');
+          break;
+
+        case 53: // DNS Overwrites HOSTS File challenge
+          isLikelyCorrect = yamlContent.includes('dnsPolicy: None') && !yamlContent.includes('dnsPolicy: ClusterFirst');
+          break;
+
+        case 54: // API Rate Limits Hit challenge
+          isLikelyCorrect = yamlContent.includes('value: "30"') && !yamlContent.includes('value: "1"');
+          break;
+
+        case 55: // PodSecurityPolicy Too Strict challenge
+          isLikelyCorrect = yamlContent.includes('runAsNonRoot: false') && !yamlContent.includes('runAsNonRoot: true');
+          break;
+
+        case 56: // Custom AdmissionController Rejects Pod challenge
+          isLikelyCorrect = yamlContent.includes('name: sidecar') && yamlContent.includes('image: sidecar:latest');
+          break;
+
         default:
-          isLikelyCorrect = hasChanges; // Basic check for other challenges
+          // More strict generic validation for challenges without specific logic
+          const hasValidYaml = yamlContent.includes('apiVersion') && yamlContent.includes('kind');
+          const hasSignificantChanges = hasChanges && Math.abs(yamlContent.length - challenge.brokenYaml.length) > 10;
+          isLikelyCorrect = hasValidYaml && hasSignificantChanges;
       }
     }
 
@@ -411,6 +669,96 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
         }
         break;
 
+      case 11: // Broken Ingress Route challenge
+        const hasCorrectIngressPath = yamlContent.includes('path: /app') && !yamlContent.includes('path: /wrong');
+        const hasCorrectServiceName = yamlContent.includes('name: web-service') && !yamlContent.includes('name: wrong-service');
+
+        if (hasCorrectIngressPath && hasCorrectServiceName) {
+          isValid = true;
+          message = 'Perfect! You fixed the ingress path and service name. Traffic should now route correctly.';
+        } else {
+          if (!hasCorrectIngressPath) {
+            issues.push('Fix the ingress path from "/wrong" to "/app" to match the application route');
+          }
+          if (!hasCorrectServiceName) {
+            issues.push('Fix the service name from "wrong-service" to "web-service" to match the actual service');
+          }
+          message = 'Ingress routing is still broken due to incorrect path or service name.';
+        }
+        break;
+
+      case 12: // HPA Not Scaling challenge
+        const hasResourceLimits12 = yamlContent.includes('limits:') && yamlContent.includes('cpu:');
+        const hasHPAMetrics = yamlContent.includes('targetCPUUtilizationPercentage') || yamlContent.includes('metrics:');
+
+        if (hasResourceLimits12 && hasHPAMetrics) {
+          isValid = true;
+          message = 'Excellent! You added CPU limits and HPA metrics. Autoscaling should now work properly.';
+        } else {
+          if (!hasResourceLimits12) {
+            issues.push('Add CPU limits to the deployment for HPA to measure utilization');
+          }
+          if (!hasHPAMetrics) {
+            issues.push('Add targetCPUUtilizationPercentage or metrics to the HPA configuration');
+          }
+          message = 'HPA cannot scale without proper resource limits and metrics configuration.';
+        }
+        break;
+
+      case 13: // RBAC Access Denied challenge
+        const hasRoleBinding = yamlContent.includes('kind: RoleBinding') || yamlContent.includes('kind: ClusterRoleBinding');
+        const hasServiceAccountRef = yamlContent.includes('kind: ServiceAccount');
+
+        if (hasRoleBinding && hasServiceAccountRef) {
+          isValid = true;
+          message = 'Great! You created the missing RoleBinding to grant API access to the ServiceAccount.';
+        } else {
+          if (!hasRoleBinding) {
+            issues.push('Create a RoleBinding or ClusterRoleBinding to grant permissions');
+          }
+          if (!hasServiceAccountRef) {
+            issues.push('Ensure the ServiceAccount is properly referenced in the RoleBinding');
+          }
+          message = 'RBAC access is still denied due to missing role binding.';
+        }
+        break;
+
+      case 14: // NetworkPolicy Blocks All Traffic challenge
+        const hasAllowPolicy = yamlContent.includes('policyTypes:') && yamlContent.includes('Ingress');
+        const hasFromSelector = yamlContent.includes('from:') || yamlContent.includes('namespaceSelector:');
+
+        if (hasAllowPolicy && hasFromSelector) {
+          isValid = true;
+          message = 'Perfect! You created an allow policy to permit necessary traffic through the NetworkPolicy.';
+        } else {
+          if (!hasAllowPolicy) {
+            issues.push('Add policyTypes with Ingress to define allowed traffic');
+          }
+          if (!hasFromSelector) {
+            issues.push('Add from selectors to specify which sources can send traffic');
+          }
+          message = 'NetworkPolicy still blocks all traffic due to missing allow rules.';
+        }
+        break;
+
+      case 15: // PersistentVolume Not Bound challenge
+        const hasMatchingStorageClass = yamlContent.includes('storageClassName: fast-ssd');
+        const hasMatchingSize = yamlContent.includes('storage: 10Gi');
+
+        if (hasMatchingStorageClass && hasMatchingSize) {
+          isValid = true;
+          message = 'Excellent! You fixed the storage class and size mismatch. PVC should now bind to PV.';
+        } else {
+          if (!hasMatchingStorageClass) {
+            issues.push('Change storageClassName to "fast-ssd" to match the PersistentVolume');
+          }
+          if (!hasMatchingSize) {
+            issues.push('Change storage size to "10Gi" to match the PersistentVolume capacity');
+          }
+          message = 'PVC still cannot bind due to storage class or size mismatch.';
+        }
+        break;
+
       case 28: // Crash from Bad ENV challenge
         const hasCorrectConfigMapKey = yamlContent.includes('key: database_url') && !yamlContent.includes('key: db_url');
 
@@ -539,6 +887,244 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
         } else {
           issues.push('Add a readiness probe with httpGet to check if the pod is ready');
           message = 'Readiness probe is still missing.';
+        }
+        break;
+
+      case 38: // Wrong Deployment Strategy challenge
+        const hasRollingUpdate = yamlContent.includes('type: RollingUpdate') && !yamlContent.includes('type: Recreate');
+
+        if (hasRollingUpdate) {
+          isValid = true;
+          message = 'Excellent! You changed the deployment strategy to RollingUpdate for zero-downtime deployments.';
+        } else {
+          issues.push('Change deployment strategy from "Recreate" to "RollingUpdate" to avoid downtime');
+          message = 'Deployment strategy is still causing downtime during updates.';
+        }
+        break;
+
+      case 39: // Readiness Probe Uses Wrong Path challenge
+        const hasCorrectPath = yamlContent.includes('path: /status') && !yamlContent.includes('path: /healthz');
+
+        if (hasCorrectPath) {
+          isValid = true;
+          message = 'Perfect! You fixed the readiness probe path to match the application endpoint.';
+        } else {
+          issues.push('Change readiness probe path from "/healthz" to "/status" to match the app endpoint');
+          message = 'Readiness probe is still using the wrong path.';
+        }
+        break;
+
+      case 40: // Resource Starvation challenge
+        const hasResourceSection40 = yamlContent.includes('resources:');
+        const hasLimits40 = yamlContent.includes('limits:');
+        const hasRequests40 = yamlContent.includes('requests:');
+
+        if (hasResourceSection40 && hasLimits40 && hasRequests40) {
+          isValid = true;
+          message = 'Excellent! You added resource limits and requests to prevent resource starvation.';
+        } else {
+          if (!hasResourceSection40) {
+            issues.push('Add a resources section to the container');
+          }
+          if (!hasLimits40) {
+            issues.push('Add resource limits to prevent excessive consumption');
+          }
+          if (!hasRequests40) {
+            issues.push('Add resource requests for proper scheduling');
+          }
+          message = 'Resource configuration is still missing to prevent starvation.';
+        }
+        break;
+
+      case 41: // Image Registry Timeout challenge
+        const hasCorrectPullPolicy41 = yamlContent.includes('imagePullPolicy: IfNotPresent') && !yamlContent.includes('imagePullPolicy: Always');
+
+        if (hasCorrectPullPolicy41) {
+          isValid = true;
+          message = 'Great! You changed the pull policy to use cached images and avoid registry timeouts.';
+        } else {
+          issues.push('Change imagePullPolicy from "Always" to "IfNotPresent" to use cached images');
+          message = 'Image pull policy still causes registry timeout issues.';
+        }
+        break;
+
+      case 42: // Service Without Selector challenge
+        const hasServiceSelector42 = yamlContent.includes('selector:') && yamlContent.includes('app: web');
+
+        if (hasServiceSelector42) {
+          isValid = true;
+          message = 'Perfect! You added a selector to the service to route traffic to pods.';
+        } else {
+          issues.push('Add a selector to the service that matches the pod labels (app: web)');
+          message = 'Service still has no selector and cannot route traffic.';
+        }
+        break;
+
+      case 43: // Invalid HostAlias challenge
+        const hasValidIP = !yamlContent.includes('999.999.999.999') && yamlContent.includes('192.168.1.100');
+
+        if (hasValidIP) {
+          isValid = true;
+          message = 'Excellent! You fixed the invalid IP address in the host alias.';
+        } else {
+          issues.push('Replace the invalid IP "999.999.999.999" with a valid IP like "192.168.1.100"');
+          message = 'Host alias still contains an invalid IP address.';
+        }
+        break;
+
+      case 44: // Stale PVC Bound challenge
+        const hasDeletePolicy = yamlContent.includes('persistentVolumeReclaimPolicy: Delete') && !yamlContent.includes('persistentVolumeReclaimPolicy: Retain');
+
+        if (hasDeletePolicy) {
+          isValid = true;
+          message = 'Great! You changed the reclaim policy to automatically clean up PVs.';
+        } else {
+          issues.push('Change persistentVolumeReclaimPolicy from "Retain" to "Delete" for auto-cleanup');
+          message = 'PV reclaim policy still causes stale PVC binding issues.';
+        }
+        break;
+
+      case 45: // Failing CronJob challenge
+        const hasTimeZone = yamlContent.includes('timeZone:') && yamlContent.includes('UTC');
+
+        if (hasTimeZone) {
+          isValid = true;
+          message = 'Perfect! You added an explicit timezone to prevent scheduling issues.';
+        } else {
+          issues.push('Add "timeZone: UTC" to the CronJob spec for explicit timezone handling');
+          message = 'CronJob still has timezone ambiguity causing failures.';
+        }
+        break;
+
+      case 46: // Affinity Rules Too Strict challenge
+        const hasPreferredAffinity = yamlContent.includes('preferredDuringSchedulingIgnoredDuringExecution') && !yamlContent.includes('requiredDuringSchedulingIgnoredDuringExecution');
+
+        if (hasPreferredAffinity) {
+          isValid = true;
+          message = 'Excellent! You relaxed the affinity rules to use preferred instead of required.';
+        } else {
+          issues.push('Change affinity from "requiredDuringSchedulingIgnoredDuringExecution" to "preferredDuringSchedulingIgnoredDuringExecution"');
+          message = 'Affinity rules are still too strict for pod scheduling.';
+        }
+        break;
+
+      case 47: // NetworkPolicy Misrouting challenge
+        const hasRestrictedCIDR = yamlContent.includes('cidr: 10.0.0.0/8') && !yamlContent.includes('cidr: 0.0.0.0/0');
+
+        if (hasRestrictedCIDR) {
+          isValid = true;
+          message = 'Great! You restricted the CIDR to internal network only.';
+        } else {
+          issues.push('Change CIDR from "0.0.0.0/0" to "10.0.0.0/8" to restrict to internal network');
+          message = 'NetworkPolicy is still too permissive with CIDR range.';
+        }
+        break;
+
+      case 48: // Wrong RBAC for CRDs challenge
+        const hasCustomResourcePerms = yamlContent.includes('customresources') || yamlContent.includes('mycrds');
+
+        if (hasCustomResourcePerms) {
+          isValid = true;
+          message = 'Perfect! You added permissions for custom resources.';
+        } else {
+          issues.push('Add "customresources" and "mycrds" to the resources list in RBAC');
+          message = 'RBAC still lacks permissions for custom resources.';
+        }
+        break;
+
+      case 49: // StatefulSet Ordering Broken challenge
+        const hasVolumeClaimTemplates = yamlContent.includes('volumeClaimTemplates:') && !yamlContent.includes('persistentVolumeClaim:');
+
+        if (hasVolumeClaimTemplates) {
+          isValid = true;
+          message = 'Excellent! You replaced shared PVC with volumeClaimTemplates for proper StatefulSet ordering.';
+        } else {
+          issues.push('Replace shared PVC with volumeClaimTemplates to ensure each pod gets its own storage');
+          message = 'StatefulSet still uses shared PVC causing data mixup.';
+        }
+        break;
+
+      case 50: // Overprovisioned HPA challenge
+        const hasReasonableMaxReplicas = yamlContent.includes('maxReplicas: 10') && !yamlContent.includes('maxReplicas: 50');
+
+        if (hasReasonableMaxReplicas) {
+          isValid = true;
+          message = 'Great! You reduced maxReplicas to a reasonable number.';
+        } else {
+          issues.push('Change maxReplicas from 50 to 10 to prevent cluster overload');
+          message = 'HPA maxReplicas is still too high and can crash the cluster.';
+        }
+        break;
+
+      case 51: // ReadWriteOnce Conflict challenge
+        const hasReadWriteMany = yamlContent.includes('ReadWriteMany') && !yamlContent.includes('ReadWriteOnce');
+
+        if (hasReadWriteMany) {
+          isValid = true;
+          message = 'Perfect! You changed the access mode to allow multiple pods to mount the volume.';
+        } else {
+          issues.push('Change accessModes from "ReadWriteOnce" to "ReadWriteMany" to allow multiple pods');
+          message = 'PVC access mode still prevents multiple pods from mounting.';
+        }
+        break;
+
+      case 52: // Seccomp Blocks Syscall challenge
+        const hasUnconfinedSeccomp = yamlContent.includes('type: Unconfined') && !yamlContent.includes('type: RuntimeDefault');
+
+        if (hasUnconfinedSeccomp) {
+          isValid = true;
+          message = 'Great! You changed to a less restrictive seccomp profile.';
+        } else {
+          issues.push('Change seccomp type from "RuntimeDefault" to "Unconfined" to allow required syscalls');
+          message = 'Seccomp profile is still too restrictive for this application.';
+        }
+        break;
+
+      case 53: // DNS Overwrites HOSTS File challenge
+        const hasNoneDNSPolicy = yamlContent.includes('dnsPolicy: None') && !yamlContent.includes('dnsPolicy: ClusterFirst');
+
+        if (hasNoneDNSPolicy) {
+          isValid = true;
+          message = 'Excellent! You changed DNS policy to respect custom host aliases.';
+        } else {
+          issues.push('Change dnsPolicy from "ClusterFirst" to "None" to respect hostAliases');
+          message = 'DNS policy still overrides custom host aliases.';
+        }
+        break;
+
+      case 54: // API Rate Limits Hit challenge
+        const hasReducedPolling = yamlContent.includes('value: "30"') && !yamlContent.includes('value: "1"');
+
+        if (hasReducedPolling) {
+          isValid = true;
+          message = 'Perfect! You reduced the polling frequency to avoid rate limits.';
+        } else {
+          issues.push('Change polling interval from "1" second to "30" seconds to avoid rate limits');
+          message = 'Application is still polling too frequently and hitting rate limits.';
+        }
+        break;
+
+      case 55: // PodSecurityPolicy Too Strict challenge
+        const allowsRootAccess = yamlContent.includes('runAsNonRoot: false') && !yamlContent.includes('runAsNonRoot: true');
+
+        if (allowsRootAccess) {
+          isValid = true;
+          message = 'Great! You allowed root access for this application that requires it.';
+        } else {
+          issues.push('Change runAsNonRoot from "true" to "false" to allow required root access');
+          message = 'Pod security policy still blocks required root access.';
+        }
+        break;
+
+      case 56: // Custom AdmissionController Rejects Pod challenge
+        const hasSidecar = yamlContent.includes('name: sidecar') && yamlContent.includes('image: sidecar:latest');
+
+        if (hasSidecar) {
+          isValid = true;
+          message = 'Perfect! You added the required sidecar container to satisfy the admission controller.';
+        } else {
+          issues.push('Add a sidecar container with name "sidecar" and image "sidecar:latest"');
+          message = 'Pod still lacks the required sidecar container.';
         }
         break;
 

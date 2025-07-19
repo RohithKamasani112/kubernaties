@@ -14,7 +14,8 @@ import {
   ChevronRight,
   Lightbulb,
   Heart,
-  Network
+  Network,
+  Bug
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -50,6 +51,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navItems = [
     { path: '/', icon: Home, label: 'Home', color: 'text-blue-600' },
     { path: '/playground', icon: PlayCircle, label: 'Playground', color: 'text-emerald-600' },
+    { path: '/k8s-debugging', icon: Bug, label: "K8s Debugging", color: 'text-red-600' },
     // { path: '/k8s-explained', icon: Network, label: 'K8s Explained', color: 'text-cyan-600' },
     { path: '/examples', icon: Lightbulb, label: 'Examples', color: 'text-yellow-600' },
     { path: '/lessons', icon: BookOpen, label: 'Lessons', color: 'text-purple-600' },

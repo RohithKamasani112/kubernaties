@@ -14,6 +14,9 @@ const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
   onClose,
   example
 }) => {
+  // Early return before any hooks
+  if (!example) return null;
+
   const [isExecuting, setIsExecuting] = useState(false);
   const [output, setOutput] = useState<string>('');
   const [showOutput, setShowOutput] = useState(false);
@@ -21,8 +24,6 @@ const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
   const terminalRef = useRef<HTMLDivElement>(null);
 
   const simulateExecution = async () => {
-    if (!example) return;
-    
     setIsExecuting(true);
     setShowOutput(true);
     setOutput('');
@@ -49,11 +50,9 @@ const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
   };
 
   const copyCommand = () => {
-    if (example) {
-      navigator.clipboard.writeText(example.command);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
+    navigator.clipboard.writeText(example.command);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const resetTerminal = () => {
@@ -67,8 +66,6 @@ const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
   }, [output]);
-
-  if (!example) return null;
 
   return (
     <AnimatePresence>

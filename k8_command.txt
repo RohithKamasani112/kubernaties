@@ -1,0 +1,188 @@
+# PRODUCTION-GRADE KUBERNETES DEBUGGING COMMANDS
+# ================================================
+
+# 1. CLUSTER HEALTH & CONFIGURATION
+# ---------------------------------
+kubectl cluster-info                                    # Cluster endpoint info
+kubectl cluster-info dump                              # Full cluster state dump
+kubectl config view                                    # View kubeconfig
+kubectl config get-contexts                            # List all contexts
+kubectl config current-context                         # Show current context
+kubectl config use-context CONTEXT_NAME                # Switch context
+kubectl config set-context --current --namespace=dev   # Set default namespace
+kubectl version --client --server                      # K8s version info
+kubectl api-resources                                  # List all API resources
+kubectl api-versions                                   # List all API versions
+
+# 2. NODE DEBUGGING & MONITORING
+# ------------------------------
+kubectl get nodes -o wide                              # Node details with IPs
+kubectl describe node NODE_NAME                        # Node detailed info
+kubectl top nodes                                      # Node resource usage
+kubectl get nodes --show-labels                        # Node labels
+kubectl cordon NODE_NAME                               # Mark node unschedulable
+kubectl uncordon NODE_NAME                             # Mark node schedulable
+kubectl drain NODE_NAME --ignore-daemonsets            # Safely evict pods
+kubectl get nodes -o jsonpath='{.items[*].status.conditions[?(@.type=="Ready")].status}'
+
+# 3. POD DEBUGGING & TROUBLESHOOTING
+# ----------------------------------
+kubectl get pods --all-namespaces                      # All pods across namespaces
+kubectl get pods -o wide                               # Pod details with node info
+kubectl get pods --field-selector=status.phase=Failed  # Failed pods only
+kubectl get pods --field-selector=status.phase=Pending # Pending pods only
+kubectl describe pod POD_NAME                          # Detailed pod info
+kubectl logs POD_NAME                                  # Pod logs
+kubectl logs POD_NAME -c CONTAINER_NAME                # Container-specific logs
+kubectl logs POD_NAME --previous                       # Previous container logs
+kubectl logs POD_NAME --since=1h                       # Logs from last hour
+kubectl logs POD_NAME --tail=100                       # Last 100 log lines
+kubectl logs -f POD_NAME                               # Follow logs real-time
+kubectl exec -it POD_NAME -- /bin/bash                 # Interactive shell
+kubectl exec -it POD_NAME -c CONTAINER_NAME -- /bin/sh # Multi-container exec
+kubectl top pods                                       # Pod resource usage
+kubectl top pods --containers                          # Container resource usage
+
+# 4. DEPLOYMENT & REPLICASET DEBUGGING
+# ------------------------------------
+kubectl get deployments -o wide                        # Deployment status
+kubectl describe deployment DEPLOYMENT_NAME            # Deployment details
+kubectl rollout status deployment/DEPLOYMENT_NAME      # Rollout status
+kubectl rollout history deployment/DEPLOYMENT_NAME     # Rollout history
+kubectl rollout undo deployment/DEPLOYMENT_NAME        # Rollback deployment
+kubectl scale deployment DEPLOYMENT_NAME --replicas=3  # Scale deployment
+kubectl get replicasets                                # ReplicaSet status
+kubectl describe replicaset RS_NAME                    # ReplicaSet details
+
+# 5. SERVICE & NETWORKING DEBUGGING
+# ---------------------------------
+kubectl get services --all-namespaces                  # All services
+kubectl describe service SERVICE_NAME                  # Service details
+kubectl get endpoints                                  # Service endpoints
+kubectl describe endpoints ENDPOINT_NAME               # Endpoint details
+kubectl get ingress                                    # Ingress resources
+kubectl describe ingress INGRESS_NAME                  # Ingress details
+kubectl port-forward pod/POD_NAME 8080:80             # Port forwarding
+kubectl port-forward service/SERVICE_NAME 8080:80     # Service port forward
+kubectl proxy --port=8080                             # API server proxy
+
+# 6. EVENTS & TROUBLESHOOTING
+# ---------------------------
+kubectl get events --sort-by=.metadata.creationTimestamp  # Recent events
+kubectl get events --field-selector type=Warning          # Warning events only
+kubectl get events --field-selector type=Error            # Error events only
+kubectl get events --field-selector involvedObject.name=POD_NAME  # Pod-specific events
+kubectl get events -n NAMESPACE                            # Namespace events
+kubectl describe pod POD_NAME | grep -A 10 Events         # Pod events only
+
+# 7. RESOURCE MONITORING & METRICS
+# --------------------------------
+kubectl top nodes                                      # Node resource usage
+kubectl top pods --all-namespaces                      # Pod resource usage
+kubectl top pods --sort-by=cpu                         # Sort by CPU usage
+kubectl top pods --sort-by=memory                      # Sort by memory usage
+kubectl describe node NODE_NAME | grep -A 5 "Allocated resources"  # Node allocation
+
+# 8. CONFIGMAP & SECRET DEBUGGING
+# -------------------------------
+kubectl get configmaps --all-namespaces                # All ConfigMaps
+kubectl describe configmap CONFIG_NAME                 # ConfigMap details
+kubectl get configmap CONFIG_NAME -o yaml              # ConfigMap YAML
+kubectl get secrets --all-namespaces                   # All secrets
+kubectl describe secret SECRET_NAME                    # Secret details
+kubectl get secret SECRET_NAME -o yaml                 # Secret YAML (base64)
+kubectl get secret SECRET_NAME -o jsonpath='{.data.password}' | base64 -d  # Decode secret
+
+# 9. PERSISTENT VOLUME DEBUGGING
+# ------------------------------
+kubectl get pv                                         # Persistent Volumes
+kubectl get pvc --all-namespaces                       # Persistent Volume Claims
+kubectl describe pv PV_NAME                            # PV details
+kubectl describe pvc PVC_NAME                          # PVC details
+kubectl get storageclass                               # Storage classes
+
+# 10. NAMESPACE DEBUGGING
+# ----------------------
+kubectl get namespaces                                 # List namespaces
+kubectl describe namespace NAMESPACE_NAME              # Namespace details
+kubectl get all -n NAMESPACE_NAME                      # All resources in namespace
+kubectl get events -n NAMESPACE_NAME                   # Namespace events
+
+# 11. RBAC & SECURITY DEBUGGING
+# -----------------------------
+kubectl auth can-i create pods                         # Check permissions
+kubectl auth can-i create pods --as=USER               # Check user permissions
+kubectl get serviceaccounts --all-namespaces           # Service accounts
+kubectl describe serviceaccount SA_NAME                # SA details
+kubectl get rolebindings --all-namespaces              # Role bindings
+kubectl get clusterrolebindings                        # Cluster role bindings
+kubectl describe rolebinding BINDING_NAME              # Role binding details
+
+# 12. ADVANCED DEBUGGING COMMANDS
+# -------------------------------
+kubectl get pods -o jsonpath='{.items[*].spec.containers[*].image}'  # All container images
+kubectl get pods --field-selector=spec.nodeName=NODE_NAME            # Pods on specific node
+kubectl get pods -o custom-columns=NAME:.metadata.name,STATUS:.status.phase,NODE:.spec.nodeName
+kubectl get pods --sort-by=.metadata.creationTimestamp               # Sort by creation time
+kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.phase}{"\n"}{end}'
+
+# 13. RESOURCE CLEANUP & MAINTENANCE
+# ----------------------------------
+kubectl delete pods --field-selector=status.phase=Succeeded          # Clean completed pods
+kubectl delete pods --field-selector=status.phase=Failed             # Clean failed pods
+kubectl delete pod POD_NAME --grace-period=0 --force                 # Force delete pod
+kubectl delete all --all -n NAMESPACE_NAME                           # Delete all in namespace
+kubectl patch deployment DEPLOYMENT_NAME -p '{"spec":{"replicas":0}}' # Scale to zero
+
+# 14. YAML MANIPULATION & VALIDATION
+# ----------------------------------
+kubectl apply -f manifest.yaml --dry-run=client                      # Validate YAML
+kubectl apply -f manifest.yaml --dry-run=server                      # Server-side validation
+kubectl diff -f manifest.yaml                                        # Show differences
+kubectl explain pod.spec.containers                                  # Resource documentation
+kubectl get pod POD_NAME -o yaml                                     # Export pod YAML
+kubectl get deployment DEPLOYMENT_NAME -o yaml > backup.yaml         # Backup resource
+
+# 15. TROUBLESHOOTING SPECIFIC ISSUES
+# -----------------------------------
+# Pod stuck in Pending state
+kubectl describe pod POD_NAME | grep -A 10 Events
+kubectl get events --field-selector involvedObject.name=POD_NAME
+
+# Pod stuck in CrashLoopBackOff
+kubectl logs POD_NAME --previous
+kubectl describe pod POD_NAME
+
+# Service not accessible
+kubectl get endpoints SERVICE_NAME
+kubectl describe service SERVICE_NAME
+
+# DNS issues
+kubectl exec -it POD_NAME -- nslookup kubernetes.default
+kubectl exec -it POD_NAME -- cat /etc/resolv.conf
+
+# Network connectivity test
+kubectl run test-pod --image=busybox --rm -it -- wget -qO- http://SERVICE_NAME:PORT
+
+# 16. PERFORMANCE & DEBUGGING TOOLS
+# ---------------------------------
+kubectl run debug-pod --image=nicolaka/netshoot --rm -it -- /bin/bash  # Network debugging
+kubectl run curl-test --image=curlimages/curl --rm -it -- /bin/sh      # HTTP testing
+kubectl create job debug-job --image=busybox -- sleep 3600             # Debug job
+
+# 17. BACKUP & EXPORT COMMANDS
+# ----------------------------
+kubectl get all --all-namespaces -o yaml > cluster-backup.yaml        # Full cluster backup
+kubectl get pods --all-namespaces -o wide > pods-status.txt           # Pod status export
+kubectl get events --all-namespaces --sort-by=.metadata.creationTimestamp > events.log
+
+# 18. QUICK DIAGNOSTIC COMMANDS
+# -----------------------------
+# One-liner cluster health check
+kubectl get nodes,pods --all-namespaces | grep -E "(NotReady|Error|CrashLoopBackOff|Pending)"
+
+# Resource usage summary
+kubectl top nodes && echo "---" && kubectl top pods --all-namespaces --sort-by=memory
+
+# Failed resources summary
+kubectl get pods --all-namespaces --field-selector=status.phase=Failed

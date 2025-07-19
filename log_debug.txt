@@ -1,0 +1,349 @@
+✅ Level 1: Pod-Level Debugging
+
+1. CrashLoopBackOff
+
+What’s happening: Pod starts, crashes repeatedly.
+
+Logs show: Application stack trace, segfault, or misconfigured entrypoint.
+
+User should: Check container logs, kubectl describe pod, fix entrypoint or config/env var.
+
+Hint: "Simulate app crash due to missing ENV var"
+
+2. ImagePullBackOff
+
+What’s happening: Kubernetes can't pull container image.
+
+Logs show: pull access denied, not found, or auth error.
+
+User should: Validate image name, credentials, registry access.
+
+Hint: "Simulate private repo without secret"
+
+3. Pod Pending
+
+What’s happening: Pod scheduled but not running.
+
+Logs show: 0/3 nodes available, affinity/taint errors.
+
+User should: Describe pod, check node taints, resource requests.
+
+Hint: "Simulate pod stuck due to no CPU"
+
+✅ Level 2: Service and Networking Issues
+
+4. Service Not Reachable
+
+What’s happening: Application can't reach other service.
+
+Logs show: connection refused, timeout, DNS failure.
+
+User should: Validate service name, selectors, ports.
+
+Hint: "Simulate wrong service selector"
+
+5. Readiness Probe Failing
+
+What’s happening: Service marked as not ready.
+
+Logs show: Application runs but probe fails.
+
+User should: Adjust path, port, or delay for readiness probe.
+
+Hint: "Probe path wrong"
+
+6. DNS Resolution Fails
+
+What’s happening: Pod can’t resolve internal name.
+
+Logs show: DNS errors like SERVFAIL.
+
+User should: Check CoreDNS logs, check service names.
+
+Hint: "Simulate CoreDNS crash"
+
+✅ Level 3: Node & Scheduling Issues
+
+7. Node Out of Resources
+
+What’s happening: Pods evicted or not scheduled.
+
+Logs show: evicted due to memory pressure.
+
+User should: Describe node, use kubectl top nodes, adjust requests/limits.
+
+8. Taints and Tolerations Mismatch
+
+What’s happening: Pod not scheduled.
+
+Logs show: Scheduler skips node.
+
+User should: Match tolerations to taints.
+
+9. Host Port Conflict
+
+What’s happening: Pod fails to start.
+
+Logs show: Bind error on host port.
+
+User should: Avoid using same hostPort or deploy DaemonSet.
+
+✅ Level 4: Persistent Storage and Security
+
+10. PVC Stuck in Pending
+
+What’s happening: Volume can’t be provisioned.
+
+Logs show: no persistent volumes available.
+
+User should: Check storage class, PV availability.
+
+11. Volume Mount Permission Denied
+
+What’s happening: Pod starts but fails to read/write volume.
+
+Logs show: Permission denied.
+
+User should: Check fsGroup, permissions.
+
+12. Secret or ConfigMap Not Found
+
+What’s happening: Pod fails due to missing secret.
+
+Logs show: no such file or directory.
+
+User should: Check secret exists, is mounted correctly.
+
+✅ Level 5: Ingress, Controllers, and Mesh
+
+13. Ingress Returns 404 or 502
+
+What’s happening: Frontend unreachable.
+
+Logs show: Ingress controller logs show no upstream.
+
+User should: Validate backend service, TLS secret, annotations.
+
+14. Sidecar Injection Breaks Pod
+
+What’s happening: App fails due to missing sidecar.
+
+Logs show: Init container crash or 503s.
+
+User should: Check mesh labels, webhook logs.
+
+15. Operator Doesn’t Reconcile
+
+What’s happening: Custom resource is ignored.
+
+Logs show: Operator logs show parsing error or crash.
+
+User should: Check CRD version, permissions.
+
+✅ Level 6: CI/CD, Monitoring, and Time
+
+16. Job or CronJob Fails
+
+What’s happening: One-time job crashes.
+
+Logs show: App error or no logs at all.
+
+User should: Check image, command, and logs of failed job.
+
+17. Prometheus Not Scraping
+
+What’s happening: Metrics missing.
+
+Logs show: Target down, bad scrape config.
+
+User should: Check metrics endpoint, labels.
+
+18. Time Sync Issues
+
+What’s happening: Logs out of order, token errors.
+
+Logs show: JWT invalid or clock skew.
+
+User should: Sync NTP, check node ti
+
+
+--------------------
+
+19. Time Sync Issues
+
+What’s happening: Logs out of order, token errors.
+
+Logs show: JWT invalid or clock skew.
+
+User should: Sync NTP, check node time drift.
+
+✅ Level 7: Advanced Debugging Scenarios
+
+20. Admission Webhook Failing
+
+What’s happening: Resource validation blocked.
+
+Logs show: Webhook connect timeout or TLS error.
+
+User should: Check webhook URL, service, TLS certs.
+
+21. Init Container Timeout
+
+What’s happening: Init container never finishes.
+
+Logs show: Hanging on startup or exit 1.
+
+User should: Examine init logs, network access, dependencies.
+
+22. Fluentd/Log Forwarder Errors
+
+What’s happening: Logs missing from central system.
+
+Logs show: connection refused, or parse errors.
+
+User should: Validate fluentd config, output sink, file access.
+
+23. Kubelet Resource Leak
+
+What’s happening: Node slowly becomes unstable.
+
+Logs show: Kubelet logs high memory, unable to evict.
+
+User should: Tune GC, cadvisor, and cleanup daemonsets.
+
+24. Cloud Provider Integration Issues
+
+What’s happening: LoadBalancer stuck, volumes not attaching.
+
+Logs show: API errors from cloud controller.
+
+User should: Check IAM, cloud region, provider logs.
+
+Liveness Probe Failure
+
+What’s happening: Pod is restarted repeatedly even though app is working intermittently.
+
+Logs show: HTTP probe failed, timeout.
+
+User should: Tweak probe timing, thresholds, and confirm endpoint behavior.
+
+26. Pod Network Policy Blocking Traffic
+
+What’s happening: Pod can't reach other pods despite valid service.
+
+Logs show: Timeouts, dropped traffic.
+
+User should: Check NetworkPolicy rules, logs from CNI plugin.
+
+27. HPA Not Scaling
+
+What’s happening: App under load, but no pods added.
+
+Logs show: unable to fetch metrics, or no trigger despite traffic.
+
+User should: Confirm metrics-server is running and metrics are exposed.
+
+28. ConfigMap Changes Not Propagating
+
+What’s happening: App uses outdated config after a change.
+
+Logs show: App behaving based on old values.
+
+User should: Restart pod or set subPath properly.
+
+29. Container OOMKilled
+
+What’s happening: Pod terminated suddenly under load.
+
+Logs show: Exit code 137 or OOMKilled.
+
+User should: Analyze memory usage, adjust resource limits.
+
+30. Node Disk Pressure
+
+What’s happening: Pods evicted unexpectedly.
+
+Logs show: node has disk pressure, eviction warning.
+
+User should: Check disk usage on node (df -h), cleanup /var/lib/docker.
+
+31. DaemonSet Not Running on All Nodes
+
+What’s happening: DaemonSet skipped on some nodes.
+
+Logs show: Scheduler skips, node selector doesn't match.
+
+User should: Inspect DaemonSet tolerations, labels, and kubectl describe.
+
+32. API Server Down or Unreachable
+
+What’s happening: kubectl not responding, components stuck.
+
+Logs show: connection refused, health probes failing.
+
+User should: SSH into master node, check kube-apiserver logs.
+
+33. ETCD Out of Space / Corruption
+
+What’s happening: Cluster unresponsive or degraded.
+
+Logs show: ETCD disk full, compaction needed.
+
+User should: Compact, defrag, increase storage.
+
+34. Stuck Finalizers Prevent Deletion
+
+What’s happening: Resource stuck in Terminating.
+
+Logs show: Finalizer blocking deletion.
+
+User should: Remove finalizer via kubectl patch.
+
+35. Multiple Ingress Controllers Conflict
+
+What’s happening: Only one ingress works or routing fails.
+
+Logs show: Conflicting annotations, multiple class labels.
+
+User should: Define ingressClass and isolate ingress controllers.
+
+36. Volume Stuck Detaching or Attaching
+
+What’s happening: Volume won't detach from node.
+
+Logs show: Controller-manager errors.
+
+User should: Manually detach from cloud or cordon/drain node.
+
+37. ArgoCD Sync Fails (GitOps context)
+
+What’s happening: ArgoCD fails to apply manifest.
+
+Logs show: server rejected request, or invalid diff.
+
+User should: Validate manifest, RBAC, CRD version compatibility.
+
+📘 Optional for Teaching (but useful for advanced learners):
+38. Certificate Expired (K8s API or Ingress TLS)
+
+Debug expired TLS certificates for cluster or services.
+
+39. CoreDNS Configuration Error
+
+Validate Corefile, ensure zone and upstreams are correct.
+
+40. Log Rotation Failing
+
+Container logs grow unbounded. Setup proper logrotate or file size limits.
+
+41. Metrics Server Fails to Start
+
+Needed for HPA. Logs show CA cert issue or API timeout.
+
+42. Pod Security Policy (PSP) Denies Pod
+
+Logs show Forbidden, pod won't schedule due to missing capabilities.
+
+43. Misconfigured StatefulSet
+
+Improper headless service, volumeClaimTemplate errors.

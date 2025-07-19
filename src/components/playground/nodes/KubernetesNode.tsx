@@ -18,7 +18,10 @@ import {
   Edit3,
   Check,
   X,
-  Trash2
+  Trash2,
+  User,
+  TrendingUp,
+  FolderOpen
 } from 'lucide-react';
 import { useKubernetesStore } from '../../../store/kubernetesStore';
 import toast from 'react-hot-toast';
@@ -49,6 +52,9 @@ const KubernetesNode: React.FC<NodeProps<NodeData>> = ({ data, selected, id }) =
       daemonset: Layers,
       job: Play,
       cronjob: Clock,
+      user: User,
+      hpa: TrendingUp,
+      namespace: FolderOpen,
     };
     return icons[type] || Box;
   };
@@ -82,6 +88,9 @@ const KubernetesNode: React.FC<NodeProps<NodeData>> = ({ data, selected, id }) =
       configmap: 'text-cyan-600 bg-cyan-50 border-cyan-200',
       secret: 'text-red-600 bg-red-50 border-red-200',
       pvc: 'text-indigo-600 bg-indigo-50 border-indigo-200',
+      user: 'text-red-700 bg-red-100 border-red-300',
+      hpa: 'text-orange-600 bg-orange-50 border-orange-200',
+      namespace: 'text-purple-600 bg-purple-50 border-purple-200',
     };
     return colors[type] || 'text-slate-600 bg-slate-50 border-slate-200';
   };
@@ -119,6 +128,7 @@ const KubernetesNode: React.FC<NodeProps<NodeData>> = ({ data, selected, id }) =
 
   return (
     <motion.div
+      key={`${id}-${data.componentType}`} // Force re-render on component changes
       className={`group px-4 py-3 border-2 rounded-xl bg-white shadow-sm min-w-[140px] relative ${colorClasses} ${
         selected ? 'ring-2 ring-blue-500 ring-opacity-50' : ''
       }`}
@@ -126,6 +136,10 @@ const KubernetesNode: React.FC<NodeProps<NodeData>> = ({ data, selected, id }) =
       animate={{ scale: 1, opacity: 1 }}
       transition={{ duration: 0.2 }}
       whileHover={{ scale: 1.02 }}
+      style={{
+        transform: 'translate3d(0, 0, 0)', // Force hardware acceleration
+        willChange: 'transform' // Optimize for transforms
+      }}
     >
       {/* Connection Handles */}
       <Handle

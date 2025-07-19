@@ -147,7 +147,28 @@ const Lessons: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="relative text-center mb-12">
+          {/* Small K8s Architecture Button - Top Right */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.4 }}
+            className="absolute top-0 right-0 hidden md:block"
+          >
+            <button
+              onClick={() => setShowDiagramLearning(true)}
+              className="group bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-4 py-2 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 flex items-center gap-2"
+            >
+              <Map className="w-4 h-4" />
+              <span className="text-sm font-medium">K8s Architecture</span>
+              <motion.div
+                animate={{ rotate: [0, 360] }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                className="w-2 h-2 bg-white bg-opacity-60 rounded-full"
+              />
+            </button>
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -199,6 +220,23 @@ const Lessons: React.FC = () => {
               )}
             </div>
           </motion.div>
+
+          {/* Mobile K8s Architecture Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="md:hidden mt-6"
+          >
+            <button
+              onClick={() => setShowDiagramLearning(true)}
+              className="group bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-4 py-2 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl flex items-center gap-2 mx-auto"
+            >
+              <Map className="w-4 h-4" />
+              <span className="text-sm font-medium">Explore K8s Architecture</span>
+              <ArrowRight className="w-3 h-3" />
+            </button>
+          </motion.div>
         </div>
 
         {/* Search Results */}
@@ -242,153 +280,7 @@ const Lessons: React.FC = () => {
           </motion.div>
         )}
 
-        {/* Diagram Learning Feature */}
-        {!searchQuery && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="mb-12"
-          >
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white relative overflow-hidden">
-              {/* Background Pattern */}
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute top-4 left-4 w-32 h-32 border-2 border-white rounded-full"></div>
-                <div className="absolute bottom-4 right-4 w-24 h-24 border-2 border-white rounded-lg rotate-45"></div>
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 border border-white rounded-full"></div>
-              </div>
 
-              <div className="relative z-10">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
-                        <Map className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <h3 className="text-2xl font-bold">Learn from Interactive Diagrams</h3>
-                        <p className="text-blue-100">Visual exploration of Kubernetes architecture</p>
-                      </div>
-                    </div>
-
-                    <p className="text-blue-100 mb-6 max-w-2xl">
-                      Explore Kubernetes components through an interactive node-based map.
-                      Hover over components for quick insights, click for detailed explanations,
-                      and export your learning materials as PDF for offline study.
-                    </p>
-
-                    <div className="flex flex-wrap gap-4 mb-6">
-                      <div className="flex items-center gap-2 bg-white bg-opacity-20 px-3 py-2 rounded-lg">
-                        <Network className="w-4 h-4" />
-                        <span className="text-sm">Interactive Architecture Map</span>
-                      </div>
-                      <div className="flex items-center gap-2 bg-white bg-opacity-20 px-3 py-2 rounded-lg">
-                        <Eye className="w-4 h-4" />
-                        <span className="text-sm">Hover Tooltips & Click Details</span>
-                      </div>
-                      <div className="flex items-center gap-2 bg-white bg-opacity-20 px-3 py-2 rounded-lg">
-                        <BookOpen className="w-4 h-4" />
-                        <span className="text-sm">Export to PDF</span>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => setShowDiagramLearning(true)}
-                      className="bg-white text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-xl font-semibold transition-colors inline-flex items-center gap-2 shadow-lg"
-                    >
-                      <Map className="w-5 h-5" />
-                      Explore Architecture Map
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  {/* Preview Animation */}
-                  <div className="hidden lg:block">
-                    <div className="relative w-64 h-48">
-                      <motion.div
-                        animate={{
-                          scale: [1, 1.1, 1],
-                          rotate: [0, 5, 0]
-                        }}
-                        transition={{
-                          duration: 4,
-                          repeat: Infinity,
-                          ease: "easeInOut"
-                        }}
-                        className="absolute top-4 left-4 w-16 h-16 bg-white bg-opacity-30 rounded-xl flex items-center justify-center"
-                      >
-                        <span className="text-2xl">🧠</span>
-                      </motion.div>
-                      <motion.div
-                        animate={{
-                          scale: [1, 1.2, 1],
-                          y: [0, -10, 0]
-                        }}
-                        transition={{
-                          duration: 3,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                          delay: 1
-                        }}
-                        className="absolute top-16 right-8 w-12 h-12 bg-white bg-opacity-30 rounded-lg flex items-center justify-center"
-                      >
-                        <span className="text-lg">🚀</span>
-                      </motion.div>
-                      <motion.div
-                        animate={{
-                          scale: [1, 1.15, 1],
-                          x: [0, 10, 0]
-                        }}
-                        transition={{
-                          duration: 3.5,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                          delay: 2
-                        }}
-                        className="absolute bottom-8 left-8 w-14 h-14 bg-white bg-opacity-30 rounded-full flex items-center justify-center"
-                      >
-                        <span className="text-xl">🔗</span>
-                      </motion.div>
-
-                      {/* Connecting Lines */}
-                      <svg className="absolute inset-0 w-full h-full">
-                        <motion.path
-                          d="M 60 60 Q 120 80 180 100"
-                          stroke="rgba(255,255,255,0.3)"
-                          strokeWidth="2"
-                          fill="none"
-                          strokeDasharray="5,5"
-                          initial={{ pathLength: 0 }}
-                          animate={{ pathLength: 1 }}
-                          transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                          }}
-                        />
-                        <motion.path
-                          d="M 180 100 Q 140 140 100 160"
-                          stroke="rgba(255,255,255,0.3)"
-                          strokeWidth="2"
-                          fill="none"
-                          strokeDasharray="5,5"
-                          initial={{ pathLength: 0 }}
-                          animate={{ pathLength: 1 }}
-                          transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                            ease: "easeInOut",
-                            delay: 1
-                          }}
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
 
         {/* Learning Roadmap */}
         {!searchQuery && (
