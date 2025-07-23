@@ -181,7 +181,7 @@ const StatusPanel: React.FC = () => {
 
   return (
     <motion.div
-      className="w-full bg-white border-l border-slate-200 flex flex-col h-full"
+      className="w-full h-full flex flex-col overflow-hidden"
       initial={{ x: 100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.3 }}

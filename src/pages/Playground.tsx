@@ -7,7 +7,7 @@ import KubernetesCanvas from '../components/playground/KubernetesCanvas';
 import YamlEditor from '../components/playground/YamlEditor';
 import StatusPanel from '../components/playground/StatusPanel';
 import ComponentPalette from '../components/playground/ComponentPalette';
-import LearningGuide from '../components/playground/LearningGuide';
+
 import ArchitectureValidator from '../components/playground/ArchitectureValidator';
 import ExamplesGallery from '../components/playground/ExamplesGallery';
 import toast from 'react-hot-toast';
@@ -170,8 +170,8 @@ const Playground: React.FC = () => {
 
       {/* Main Content - Compact Layout */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Component Palette - Increased width to fix clumsy layout */}
-        <div className="w-64 flex-shrink-0 overflow-hidden">
+        {/* Component Palette - Left sidebar */}
+        <div className="w-64 flex-shrink-0 overflow-hidden border-r border-slate-200">
           <ComponentPalette />
         </div>
 
@@ -180,12 +180,12 @@ const Playground: React.FC = () => {
           {/* Top Section: Canvas and Status Panel */}
           <div className="flex-1 flex overflow-hidden min-h-0">
             {/* Canvas - Flexible width */}
-            <div className="flex-1 bg-slate-50 overflow-hidden min-w-0">
+            <div className="flex-1 bg-slate-50 overflow-hidden min-w-0 relative">
               <KubernetesCanvas />
             </div>
 
-            {/* Status Panel - Increased width to match palette */}
-            <div className="w-64 flex-shrink-0 overflow-hidden">
+            {/* Status Panel - Right sidebar with fixed width */}
+            <div className="w-64 flex-shrink-0 border-l border-slate-200 bg-white">
               <StatusPanel />
             </div>
           </div>
@@ -207,8 +207,7 @@ const Playground: React.FC = () => {
         </div>
       </div>
 
-      {/* Learning Guide */}
-      <LearningGuide />
+
 
       {/* Architecture Validator */}
       <ArchitectureValidator />

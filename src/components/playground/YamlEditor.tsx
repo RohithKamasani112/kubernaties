@@ -510,7 +510,7 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
           </motion.div>
         )}
 
-        {yamlContent ? (
+        <div className="relative h-full">
           <Editor
             height="100%"
             defaultLanguage="yaml"
@@ -518,39 +518,37 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
             onChange={handleYamlChange}
             options={editorOptions}
           />
-        ) : (
-          <div className="h-full flex items-center justify-center text-slate-500">
-            <div className="text-center max-w-md">
-              <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p className="text-sm mb-3">
-                Add components to the canvas to see generated YAML
-              </p>
-              <p className="text-xs text-slate-400 mb-4">
-                Drag components from the left panel to get started
-              </p>
-              <div className="bg-slate-100 rounded-lg p-4 text-left">
-                <p className="text-xs text-slate-600 mb-2 font-mono">
-                  # YAML will be generated here...
+          {yamlContent === '' && (
+            <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+              <div className="text-center max-w-md text-slate-400">
+                <FileText className="w-12 h-12 mx-auto mb-4 opacity-30" />
+                <p className="text-sm mb-3">
+                  Add components to the canvas to see generated YAML
                 </p>
-                <p className="text-xs text-slate-500 font-mono">
-                  # Example:
+                <p className="text-xs mb-4">
+                  Or click here and paste your own YAML...
                 </p>
-                <p className="text-xs text-slate-500 font-mono">
-                  # apiVersion: v1
-                </p>
-                <p className="text-xs text-slate-500 font-mono">
-                  # kind: Pod
-                </p>
-                <p className="text-xs text-slate-500 font-mono">
-                  # metadata:
-                </p>
-                <p className="text-xs text-slate-500 font-mono">
-                  #   name: my-pod
-                </p>
+                <div className="bg-slate-50 rounded-lg p-4 text-left border border-slate-200">
+                  <p className="text-xs text-slate-500 font-mono">
+                    # Example YAML:
+                  </p>
+                  <p className="text-xs text-slate-500 font-mono">
+                    # apiVersion: v1
+                  </p>
+                  <p className="text-xs text-slate-500 font-mono">
+                    # kind: Pod
+                  </p>
+                  <p className="text-xs text-slate-500 font-mono">
+                    # metadata:
+                  </p>
+                  <p className="text-xs text-slate-500 font-mono">
+                    #   name: my-pod
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Validation Errors */}

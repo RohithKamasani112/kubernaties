@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { 
-  Heart, 
-  Users, 
-  Globe, 
-  BookOpen, 
-  Rocket, 
-  Target, 
+import {
+  Heart,
+  Users,
+  Globe,
+  BookOpen,
+  Rocket,
+  Target,
   ArrowRight,
   Star,
   Award,
@@ -17,7 +17,12 @@ import {
   Layers,
   GitBranch,
   Play,
-  UserPlus
+  UserPlus,
+  MessageSquare,
+  Bug,
+  Lightbulb,
+  ExternalLink,
+  Send
 } from 'lucide-react';
 
 const About: React.FC = () => {
@@ -606,6 +611,89 @@ const About: React.FC = () => {
                 </motion.div>
               );
             })}
+          </div>
+
+          {/* Contact and Social Section */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
+            {/* Follow us on LinkedIn */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-100 h-full">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  Stay Connected
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Follow us on LinkedIn for the latest updates, tech insights, and learning opportunities
+                </p>
+                <a
+                  href="https://www.linkedin.com/company/samwi/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center space-x-3 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  </svg>
+                  <span>Follow on LinkedIn</span>
+                </a>
+              </div>
+            </motion.div>
+
+            {/* Contact Us */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-8 border border-green-100 h-full">
+                <div className="flex items-center justify-center mb-4">
+                  <MessageSquare className="w-8 h-8 text-green-600 mr-3" />
+                  <h3 className="text-2xl font-bold text-gray-900">
+                    Help Us Improve KubeQuest
+                  </h3>
+                </div>
+                <p className="text-gray-600 mb-6">
+                  Your feedback shapes our platform! Report bugs, suggest features, or share your learning experience.
+                </p>
+
+                {/* Feedback Types */}
+                <div className="grid md:grid-cols-3 gap-4 mb-6">
+                  <div className="bg-white rounded-lg p-4 border border-green-100">
+                    <Bug className="w-6 h-6 text-red-500 mx-auto mb-2" />
+                    <h4 className="font-semibold text-gray-900 text-sm">Report Bugs</h4>
+                    <p className="text-xs text-gray-600">Found something broken?</p>
+                  </div>
+                  <div className="bg-white rounded-lg p-4 border border-green-100">
+                    <Lightbulb className="w-6 h-6 text-yellow-500 mx-auto mb-2" />
+                    <h4 className="font-semibold text-gray-900 text-sm">Feature Ideas</h4>
+                    <p className="text-xs text-gray-600">Suggest improvements</p>
+                  </div>
+                  <div className="bg-white rounded-lg p-4 border border-green-100">
+                    <Heart className="w-6 h-6 text-pink-500 mx-auto mb-2" />
+                    <h4 className="font-semibold text-gray-900 text-sm">General Feedback</h4>
+                    <p className="text-xs text-gray-600">Share your experience</p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRRM1ZI7aSogq93y9onzbR2R4vJZkxswPGqV6wqSQyUm0FSA/viewform?usp=dialog', '_blank', 'width=800,height=900,scrollbars=yes,resizable=yes')}
+                  className="inline-flex items-center space-x-3 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                >
+                  <ExternalLink className="w-5 h-5" />
+                  <span>Open Feedback Form</span>
+                </button>
+                <div className="mt-4 text-sm text-gray-500">
+                  Quick & easy • Takes 2-3 minutes
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>

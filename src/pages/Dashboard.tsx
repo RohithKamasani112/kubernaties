@@ -11,7 +11,12 @@ import {
   ArrowRight,
   TrendingUp,
   Award,
-  Activity
+  Activity,
+  MessageSquare,
+  Bug,
+  Lightbulb,
+  ExternalLink,
+  Send
 } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
@@ -111,10 +116,25 @@ const Dashboard: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center">
-            Welcome back! 👋
-          </h1>
-          <p className="text-gray-600">Ready to master Kubernetes? Let's continue your learning journey.</p>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center">
+                Welcome to <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent ml-2">Samwi</span>! 👋
+              </h1>
+              <p className="text-gray-600">Welcome to Samwi's KubeQuest learning platform! Ready to master Kubernetes and cloud technologies?</p>
+            </div>
+
+            {/* Quick Feedback CTA */}
+            <div className="flex-shrink-0">
+              <button
+                onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRRM1ZI7aSogq93y9onzbR2R4vJZkxswPGqV6wqSQyUm0FSA/viewform?usp=dialog', '_blank', 'width=800,height=900,scrollbars=yes,resizable=yes')}
+                className="inline-flex items-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+              >
+                <MessageSquare className="w-4 h-4" />
+                <span>Give Feedback</span>
+              </button>
+            </div>
+          </div>
         </motion.div>
 
         {/* Stats Grid */}
@@ -192,7 +212,136 @@ const Dashboard: React.FC = () => {
             </div>
           </motion.div>
         </div>
+
+        {/* Feedback Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="mt-12"
+        >
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-8 border border-blue-100">
+            <div className="text-center mb-8">
+              <div className="flex items-center justify-center mb-4">
+                <MessageSquare className="w-8 h-8 text-blue-600 mr-3" />
+                <h3 className="text-2xl font-bold text-gray-900">
+                  Help Shape KubeQuest's Future
+                </h3>
+              </div>
+              <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+                Your feedback drives our improvements! Whether you've found a bug, have a brilliant feature idea,
+                or want to share your learning experience - we want to hear from you.
+              </p>
+            </div>
+
+            {/* Quick Feedback Options */}
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-white rounded-lg p-6 border border-red-100 hover:border-red-200 transition-colors">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Bug className="w-6 h-6 text-red-600" />
+                  </div>
+                  <h4 className="font-semibold text-gray-900 mb-2">Report a Bug</h4>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Something not working as expected? Let us know so we can fix it quickly.
+                  </p>
+                  <button
+                    onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRRM1ZI7aSogq93y9onzbR2R4vJZkxswPGqV6wqSQyUm0FSA/viewform?usp=dialog', '_blank', 'width=800,height=900,scrollbars=yes,resizable=yes')}
+                    className="text-red-600 hover:text-red-700 font-medium text-sm flex items-center justify-center"
+                  >
+                    Report Bug <ArrowRight className="w-4 h-4 ml-1" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg p-6 border border-yellow-100 hover:border-yellow-200 transition-colors">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Lightbulb className="w-6 h-6 text-yellow-600" />
+                  </div>
+                  <h4 className="font-semibold text-gray-900 mb-2">Suggest Feature</h4>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Have an idea that could make learning even better? Share it with us!
+                  </p>
+                  <button
+                    onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRRM1ZI7aSogq93y9onzbR2R4vJZkxswPGqV6wqSQyUm0FSA/viewform?usp=dialog', '_blank', 'width=800,height=900,scrollbars=yes,resizable=yes')}
+                    className="text-yellow-600 hover:text-yellow-700 font-medium text-sm flex items-center justify-center"
+                  >
+                    Share Idea <ArrowRight className="w-4 h-4 ml-1" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg p-6 border border-green-100 hover:border-green-200 transition-colors">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Send className="w-6 h-6 text-green-600" />
+                  </div>
+                  <h4 className="font-semibold text-gray-900 mb-2">General Feedback</h4>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Share your overall experience and help us understand what's working well.
+                  </p>
+                  <button
+                    onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRRM1ZI7aSogq93y9onzbR2R4vJZkxswPGqV6wqSQyUm0FSA/viewform?usp=dialog', '_blank', 'width=800,height=900,scrollbars=yes,resizable=yes')}
+                    className="text-green-600 hover:text-green-700 font-medium text-sm flex items-center justify-center"
+                  >
+                    Give Feedback <ArrowRight className="w-4 h-4 ml-1" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Main CTA */}
+            <div className="text-center">
+              <button
+                onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRRM1ZI7aSogq93y9onzbR2R4vJZkxswPGqV6wqSQyUm0FSA/viewform?usp=dialog', '_blank', 'width=800,height=900,scrollbars=yes,resizable=yes')}
+                className="inline-flex items-center space-x-3 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                <ExternalLink className="w-5 h-5" />
+                <span>Open Complete Feedback Form</span>
+              </button>
+              <p className="text-sm text-gray-500 mt-3">
+                Quick & easy • Takes 2-3 minutes • Your input shapes our roadmap
+              </p>
+
+              {/* Alternative Contact */}
+              <div className="mt-6 pt-6 border-t border-blue-200">
+                <p className="text-sm text-gray-600 mb-2">
+                  Prefer email? You can also reach us directly:
+                </p>
+                <a
+                  href="mailto:samwi.global@gmail.com?subject=Feedback for KubeQuest Platform"
+                  className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span>samwi.global@gmail.com</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
+
+      {/* Floating Feedback Button */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, delay: 1 }}
+        className="fixed bottom-6 right-6 z-50"
+      >
+        <button
+          onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRRM1ZI7aSogq93y9onzbR2R4vJZkxswPGqV6wqSQyUm0FSA/viewform?usp=dialog', '_blank', 'width=800,height=900,scrollbars=yes,resizable=yes')}
+          className="group bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110"
+          title="Give Feedback"
+        >
+          <MessageSquare className="w-6 h-6" />
+          <span className="absolute right-full mr-3 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white text-sm px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+            Give Feedback
+          </span>
+        </button>
+      </motion.div>
     </div>
   );
 };

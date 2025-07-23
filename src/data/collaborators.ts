@@ -7,79 +7,39 @@ export interface Collaborator {
   bio?: string;
 }
 
-// Example collaborators data - replace with actual team members
+// Team collaborators data - QA Interns contributing to the product
 export const collaborators: Collaborator[] = [
   {
     id: "1",
-    name: "Alex Rodriguez",
-    role: "Lead Developer",
-    imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-    linkedinUrl: "https://linkedin.com/in/alexrodriguez",
-    bio: "Kubernetes expert with 5+ years of experience in container orchestration and cloud-native development"
+    name: "Hem Kumari Abungyak",
+    role: "QA Intern",
+    imageUrl: "H",
+    linkedinUrl: "https://www.linkedin.com/in/hem-kumari-abungyak-81566436a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+    bio: "Quality assurance intern ensuring platform reliability and exceptional user experiences"
   },
   {
     id: "2",
-    name: "Sarah Chen",
-    role: "DevOps Engineer",
-    imageUrl: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
-    linkedinUrl: "https://linkedin.com/in/sarahchen",
-    bio: "Cloud infrastructure specialist focused on scalable solutions and automation"
+    name: "Mehreen Talat",
+    role: "QA Intern",
+    imageUrl: "M",
+    linkedinUrl: "https://www.linkedin.com/in/mehreentalat/",
+    bio: "Dedicated QA intern focused on testing and improving platform functionality"
   },
   {
     id: "3",
-    name: "Marcus Thompson",
-    role: "UI/UX Designer",
-    imageUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-    linkedinUrl: "https://linkedin.com/in/marcusthompson",
-    bio: "Design expert creating intuitive learning experiences for complex technical concepts"
+    name: "Dhruv Maheshwari",
+    role: "QA Intern",
+    imageUrl: "D",
+    linkedinUrl: "https://www.linkedin.com/in/dhruv-maheshwari-aab98b26",
+    bio: "Quality assurance intern contributing to robust testing processes and bug-free experiences"
   },
   {
     id: "4",
-    name: "Emily Davis",
-    role: "Technical Writer",
-    imageUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
-    linkedinUrl: "https://linkedin.com/in/emilydavis",
-    bio: "Documentation specialist making complex topics accessible to learners worldwide"
-  },
-  {
-    id: "5",
-    name: "David Kim",
-    role: "Platform Engineer",
-    imageUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
-    linkedinUrl: "https://linkedin.com/in/davidkim",
-    bio: "Infrastructure automation expert building reliable and scalable platforms"
-  },
-  {
-    id: "6",
-    name: "Lisa Wang",
-    role: "Product Manager",
-    imageUrl: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=face",
-    linkedinUrl: "https://linkedin.com/in/lisawang",
-    bio: "Product strategist focused on creating exceptional learning experiences"
-  },
-  {
-    id: "7",
-    name: "James Wilson",
-    role: "Security Engineer",
-    imageUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
-    linkedinUrl: "https://linkedin.com/in/jameswilson",
-    bio: "Cybersecurity specialist ensuring platform security and compliance"
-  },
-  {
-    id: "8",
-    name: "Maria Garcia",
-    role: "QA Engineer",
-    imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face",
-    linkedinUrl: "https://linkedin.com/in/mariagarcia",
-    bio: "Quality assurance expert ensuring reliable and bug-free user experiences"
-  },
-  {
-    id: "9",
-    name: "Robert Brown",
-    role: "Cloud Architect",
-    imageUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&h=150&fit=crop&crop=face",
-    linkedinUrl: "https://linkedin.com/in/robertbrown",
-    bio: "Cloud infrastructure architect designing scalable and resilient systems"
+    name: "Nikola Mijajlović",
+    role: "QA Intern",
+    imageUrl: "N",
+    linkedinUrl: "https://www.linkedin.com/in/nikola-mijajlovi%C4%87-833818300?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+    bio: "QA intern specializing in comprehensive testing and quality improvement initiatives"
   }
 ];
 

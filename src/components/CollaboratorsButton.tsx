@@ -105,19 +105,27 @@ const CollaboratorsButton: React.FC = () => {
                     {/* Profile Image */}
                     <div className="relative mb-6 flex justify-center">
                       <div className="w-24 h-24 rounded-full overflow-hidden bg-blue-500 ring-4 ring-blue-100 shadow-lg">
-                        <img
-                          src={collaborator.imageUrl}
-                          alt={collaborator.name}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.style.display = 'none';
-                            const parent = target.parentElement;
-                            if (parent) {
-                              parent.innerHTML = `<div class="w-full h-full flex items-center justify-center text-white text-2xl font-bold">${collaborator.name.split(' ').map(n => n[0]).join('')}</div>`;
-                            }
-                          }}
-                        />
+                        {collaborator.imageUrl.length === 1 ? (
+                          // Display letter placeholder
+                          <div className="w-full h-full flex items-center justify-center text-white text-3xl font-bold">
+                            {collaborator.imageUrl}
+                          </div>
+                        ) : (
+                          // Display actual image
+                          <img
+                            src={collaborator.imageUrl}
+                            alt={collaborator.name}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              const parent = target.parentElement;
+                              if (parent) {
+                                parent.innerHTML = `<div class="w-full h-full flex items-center justify-center text-white text-2xl font-bold">${collaborator.name.split(' ').map(n => n[0]).join('')}</div>`;
+                              }
+                            }}
+                          />
+                        )}
                       </div>
                       {/* LinkedIn indicator */}
                       <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-[#0077B5] rounded-lg flex items-center justify-center shadow-lg border-2 border-white">

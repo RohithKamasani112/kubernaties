@@ -7,7 +7,6 @@ import {
   BookOpen,
   Target,
   FileText,
-  Zap,
   Award,
   User,
   ChevronLeft,
@@ -16,9 +15,11 @@ import {
   Heart,
   Network,
   Bug,
-  Cloud
+  Cloud,
+  MessageSquare
 } from 'lucide-react';
 import { StatusBadge } from './ui/StatusBadge';
+import KubeQuestLogo from './icons/KubeQuestLogo';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -53,14 +54,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navItems = [
     { path: '/', icon: Home, label: 'Home', color: 'text-blue-600' },
     { path: '/playground', icon: PlayCircle, label: 'Playground', color: 'text-emerald-600' },
-    { path: '/k8s-debugging', icon: Bug, label: "K8s Debugging", color: 'text-red-600' },
-    // { path: '/k8s-explained', icon: Network, label: 'K8s Explained', color: 'text-cyan-600' },
-    { path: '/examples', icon: Lightbulb, label: 'Examples', color: 'text-yellow-600' },
     { path: '/lessons', icon: BookOpen, label: 'Lessons', color: 'text-purple-600' },
+    { path: '/examples', icon: Lightbulb, label: 'Examples', color: 'text-yellow-600' },
     { path: '/challenges', icon: Target, label: 'Challenges', color: 'text-orange-600' },
+    { path: '/k8s-debugging', icon: Bug, label: "K8s Debugging", color: 'text-red-600' },
     { path: '/arch-learning', icon: Cloud, label: 'Arch Learning', color: 'text-indigo-600', status: 'under-development' },
     { path: '/docs', icon: FileText, label: 'Docs', color: 'text-slate-600' },
-    { path: '/about', icon: Heart, label: 'About', color: 'text-pink-600' },
+    { path: '/about', icon: Heart, label: 'About & Feedback', color: 'text-pink-600' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -109,9 +109,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {/* Logo */}
         <div className={`${isCollapsed ? 'p-4' : 'p-6'} border-b border-slate-200 transition-all duration-300`}>
           <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-200">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Zap className="w-5 h-5 text-white" />
-            </div>
+            <KubeQuestLogo size={isCollapsed ? 32 : 40} className="flex-shrink-0" />
             <AnimatePresence>
               {!isCollapsed && (
                 <motion.div

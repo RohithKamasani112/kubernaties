@@ -176,30 +176,36 @@ resource "aws_route53_record" "site_dns" {
 output "website_url" {
   value = "https://${var.domain_name}"
 }
-----------------------------------------------------------------------------------------
+Scenario 2: Scalable Serverless API on Azure 💠
+Title: Scalable Serverless API on Azure
 
-## Scenario 2: Scalable Serverless API on Azure 💠
+Description: Build a highly scalable, event-driven, and cost-efficient REST API backend using Azure's core serverless components.
 
-* **Title**: Scalable Serverless API on Azure
-* **Description**: Build a highly scalable, event-driven, and cost-efficient REST API backend using Azure's core serverless components for modern mobile applications.
-* **User Prompt**: "Build a scalable, low-cost API for my mobile app on Azure."
-* **Services Involved**:
-    * Azure Functions (for serverless compute)
-    * API Management (for gateway, security, and policies)
-    * Cosmos DB (for NoSQL database)
-    * Application Insights (for monitoring and analytics)
-* **Level**: Intermediate
-* **Estimated Time**: 25 minutes
-* **Cost Level**: Low
-* **Export Formats**: PNG, Terraform
+User Prompt: "Build a scalable, low-cost API for my mobile app on Azure."
 
-### **Architecture Diagram (PNG) Description**
+Services Involved:
 
+Azure Functions (for compute)
+
+API Management (for gateway, security, and policies)
+
+Cosmos DB (for NoSQL database)
+
+Application Insights (for monitoring)
+
+Level: Intermediate
+
+Estimated Time: 25 minutes
+
+Cost Level: Low
+
+Export Formats: PNG, Terraform
+
+Architecture Diagram (PNG) Description
 The diagram shows a Mobile App/Client on the far left. An arrow points from the client to an API Management instance, which acts as the API gateway. The API Management icon has a smaller key icon on it, representing authentication (e.g., subscription keys). The gateway defines the API routes (e.g., /api/items). An arrow points from API Management to an Azure Function App. The Function App contains multiple HTTP-triggered functions (e.g., CreateItem, GetItem). An arrow points from the Function App to a Cosmos DB (NoSQL API) instance, representing data storage and retrieval. A separate Application Insights service is shown, with dotted lines pointing to both the API Management and the Function App, indicating it's collecting logs and telemetry from both.
 
-### **Terraform Code (`main.tf`)**
-
-```terraform
+Terraform Code (main.tf)
+Terraform
 
 # main.tf
 # This Terraform code deploys a serverless API with Azure Functions and Cosmos DB, fronted by API Management.
@@ -334,33 +340,36 @@ resource "azurerm_api_management" "apim" {
 output "api_gateway_url" {
   value = azurerm_api_management.apim.gateway_url
 }
-```
+Scenario 3: Containerized Web App on GCP Cloud Run 🌐
+Title: Containerized Web App on GCP Cloud Run
 
----
-----------------------------------------------------------------------------------------
+Description: Deploy a containerized application as a fully managed, auto-scaling serverless web service on Google Cloud Run.
 
-## Scenario 3: Containerized Web App on GCP Cloud Run 🌐
+User Prompt: "Deploy my Node.js Docker container as a scalable web service on GCP."
 
-* **Title**: Containerized Web App on GCP Cloud Run
-* **Description**: Deploy a containerized application as a fully managed, auto-scaling serverless web service on Google Cloud Run with zero server management.
-* **User Prompt**: "Deploy my Node.js Docker container as a scalable web service on GCP."
-* **Services Involved**:
-    * Cloud Run (Serverless container runtime)
-    * Artifact Registry (Container image storage)
-    * Cloud Build (Automated container builds)
-    * IAM (Identity and Access Management)
-* **Level**: Beginner
-* **Estimated Time**: 15 minutes
-* **Cost Level**: Low
-* **Export Formats**: PNG, Terraform
+Services Involved:
 
-### **Architecture Diagram (PNG) Description**
+Cloud Run (Serverless container runtime)
 
+Artifact Registry (Container image storage)
+
+Cloud Build (Automated container builds)
+
+IAM (Identity and Access Management)
+
+Level: Beginner
+
+Estimated Time: 15 minutes
+
+Cost Level: Low
+
+Export Formats: PNG, Terraform
+
+Architecture Diagram (PNG) Description
 The diagram begins with a Developer pushing code to a GitHub/Cloud Source Repository. This action triggers Cloud Build. An arrow points from the code repository to Cloud Build. Cloud Build is shown as a pipeline with steps: Build and Push. The Build step takes the source code (including a Dockerfile) and creates a Docker image. An arrow points from the Build step to the Push step. The Push step pushes the container image into Artifact Registry. An arrow points from Cloud Build to Artifact Registry. Finally, a Cloud Run service is shown, configured to pull its image from the Artifact Registry. An arrow points from Artifact Registry to Cloud Run. The Cloud Run service automatically scales from zero to N instances and is exposed to the internet via a public URL. A User icon points to the Cloud Run service, representing public access.
 
-### **Terraform Code (`main.tf`)**
-
-```terraform
+Terraform Code (main.tf)
+Terraform
 
 # main.tf
 # This Terraform code sets up the infrastructure to deploy a container to Cloud Run.
@@ -443,33 +452,38 @@ output "service_url" {
   description = "The URL of the deployed Cloud Run service."
   value       = google_cloud_run_v2_service.default.uri
 }
-```
 
----
-----------------------------------------------------------------------------------------
+_-----
+Scenario 4: Real-time Data Processing on AWS 📈
+Title: Real-time Data Processing Pipeline
 
-## Scenario 4: Real-time Data Processing on AWS 📈
+Description: Build an end-to-end, serverless pipeline to ingest, process, and store real-time streaming data on AWS.
 
-* **Title**: Real-time Data Processing Pipeline
-* **Description**: Build an end-to-end, serverless pipeline to ingest, process, and store real-time streaming data on AWS for analytics and insights.
-* **User Prompt**: "Create a system to analyze real-time clickstream data from my website."
-* **Services Involved**:
-    * Kinesis Data Streams (for data ingestion)
-    * Lambda (for data processing)
-    * S3 (for processed data storage/data lake)
-    * IAM (for permissions)
-* **Level**: Intermediate
-* **Estimated Time**: 30 minutes
-* **Cost Level**: Medium
-* **Export Formats**: PNG, Terraform
+User Prompt: "Create a system to analyze real-time clickstream data from my website."
 
-### **Architecture Diagram (PNG) Description**
+Services Involved:
 
+Kinesis Data Streams (for data ingestion)
+
+Lambda (for data processing)
+
+S3 (for processed data storage/data lake)
+
+IAM (for permissions)
+
+Level: Intermediate
+
+Estimated Time: 30 minutes
+
+Cost Level: Medium
+
+Export Formats: PNG, Terraform
+
+Architecture Diagram (PNG) Description
 The diagram shows data producers (like web or mobile clients) on the left sending a continuous stream of data into an Amazon Kinesis Data Stream. An arrow points from the producers to the Kinesis stream icon. A Lambda function is configured as a consumer of this stream, indicated by a trigger icon connecting Kinesis to Lambda. The Lambda function reads batches of records from the stream, processes them (e.g., transforms JSON, enriches data), and then writes the processed data into an S3 Bucket, which is labeled "Processed Data Lake". An arrow points from the Lambda function to the S3 bucket. All resources are governed by an IAM Role that grants the Lambda function the necessary permissions to read from Kinesis and write to S3.
 
-### **Terraform Code (`main.tf`)**
-
-```terraform
+Terraform Code (main.tf)
+Terraform
 
 # main.tf
 # This Terraform code deploys a serverless data processing pipeline on AWS.
@@ -617,34 +631,38 @@ exports.handler = async (event) => {
   return `Successfully processed ${event.Records.length} records.`;
 };
 */
-```
+Scenario 5: Private GKE Cluster with Cloud SQL 🔐
+Title: Private GKE Cluster with Cloud SQL
 
----
-----------------------------------------------------------------------------------------
+Description: Deploy a secure, production-grade microservices application on a private Google Kubernetes Engine (GKE) cluster that communicates securely with a managed SQL database.
 
-## Scenario 5: Private GKE Cluster with Cloud SQL 🔐
+User Prompt: "Set up a secure Kubernetes environment that is not exposed to the internet and can connect to a Postgres database."
 
-* **Title**: Private GKE Cluster with Cloud SQL
-* **Description**: Deploy a secure, production-grade microservices application on a private Google Kubernetes Engine (GKE) cluster that communicates securely with a managed SQL database.
-* **User Prompt**: "Set up a secure Kubernetes environment that is not exposed to the internet and can connect to a Postgres database."
-* **Services Involved**:
-    * GKE (Google Kubernetes Engine)
-    * VPC Network
-    * Cloud SQL (for PostgreSQL)
-    * Cloud NAT (for outbound internet access)
-    * IAM
-* **Level**: Advanced
-* **Estimated Time**: 60 minutes
-* **Cost Level**: High
-* **Export Formats**: PNG, Terraform
+Services Involved:
 
-### **Architecture Diagram (PNG) Description**
+GKE (Google Kubernetes Engine)
 
+VPC Network
+
+Cloud SQL (for PostgreSQL)
+
+Cloud NAT (for outbound internet access)
+
+IAM
+
+Level: Advanced
+
+Estimated Time: 60 minutes
+
+Cost Level: High
+
+Export Formats: PNG, Terraform
+
+Architecture Diagram (PNG) Description
 The diagram is enclosed within a large box representing a VPC Network. Inside the VPC, there's a GKE Cluster labeled "Private Cluster". The nodes within the cluster have no public IP addresses. Pods running inside the GKE cluster need to talk to a database. An arrow points from the GKE cluster to a Cloud SQL for PostgreSQL instance. This connection is internal to the VPC, using private IP addresses. For the cluster to pull container images or hit external APIs, an arrow points from the GKE cluster to a Cloud NAT Gateway, which in turn points to the public Internet. This ensures nodes can make outbound requests without having a public IP address. A developer is shown outside the VPC, connecting to the cluster's control plane via a secured endpoint or a bastion host (not shown for simplicity).
 
-### **Terraform Code (`main.tf`)**
-
-```terraform
+Terraform Code (main.tf)
+Terraform
 
 # main.tf
 # This Terraform code deploys a private GKE cluster and a Cloud SQL instance within the same VPC.
@@ -767,34 +785,42 @@ resource "google_project_service" "sqladmin" {
   project = var.project_id
   service = "sqladmin.googleapis.com"
 }
-```
 
----
+--------
+Here are two more detailed scenarios for your application.
 
-----------------------------------------------------------------------------------------
-## Scenario 6: CI/CD Pipeline for Containers on Azure 🚀
+Scenario 6: CI/CD Pipeline for Containers on Azure 🚀
+Title: CI/CD Pipeline for Containers on Azure
 
-* **Title**: CI/CD Pipeline for Containers on Azure
-* **Description**: Automate the build and deployment of a containerized application from a Git repository to Azure App Service using Azure DevOps for seamless continuous delivery.
-* **User Prompt**: "I want to automatically update my web app whenever I push code to my repo."
-* **Services Involved**:
-    * Azure App Service (for hosting the web app)
-    * Azure Container Registry (ACR) (for storing Docker images)
-    * Azure DevOps Pipelines (for CI/CD automation)
-    * Azure Monitor (for observing application logs)
-* **Level**: Intermediate
-* **Estimated Time**: 45 minutes
-* **Cost Level**: Medium
-* **Export Formats**: PNG, Terraform
+Description: Automate the build and deployment of a containerized application from a Git repository to Azure App Service using Azure DevOps.
 
-### **Architecture Diagram (PNG) Description**
+User Prompt: "I want to automatically update my web app whenever I push code to my repo."
 
+Services Involved:
+
+Azure App Service (for hosting the web app)
+
+Azure Container Registry (ACR) (for storing Docker images)
+
+Azure DevOps Pipelines (for CI/CD automation)
+
+Azure Monitor (for observing application logs)
+
+Level: Intermediate
+
+Estimated Time: 45 minutes
+
+Cost Level: Medium
+
+Export Formats: PNG, Terraform
+
+Architecture Diagram (PNG) Description
 The diagram starts with a developer pushing code to a Git Repository (like Azure Repos or GitHub). This push triggers an Azure DevOps Pipeline. The pipeline is shown as a two-stage process. The first stage, "Build", takes the application code and a Dockerfile, builds a Docker image, and pushes it to an Azure Container Registry (ACR). An arrow points from the pipeline's build stage to ACR. The second stage, "Release", is triggered upon a successful build. This stage takes the newly pushed image from ACR and deploys it to an Azure App Service that is configured to run containers. An arrow points from the pipeline's release stage to the App Service. Finally, Azure Monitor is shown collecting logs and metrics from the App Service, providing observability.
 
-### **Terraform Code (`main.tf`)**
-*This Terraform code sets up the target infrastructure. The Azure DevOps Pipeline itself is configured within the Azure DevOps portal.*
+Terraform Code (main.tf)
+This Terraform code sets up the target infrastructure. The Azure DevOps Pipeline itself is configured within the Azure DevOps portal.
 
-```terraform
+Terraform
 
 # main.tf
 # This Terraform code provisions the Azure infrastructure to host a containerized web app.
@@ -875,33 +901,36 @@ output "webapp_url" {
 output "acr_login_server" {
   value = azurerm_container_registry.acr.login_server
 }
-```
+Scenario 7: AWS Serverless Data Lake Querying 💧
+Title: AWS Serverless Data Lake Querying
 
----
+Description: Build a system to catalog raw data in S3 and run complex SQL queries on it without managing any servers or data warehouse infrastructure.
 
-----------------------------------------------------------------------------------------
-## Scenario 7: AWS Serverless Data Lake Querying 💧
+User Prompt: "I have TBs of log files in S3. I need an easy way to run SQL queries on them."
 
-* **Title**: AWS Serverless Data Lake Querying
-* **Description**: Build a system to catalog raw data in S3 and run complex SQL queries on it without managing any servers or data warehouse infrastructure.
-* **User Prompt**: "I have TBs of log files in S3. I need an easy way to run SQL queries on them."
-* **Services Involved**:
-    * S3 (for the data lake storage)
-    * AWS Glue Crawler (to automatically discover schema and create a data catalog)
-    * AWS Glue Data Catalog (as the metadata repository)
-    * Amazon Athena (to run interactive SQL queries)
-* **Level**: Intermediate
-* **Estimated Time**: 25 minutes
-* **Cost Level**: Low (Pay-per-query)
-* **Export Formats**: PNG, Terraform
+Services Involved:
 
-### **Architecture Diagram (PNG) Description**
+S3 (for the data lake storage)
 
+AWS Glue Crawler (to automatically discover schema and create a data catalog)
+
+AWS Glue Data Catalog (as the metadata repository)
+
+Amazon Athena (to run interactive SQL queries)
+
+Level: Intermediate
+
+Estimated Time: 25 minutes
+
+Cost Level: Low (Pay-per-query)
+
+Export Formats: PNG, Terraform
+
+Architecture Diagram (PNG) Description
 The diagram shows an S3 Bucket labeled "Raw Data Lake" containing folders of data (e.g., CSV or Parquet files). An AWS Glue Crawler is shown with an arrow pointing to this S3 bucket, indicating it crawls the data. The crawler analyzes the data and populates an AWS Glue Data Catalog with table definitions and schema information; an arrow points from the crawler to the catalog. An Analyst/User is shown on the right using the Amazon Athena query editor. Athena is configured to use the Glue Data Catalog as its metastore. An arrow points from Athena to the Glue Data Catalog. When the user runs a query, Athena reads the schema from the catalog and then directly scans the relevant data in the S3 bucket to produce results. A final arrow points from Athena back to the S3 bucket.
 
-### **Terraform Code (`main.tf`)**
-
-```terraform
+Terraform Code (main.tf)
+Terraform
 
 # main.tf
 # This Terraform code creates a data lake foundation with S3, Glue, and Athena.
@@ -999,34 +1028,41 @@ resource "aws_athena_workgroup" "primary" {
     }
   }
 }
-```
+-
+Of course. Here are two more scenarios.
 
----
+Scenario 8: Intelligent Document Processing on GCP 📄
+Title: Intelligent Document Processing on GCP
 
-----------------------------------------------------------------------------------------
-## Scenario 8: Intelligent Document Processing on GCP 📄
+Description: Build a serverless pipeline that automatically extracts structured data from uploaded documents (like invoices or receipts) using Google Cloud's AI services.
 
-* **Title**: Intelligent Document Processing on GCP
-* **Description**: Build a serverless pipeline that automatically extracts structured data from uploaded documents (like invoices or receipts) using Google Cloud's AI services.
-* **User Prompt**: "I need to automatically scan invoices and extract the total amount and due date."
-* **Services Involved**:
-    * Cloud Storage (to receive and store documents)
-    * Cloud Functions (to orchestrate the workflow)
-    * Document AI (to process documents and extract entities)
-    * BigQuery (to store the extracted, structured data)
-* **Level**: Advanced
-* **Estimated Time**: 50 minutes
-* **Cost Level**: Medium
-* **Export Formats**: PNG, Terraform
+User Prompt: "I need to automatically scan invoices and extract the total amount and due date."
 
-### **Architecture Diagram (PNG) Description**
+Services Involved:
 
+Cloud Storage (to receive and store documents)
+
+Cloud Functions (to orchestrate the workflow)
+
+Document AI (to process documents and extract entities)
+
+BigQuery (to store the extracted, structured data)
+
+Level: Advanced
+
+Estimated Time: 50 minutes
+
+Cost Level: Medium
+
+Export Formats: PNG, Terraform
+
+Architecture Diagram (PNG) Description
 The diagram shows a user uploading a PDF or image file into a Cloud Storage bucket labeled "Incoming Documents". This upload event triggers a Cloud Function. An arrow points from Cloud Storage to the Cloud Function. The function then calls the Document AI API, sending the document for analysis. An arrow points from the Cloud Function to Document AI. Document AI processes the file, extracts key entities (like names, dates, amounts), and returns a structured JSON object to the function. An arrow points back from Document AI to the Cloud Function. Finally, the Cloud Function takes this structured JSON data and inserts it as a new row into a BigQuery table labeled "Extracted Data". An arrow points from the function to BigQuery, where analysts can later run queries.
 
-### **Terraform Code (`main.tf`)**
-*This Terraform code sets up the required storage, database, and IAM roles. The Cloud Function code and Document AI processor must be created separately.*
+Terraform Code (main.tf)
+This Terraform code sets up the required storage, database, and IAM roles. The Cloud Function code and Document AI processor must be created separately.
 
-```terraform
+Terraform
 
 # main.tf
 # This Terraform code provisions the GCP infrastructure for a document processing pipeline.
@@ -1142,35 +1178,40 @@ resource "google_cloudfunctions_function" "doc_processor_function" {
 
   depends_on = [google_project_service.apis]
 }
-```
+Scenario 9: Multi-Region Active-Active Web Application on AWS 🌍
+Title: Multi-Region Active-Active Web Application
 
-----------------------------------------------------------------------------------------
----
+Description: Design a highly available and fault-tolerant architecture that serves traffic from multiple AWS regions simultaneously, providing low latency for global users and resilience against regional outages.
 
-## Scenario 9: Multi-Region Active-Active Web Application on AWS 🌍
+User Prompt: "Build me a bulletproof global application that never goes down."
 
-* **Title**: Multi-Region Active-Active Web Application
-* **Description**: Design a highly available and fault-tolerant architecture that serves traffic from multiple AWS regions simultaneously, providing low latency for global users and resilience against regional outages.
-* **User Prompt**: "Build me a bulletproof global application that never goes down."
-* **Services Involved**:
-    * Route 53 (with latency-based routing)
-    * CloudFront (for caching and WAF integration)
-    * Application Load Balancer (ALB)
-    * EC2 Auto Scaling Groups
-    * DynamoDB Global Tables (for multi-region, active-active database)
-* **Level**: Advanced
-* **Estimated Time**: 90 minutes
-* **Cost Level**: High
-* **Export Formats**: PNG, Terraform
+Services Involved:
 
-### **Architecture Diagram (PNG) Description**
+Route 53 (with latency-based routing)
 
+CloudFront (for caching and WAF integration)
+
+Application Load Balancer (ALB)
+
+EC2 Auto Scaling Groups
+
+DynamoDB Global Tables (for multi-region, active-active database)
+
+Level: Advanced
+
+Estimated Time: 90 minutes
+
+Cost Level: High
+
+Export Formats: PNG, Terraform
+
+Architecture Diagram (PNG) Description
 The diagram shows a global user connecting to Route 53, which uses a latency-based routing policy. Route 53 directs the user to the closest of two AWS Regions (e.g., us-east-1 and eu-west-1). Each region's architecture is a mirror of the other. Within each region, traffic flows through an Application Load Balancer, which distributes requests across an EC2 Auto Scaling Group. The EC2 instances run the application code. These instances read from and write to a local replica of a DynamoDB Global Table. A bi-directional arrow between the DynamoDB tables in each region indicates that data written in one region is automatically replicated to the other, keeping them in sync. This setup ensures that if one entire region fails, Route 53 health checks will automatically failover all traffic to the healthy region.
 
-### **Terraform Code (`main.tf`)**
-*This is a simplified example showing the core components in two regions. A production setup would be more complex.*
+Terraform Code (main.tf)
+This is a simplified example showing the core components in two regions. A production setup would be more complex.
 
-```terraform
+Terraform
 
 # main.tf
 # This Terraform code provisions a multi-region active-active architecture.
@@ -1285,34 +1326,42 @@ resource "aws_autoscaling_group" "app_asg" { ... }
 output "lb_dns_name" { value = aws_lb.app_lb.dns_name }
 output "lb_zone_id" { value = aws_lb.app_lb.zone_id }
 */
-```
 
----
-----------------------------------------------------------------------------------------
+_-----------
+Of course. Here are two more scenarios.
 
-## Scenario 10: Azure IoT Data Ingestion and Monitoring 🌡️
+Scenario 10: Azure IoT Data Ingestion and Monitoring 🌡️
+Title: Azure IoT Data Ingestion and Monitoring
 
-* **Title**: Azure IoT Data Ingestion and Monitoring
-* **Description**: Build a scalable solution to ingest telemetry data from millions of IoT devices, process it in real-time, and store it for analysis and visualization.
-* **User Prompt**: "I need to collect temperature data from sensors and show it on a dashboard."
-* **Services Involved**:
-    * IoT Hub (for device registration and data ingestion)
-    * Stream Analytics (for real-time data processing and filtering)
-    * Azure Cosmos DB (to store the processed data)
-    * Power BI (for data visualization and dashboards)
-* **Level**: Advanced
-* **Estimated Time**: 60 minutes
-* **Cost Level**: Medium
-* **Export Formats**: PNG, Terraform
+Description: Build a scalable solution to ingest telemetry data from millions of IoT devices, process it in real-time, and store it for analysis and visualization.
 
-### **Architecture Diagram (PNG) Description**
+User Prompt: "I need to collect temperature data from sensors and show it on a dashboard."
 
+Services Involved:
+
+IoT Hub (for device registration and data ingestion)
+
+Stream Analytics (for real-time data processing and filtering)
+
+Azure Cosmos DB (to store the processed data)
+
+Power BI (for data visualization and dashboards)
+
+Level: Advanced
+
+Estimated Time: 60 minutes
+
+Cost Level: Medium
+
+Export Formats: PNG, Terraform
+
+Architecture Diagram (PNG) Description
 The diagram shows multiple IoT Devices on the left, sending telemetry data securely to an Azure IoT Hub. The IoT Hub acts as a cloud gateway, managing device identities and ingesting the data stream. An arrow points from the IoT Hub to an Azure Stream Analytics Job. This job runs a continuous SQL-like query to process the data in real-time (e.g., filter for alerts or aggregate data). The Stream Analytics job has two outputs. The primary output is an arrow pointing to Azure Cosmos DB, where the processed telemetry is stored for long-term retention and querying. The second output is an arrow pointing to Power BI, which provides a live dashboard visualization of the incoming data stream.
 
-### **Terraform Code (`main.tf`)**
-*This Terraform code provisions the core Azure infrastructure. The Stream Analytics query and Power BI connection are configured in the Azure portal.*
+Terraform Code (main.tf)
+This Terraform code provisions the core Azure infrastructure. The Stream Analytics query and Power BI connection are configured in the Azure portal.
 
-```terraform
+Terraform
 
 # main.tf
 # This Terraform code provisions the infrastructure for an Azure IoT solution.
@@ -1427,34 +1476,38 @@ resource "azurerm_stream_analytics_output_cosmosdb" "output_cosmos" {
   document_id               = "id"
   partition_key             = "deviceId"
 }
-```
+Scenario 11: Big Data ETL Pipeline with GCP Dataproc 🐘
+Title: Big Data ETL Pipeline with GCP Dataproc
 
----
+Description: Design a batch processing pipeline to run large-scale data transformations using a managed Apache Spark cluster on Google Cloud.
 
-----------------------------------------------------------------------------------------
-## Scenario 11: Big Data ETL Pipeline with GCP Dataproc 🐘
+User Prompt: "I need to process terabytes of raw data nightly using a Spark job."
 
-* **Title**: Big Data ETL Pipeline with GCP Dataproc
-* **Description**: Design a batch processing pipeline to run large-scale data transformations using a managed Apache Spark cluster on Google Cloud for enterprise data processing.
-* **User Prompt**: "I need to process terabytes of raw data nightly using a Spark job."
-* **Services Involved**:
-    * Cloud Storage (for staging raw and processed data)
-    * Dataproc (for managed Hadoop/Spark clusters)
-    * Cloud Composer / Cloud Functions (to orchestrate and schedule the job)
-    * BigQuery (as the final data warehouse)
-* **Level**: Advanced
-* **Estimated Time**: 75 minutes
-* **Cost Level**: High (while cluster is running)
-* **Export Formats**: PNG, Terraform
+Services Involved:
 
-### **Architecture Diagram (PNG) Description**
+Cloud Storage (for staging raw and processed data)
 
+Dataproc (for managed Hadoop/Spark clusters)
+
+Cloud Composer / Cloud Functions (to orchestrate and schedule the job)
+
+BigQuery (as the final data warehouse)
+
+Level: Advanced
+
+Estimated Time: 75 minutes
+
+Cost Level: High (while cluster is running)
+
+Export Formats: PNG, Terraform
+
+Architecture Diagram (PNG) Description
 The diagram shows a workflow that begins with raw data (e.g., log files) being loaded into a Cloud Storage bucket labeled "Raw Data". A Cloud Composer (managed Airflow) DAG or a scheduled Cloud Function triggers the pipeline. An arrow points from the scheduler to a Dataproc cluster. The scheduler submits a Spark job to the Dataproc cluster. The Dataproc cluster spins up, reads the raw data from the first Cloud Storage bucket, performs large-scale transformations, and writes the processed, clean data back to a different Cloud Storage bucket labeled "Processed Data". Arrows show this data flow from GCS to Dataproc and back to GCS. Finally, a separate step in the workflow loads the processed data from the second GCS bucket into a BigQuery table for analysis.
 
-### **Terraform Code (`main.tf`)**
-*This code provisions the Dataproc cluster and related storage. It assumes a Spark job (e.g., a .py or .jar file) is already available in a GCS bucket.*
+Terraform Code (main.tf)
+This code provisions the Dataproc cluster and related storage. It assumes a Spark job (e.g., a .py or .jar file) is already available in a GCS bucket.
 
-```terraform
+Terraform
 
 # main.tf
 # This Terraform code provisions a Dataproc cluster for running batch Spark jobs.
@@ -1549,39 +1602,45 @@ output "dataproc_cluster_name" {
 output "dataproc_job_id" {
   value = google_dataproc_job.spark_job.id
 }
-```
 
----
 
-----------------------------------------------------------------------------------------
-## Scenario 12: Secure Bastion Host Access on AWS 🛡️
+------------
+Scenario 12: Secure Bastion Host Access on AWS 🛡️
+Title: Secure Bastion Host Access on AWS
 
-* **Title**: Secure Bastion Host Access on AWS
-* **Description**: Implement a secure method to access private resources (like databases or backend servers) in a VPC using a hardened bastion host and AWS Systems Manager for shell access, eliminating the need for open SSH ports.
-* **User Prompt**: "How can I securely SSH into my private EC2 instances without exposing them to the internet?"
-* **Services Involved**:
-    * VPC (with public and private subnets)
-    * EC2 (for the bastion host and private instances)
-    * Security Groups
-    * AWS Systems Manager (SSM) Session Manager
-    * IAM
-* **Level**: Intermediate
-* **Estimated Time**: 40 minutes
-* **Cost Level**: Low
-* **Export Formats**: PNG, Terraform
+Description: Implement a secure method to access private resources (like databases or backend servers) in a VPC using a hardened bastion host and AWS Systems Manager for shell access, eliminating the need for open SSH ports.
 
-### **Architecture Diagram (PNG) Description**
+User Prompt: "How can I securely SSH into my private EC2 instances without exposing them to the internet?"
 
+Services Involved:
+
+VPC (with public and private subnets)
+
+EC2 (for the bastion host and private instances)
+
+Security Groups
+
+AWS Systems Manager (SSM) Session Manager
+
+IAM
+
+Level: Intermediate
+
+Estimated Time: 40 minutes
+
+Cost Level: Low
+
+Architecture Diagram (PNG) Description
 The diagram shows an AWS VPC divided into a Public Subnet and a Private Subnet. An Internet Gateway is attached to the VPC, with a route from the public subnet.
 
 An Administrator is shown outside the VPC. They connect to AWS via the AWS Systems Manager (SSM) Session Manager service in the cloud. SSM then establishes a secure, tunneled connection to an EC2 instance labeled "Bastion Host" located in the public subnet. This bastion host does not have an open SSH port (port 22) in its security group.
 
 Inside the private subnet, there's another EC2 instance labeled "Private Server". The bastion host's security group allows outbound SSH traffic (port 22) specifically to the private server's security group. An arrow shows this SSH connection originating from the bastion and terminating at the private server, all within the VPC. This setup allows the administrator to first connect to the bastion via SSM and then "jump" to the private server.
 
-### **Terraform Code (`main.tf`)**
-*This Terraform code provisions the network, bastion host, and a private instance, complete with the necessary IAM and security group configurations for SSM access.*
+Terraform Code (main.tf)
+This Terraform code provisions the network, bastion host, and a private instance, complete with the necessary IAM and security group configurations for SSM access.
 
-```terraform
+Terraform
 
 # main.tf
 # This Terraform provisions a VPC with a bastion host accessed via AWS Systems Manager.
@@ -1702,36 +1761,40 @@ resource "aws_instance" "private_server" {
   vpc_security_group_ids = [aws_security_group.private_sg.id]
   tags = { Name = "PrivateServer" }
 }
-```
+Scenario 13: GCP Media Streaming and Transcoding Pipeline 🎬
+Title: GCP Media Streaming and Transcoding Pipeline
 
----
+Description: Create an automated pipeline that transcodes uploaded video files into multiple formats and bitrates suitable for adaptive streaming on web and mobile devices.
 
-----------------------------------------------------------------------------------------
-## Scenario 13: GCP Media Streaming and Transcoding Pipeline 🎬
+User Prompt: "When I upload a high-res video, I need it converted into different qualities for my streaming app."
 
-* **Title**: GCP Media Streaming and Transcoding Pipeline
-* **Description**: Create an automated pipeline that transcodes uploaded video files into multiple formats and bitrates suitable for adaptive streaming on web and mobile devices.
-* **User Prompt**: "When I upload a high-res video, I need it converted into different qualities for my streaming app."
-* **Services Involved**:
-    * Cloud Storage (for storing raw and transcoded media)
-    * Cloud Functions (to trigger the transcoding job)
-    * Transcoder API (for high-quality video transcoding)
-    * Cloud CDN (to serve the final media content)
-* **Level**: Advanced
-* **Estimated Time**: 50 minutes
-* **Cost Level**: Medium
-* **Export Formats**: PNG, Terraform
+Services Involved:
 
-### **Architecture Diagram (PNG) Description**
+Cloud Storage (for storing raw and transcoded media)
 
+Cloud Functions (to trigger the transcoding job)
+
+Transcoder API (for high-quality video transcoding)
+
+Cloud CDN (to serve the final media content)
+
+Level: Advanced
+
+Estimated Time: 50 minutes
+
+Cost Level: Medium
+
+Export Formats: PNG, Terraform
+
+Architecture Diagram (PNG) Description
 The diagram starts with a user uploading a large video file to a Cloud Storage bucket labeled "Raw Media". This upload event triggers a Cloud Function. The Cloud Function's role is to start a transcoding job. An arrow points from the function to the Transcoder API. The function provides the Transcoder API with the location of the raw video file and a "transcoding template" that defines the desired output formats (e.g., 1080p, 720p, 480p HLS streams).
 
 The Transcoder API then reads the raw video from the first bucket, performs the transcoding, and writes the resulting video segments and manifest files into a second Cloud Storage bucket labeled "Processed Media". An arrow shows this data flow. This second bucket is configured as the backend for a Cloud CDN. Finally, an end-user's device is shown streaming the video content directly from the Cloud CDN, which provides low-latency delivery by caching content at Google's edge locations.
 
-### **Terraform Code (`main.tf`)**
-*This Terraform code sets up the storage buckets and the Cloud Function trigger. The Transcoder API job templates are typically configured in the GCP console.*
+Terraform Code (main.tf)
+This Terraform code sets up the storage buckets and the Cloud Function trigger. The Transcoder API job templates are typically configured in the GCP console.
 
-```terraform
+Terraform
 
 # main.tf
 # This Terraform provisions the infrastructure for a media transcoding pipeline on GCP.
@@ -1846,34 +1909,39 @@ resource "google_compute_global_forwarding_rule" "default" {
   port_range = "80"
 }
 
-```
+-------------
 
----
 
-----------------------------------------------------------------------------------------
-## Scenario 14: AWS API Gateway with VPC Link 🔗
+Scenario 14: AWS API Gateway with VPC Link 🔗
+Title: AWS API Gateway with VPC Link
 
-* **Title**: AWS API Gateway with VPC Link
-* **Description**: Expose a private service running on EC2 instances within a VPC to the public through a secure, managed API Gateway without exposing the instances to the internet.
-* **User Prompt**: "I need to create a public REST API for a service running on private servers."
-* **Services Involved**:
-    * API Gateway (HTTP API type)
-    * VPC Link
-    * Network Load Balancer (NLB)
-    * EC2 (running in a private subnet)
-    * VPC
-* **Level**: Advanced
-* **Estimated Time**: 60 minutes
-* **Cost Level**: Medium
-* **Export Formats**: PNG, Terraform
+Description: Expose a private service running on EC2 instances within a VPC to the public through a secure, managed API Gateway without exposing the instances to the internet.
 
-### **Architecture Diagram (PNG) Description**
+User Prompt: "I need to create a public REST API for a service running on private servers."
 
+Services Involved:
+
+API Gateway (HTTP API type)
+
+VPC Link
+
+Network Load Balancer (NLB)
+
+EC2 (running in a private subnet)
+
+VPC
+
+Level: Advanced
+
+Estimated Time: 60 minutes
+
+Cost Level: Medium
+
+Architecture Diagram (PNG) Description
 The diagram shows a user making a request to an AWS API Gateway public endpoint. The API Gateway has an integration configured to use a VPC Link. The VPC Link points to a Network Load Balancer (NLB) that resides in a public subnet inside a VPC. The NLB's target group consists of EC2 instances running the actual application, but these instances are located in a private subnet within the same VPC. Arrows show the flow: User -> API Gateway -> VPC Link -> NLB -> Private EC2 Instances. This architecture ensures that only the NLB is exposed within the VPC for the API Gateway to connect to, while the application servers remain completely private.
 
-### **Terraform Code (`main.tf`)**
-
-```terraform
+Terraform Code (main.tf)
+Terraform
 
 # main.tf
 # This Terraform provisions an API Gateway that connects to a private service via a VPC Link.
@@ -1960,34 +2028,34 @@ resource "aws_apigatewayv2_stage" "default_stage" {
 output "api_endpoint" {
   value = aws_apigatewayv2_stage.default_stage.invoke_url
 }
-```
+Scenario 15: Azure Blue/Green Deployment for App Service 🔵🟢
+Title: Azure Blue/Green Deployment for App Service
 
----
+Description: Implement a zero-downtime deployment strategy by using deployment slots. Deploy a new version of an application to a staging slot, test it, and then swap it into production seamlessly.
 
-----------------------------------------------------------------------------------------
-## Scenario 15: Azure Blue/Green Deployment for App Service 🔵🟢
+User Prompt: "How can I update my production web app without any downtime for my users?"
 
-* **Title**: Azure Blue/Green Deployment for App Service
-* **Description**: Implement a zero-downtime deployment strategy by using deployment slots. Deploy a new version of an application to a staging slot, test it, and then swap it into production seamlessly.
-* **User Prompt**: "How can I update my production web app without any downtime for my users?"
-* **Services Involved**:
-    * Azure App Service (Standard tier or higher)
-    * App Service Plan
-    * Deployment Slots
-* **Level**: Intermediate
-* **Estimated Time**: 30 minutes
-* **Cost Level**: Medium
-* **Export Formats**: PNG, Terraform
+Services Involved:
 
-### **Architecture Diagram (PNG) Description**
+Azure App Service (Standard tier or higher)
 
+App Service Plan
+
+Deployment Slots
+
+Level: Intermediate
+
+Estimated Time: 30 minutes
+
+Cost Level: Medium
+
+Architecture Diagram (PNG) Description
 The diagram shows an Azure App Service with two slots. The main box is the Production Slot, which has the public-facing URL (app.azurewebsites.net) and is labeled "Blue". It receives 100% of the live user traffic. A second, smaller box is attached to it, labeled Staging Slot ("Green"), with its own separate URL (app-staging.azurewebsites.net).
 
 A CI/CD pipeline is shown deploying the new version of the code only to the Staging Slot. After deployment, automated tests can be run against the staging URL. Once validated, an operator clicks a "Swap" button in the Azure portal. An arrow indicates the swap action, which instantly redirects the production URL traffic from the Blue slot to the Green slot. The old Blue slot now contains the previous version of the code and receives no traffic, acting as an instant rollback target.
 
-### **Terraform Code (`main.tf`)**
-
-```terraform
+Terraform Code (main.tf)
+Terraform
 
 # main.tf
 # This Terraform provisions an Azure App Service with a staging slot for blue/green deployments.
@@ -2045,33 +2113,34 @@ output "production_url" {
 output "staging_url" {
   value = "https://${azurerm_linux_web_app_slot.staging_slot.default_hostname}"
 }
-```
+Scenario 16: GCP Real-time Analytics with Looker 📊
+Title: GCP Real-time Analytics with Looker
 
----
+Description: Connect Google's BI platform, Looker, directly to a BigQuery data warehouse to build interactive, real-time dashboards and perform deep-dive data exploration.
 
-----------------------------------------------------------------------------------------
-## Scenario 16: GCP Real-time Analytics with Looker 📊
+User Prompt: "I need a powerful BI tool to create dashboards from my data in BigQuery."
 
-* **Title**: GCP Real-time Analytics with Looker
-* **Description**: Connect Google's BI platform, Looker, directly to a BigQuery data warehouse to build interactive, real-time dashboards and perform deep-dive data exploration.
-* **User Prompt**: "I need a powerful BI tool to create dashboards from my data in BigQuery."
-* **Services Involved**:
-    * BigQuery (as the data warehouse)
-    * Looker (for BI and visualization)
-    * IAM (for secure connection)
-* **Level**: Intermediate
-* **Estimated Time**: 30 minutes
-* **Cost Level**: High (Looker licensing)
-* **Export Formats**: PNG, Terraform
+Services Involved:
 
-### **Architecture Diagram (PNG) Description**
+BigQuery (as the data warehouse)
 
+Looker (for BI and visualization)
+
+IAM (for secure connection)
+
+Level: Intermediate
+
+Estimated Time: 30 minutes
+
+Cost Level: High (Looker licensing)
+
+Architecture Diagram (PNG) Description
 The diagram shows data from various sources (e.g., Cloud Storage, Streaming Pipelines) being loaded into Google BigQuery, which is depicted as a large data warehouse. Separately, a Looker Instance is shown. A dedicated IAM Service Account is created in GCP with permissions to read data from BigQuery. An arrow points from the service account to BigQuery. The Looker instance is then configured with the credentials of this service account, creating a secure connection. An arrow points from Looker to BigQuery, labeled "Live Query". An analyst is shown using the Looker web interface to build dashboards. When a user interacts with a Looker dashboard, Looker generates SQL queries in real-time and sends them directly to BigQuery, which returns the results to be visualized.
 
-### **Terraform Code (`main.tf`)**
-*This Terraform code sets up the BigQuery dataset and the dedicated service account for Looker to use. The connection is then finalized within the Looker UI.*
+Terraform Code (main.tf)
+This Terraform code sets up the BigQuery dataset and the dedicated service account for Looker to use. The connection is then finalized within the Looker UI.
 
-```terraform
+Terraform
 
 # main.tf
 # This Terraform prepares the GCP environment for a Looker connection.
@@ -2133,31 +2202,32 @@ output "looker_service_account_key" {
   value     = base64decode(google_service_account_key.looker_sa_key.private_key)
   sensitive = true
 }
-```
+Scenario 17: AWS Cost Anomaly Detection 💰
+Title: AWS Cost Anomaly Detection
 
----
+Description: Proactively monitor your AWS spending and get alerted automatically when unusual or unexpected cost increases are detected.
 
-## Scenario 17: AWS Cost Anomaly Detection 💰
+User Prompt: "Notify me immediately if my AWS bill suddenly spikes."
 
-* **Title**: AWS Cost Anomaly Detection
-* **Description**: Proactively monitor your AWS spending and get alerted automatically when unusual or unexpected cost increases are detected using machine learning.
-* **User Prompt**: "Notify me immediately if my AWS bill suddenly spikes."
-* **Services Involved**:
-    * AWS Cost Explorer
-    * AWS Cost Anomaly Detection
-    * Amazon SNS (Simple Notification Service)
-* **Level**: Beginner
-* **Estimated Time**: 15 minutes
-* **Cost Level**: Low
-* **Export Formats**: PNG, Terraform
+Services Involved:
 
-### **Architecture Diagram (PNG) Description**
+AWS Cost Explorer
 
+AWS Cost Anomaly Detection
+
+Amazon SNS (Simple Notification Service)
+
+Level: Beginner
+
+Estimated Time: 15 minutes
+
+Cost Level: Low
+
+Architecture Diagram (PNG) Description
 The diagram shows the AWS Cost Explorer service at the center, which collects billing and usage data from all AWS services being used. An AWS Cost Anomaly Detection monitor is configured within Cost Explorer. This monitor continuously analyzes spending patterns using machine learning. When the monitor detects an anomaly (a deviation from the expected pattern), it triggers an action. An arrow points from the anomaly detection monitor to an Amazon SNS Topic. The SNS topic then sends a notification to all its subscribers. An email icon and a phone icon are shown subscribed to the topic, representing email and SMS alerts being sent to the finance or operations team.
 
-### **Terraform Code (`main.tf`)**
-
-```terraform
+Terraform Code (main.tf)
+Terraform
 
 # main.tf
 # This Terraform sets up AWS Cost Anomaly Detection and SNS alerting.
@@ -2207,33 +2277,32 @@ resource "aws_ce_anomaly_subscription" "anomaly_alert_subscription" {
     address = aws_sns_topic.cost_alerts.arn
   }
 }
-```
+Scenario 18: Azure Logic Apps for Business Process Automation ⚙️
+Title: Azure Logic Apps for Business Process Automation
 
----
+Description: Automate a business workflow using Azure's low-code/no-code integration platform. This example shows how to save email attachments from Office 365 directly to Azure Blob Storage.
 
-----------------------------------------------------------------------------------------
-## Scenario 18: Azure Logic Apps for Business Process Automation ⚙️
+User Prompt: "I need a simple way to automatically save all attachments from my invoices email to cloud storage."
 
-* **Title**: Azure Logic Apps for Business Process Automation
-* **Description**: Automate a business workflow using Azure's low-code/no-code integration platform. This example shows how to save email attachments from Office 365 directly to Azure Blob Storage.
-* **User Prompt**: "I need a simple way to automatically save all attachments from my invoices email to cloud storage."
-* **Services Involved**:
-    * Azure Logic Apps
-    * Office 365 Outlook Connector
-    * Azure Blob Storage Connector
-* **Level**: Beginner
-* **Estimated Time**: 20 minutes
-* **Cost Level**: Low
-* **Export Formats**: PNG, Terraform
+Services Involved:
 
-### **Architecture Diagram (PNG) Description**
+Azure Logic Apps
 
+Office 365 Outlook Connector
+
+Azure Blob Storage Connector
+
+Level: Beginner
+
+Estimated Time: 20 minutes
+
+Cost Level: Low
+
+Architecture Diagram (PNG) Description
 The diagram is a visual workflow designer. The first block is the Trigger, labeled "When a new email arrives (Office 365)" with properties like "Folder: Inbox" and "Has Attachment: Yes". An arrow points down to a Loop block labeled "For each attachment". Inside the loop, there is an Action block labeled "Create blob (Azure Storage)". This block is configured to use the "Attachment Name" and "Attachment Content" from the trigger step and save it into a specified Azure Storage container. The diagram visually represents the logic: for every new email with an attachment, grab each attachment and save it as a file in Blob Storage.
 
-### **Terraform Code (`main.tf`)**
-*This Terraform code provisions the Logic App workflow and the required API connections. Note that the first time this is deployed, you must authorize the API connections in the Azure portal.*
-
-```terraform
+Terraform Code (main.tf)
+This Terraform code provisions the Logic App workflow and the required API connections. Note that the first time this is deployed, you must authorize the API connections in the Azure portal.
 
 Terraform
 
@@ -2315,30 +2384,35 @@ resource "azurerm_logic_app_connection" "azureblob" {
   managed_api_id      = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/providers/Microsoft.Web/locations/${azurerm_resource_group.rg.location}/managedApis/azureblob"
   display_name        = "AzureBlob"
 }
-```
 
----
+_----------
 
-*The following scenarios are designed for learning directly through the cloud console, CLI, or SDKs, without using Terraform. The focus is on the manual steps and understanding the services interactively.*
+Of course. Here are detailed scenarios designed for learning directly through the cloud console, CLI, or SDKs, without using Terraform. The focus is on the manual steps and understanding the services interactively.
 
-----------------------------------------------------------------------------------------
-## Scenario 19: Deploying a Serverless Application with AWS SAM CLI 🚀
+Scenario 19: Deploying a Serverless Application with AWS SAM CLI 🚀
+Title: Deploying a Serverless Application with AWS SAM CLI
 
-* **Title**: Deploying a Serverless Application with AWS SAM CLI
-* **Description**: Learn to build, package, and deploy a complete serverless application (API Gateway, Lambda, DynamoDB) using the AWS Serverless Application Model (SAM) command-line interface, a specialized tool for serverless development.
-* **User Prompt**: "Show me the standard AWS-native way to develop and deploy a serverless API."
-* **Services Involved**:
-    * API Gateway
-    * Lambda
-    * DynamoDB
-    * CloudFormation (used by SAM behind the scenes)
-* **Level**: Intermediate
-* **Estimated Time**: 40 minutes
-* **Cost Level**: Low
-* **Export Formats**: Console Tutorial, CLI Commands
+Description: Learn to build, package, and deploy a complete serverless application (API Gateway, Lambda, DynamoDB) using the AWS Serverless Application Model (SAM) command-line interface, a specialized tool for serverless development.
 
-### **Architecture Diagram (PNG) Description**
+User Prompt: "Show me the standard AWS-native way to develop and deploy a serverless API."
 
+Services Involved:
+
+API Gateway
+
+Lambda
+
+DynamoDB
+
+CloudFormation (used by SAM behind the scenes)
+
+Level: Intermediate
+
+Estimated Time: 40 minutes
+
+Cost Level: Low
+
+Architecture Diagram (PNG) Description
 The diagram shows a developer on their local machine using the AWS SAM CLI. The developer works on a template.yaml file and a folder with Lambda function code (e.g., hello_world/app.py). The sam build command is shown processing these files. The sam deploy command is then shown pushing the packaged application to AWS CloudFormation. CloudFormation reads the instructions and provisions the required resources: an API Gateway, a Lambda Function, and a DynamoDB Table, along with the necessary IAM Roles.
 
 Learning Steps (Manual/Programmatic)
@@ -2360,25 +2434,27 @@ Deploy to AWS: Run the command sam deploy --guided. SAM will prompt you for a st
 
 Test the Endpoint: Once deployment is complete, SAM will output the API endpoint URL. Access this URL in a browser or with a tool like curl. Then, go to the AWS Management Console, navigate to DynamoDB, and verify that a new item was written to your table.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-## Scenario 20: Training a Custom Vision AI Model via the Azure Portal 🖼️
+Scenario 20: Training a Custom Vision AI Model via the Azure Portal 🖼️
+Title: Training a Custom Vision AI Model via the Azure Portal
 
-* **Title**: Training a Custom Vision AI Model via the Azure Portal
-* **Description**: Use the Azure Custom Vision web portal to upload and tag images, train a machine learning model to recognize specific objects, and test its performance without writing any code.
-* **User Prompt**: "I want to build an AI that can tell the difference between a cat and a dog from a photo."
-* **Services Involved**:
-    * Azure Cognitive Services (Custom Vision)
-* **Level**: Beginner
-* **Estimated Time**: 25 minutes
-* **Cost Level**: Low (Free tier available)
-* **Export Formats**: Console Tutorial, Model Export
+Description: Use the Azure Custom Vision web portal to upload and tag images, train a machine learning model to recognize specific objects, and test its performance without writing any code.
 
-### **Architecture Diagram (PNG) Description**
+User Prompt: "I want to build an AI that can tell the difference between a cat and a dog from a photo."
 
+Services Involved:
+
+Azure Cognitive Services (Custom Vision)
+
+Level: Beginner
+
+Estimated Time: 25 minutes
+
+Cost Level: Low (Free tier available)
+
+Architecture Diagram (PNG) Description
 The diagram is a simple flow chart. It starts with a User who has a Collection of Images (e.g., photos of cats and dogs). The user interacts with the Custom Vision Portal (a web UI). An arrow shows the user uploading images to the portal. Inside the portal, the user is shown tagging the images (drawing boxes and labeling them "cat" or "dog"). Next, the user clicks a "Train" button. This action triggers the Custom Vision AI Service in Azure to train a model. After training, the portal displays Model Performance Metrics (like Precision and Recall). Finally, the user uses the "Quick Test" feature in the portal to upload a new image, and the model returns a prediction with a confidence score.
 
-### **Learning Steps (Manual/Programmatic)**
+Learning Steps (Manual/Programmatic)
 Create a Custom Vision Resource: In the Azure Portal, search for and create a "Custom Vision" resource. Choose the "Both" option for training and prediction. Select a pricing tier (the F0 Free tier is sufficient).
 
 Launch the Portal: Once the resource is created, navigate to the Custom Vision web portal at www.customvision.ai and sign in.
@@ -2393,26 +2469,29 @@ Evaluate Performance: After training completes, the "Performance" tab will activ
 
 Test the Model: Go to the "Quick Test" tab. Click "Browse local files" and upload a new image of a cat or dog that the model has never seen before. The model will analyze the image and draw a box around the object it finds, along with the predicted tag and a confidence score. This gives you a real-world test of your AI's capability.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-## Scenario 21: Exploring Public Datasets with BigQuery UI 🔍
+Scenario 21: Exploring Public Datasets with BigQuery UI 🔍
+Title: Exploring Public Datasets with BigQuery UI
 
-* **Title**: Exploring Public Datasets with BigQuery UI
-* **Description**: Learn to use the Google BigQuery web interface to explore massive public datasets, write standard SQL queries to analyze data, and visualize the results without any setup or data loading.
-* **User Prompt**: "Let me analyze real-world data, like all the Reddit comments or Wikipedia page views."
-* **Services Involved**:
-    * BigQuery
-    * BigQuery Public Datasets
-* **Level**: Beginner
-* **Estimated Time**: 20 minutes
-* **Cost Level**: Low (within the free tier sandbox)
-* **Export Formats**: Console Tutorial, SQL Queries
+Description: Learn to use the Google BigQuery web interface to explore massive public datasets, write standard SQL queries to analyze data, and visualize the results without any setup or data loading.
 
-### **Architecture Diagram (PNG) Description**
+User Prompt: "Let me analyze real-world data, like all the Reddit comments or Wikipedia page views."
 
+Services Involved:
+
+BigQuery
+
+BigQuery Public Datasets
+
+Level: Beginner
+
+Estimated Time: 20 minutes
+
+Cost Level: Low (within the free tier sandbox)
+
+Architecture Diagram (PNG) Description
 The diagram is focused on a single service. On the left, a large database icon is labeled BigQuery Public Datasets, containing numerous well-known datasets (Hacker News, USA Names, etc.). In the center is the BigQuery Web UI. An analyst is shown interacting with the UI. The UI is split into three main parts: the Navigation Pane on the left where the user can browse datasets and tables, the Query Editor at the top where the user writes SQL, and the Query Results pane at the bottom where the output is displayed. An arrow points from the Query Editor to the Public Datasets, representing a query being run. Another arrow points from the Public Datasets to the Query Results pane.
 
-### **Learning Steps (Manual/Programmatic)**
+Learning Steps (Manual/Programmatic)
 Open the BigQuery Console: Navigate to the Google Cloud Console and select "BigQuery". You can use the BigQuery Sandbox without providing a credit card.
 
 Add a Public Dataset: In the navigation pane on the left, click the "+ ADD" button. Select "Public datasets" from the options. A marketplace will appear. Search for a dataset, for example, "USA Names", and click "View Dataset". This will add the bigquery-public-data.usa_names dataset to your navigation pane.
@@ -2451,32 +2530,34 @@ ORDER BY
 Visualize Results: After running the query, click the "Explore Data" button and choose "Explore with Looker Studio". This will automatically open a new tab with a basic chart of your query results, showing you how to quickly move from raw data to a visualization.
 
 
----
+-------------
 
-*The following scenarios provide comprehensive coverage across AWS, Azure, and GCP for advanced disaster recovery and enterprise scenarios.*
+Yes, the scenarios cover AWS, Azure, and GCP. Here are three more detailed scenarios, one for each major cloud provider, to ensure comprehensive coverage.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-## Scenario 22: AWS S3 Cross-Region Replication for Disaster Recovery 🛟
+Scenario 22: AWS S3 Cross-Region Replication for Disaster Recovery 🛟
+Title: AWS S3 Cross-Region Replication for Disaster Recovery
 
-* **Title**: AWS S3 Cross-Region Replication for Disaster Recovery
-* **Description**: Configure Amazon S3 to automatically and asynchronously replicate objects from a bucket in one AWS region to a bucket in another region to ensure data durability and availability in case of a regional outage.
-* **User Prompt**: "I need to make sure my critical data in S3 survives if an entire AWS region goes down."
-* **Services Involved**:
-    * S3 (Simple Storage Service)
-    * IAM (Identity and Access Management)
-* **Level**: Intermediate
-* **Estimated Time**: 20 minutes
-* **Cost Level**: Low (plus data transfer costs)
-* **Export Formats**: PNG, Terraform
+Description: Configure Amazon S3 to automatically and asynchronously replicate objects from a bucket in one AWS region to a bucket in another region to ensure data durability and availability in case of a regional outage.
 
-### **Architecture Diagram (PNG) Description**
+User Prompt: "I need to make sure my critical data in S3 survives if an entire AWS region goes down."
 
+Services Involved:
+
+S3 (Simple Storage Service)
+
+IAM (Identity and Access Management)
+
+Level: Intermediate
+
+Estimated Time: 20 minutes
+
+Cost Level: Low (plus data transfer costs)
+
+Architecture Diagram (PNG) Description
 The diagram shows two AWS regions, for example, us-east-1 and us-west-2, represented by two large boxes. Inside the us-east-1 box, there is an S3 Bucket labeled "Primary Bucket". A user or application is shown writing an object (a file icon) to this bucket. A dotted arrow labeled "Replication Rule" points from the primary bucket in us-east-1 to another S3 Bucket in the us-west-2 box, labeled "Replica Bucket". The same object icon appears in the replica bucket shortly after, indicating successful replication. An IAM Role is depicted with an arrow pointing to both buckets, signifying that it has permissions to read from the source and write to the destination.
 
-### **Terraform Code (`main.tf`)**
-
-```terraform
+Terraform Code (main.tf)
+Terraform
 
 # main.tf
 # This Terraform configures S3 Cross-Region Replication (CRR).
@@ -2587,33 +2668,32 @@ resource "aws_s3_bucket_replication_configuration" "replication_config" {
 
   depends_on = [aws_iam_role_policy_attachment.replication_attachment]
 }
-```
+Scenario 23: Centralized Logging and Security Analysis with Azure Sentinel 🕵️
+Title: Centralized Logging and Security Analysis with Azure Sentinel
 
----
+Description: Set up Azure Sentinel to collect, detect, investigate, and respond to security threats across your Azure environment by ingesting data from various sources like Azure Activity Log and virtual machines.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-## Scenario 23: Centralized Logging and Security Analysis with Azure Sentinel 🕵️
+User Prompt: "I need a single place to see all security alerts and logs from my Azure resources."
 
-* **Title**: Centralized Logging and Security Analysis with Azure Sentinel
-* **Description**: Set up Azure Sentinel to collect, detect, investigate, and respond to security threats across your Azure environment by ingesting data from various sources like Azure Activity Log and virtual machines.
-* **User Prompt**: "I need a single place to see all security alerts and logs from my Azure resources."
-* **Services Involved**:
-    * Azure Sentinel (Cloud-native SIEM)
-    * Log Analytics Workspace (The foundation for Sentinel)
-    * Data Connectors (e.g., Azure Activity, Security Center)
-* **Level**: Intermediate
-* **Estimated Time**: 25 minutes
-* **Cost Level**: Medium
-* **Export Formats**: PNG, Terraform
+Services Involved:
 
-### **Architecture Diagram (PNG) Description**
+Azure Sentinel (Cloud-native SIEM)
 
+Log Analytics Workspace (The foundation for Sentinel)
+
+Data Connectors (e.g., Azure Activity, Security Center)
+
+Level: Intermediate
+
+Estimated Time: 25 minutes
+
+Cost Level: Medium
+
+Architecture Diagram (PNG) Description
 The diagram shows various Azure Resources on the left (Virtual Machines, Azure AD, Azure Firewall). Arrows from each of these resources point towards a central Log Analytics Workspace, indicating that logs and events are being sent here. Layered on top of the Log Analytics Workspace is the Azure Sentinel service. Sentinel is shown with several functional blocks: "Data Collection", "Detection (Analytics Rules)", "Investigation", and "Automation (Playbooks)". An arrow flows from the Log Analytics Workspace into Sentinel's data collection. A Security Analyst is shown interacting with the Sentinel dashboard to view incidents, hunt for threats, and trigger automated responses (Playbooks).
 
-### **Terraform Code (`main.tf`)**
-
-```terraform
+Terraform Code (main.tf)
+Terraform
 
 # main.tf
 # This Terraform provisions an Azure Sentinel instance and connects it to Azure Activity logs.
@@ -2682,34 +2762,34 @@ resource "azurerm_sentinel_alert_rule_scheduled" "suspicious_nsg_rule" {
   trigger_operator = "GreaterThan"
   trigger_threshold = 0
 }
-```
+Scenario 24: Running Batch HPC Jobs with Google Cloud Batch 🧑‍💻
+Title: Running Batch HPC Jobs with Google Cloud Batch
 
----
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
+Description: Define and run a large-scale, high-performance computing (HPC) batch job on managed infrastructure that automatically provisions and de-provisions resources as needed.
 
-## Scenario 24: Running Batch HPC Jobs with Google Cloud Batch 🧑‍💻
+User Prompt: "I need to run a 10,000-core genomics simulation job overnight without managing my own cluster."
 
-* **Title**: Running Batch HPC Jobs with Google Cloud Batch
-* **Description**: Define and run a large-scale, high-performance computing (HPC) batch job on managed infrastructure that automatically provisions and de-provisions resources as needed.
-* **User Prompt**: "I need to run a 10,000-core genomics simulation job overnight without managing my own cluster."
-* **Services Involved**:
-    * Cloud Batch
-    * Compute Engine (managed by Batch)
-    * Cloud Storage (for input/output data)
-* **Level**: Advanced
-* **Estimated Time**: 30 minutes
-* **Cost Level**: High (while the job is running)
-* **Export Formats**: PNG, Terraform
+Services Involved:
 
-### **Architecture Diagram (PNG) Description**
+Cloud Batch
 
+Compute Engine (managed by Batch)
+
+Cloud Storage (for input/output data)
+
+Level: Advanced
+
+Estimated Time: 30 minutes
+
+Cost Level: High (while the job is running)
+
+Architecture Diagram (PNG) Description
 The diagram shows a User or a Scheduler submitting a Job Definition (JSON) to the Cloud Batch API. The job definition specifies the container image to run, the number of tasks, CPU/memory requirements, and input/output data locations. The Cloud Batch service receives this job and automatically provisions a temporary pool of Compute Engine VMs. The VMs pull input data from a Cloud Storage bucket, run their assigned tasks in parallel, and write their output back to another Cloud Storage bucket. Once the job is complete, the Cloud Batch service automatically terminates all the Compute Engine VMs, ensuring the user only pays for the compute time used.
 
-### **Terraform Code (`main.tf`)**
-*This Terraform code defines a Cloud Batch job. The job itself is simple (prints a message), but the configuration demonstrates how to set up a parallel task for a large-scale workload.*
+Terraform Code (main.tf)
+This Terraform code defines a Cloud Batch job. The job itself is simple (prints a message), but the configuration demonstrates how to set up a parallel task for a large-scale workload.
 
-```terraform
+Terraform
 
 # main.tf
 # This Terraform defines and creates a job in Google Cloud Batch.
@@ -2790,38 +2870,41 @@ resource "google_batch_job" "hpc_job" {
 }
 
 
-```
+-----------
 
----
+Of course. Here are three very common and important architectures, one for each major cloud, designed for learning through the console without Terraform.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-*The following scenarios represent common and important architectures for each major cloud, designed for learning through the console without Terraform.*
+Scenario 25: AWS Dynamic Image Resizing and Caching 🖼️
+Title: Dynamic Image Resizing and Caching
 
-## Scenario 25: AWS Dynamic Image Resizing and Caching 🖼️
+Description: Build a cost-effective, serverless solution that automatically resizes an image on-the-fly when requested for the first time and caches the result globally for all subsequent requests.
 
-* **Title**: Dynamic Image Resizing and Caching
-* **Description**: Build a cost-effective, serverless solution that automatically resizes an image on-the-fly when requested for the first time and caches the result globally for all subsequent requests.
-* **User Prompt**: "I need a way to create different image sizes (like thumbnails) automatically without pre-processing everything."
-* **Services Involved**:
-    * S3 (Simple Storage Service)
-    * API Gateway
-    * Lambda
-    * CloudFront (Content Delivery Network)
-* **Level**: Intermediate
-* **Estimated Time**: 45 minutes
-* **Cost Level**: Low
-* **Export Formats**: Console Tutorial, Architecture Diagram
+User Prompt: "I need a way to create different image sizes (like thumbnails) automatically without pre-processing everything."
 
-### **Architecture Diagram (PNG) Description**
+Services Involved:
 
+S3 (Simple Storage Service)
+
+API Gateway
+
+Lambda
+
+CloudFront (Content Delivery Network)
+
+Level: Intermediate
+
+Estimated Time: 45 minutes
+
+Cost Level: Low
+
+Architecture Diagram (PNG) Description
 The diagram shows a user requesting a specific image size, like .../images/123_200x200.jpg, from a CloudFront distribution. CloudFront first checks its cache.
 
 If the image is not in the cache (a "cache miss"), CloudFront forwards the request to its origin, which is an API Gateway. The API Gateway triggers a Lambda function, passing the image name and dimensions from the URL. The Lambda function then fetches the original, high-resolution image from a private S3 Bucket (e.g., 123.jpg), resizes it in memory to 200x200, and returns the resized image back to CloudFront. CloudFront then caches this new resized image and serves it to the user.
 
 If the image is in the cache (a "cache hit" on subsequent requests), CloudFront serves the resized image directly to the user from the edge location, providing a very fast response and never invoking the backend Lambda function.
 
-### **Learning Steps (Manual/Programmatic)**
+Learning Steps (Manual/Programmatic)
 Create S3 Buckets: In the AWS Management Console, navigate to S3. Create two S3 buckets: one for your original high-resolution images (e.g., my-app-originals) and another for the resized images (e.g., my-app-resized-cache). Keep them private.
 
 Create IAM Role: Go to IAM and create a role for your Lambda function. Attach the AWSLambdaBasicExecutionRole policy for logging. Create a custom inline policy that grants s3:GetObject permission on the originals bucket and s3:PutObject permission on the resized cache bucket.
@@ -2846,35 +2929,39 @@ Create CloudFront Distribution: Go to CloudFront and create a new distribution. 
 
 Test the Flow: Upload a large JPG file to your originals bucket. Construct the URL using your CloudFront domain and the image key with desired dimensions (e.g., https://<cloudfront_id>.cloudfront.net/images/my-photo_400x400.jpg). The first time you access it, it will be slow as the Lambda function runs. Refresh the page, and it will load instantly from the CloudFront cache.
 
----
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
+Scenario 26: Azure Secure Access to PaaS Services with Private Endpoints 🔒
+Title: Secure Access to PaaS Services with Private Endpoints
 
-## Scenario 26: Azure Secure Access to PaaS Services with Private Endpoints 🔒
+Description: Learn how to ensure that traffic from a Virtual Machine to an Azure PaaS service (like Azure SQL Database) never leaves the Microsoft backbone network, enhancing security by eliminating public internet exposure.
 
-* **Title**: Secure Access to PaaS Services with Private Endpoints
-* **Description**: Learn how to ensure that traffic from a Virtual Machine to an Azure PaaS service (like Azure SQL Database) never leaves the Microsoft backbone network, enhancing security by eliminating public internet exposure.
-* **User Prompt**: "How do I let my private virtual machine connect to my SQL database without giving the database a public IP address?"
-* **Services Involved**:
-    * Virtual Network (VNet)
-    * Virtual Machine
-    * Azure SQL Database
-    * Private Endpoint
-    * Private DNS Zone
-* **Level**: Advanced
-* **Estimated Time**: 40 minutes
-* **Cost Level**: Medium
-* **Export Formats**: Console Tutorial, Architecture Diagram
+User Prompt: "How do I let my private virtual machine connect to my SQL database without giving the database a public IP address?"
 
-### **Architecture Diagram (PNG) Description**
+Services Involved:
 
+Virtual Network (VNet)
+
+Virtual Machine
+
+Azure SQL Database
+
+Private Endpoint
+
+Private DNS Zone
+
+Level: Advanced
+
+Estimated Time: 40 minutes
+
+Cost Level: Medium
+
+Architecture Diagram (PNG) Description
 The diagram shows an Azure Virtual Network (VNet). Inside the VNet, a Virtual Machine resides in a subnet. Separately, an Azure SQL Database is shown. Crucially, the SQL Database has its public network access disabled (firewall set to "Deny").
 
 A Private Endpoint resource is created for the SQL Database. This Private Endpoint projects a Network Interface (NIC) directly into the VNet's subnet. This NIC has a private IP address from the VNet's address space. An arrow points from the VM to this private IP address.
 
 To handle name resolution, a Private DNS Zone for privatelink.database.windows.net is created and linked to the VNet. This zone contains an A record that maps the database's standard public name (e.g., mydb.database.windows.net) to the private IP address of the Private Endpoint's NIC. When the VM tries to connect to mydb.database.windows.net, the DNS lookup resolves to the internal private IP, and traffic flows securely over the private network.
 
-### **Learning Steps (Manual/Programmatic)**
+Learning Steps (Manual/Programmatic)
 Set up the Network: In the Azure Portal, create a Virtual Network (VNet) with at least one subnet.
 
 Deploy a Virtual Machine: Create a Windows or Linux Virtual Machine and place it inside the subnet you created. This will be your client machine.
@@ -2893,36 +2980,39 @@ Verify the Connection: RDP or SSH into your Virtual Machine. Use a command-line 
 
 Test Database Access: Using a tool like SQL Server Management Studio (SSMS) or sqlcmd, attempt to connect to your SQL server from the VM using its standard public name. The connection will succeed because all traffic is being routed privately within the VNet. If you were to try the same connection from your own laptop over the internet, it would fail.
 
----
+Scenario 27: CI/CD Pipeline for GKE with Cloud Build ☸️
+Title: CI/CD Pipeline for GKE with Cloud Build
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-## Scenario 27: CI/CD Pipeline for GKE with Cloud Build ☸️
+Description: Create a fully automated pipeline that takes source code from a repository, builds a container image, pushes it to a registry, and deploys it to a Google Kubernetes Engine (GKE) cluster.
 
-* **Title**: CI/CD Pipeline for GKE with Cloud Build
-* **Description**: Create a fully automated pipeline that takes source code from a repository, builds a container image, pushes it to a registry, and deploys it to a Google Kubernetes Engine (GKE) cluster.
-* **User Prompt**: "I want to set up a professional CI/CD pipeline for my microservice running on Kubernetes."
-* **Services Involved**:
-    * Google Kubernetes Engine (GKE)
-    * Cloud Build
-    * Artifact Registry (for container images)
-    * Cloud Source Repositories (or GitHub/Bitbucket)
-* **Level**: Advanced
-* **Estimated Time**: 60 minutes
-* **Cost Level**: Medium
-* **Export Formats**: Console Tutorial, YAML Configuration
+User Prompt: "I want to set up a professional CI/CD pipeline for my microservice running on Kubernetes."
 
-### **Architecture Diagram (PNG) Description**
+Services Involved:
 
+Google Kubernetes Engine (GKE)
+
+Cloud Build
+
+Artifact Registry (for container images)
+
+Cloud Source Repositories (or GitHub/Bitbucket)
+
+Level: Advanced
+
+Estimated Time: 60 minutes
+
+Cost Level: Medium
+
+Architecture Diagram (PNG) Description
 The diagram shows a developer committing code to a Cloud Source Repository. This commit action automatically triggers Cloud Build. Cloud Build is shown as a pipeline defined by a cloudbuild.yaml file in the repository.
 
 The pipeline has three main stages:
 
-**Build**: Cloud Build uses the Dockerfile in the repo to build a new container image.
+Build: Cloud Build uses the Dockerfile in the repo to build a new container image.
 
-**Push**: The newly built image is pushed to the Artifact Registry.
+Push: The newly built image is pushed to the Artifact Registry.
 
-**Deploy**: Cloud Build uses kubectl commands to apply a Kubernetes manifest file (e.g., deployment.yaml) to the GKE Cluster. This step updates the GKE deployment to use the new container image version from the Artifact Registry.
+Deploy: Cloud Build uses kubectl commands to apply a Kubernetes manifest file (e.g., deployment.yaml) to the GKE Cluster. This step updates the GKE deployment to use the new container image version from the Artifact Registry.
 
 The final result is a new Pod being rolled out in the GKE cluster, running the updated application code.
 
@@ -2966,29 +3056,33 @@ Test the Pipeline: Make a small change to your application code and push the com
 
 
 
----
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
+-----------------
 
-## Scenario 28: AWS Federated Authentication with Amazon Cognito 🧑‍🤝‍🧑
+Scenario 28: AWS Federated Authentication with Amazon Cognito 🧑‍🤝‍🧑
+Title: Federated Authentication with Amazon Cognito
 
-* **Title**: Federated Authentication with Amazon Cognito
-* **Description**: Learn how to add user sign-up, sign-in, and access control to your web application by integrating with Amazon Cognito, allowing users to authenticate with social identity providers like Google or Facebook.
-* **User Prompt**: "I need to add a login system to my app so users can sign in with their Google account."
-* **Services Involved**:
-    * Amazon Cognito (User Pools & Identity Pools)
-    * IAM (Identity and Access Management)
-    * A simple static web application (hosted on S3 for the demo)
-* **Level**: Intermediate
-* **Estimated Time**: 45 minutes
-* **Cost Level**: Low
-* **Export Formats**: Console Tutorial, Integration Guide
+Description: Learn how to add user sign-up, sign-in, and access control to your web application by integrating with Amazon Cognito, allowing users to authenticate with social identity providers like Google or Facebook.
 
-### **Architecture Diagram (PNG) Description**
+User Prompt: "I need to add a login system to my app so users can sign in with their Google account."
 
+Services Involved:
+
+Amazon Cognito (User Pools & Identity Pools)
+
+IAM (Identity and Access Management)
+
+A simple static web application (hosted on S3 for the demo)
+
+Level: Intermediate
+
+Estimated Time: 45 minutes
+
+Cost Level: Low
+
+Architecture Diagram (PNG) Description
 The diagram shows a user interacting with a Web Application. When the user clicks "Login," the application redirects them to the Amazon Cognito Hosted UI. This UI displays options like "Sign in with Google" or "Sign in with Facebook." The user authenticates with their chosen provider (e.g., Google). After successful authentication, Google returns a token to Cognito. Cognito then creates a user profile in its User Pool and provides the web application with a JSON Web Token (JWT). The application can then use this JWT to exchange it for temporary AWS credentials via a Cognito Identity Pool. These temporary credentials allow the web app to securely access other AWS services, like a private S3 bucket or an API Gateway endpoint, on behalf of the logged-in user.
 
-### **Learning Steps (Manual/Programmatic)**
+Learning Steps (Manual/Programmatic)
 Create a Cognito User Pool: In the AWS Management Console, navigate to Amazon Cognito. Click "Create user pool." Choose "Federated identity providers" and select providers like Google or Facebook. You will need to provide a Client ID and Client Secret, which you get by creating an "OAuth 2.0 Client ID" in the Google Cloud Console for your application.
 
 Configure the App Client: In your User Pool settings, go to the "App integration" tab. Create a new "App client." Select "Public client" and generate a client secret. Note the Client ID.
@@ -3003,15 +3097,12 @@ Integrate with a Sample App: Download or create a simple single-page JavaScript 
 
 Test the Login Flow: Open your web app. Click the login button. You should be redirected to the Cognito Hosted UI. Sign in with the Google account you configured. After a successful login, Cognito will redirect you back to your app's callback URL with an authorization code in the URL. Your application can then exchange this code for user tokens, proving the user is authenticated.
 
----
+Scenario 29: Azure Hybrid Cloud Networking with VPN Gateway 🏢
+Title: Azure Hybrid Cloud Networking with VPN Gateway
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-## Scenario 29: Azure Hybrid Cloud Networking with VPN Gateway 🏢
+Description: Establish a secure, site-to-site VPN tunnel connecting your on-premises office network to an Azure Virtual Network (VNet), allowing resources in both locations to communicate as if they were on the same network.
 
-* **Title**: Azure Hybrid Cloud Networking with VPN Gateway
-* **Description**: Establish a secure, site-to-site VPN tunnel connecting your on-premises office network to an Azure Virtual Network (VNet), allowing resources in both locations to communicate as if they were on the same network.
-* **User Prompt**: "I need my servers in Azure to securely access a database in my office."
+User Prompt: "I need my servers in Azure to securely access a database in my office."
 
 Services Involved:
 
@@ -3069,15 +3160,12 @@ Enter the same pre-shared key (PSK) that you configured on your on-premises devi
 
 Verify the Tunnel: After a few minutes, the status of the connection in the portal should change to "Connected". You can now test connectivity by trying to ping a private IP address in Azure from an on-premises machine, or vice-versa (ensure firewalls allow ICMP traffic).
 
----
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
+Scenario 30: GCP Autoscaling a Web Application ⚖️
+Title: Autoscaling a Web Application with Managed Instance Groups
 
-## Scenario 30: GCP Autoscaling a Web Application ⚖️
+Description: Deploy a resilient web application that automatically scales the number of virtual machines up or down based on real-time CPU utilization, ensuring performance during traffic spikes and saving costs during quiet periods.
 
-* **Title**: Autoscaling a Web Application with Managed Instance Groups
-* **Description**: Deploy a resilient web application that automatically scales the number of virtual machines up or down based on real-time CPU utilization, ensuring performance during traffic spikes and saving costs during quiet periods.
-* **User Prompt**: "My website is slow during peak hours. How can I make it handle more traffic automatically?"
+User Prompt: "My website is slow during peak hours. How can I make it handle more traffic automatically?"
 
 Services Involved:
 
@@ -3151,8 +3239,6 @@ Test Autoscaling (Optional): To simulate load, you would need to use a load test
 
 ---------------
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Of course. Here are three more architecture scenarios focused on console-based learning for AWS, Azure, and GCP.
 
 Scenario 31: AWS Building a Serverless Data Lake with Lake Formation 🔐
@@ -3206,9 +3292,6 @@ Grant permissions. You can select specific columns to include or exclude. For ex
 
 Query with Athena: Log in as the IAM user you just granted permissions to. Navigate to Amazon Athena. Run SELECT * FROM your_database.your_table;. You will see that the query results only contain the specific columns you were granted access to, even though you requested all (*). This demonstrates that Lake Formation's permissions are being enforced.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 32: Azure Geo-Redundant Web App with Azure Front Door 🌐
 Title: Deploying a Geo-Redundant Web App with Azure Front Door
 
@@ -3315,9 +3398,6 @@ Test the Security Policy: Deploy a third, "unauthorized" pod into the same names
 
 ----------------------
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Absolutely. Here are ten architecture scenarios designed for hands-on learning, covering common and important patterns across AWS, Azure, and GCP.
 
 Scenario 34 (AWS): Protecting a Web Application with AWS WAF 🛡️
@@ -3457,9 +3537,6 @@ Test the System: Invoke the order-service Lambda function manually from the cons
 
 Verify Results: Go to the CloudWatch Logs for both the shipping-service and the invoicing-service. You will see that both functions were invoked and have log entries showing the "Order Created" event data. This proves the order-service was successfully decoupled from its consumers.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 37 (AWS): Automated CI/CD with AWS CodePipeline 🔄
 Title: Automated CI/CD with AWS CodePipeline
 
@@ -3515,9 +3592,6 @@ Deploy Stage: Select "AWS CodeDeploy" and choose the application and deployment 
 
 Trigger and Observe: Save the pipeline. It will automatically run for the first time. You can watch as each stage turns green upon successful completion. To test the full CI/CD flow, make a small code change, commit it, and push it to your CodeCommit repository. This will automatically trigger a new pipeline execution, deploying your change to the EC2 instance within minutes.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 38 (Azure): User Identity Management with Azure AD B2C 👤
 Title: User Identity Management with Azure AD B2C
 
@@ -3557,9 +3631,6 @@ Test Sign-Up: Click "Sign up now," enter an email address and password, and fill
 
 Test Sign-In: After sign-up, you'll be redirected to the test redirect URI (https://jwt.ms) with a valid ID token. The contents of the token, including the claims you selected, will be displayed. This simulates what your real application would receive. Run the user flow again and test the sign-in process with the credentials you just created.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 39 (Azure): Migrating an On-Premises Database with DMS 🚚
 Title: Migrating an On-Premises Database with Azure Database Migration Service
 
@@ -3607,9 +3678,6 @@ It then continuously applies new transaction log backups to keep the target sync
 
 Perform the Cutover: The DMS dashboard will show you when the initial restore is complete and the two databases are in sync. At a planned time, stop all traffic to your on-premises application, wait for the final logs to be applied in DMS, and then click "Complete cutover." This finalizes the migration. You can then re-point your application's connection string to the new Azure SQL Database.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 40 (Azure): Path-Based Routing with Application Gateway 🛣️
 Title: Path-Based Routing with Application Gateway
 
@@ -3675,9 +3743,6 @@ Navigate to http://<gateway-ip>/images/. You should see the response from one of
 
 Navigate to http://<gateway-ip>/video/. You should see the response from one of your video servers.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 41 (GCP): DDoS Protection with Cloud Armor 🛡️
 Title: DDoS Protection with Cloud Armor
 
@@ -3849,9 +3914,6 @@ Get Predictions: Once the endpoint is active, you can use the UI to enter sample
 ------------
 Of course. Here are fifteen more detailed architecture scenarios designed for hands-on learning across AWS, Azure, and GCP.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 44 (AWS): Simplified PaaS Deployment with Elastic Beanstalk 🧑‍🌾
 Title: Simplified PaaS Deployment with Elastic Beanstalk
 
@@ -3903,10 +3965,6 @@ Access Your Application: Once the environment's health is "Ok," a URL will appea
 
 Explore Configuration: Navigate through the environment's "Configuration" tab. Here you can adjust settings like instance types, scaling triggers, and database connections, all without directly touching the underlying resources.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 45 (AWS): Visual Workflow Orchestration with Step Functions 🎼
 Title: Visual Workflow Orchestration with Step Functions
 
@@ -3956,10 +4014,6 @@ Start an Execution: On your state machine's page, click "Start execution." You c
 
 Visualize the Execution: The console will show a live, color-coded graph of your workflow execution. You can see each step turn green as it completes successfully. You can click on any step to see its input and output, making it easy to debug complex flows.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 46 (AWS): Securely Managing Application Secrets with Secrets Manager 🤫
 Title: Securely Managing Application Secrets with Secrets Manager
 
@@ -4007,10 +4061,6 @@ Update Application Code: Modify your application code to use the AWS SDK. Instea
 
 Test the Retrieval: Deploy and run your application. Check the logs to confirm that it successfully fetched the secret from Secrets Manager and was able to use it to connect to the database.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 47 (AWS): Real-time Stream Analytics with Kinesis Data Analytics 🌊
 Title: Real-time Stream Analytics with Kinesis Data Analytics
 
@@ -4064,10 +4114,6 @@ Send Data: Use a simple script (e.g., Python with boto3) or the AWS CLI to send 
 
 Verify Results: Check the CloudWatch logs for your destination Lambda function. You will see it being invoked every minute with the aggregated results calculated by your continuous SQL query.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 48 (Azure): Deploying Kubernetes with Azure Kubernetes Service (AKS) ⚓
 Title: Deploying Kubernetes with Azure Kubernetes Service (AKS)
 
@@ -4111,11 +4157,6 @@ Deploy the Application: Use kubectl apply -f deployment.yaml and kubectl apply -
 
 Verify Deployment: Run kubectl get pods to see your application pods running. Run kubectl get service to find the external IP address of your load balancer. Access this IP in a browser to see your live application.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 49 (Azure): Managing Secrets with Azure Key Vault 🔑
 Title: Managing Secrets with Azure Key Vault
 
@@ -4161,8 +4202,6 @@ Reference the Secret in App Service: Go back to your App Service. In the "Config
 
 Test the Application: Your application code can now read the secret simply by reading the DB_CONNECTION environment variable. The App Service platform handles the authentication to Key Vault and the injection of the secret value. Deploy code that prints this environment variable to verify it's working.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 50 (Azure): Modern Data Warehousing with Azure Synapse Analytics 💎
 Title: Modern Data Warehousing with Azure Synapse Analytics
 
@@ -4272,10 +4311,6 @@ Deploy VMs: Create two VMs. Place the "Web-VM" in the DMZ-Subnet and the "DB-VM"
 
 Test Connectivity: The Web-VM will have a public IP and you can attempt to access it on port 443. The DB-VM will have no public IP. If you RDP into the Web-VM, you should be able to connect to the DB-VM on port 1433. An attempt to connect directly to the DB-VM from the internet will fail.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 52 (GCP): Caching Content with Cloud CDN 💨
 Title: Caching Content with Cloud CDN
 
@@ -4317,10 +4352,6 @@ Test the CDN: Find the public IP address of your load balancer. Open your browse
 
 Verify Caching: Observe the response headers for the image. You should see headers like Age and x-cache: HIT, indicating the content was served from the CDN cache. The first request might be a MISS, but subsequent requests should be a HIT.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 53 (GCP): Serverless Web Hosting with App Engine ⚙️
 Title: Serverless Web Hosting with App Engine
 
@@ -4364,10 +4395,6 @@ View Your Application: After a few minutes, the command will finish and provide 
 
 Manage Versions: Deploy a small change to your code using gcloud app deploy again. Go to the App Engine -> Versions page in the GCP console. You will see both the old and new versions listed. You can easily split traffic between them or roll back to the previous version with a single click.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 54 (GCP): Zero-Trust Application Access with Identity-Aware Proxy (IAP) 🏰
 Title: Zero-Trust Application Access with Identity-Aware Proxy (IAP)
 
@@ -4411,10 +4438,6 @@ Test Access (as Authorized User): In an incognito browser window, navigate to th
 
 Test Access (as Unauthorized User): Open another incognito browser window or use a different browser profile. Navigate to the same IP address. Log in with a personal Gmail account or any other account not on the allow list. You will be presented with a "You don't have access" page, proving that IAP has successfully blocked the unauthorized user before they could reach your application.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 55 (GCP): Storing and Querying JSON with Firestore 📄
 Title: Storing and Querying JSON with Firestore
 
@@ -4473,9 +4496,6 @@ Try a more complex query where interests array-contains programming. This will a
 
 
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 
 
 
@@ -4536,10 +4556,6 @@ systemctl enable httpd
 echo "<h1>Hello from my EC2 Web Server!</h1>" > /var/www/html/index.html
 Launch and Verify: Review the summary and click "Launch instance." After a few minutes, the instance state will change to "Running." Select the instance and find its "Public IPv4 address" in the details pane. Paste this IP address into your web browser. You should see the "Hello from my EC2 Web Server!" message.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 57 (AWS): Storing Files in S3 🗃️
 Title: Storing Files in Amazon S3
 
@@ -4584,10 +4600,6 @@ Verify Public Access: Now, try opening the "Object URL" again. Your file should 
 Scenario 58 (AWS): Sending Notifications with SNS 📢
 Title: Sending Notifications with Amazon SNS
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Description: Learn how to use a publish/subscribe (pub/sub) messaging pattern to send a single message to multiple subscribers, such as email addresses or SMS endpoints.
 
 User Prompt: "I need to send an email alert to my entire dev team when a critical error occurs."
@@ -4630,11 +4642,6 @@ Enter a "Message body" (e.g., "The main production server is unresponsive. Pleas
 
 Verify Delivery: Click "Publish message." Within moments, check the inboxes for both email addresses you subscribed. Both should have received the exact same alert email, demonstrating the fan-out pattern.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 59 (AWS): Creating a Managed Relational Database with RDS 🐘
 Title: Creating a Managed Relational Database with RDS
 
@@ -4690,10 +4697,6 @@ Configure Security Group: While it's creating, find the security group associate
 
 Connect to the Database: Once the database status is "Available," you can find its Endpoint name in the "Connectivity & security" tab. Use this endpoint, along with the username and password you created, in your application's connection string to connect to your new managed database.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 60 (Azure): Creating a Windows Virtual Machine 🖼️
 Title: Creating a Windows Virtual Machine
 
@@ -4937,10 +4940,6 @@ Connect to the Database: Once the instance is ready, select it to view its overv
 
 Use a Database Client: Use a local SQL client (like MySQL Workbench, DBeaver, or the mysql command line). Use the Public IP as the host, root as the username, and the password you created to establish a connection to your new managed database.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
 Scenario 65 (GCP): Storing and Sharing Files with Cloud Storage 🧺
 Title: Storing and Sharing Files with Cloud Storage
 
