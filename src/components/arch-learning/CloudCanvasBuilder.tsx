@@ -1,12 +1,12 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Palette, 
-  Play, 
-  Pause, 
-  Download, 
-  Save, 
-  RotateCcw, 
+import {
+  Palette,
+  Play,
+  Pause,
+  Download,
+  Save,
+  RotateCcw,
   Zap,
   Database,
   Server,
@@ -21,17 +21,35 @@ import {
   Plus,
   Minus,
   Grid,
-  Move
+  Move,
+  Search,
+  Filter,
+  Star,
+  BookOpen,
+  Lock,
+  Cloud,
+  Cpu,
+  HardDrive,
+  Wifi,
+  AlertTriangle,
+  CheckCircle,
+  Info
 } from 'lucide-react';
 
 interface CloudService {
   id: string;
   name: string;
-  provider: 'aws' | 'azure' | 'gcp';
-  category: 'compute' | 'storage' | 'database' | 'networking' | 'security' | 'analytics';
+  provider: 'aws' | 'azure' | 'gcp' | 'kubernetes';
+  category: 'compute' | 'storage' | 'database' | 'networking' | 'security' | 'analytics' | 'ai-ml' | 'devops' | 'containers';
   icon: string;
   color: string;
   description: string;
+  pricing: 'free-tier' | 'low' | 'medium' | 'high';
+  complexity: 'beginner' | 'intermediate' | 'advanced';
+  tags: string[];
+  documentation?: string;
+  bestPractices?: string[];
+  securityTips?: string[];
 }
 
 interface CanvasNode {
@@ -39,45 +57,206 @@ interface CanvasNode {
   service: CloudService;
   position: { x: number; y: number };
   connections: string[];
+  metadata?: Record<string, any>;
 }
 
 const CloudCanvasBuilder: React.FC = () => {
-  const [selectedProvider, setSelectedProvider] = useState<'all' | 'aws' | 'azure' | 'gcp'>('all');
+  const [selectedProvider, setSelectedProvider] = useState<'all' | 'aws' | 'azure' | 'gcp' | 'kubernetes'>('all');
   const [selectedCategory, setSelectedCategory] = useState<'all' | string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedComplexity, setSelectedComplexity] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all');
   const [canvasNodes, setCanvasNodes] = useState<CanvasNode[]>([]);
   const [isAnimating, setIsAnimating] = useState(false);
   const [showGrid, setShowGrid] = useState(true);
   const [zoomLevel, setZoomLevel] = useState(100);
+  const [showServiceDetails, setShowServiceDetails] = useState<string | null>(null);
 
   const cloudServices: CloudService[] = [
-    // AWS Services
-    { id: 'aws-ec2', name: 'EC2', provider: 'aws', category: 'compute', icon: '🖥️', color: 'bg-orange-100 text-orange-700', description: 'Virtual servers in the cloud' },
-    { id: 'aws-lambda', name: 'Lambda', provider: 'aws', category: 'compute', icon: '⚡', color: 'bg-orange-100 text-orange-700', description: 'Serverless compute service' },
-    { id: 'aws-s3', name: 'S3', provider: 'aws', category: 'storage', icon: '🪣', color: 'bg-orange-100 text-orange-700', description: 'Object storage service' },
-    { id: 'aws-rds', name: 'RDS', provider: 'aws', category: 'database', icon: '🗄️', color: 'bg-orange-100 text-orange-700', description: 'Managed relational database' },
-    { id: 'aws-vpc', name: 'VPC', provider: 'aws', category: 'networking', icon: '🌐', color: 'bg-orange-100 text-orange-700', description: 'Virtual private cloud' },
-    { id: 'aws-alb', name: 'ALB', provider: 'aws', category: 'networking', icon: '⚖️', color: 'bg-orange-100 text-orange-700', description: 'Application load balancer' },
-    
-    // Azure Services
-    { id: 'azure-vm', name: 'Virtual Machines', provider: 'azure', category: 'compute', icon: '💻', color: 'bg-blue-100 text-blue-700', description: 'Scalable virtual machines' },
-    { id: 'azure-functions', name: 'Functions', provider: 'azure', category: 'compute', icon: '⚡', color: 'bg-blue-100 text-blue-700', description: 'Event-driven serverless compute' },
-    { id: 'azure-storage', name: 'Storage Account', provider: 'azure', category: 'storage', icon: '💾', color: 'bg-blue-100 text-blue-700', description: 'Cloud storage solution' },
-    { id: 'azure-sql', name: 'SQL Database', provider: 'azure', category: 'database', icon: '🗃️', color: 'bg-blue-100 text-blue-700', description: 'Managed SQL database' },
-    { id: 'azure-vnet', name: 'Virtual Network', provider: 'azure', category: 'networking', icon: '🔗', color: 'bg-blue-100 text-blue-700', description: 'Private network in Azure' },
-    
-    // GCP Services
-    { id: 'gcp-compute', name: 'Compute Engine', provider: 'gcp', category: 'compute', icon: '🔧', color: 'bg-green-100 text-green-700', description: 'Virtual machine instances' },
-    { id: 'gcp-functions', name: 'Cloud Functions', provider: 'gcp', category: 'compute', icon: '⚡', color: 'bg-green-100 text-green-700', description: 'Serverless execution environment' },
-    { id: 'gcp-storage', name: 'Cloud Storage', provider: 'gcp', category: 'storage', icon: '☁️', color: 'bg-green-100 text-green-700', description: 'Object storage and serving' },
-    { id: 'gcp-sql', name: 'Cloud SQL', provider: 'gcp', category: 'database', icon: '🗂️', color: 'bg-green-100 text-green-700', description: 'Fully managed relational database' },
-    { id: 'gcp-vpc', name: 'VPC Network', provider: 'gcp', category: 'networking', icon: '🌍', color: 'bg-green-100 text-green-700', description: 'Virtual private cloud network' }
+    // AWS Services - Compute
+    {
+      id: 'aws-ec2', name: 'EC2', provider: 'aws', category: 'compute',
+      icon: '🖥️', color: 'bg-orange-100 text-orange-700',
+      description: 'Scalable virtual servers in the cloud',
+      pricing: 'free-tier', complexity: 'beginner',
+      tags: ['virtual-machines', 'compute', 'scalable'],
+      bestPractices: ['Use appropriate instance types', 'Enable monitoring', 'Configure security groups'],
+      securityTips: ['Restrict SSH access', 'Use IAM roles', 'Enable encryption']
+    },
+    {
+      id: 'aws-lambda', name: 'Lambda', provider: 'aws', category: 'compute',
+      icon: '⚡', color: 'bg-orange-100 text-orange-700',
+      description: 'Run code without managing servers',
+      pricing: 'free-tier', complexity: 'intermediate',
+      tags: ['serverless', 'event-driven', 'microservices'],
+      bestPractices: ['Optimize function size', 'Use environment variables', 'Monitor performance'],
+      securityTips: ['Least privilege IAM', 'Encrypt environment variables', 'VPC configuration']
+    },
+    {
+      id: 'aws-ecs', name: 'ECS', provider: 'aws', category: 'containers',
+      icon: '📦', color: 'bg-orange-100 text-orange-700',
+      description: 'Fully managed container orchestration',
+      pricing: 'low', complexity: 'intermediate',
+      tags: ['containers', 'docker', 'orchestration'],
+      bestPractices: ['Use Fargate for serverless', 'Configure health checks', 'Implement auto-scaling'],
+      securityTips: ['Scan container images', 'Use task roles', 'Network isolation']
+    },
+
+    // AWS Services - Storage
+    {
+      id: 'aws-s3', name: 'S3', provider: 'aws', category: 'storage',
+      icon: '🪣', color: 'bg-orange-100 text-orange-700',
+      description: 'Scalable object storage service',
+      pricing: 'free-tier', complexity: 'beginner',
+      tags: ['object-storage', 'backup', 'static-hosting'],
+      bestPractices: ['Use lifecycle policies', 'Enable versioning', 'Configure CORS'],
+      securityTips: ['Block public access', 'Enable encryption', 'Use bucket policies']
+    },
+    {
+      id: 'aws-ebs', name: 'EBS', provider: 'aws', category: 'storage',
+      icon: '💽', color: 'bg-orange-100 text-orange-700',
+      description: 'High-performance block storage',
+      pricing: 'low', complexity: 'beginner',
+      tags: ['block-storage', 'persistent', 'high-performance'],
+      bestPractices: ['Choose appropriate volume type', 'Enable snapshots', 'Monitor IOPS'],
+      securityTips: ['Enable encryption at rest', 'Secure snapshot sharing', 'Access control']
+    },
+
+    // AWS Services - Database
+    {
+      id: 'aws-rds', name: 'RDS', provider: 'aws', category: 'database',
+      icon: '🗄️', color: 'bg-orange-100 text-orange-700',
+      description: 'Managed relational database service',
+      pricing: 'free-tier', complexity: 'intermediate',
+      tags: ['relational', 'managed', 'mysql', 'postgresql'],
+      bestPractices: ['Enable Multi-AZ', 'Configure backups', 'Use read replicas'],
+      securityTips: ['Enable encryption', 'Use VPC security groups', 'Regular security updates']
+    },
+    {
+      id: 'aws-dynamodb', name: 'DynamoDB', provider: 'aws', category: 'database',
+      icon: '⚡', color: 'bg-orange-100 text-orange-700',
+      description: 'Fast NoSQL database service',
+      pricing: 'free-tier', complexity: 'intermediate',
+      tags: ['nosql', 'serverless', 'fast', 'scalable'],
+      bestPractices: ['Design efficient partition keys', 'Use GSI wisely', 'Monitor capacity'],
+      securityTips: ['Enable encryption', 'Use IAM policies', 'VPC endpoints']
+    },
+
+    // AWS Services - Networking
+    {
+      id: 'aws-vpc', name: 'VPC', provider: 'aws', category: 'networking',
+      icon: '🌐', color: 'bg-orange-100 text-orange-700',
+      description: 'Isolated cloud resources network',
+      pricing: 'free-tier', complexity: 'intermediate',
+      tags: ['networking', 'isolation', 'subnets'],
+      bestPractices: ['Use multiple AZs', 'Implement proper CIDR', 'Configure route tables'],
+      securityTips: ['Use NACLs', 'Configure security groups', 'Enable flow logs']
+    },
+    {
+      id: 'aws-alb', name: 'ALB', provider: 'aws', category: 'networking',
+      icon: '⚖️', color: 'bg-orange-100 text-orange-700',
+      description: 'Application load balancer',
+      pricing: 'low', complexity: 'intermediate',
+      tags: ['load-balancer', 'high-availability', 'ssl'],
+      bestPractices: ['Configure health checks', 'Use SSL certificates', 'Enable access logs'],
+      securityTips: ['Configure WAF', 'Use security groups', 'SSL/TLS termination']
+    },
+
+    // AWS Services - Security
+    {
+      id: 'aws-iam', name: 'IAM', provider: 'aws', category: 'security',
+      icon: '🔐', color: 'bg-orange-100 text-orange-700',
+      description: 'Identity and access management',
+      pricing: 'free-tier', complexity: 'advanced',
+      tags: ['security', 'access-control', 'policies'],
+      bestPractices: ['Use least privilege', 'Enable MFA', 'Regular access reviews'],
+      securityTips: ['Rotate access keys', 'Use roles over users', 'Monitor CloudTrail']
+    },
+
+    // Azure Services - Compute
+    {
+      id: 'azure-vm', name: 'Virtual Machines', provider: 'azure', category: 'compute',
+      icon: '💻', color: 'bg-blue-100 text-blue-700',
+      description: 'Scalable virtual machines on Azure',
+      pricing: 'free-tier', complexity: 'beginner',
+      tags: ['virtual-machines', 'windows', 'linux'],
+      bestPractices: ['Use managed disks', 'Configure auto-shutdown', 'Enable monitoring'],
+      securityTips: ['Use Azure Security Center', 'Enable disk encryption', 'Configure NSGs']
+    },
+    {
+      id: 'azure-functions', name: 'Functions', provider: 'azure', category: 'compute',
+      icon: '⚡', color: 'bg-blue-100 text-blue-700',
+      description: 'Event-driven serverless compute',
+      pricing: 'free-tier', complexity: 'intermediate',
+      tags: ['serverless', 'event-driven', 'microservices'],
+      bestPractices: ['Use consumption plan', 'Optimize cold starts', 'Monitor performance'],
+      securityTips: ['Use managed identity', 'Secure function keys', 'Network restrictions']
+    },
+
+    // Azure Services - Storage
+    {
+      id: 'azure-storage', name: 'Storage Account', provider: 'azure', category: 'storage',
+      icon: '💾', color: 'bg-blue-100 text-blue-700',
+      description: 'Scalable cloud storage solution',
+      pricing: 'free-tier', complexity: 'beginner',
+      tags: ['blob-storage', 'file-storage', 'queue-storage'],
+      bestPractices: ['Use appropriate access tiers', 'Enable soft delete', 'Configure lifecycle'],
+      securityTips: ['Enable encryption', 'Use private endpoints', 'Configure firewall']
+    },
+
+    // GCP Services - Compute
+    {
+      id: 'gcp-compute', name: 'Compute Engine', provider: 'gcp', category: 'compute',
+      icon: '🔧', color: 'bg-green-100 text-green-700',
+      description: 'Scalable virtual machine instances',
+      pricing: 'free-tier', complexity: 'beginner',
+      tags: ['virtual-machines', 'scalable', 'preemptible'],
+      bestPractices: ['Use preemptible instances', 'Configure auto-scaling', 'Use custom images'],
+      securityTips: ['Use service accounts', 'Enable OS Login', 'Configure firewall rules']
+    },
+    {
+      id: 'gcp-functions', name: 'Cloud Functions', provider: 'gcp', category: 'compute',
+      icon: '⚡', color: 'bg-green-100 text-green-700',
+      description: 'Serverless execution environment',
+      pricing: 'free-tier', complexity: 'intermediate',
+      tags: ['serverless', 'event-driven', 'http-triggers'],
+      bestPractices: ['Optimize function memory', 'Use environment variables', 'Monitor execution'],
+      securityTips: ['Use IAM roles', 'Secure environment variables', 'VPC connector']
+    },
+
+    // Kubernetes Services
+    {
+      id: 'k8s-pod', name: 'Pod', provider: 'kubernetes', category: 'containers',
+      icon: '🐳', color: 'bg-purple-100 text-purple-700',
+      description: 'Smallest deployable unit in Kubernetes',
+      pricing: 'free-tier', complexity: 'intermediate',
+      tags: ['containers', 'workload', 'scheduling'],
+      bestPractices: ['Use resource limits', 'Configure health checks', 'Use labels'],
+      securityTips: ['Run as non-root', 'Use security contexts', 'Network policies']
+    },
+    {
+      id: 'k8s-service', name: 'Service', provider: 'kubernetes', category: 'networking',
+      icon: '🔗', color: 'bg-purple-100 text-purple-700',
+      description: 'Expose applications running on pods',
+      pricing: 'free-tier', complexity: 'intermediate',
+      tags: ['networking', 'load-balancing', 'discovery'],
+      bestPractices: ['Use appropriate service types', 'Configure selectors', 'Use annotations'],
+      securityTips: ['Restrict service access', 'Use TLS', 'Network policies']
+    }
   ];
 
-  const filteredServices = cloudServices.filter(service => {
-    const providerMatch = selectedProvider === 'all' || service.provider === selectedProvider;
-    const categoryMatch = selectedCategory === 'all' || service.category === selectedCategory;
-    return providerMatch && categoryMatch;
-  });
+  const filteredServices = useMemo(() => {
+    return cloudServices.filter(service => {
+      const providerMatch = selectedProvider === 'all' || service.provider === selectedProvider;
+      const categoryMatch = selectedCategory === 'all' || service.category === selectedCategory;
+      const complexityMatch = selectedComplexity === 'all' || service.complexity === selectedComplexity;
+      const searchMatch = searchQuery === '' ||
+        service.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+
+      return providerMatch && categoryMatch && complexityMatch && searchMatch;
+    });
+  }, [selectedProvider, selectedCategory, selectedComplexity, searchQuery, cloudServices]);
 
   const handleServiceDrop = useCallback((service: CloudService, position: { x: number; y: number }) => {
     const newNode: CanvasNode = {
@@ -137,12 +316,29 @@ const CloudCanvasBuilder: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Service Palette */}
+        {/* Enhanced Service Palette */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-2xl shadow-lg border border-slate-200 h-fit sticky top-6">
             <div className="p-6 border-b border-slate-200">
-              <h3 className="text-lg font-bold text-slate-900 mb-4">Service Palette</h3>
-              
+              <div className="flex items-center space-x-2 mb-4">
+                <Palette className="w-5 h-5 text-blue-600" />
+                <h3 className="text-lg font-bold text-slate-900">Service Palette</h3>
+              </div>
+
+              {/* Search Bar */}
+              <div className="mb-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder="Search services..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                  />
+                </div>
+              </div>
+
               {/* Provider Filter */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-slate-700 mb-2">Provider</label>
@@ -155,6 +351,7 @@ const CloudCanvasBuilder: React.FC = () => {
                   <option value="aws">AWS</option>
                   <option value="azure">Azure</option>
                   <option value="gcp">Google Cloud</option>
+                  <option value="kubernetes">Kubernetes</option>
                 </select>
               </div>
 
@@ -173,34 +370,175 @@ const CloudCanvasBuilder: React.FC = () => {
                   <option value="networking">Networking</option>
                   <option value="security">Security</option>
                   <option value="analytics">Analytics</option>
+                  <option value="ai-ml">AI/ML</option>
+                  <option value="devops">DevOps</option>
+                  <option value="containers">Containers</option>
                 </select>
+              </div>
+
+              {/* Complexity Filter */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-slate-700 mb-2">Complexity</label>
+                <select
+                  value={selectedComplexity}
+                  onChange={(e) => setSelectedComplexity(e.target.value as any)}
+                  className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                >
+                  <option value="all">All Levels</option>
+                  <option value="beginner">Beginner</option>
+                  <option value="intermediate">Intermediate</option>
+                  <option value="advanced">Advanced</option>
+                </select>
+              </div>
+
+              {/* Filter Summary */}
+              <div className="text-xs text-slate-600 bg-slate-50 p-2 rounded-lg">
+                Showing {filteredServices.length} of {cloudServices.length} services
               </div>
             </div>
 
-            {/* Services List */}
+            {/* Enhanced Services List */}
             <div className="p-4 max-h-96 overflow-y-auto">
-              <div className="space-y-2">
-                {filteredServices.map((service) => (
-                  <motion.div
-                    key={service.id}
-                    draggable
-                    onDragStart={(e) => {
-                      e.dataTransfer.setData('application/json', JSON.stringify(service));
-                    }}
-                    className={`p-3 rounded-lg border border-slate-200 cursor-move hover:shadow-md transition-all duration-200 ${service.color}`}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <span className="text-lg">{service.icon}</span>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm truncate">{service.name}</p>
-                        <p className="text-xs opacity-75 truncate">{service.description}</p>
+              {filteredServices.length === 0 ? (
+                <div className="text-center py-8">
+                  <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Search className="w-6 h-6 text-slate-400" />
+                  </div>
+                  <p className="text-sm text-slate-600">No services found</p>
+                  <p className="text-xs text-slate-500">Try adjusting your filters</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {filteredServices.map((service) => (
+                    <motion.div
+                      key={service.id}
+                      draggable
+                      onDragStart={(e) => {
+                        e.dataTransfer.setData('application/json', JSON.stringify(service));
+                      }}
+                      className={`relative p-3 rounded-xl border border-slate-200 cursor-move hover:shadow-lg transition-all duration-200 ${service.color} group`}
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setShowServiceDetails(showServiceDetails === service.id ? null : service.id)}
+                    >
+                      <div className="flex items-start space-x-3">
+                        <div className="flex-shrink-0">
+                          <span className="text-lg">{service.icon}</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center space-x-2 mb-1">
+                            <p className="font-semibold text-sm truncate">{service.name}</p>
+                            <div className="flex items-center space-x-1">
+                              {service.pricing === 'free-tier' && (
+                                <span className="text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full">Free</span>
+                              )}
+                              {service.complexity === 'beginner' && (
+                                <span className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full">Easy</span>
+                              )}
+                            </div>
+                          </div>
+                          <p className="text-xs text-slate-600 leading-relaxed mb-2">{service.description}</p>
+
+                          {/* Tags */}
+                          <div className="flex flex-wrap gap-1">
+                            {service.tags.slice(0, 2).map((tag) => (
+                              <span key={tag} className="text-xs bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">
+                                {tag}
+                              </span>
+                            ))}
+                            {service.tags.length > 2 && (
+                              <span className="text-xs text-slate-500">+{service.tags.length - 2}</span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex-shrink-0 flex flex-col items-center space-y-1">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setShowServiceDetails(showServiceDetails === service.id ? null : service.id);
+                            }}
+                            className="p-1 hover:bg-white/50 rounded transition-colors"
+                          >
+                            <Info className="w-3 h-3" />
+                          </button>
+                          {getCategoryIcon(service.category)}
+                        </div>
                       </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+
+                      {/* Drag Indicator */}
+                      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Move className="w-3 h-3 text-slate-400" />
+                      </div>
+
+                      {/* Service Details Popup */}
+                      {showServiceDetails === service.id && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="absolute top-full left-0 right-0 mt-2 p-4 bg-white rounded-xl shadow-xl border border-slate-200 z-10"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <div className="space-y-3">
+                            <div>
+                              <h4 className="font-semibold text-slate-900 mb-1">{service.name}</h4>
+                              <p className="text-xs text-slate-600">{service.description}</p>
+                            </div>
+
+                            {service.bestPractices && service.bestPractices.length > 0 && (
+                              <div>
+                                <h5 className="text-xs font-medium text-green-700 mb-1 flex items-center space-x-1">
+                                  <CheckCircle className="w-3 h-3" />
+                                  <span>Best Practices</span>
+                                </h5>
+                                <ul className="text-xs text-slate-600 space-y-0.5">
+                                  {service.bestPractices.slice(0, 2).map((practice, index) => (
+                                    <li key={index} className="flex items-start space-x-1">
+                                      <span className="text-green-500 mt-0.5">•</span>
+                                      <span>{practice}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            {service.securityTips && service.securityTips.length > 0 && (
+                              <div>
+                                <h5 className="text-xs font-medium text-red-700 mb-1 flex items-center space-x-1">
+                                  <Shield className="w-3 h-3" />
+                                  <span>Security Tips</span>
+                                </h5>
+                                <ul className="text-xs text-slate-600 space-y-0.5">
+                                  {service.securityTips.slice(0, 2).map((tip, index) => (
+                                    <li key={index} className="flex items-start space-x-1">
+                                      <span className="text-red-500 mt-0.5">•</span>
+                                      <span>{tip}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                              <div className="flex items-center space-x-2 text-xs text-slate-500">
+                                <span>Complexity: {service.complexity}</span>
+                                <span>•</span>
+                                <span>Pricing: {service.pricing}</span>
+                              </div>
+                              <button
+                                onClick={() => setShowServiceDetails(null)}
+                                className="text-xs text-blue-600 hover:text-blue-700"
+                              >
+                                Close
+                              </button>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </motion.div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
