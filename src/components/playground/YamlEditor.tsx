@@ -605,19 +605,7 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
         </div>
       )}
 
-      {/* Footer with YAML Stats */}
-      {yamlContent && (
-        <div className="px-4 py-2 bg-slate-50 border-t border-slate-200 text-xs text-slate-600 flex-shrink-0">
-          <div className="flex items-center justify-between">
-            <span>
-              {nodes.length} components • {yamlContent.split('---').length - 1} resources
-            </span>
-            <span>
-              Last updated: {new Date().toLocaleTimeString()}
-            </span>
-          </div>
-        </div>
-      )}
+
     </motion.div>
   );
 };

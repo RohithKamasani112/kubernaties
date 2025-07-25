@@ -618,7 +618,7 @@ const K8sExplained: React.FC = () => {
     }
   };
   return (
-    <div className={`${isFullscreen ? 'fixed inset-0 z-50' : 'min-h-screen'} bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50`}>
+    <div className={`${isFullscreen ? 'fixed inset-0 z-50' : ''} bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50`}>
       {/* Enhanced Header */}
       <div className="bg-white/95 backdrop-blur-sm shadow-lg border-b border-gray-200/50">
         <div className="max-w-full mx-auto px-6 py-4">
@@ -746,7 +746,7 @@ const K8sExplained: React.FC = () => {
       {/* Enhanced Architecture Diagram */}
       <div
         ref={containerRef}
-        className={`relative w-full ${isFullscreen ? 'h-screen' : 'h-[calc(100vh-120px)]'} overflow-auto bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30`}
+        className={`relative w-full ${isFullscreen ? 'h-screen' : 'min-h-[600px]'} overflow-auto bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30`}
       >
         <div
           className="relative transition-transform duration-300 ease-out"

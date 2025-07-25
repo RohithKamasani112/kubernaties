@@ -22,7 +22,8 @@ import {
   Bug,
   Lightbulb,
   ExternalLink,
-  Send
+  Send,
+  Mail
 } from 'lucide-react';
 
 const About: React.FC = () => {
@@ -49,8 +50,7 @@ const About: React.FC = () => {
       "logo": "https://samwi.dev/logo.png",
       "foundingDate": "2024",
       "sameAs": [
-        "https://github.com/samwi-dev",
-        "https://twitter.com/samwi_dev"
+        "https://www.linkedin.com/company/samwi/"
       ],
       "contactPoint": {
         "@type": "ContactPoint",
@@ -630,17 +630,27 @@ const About: React.FC = () => {
                 <p className="text-gray-600 mb-6">
                   Follow us on LinkedIn for the latest updates, tech insights, and learning opportunities
                 </p>
-                <a
-                  href="https://www.linkedin.com/company/samwi/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center space-x-3 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                  </svg>
-                  <span>Follow on LinkedIn</span>
-                </a>
+                <div className="space-y-4">
+                  <a
+                    href="https://www.linkedin.com/company/samwi/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center space-x-3 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                    <span>Follow on LinkedIn</span>
+                  </a>
+
+                  <a
+                    href="mailto:samwi.global@gmail.com"
+                    className="inline-flex items-center space-x-3 bg-white hover:bg-blue-50 text-blue-700 px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl border border-blue-200"
+                  >
+                    <Mail className="w-5 h-5" />
+                    <span>samwi.global@gmail.com</span>
+                  </a>
+                </div>
               </div>
             </motion.div>
 

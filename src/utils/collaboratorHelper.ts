@@ -32,19 +32,19 @@ export const createCollaborator = (
 
 /**
  * Example usage:
- * 
+ *
  * const newCollaborator = createCollaborator({
- *   name: "John Smith",
- *   role: "Backend Developer", 
- *   linkedinUsername: "johnsmith",
- *   s3ImageKey: "john-smith.jpg",
- *   bio: "Full-stack developer with expertise in microservices"
+ *   name: "Team Member Name",
+ *   role: "Backend Developer",
+ *   linkedinUsername: "username",
+ *   s3ImageKey: "profile-image.jpg",
+ *   bio: "Developer with expertise in cloud technologies"
  * });
- * 
+ *
  * Then add to collaborators array:
  * export const collaborators: Collaborator[] = [
  *   ...existingCollaborators,
- *   { ...newCollaborator, id: "7" }
+ *   { ...newCollaborator, id: "next-id" }
  * ];
  */
 

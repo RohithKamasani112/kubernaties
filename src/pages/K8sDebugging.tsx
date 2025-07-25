@@ -152,7 +152,7 @@ const K8sDebugging: React.FC = () => {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 overflow-hidden">
+    <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       {/* Loading Overlay */}
       <AnimatePresence>
         {isLoading && (
@@ -274,7 +274,7 @@ const K8sDebugging: React.FC = () => {
         </div>
       </motion.div>
 
-      <div className="flex h-[calc(100vh-64px)]">
+      <div className="flex min-h-[600px]">
         {/* Scenario Selector Sidebar */}
         {false && (
           <motion.div

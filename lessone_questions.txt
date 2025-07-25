@@ -191,7 +191,7 @@ Scene 2: Introducing Labels - "Sticky Notes for Organization": Introduce "labels
 
 Scene 3: Selectors in Action: The child now easily finds all "Type: Car" toys by looking for the matching sticky notes. Show a "Service" (a delivery truck) using a "selector" (a magnifying glass looking for "Tier: Backend" labels) to pick up only the backend application toys.
 
-Scene 4: Annotations - "Secret Notes for Tools": Introduce "annotations" as smaller, less visible sticky notes, perhaps on the back of the toys. These notes contain information like "LastCheckedBy: John," "DeploymentTool: Helm," or "SpecialConfig: true." Emphasize that these are for tools or extra info, not for grouping or selecting. Show a "Tool Robot" reading these hidden notes.
+Scene 4: Annotations - "Secret Notes for Tools": Introduce "annotations" as smaller, less visible sticky notes, perhaps on the back of the toys. These notes contain information like "LastCheckedBy: DevOps," "DeploymentTool: Helm," or "SpecialConfig: true." Emphasize that these are for tools or extra info, not for grouping or selecting. Show a "Tool Robot" reading these hidden notes.
 
 Scene 5: Importance: Show a well-organized toy box, with labels clearly visible, making it easy for the child and tool robots to interact with the toys efficiently.
 
