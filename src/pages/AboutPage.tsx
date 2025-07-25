@@ -240,20 +240,13 @@ const AboutPage: React.FC = () => {
               <p className="text-xl text-slate-300 mb-8">
                 Have questions or feedback? We'd love to hear from you!
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex justify-center">
                 <a
                   href="mailto:hello@samwilearn.com"
                   className="inline-flex items-center space-x-2 bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-blue-700 transition-colors"
                 >
                   <Mail className="w-5 h-5" />
                   <span>Contact Us</span>
-                </a>
-                <a
-                  href="#"
-                  className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/30 transition-colors"
-                >
-                  <Github className="w-5 h-5" />
-                  <span>View on GitHub</span>
                 </a>
               </div>
             </motion.div>

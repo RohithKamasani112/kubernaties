@@ -63,21 +63,21 @@ const LearningStudioPage: React.FC<LearningStudioPageProps> = () => {
   };
 
   return (
-    <div className="h-screen flex bg-white">
-      {/* Left Panel - Guided Tutorial */}
-      <div className="w-1/3 border-r border-slate-200 flex flex-col">
+    <div className="h-screen flex flex-col lg:flex-row bg-white">
+      {/* Left Panel - Guided Tutorial - Mobile Responsive */}
+      <div className="w-full lg:w-1/3 border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col">
         {/* Header */}
-        <div className="p-6 border-b border-slate-200">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center">
-              <BookOpen className="w-5 h-5 text-white" />
+        <div className="p-3 sm:p-4 lg:p-6 border-b border-slate-200">
+          <div className="flex items-center space-x-2 sm:space-x-3 mb-3 sm:mb-4">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg sm:rounded-xl flex items-center justify-center">
+              <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
-            <div>
-              <h1 className="text-lg font-bold text-slate-900">{scenario.title}</h1>
-              <p className="text-sm text-slate-500">{scenario.difficulty} • {scenario.estimatedTime}</p>
+            <div className="min-w-0">
+              <h1 className="text-base sm:text-lg font-bold text-slate-900 truncate">{scenario.title}</h1>
+              <p className="text-xs sm:text-sm text-slate-500">{scenario.difficulty} • {scenario.estimatedTime}</p>
             </div>
           </div>
-          <p className="text-sm text-slate-600">{scenario.description}</p>
+          <p className="text-xs sm:text-sm text-slate-600">{scenario.description}</p>
         </div>
 
         {/* Progress */}
@@ -144,24 +144,24 @@ const LearningStudioPage: React.FC<LearningStudioPageProps> = () => {
         </div>
       </div>
 
-      {/* Middle Panel - Live Code Editor */}
-      <div className="w-1/3 border-r border-slate-200 flex flex-col">
+      {/* Middle Panel - Live Code Editor - Mobile Responsive */}
+      <div className="w-full lg:w-1/3 border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col">
         {/* Header */}
-        <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+        <div className="p-3 sm:p-4 border-b border-slate-200 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Code className="w-5 h-5 text-slate-600" />
-            <h2 className="font-semibold text-slate-800">Code Editor</h2>
+            <Code className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600" />
+            <h2 className="font-semibold text-slate-800 text-sm sm:text-base">Code Editor</h2>
           </div>
           <button
             onClick={handleApplyCode}
-            className="bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-600 transition-colors"
+            className="bg-green-500 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium hover:bg-green-600 transition-colors touch-manipulation"
           >
             Apply
           </button>
         </div>
 
         {/* Code Editor */}
-        <div className="flex-1 p-4">
+        <div className="flex-1 p-3 sm:p-4 min-h-[200px] lg:min-h-0">
           <textarea
             value={codeContent}
             onChange={(e) => setCodeContent(e.target.value)}
@@ -172,34 +172,34 @@ resource &quot;aws_lb&quot; &quot;main&quot; {
   name               = &quot;web-app-lb&quot;
   internal           = false
   load_balancer_type = &quot;application&quot;
-  
+
   subnets = [
     aws_subnet.public_1.id,
     aws_subnet.public_2.id
   ]
 }"
-            className="w-full h-full resize-none border border-slate-200 rounded-lg p-4 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full h-full resize-none border border-slate-200 rounded-lg p-3 sm:p-4 font-mono text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
       </div>
 
-      {/* Right Panel - Live Architecture Visualizer */}
-      <div className="w-1/3 flex flex-col">
+      {/* Right Panel - Live Architecture Visualizer - Mobile Responsive */}
+      <div className="w-full lg:w-1/3 flex flex-col min-h-[300px] lg:min-h-0">
         {/* Header */}
-        <div className="p-4 border-b border-slate-200 flex items-center space-x-2">
-          <Eye className="w-5 h-5 text-slate-600" />
-          <h2 className="font-semibold text-slate-800">Architecture Canvas</h2>
+        <div className="p-3 sm:p-4 border-b border-slate-200 flex items-center space-x-2">
+          <Eye className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600" />
+          <h2 className="font-semibold text-slate-800 text-sm sm:text-base">Architecture Canvas</h2>
         </div>
 
         {/* Canvas */}
-        <div className="flex-1 p-4 bg-slate-50">
+        <div className="flex-1 p-3 sm:p-4 bg-slate-50">
           <div className="w-full h-full border-2 border-dashed border-slate-300 rounded-lg flex items-center justify-center">
             <div className="text-center">
-              <div className="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Play className="w-8 h-8 text-slate-400" />
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                <Play className="w-6 h-6 sm:w-8 sm:h-8 text-slate-400" />
               </div>
-              <p className="text-slate-500 font-medium">Architecture will appear here</p>
-              <p className="text-slate-400 text-sm mt-1">Write code and click Apply to visualize</p>
+              <p className="text-slate-500 font-medium text-sm sm:text-base">Architecture will appear here</p>
+              <p className="text-slate-400 text-xs sm:text-sm mt-1">Write code and click Apply to visualize</p>
             </div>
           </div>
         </div>

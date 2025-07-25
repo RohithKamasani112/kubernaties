@@ -186,17 +186,17 @@ const HomePage: React.FC = () => {
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-6 lg:py-8">
 
-          {/* Beta Notice */}
+          {/* Beta Notice - Mobile Responsive */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="mb-6"
+            className="mb-4 sm:mb-6"
           >
-            <div className="bg-gradient-to-r from-orange-50 via-yellow-50 to-orange-50 border border-orange-200 rounded-xl p-4">
-              <div className="flex items-center justify-center space-x-3">
+            <div className="bg-gradient-to-r from-orange-50 via-yellow-50 to-orange-50 border border-orange-200 rounded-lg sm:rounded-xl p-3 sm:p-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-3">
                 <motion.div
                   className="w-3 h-3 bg-orange-500 rounded-full"
                   animate={{
@@ -210,7 +210,7 @@ const HomePage: React.FC = () => {
                   }}
                 />
                 <div className="text-center">
-                  <p className="text-sm font-semibold text-orange-800 mb-1">
+                  <p className="text-xs sm:text-sm font-semibold text-orange-800 mb-1">
                     🚀 You're using the Beta version of Cloud Architecture Studio!
                   </p>
                   <p className="text-xs text-orange-700">
@@ -221,19 +221,19 @@ const HomePage: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* Welcome Header */}
+          {/* Welcome Header - Mobile Responsive */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="mb-8"
+            className="mb-6 sm:mb-8"
           >
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h1 className="text-3xl font-bold text-slate-900 mb-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0 mb-4">
+              <div className="min-w-0">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 mb-1 sm:mb-2">
                   Welcome to Cloud Architecture Studio 👋
                 </h1>
-                <p className="text-lg text-slate-600">
+                <p className="text-sm sm:text-base lg:text-lg text-slate-600">
                   {state.userProgress ? (
                     <>Level {state.userProgress.level} – {getUserLevelTitle(state.userProgress.level)}</>
                   ) : (
@@ -241,31 +241,31 @@ const HomePage: React.FC = () => {
                   )}
                 </p>
               </div>
-              <div className="text-right text-sm text-slate-500">
+              <div className="text-left sm:text-right text-xs sm:text-sm text-slate-500 flex-shrink-0">
                 <div>{currentTime.toLocaleDateString()}</div>
                 <div>{currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
               </div>
             </div>
           </motion.div>
 
-          {/* Main Dashboard Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Dashboard Grid - Mobile Responsive */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
 
             {/* Left Column */}
-            <div className="lg:col-span-2 space-y-8">
+            <div className="lg:col-span-2 space-y-4 sm:space-y-6 lg:space-y-8">
 
-              {/* Progress Tracker Panel */}
+              {/* Progress Tracker Panel - Mobile Responsive */}
               {state.userProgress && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.1 }}
-                  className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6"
+                  className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6"
                 >
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-semibold text-slate-900">Learning Progress</h2>
-                    <div className="flex items-center space-x-2 text-sm text-slate-600">
-                      <Flame className="w-4 h-4 text-orange-500" />
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0 mb-4 sm:mb-6">
+                    <h2 className="text-lg sm:text-xl font-semibold text-slate-900">Learning Progress</h2>
+                    <div className="flex items-center space-x-2 text-xs sm:text-sm text-slate-600">
+                      <Flame className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500" />
                       <span>{state.userProgress.currentStreak} day streak</span>
                     </div>
                   </div>

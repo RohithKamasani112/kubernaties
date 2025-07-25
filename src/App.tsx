@@ -29,10 +29,12 @@ import KubeQuestLayout from './components/KubeQuestLayout';
 
 // Components
 import CollaboratorsButton from './components/CollaboratorsButton';
+import PerformanceOptimizer from './components/PerformanceOptimizer';
 
 function App() {
   return (
     <Router>
+      <PerformanceOptimizer />
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         <AnimatePresence mode="wait">
           <Routes>

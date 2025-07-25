@@ -277,9 +277,9 @@ const K8sExplained: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+      {/* Main Content - Mobile Responsive */}
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {componentSections.map((section) => {
             const colors = getColorClasses(section.color);
             return (
@@ -287,13 +287,13 @@ const K8sExplained: React.FC = () => {
                 key={section.title}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`${colors.bg} ${colors.border} border-2 rounded-xl p-6 shadow-sm`}
+                className={`${colors.bg} ${colors.border} border-2 rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm`}
               >
-                <h2 className={`text-xl font-bold ${colors.text} mb-4 flex items-center gap-2`}>
-                  <div className={`w-3 h-3 rounded-full bg-current`}></div>
+                <h2 className={`text-lg sm:text-xl font-bold ${colors.text} mb-3 sm:mb-4 flex items-center gap-2`}>
+                  <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-current`}></div>
                   {section.title}
                 </h2>
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {section.components.map((component) => {
                     const IconComponent = component.icon;
                     return (
@@ -302,17 +302,17 @@ const K8sExplained: React.FC = () => {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => setSelectedComponent(component)}
-                        className={`${colors.hover} bg-white border ${colors.border} rounded-lg p-4 cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md`}
+                        className={`${colors.hover} bg-white border ${colors.border} rounded-lg p-3 sm:p-4 cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md touch-manipulation`}
                       >
-                        <div className="flex items-start gap-3">
-                          <div className={`${colors.bg} ${colors.border} border rounded-lg p-2 flex-shrink-0`}>
-                            <IconComponent className={`w-5 h-5 ${colors.text}`} />
+                        <div className="flex items-start gap-2 sm:gap-3">
+                          <div className={`${colors.bg} ${colors.border} border rounded-lg p-1.5 sm:p-2 flex-shrink-0`}>
+                            <IconComponent className={`w-4 h-4 sm:w-5 sm:h-5 ${colors.text}`} />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h3 className="font-semibold text-gray-900 text-sm mb-1">{component.name}</h3>
+                            <h3 className="font-semibold text-gray-900 text-xs sm:text-sm mb-1">{component.name}</h3>
                             <p className="text-gray-600 text-xs leading-relaxed">{component.description}</p>
                           </div>
-                          <Info className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                          <Info className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
                         </div>
                       </motion.div>
                     );

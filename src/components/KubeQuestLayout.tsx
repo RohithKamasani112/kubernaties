@@ -15,7 +15,9 @@ import {
   Zap,
   ArrowLeft,
   ArrowRight,
-  ChevronRight
+  ChevronRight,
+  Menu,
+  X
 } from 'lucide-react';
 
 interface KubeQuestLayoutProps {
@@ -24,6 +26,9 @@ interface KubeQuestLayoutProps {
 
 const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
   const location = useLocation();
+
+  // Mobile menu state
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
   // Determine which module we're in
   const isCloudArchitecture = location.pathname.startsWith('/cloud-architecture');
@@ -69,7 +74,7 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
       <motion.div
         className="hidden md:flex bg-white border-r border-slate-200 flex-col flex-shrink-0"
         animate={{
-          width: isPlaygroundPage ? 64 : 256
+          width: isPlaygroundPage ? 64 : 240
         }}
         transition={{
           duration: 0.3,
@@ -77,7 +82,7 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
         }}
       >
         {/* Header */}
-        <div className="p-6 border-b border-slate-200">
+        <div className="p-4 border-b border-slate-200">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               {isCloudArchitecture ? (
@@ -136,17 +141,17 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
           </div>
         </div>
 
-        {/* Quick Navigation */}
-        <div className="px-4 py-4 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-blue-50">
+        {/* Quick Navigation - Mobile Responsive */}
+        <div className="px-3 sm:px-4 py-3 sm:py-4 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-blue-50">
           <div className="space-y-2">
-            <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 flex items-center space-x-2">
-              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+            <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 sm:mb-3 flex items-center space-x-2">
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full"></div>
               <span>SAMWI Platform</span>
             </div>
 
             <Link
               to="/"
-              className="flex items-center space-x-3 px-3 py-2.5 bg-white border border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 rounded-lg transition-all duration-200 group text-sm shadow-sm"
+              className="flex items-center space-x-2 sm:space-x-3 px-2 sm:px-3 py-2 sm:py-2.5 bg-white border border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 rounded-lg transition-all duration-200 group text-xs sm:text-sm shadow-sm touch-manipulation"
             >
               <Home className="w-4 h-4" />
               <span className="font-semibold">SAMWI Homepage</span>
@@ -259,80 +264,115 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
           })}
         </nav>
 
-        {/* User Profile */}
-        <div className="p-4 border-t border-slate-200">
-          <div className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer">
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-              isCloudArchitecture ? 'bg-purple-100' : 'bg-blue-100'
-            }`}>
-              <User className={`w-4 h-4 ${
-                isCloudArchitecture ? 'text-purple-600' : 'text-blue-600'
-              }`} />
-            </div>
-            <AnimatePresence>
-              {!isPlaygroundPage && (
-                <motion.div
-                  className="flex-1 min-w-0"
-                  initial={{ opacity: 1, width: 'auto' }}
-                  exit={{ opacity: 0, width: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <p className="text-sm font-medium text-slate-900 truncate">
-                    {isCloudArchitecture ? 'Cloud Architect' : 'Learner'}
-                  </p>
-                  <p className="text-xs text-slate-500 truncate">Level 1</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
+
       </motion.div>
 
       {/* Main Content - Responsive to sidebar state */}
-      <div className="flex-1 flex flex-col bg-slate-50 min-h-0 relative overflow-hidden">
-        {/* Mobile Header */}
-        <div className="md:hidden bg-white border-b border-slate-200 px-4 py-3">
-          <div className="flex items-center space-x-3">
-            {isCloudArchitecture ? (
-              <>
-                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                  <Cloud className="w-4 h-4 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-lg font-bold text-slate-900">Cloud Architecture</h1>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">K</span>
-                </div>
-                <div>
-                  <h1 className="text-lg font-bold text-slate-900">KubeQuest</h1>
-                </div>
-              </>
-            )}
+      <div className="flex-1 flex flex-col bg-slate-50 min-h-0 relative">
+        {/* Mobile Header - Enhanced */}
+        <div className="md:hidden bg-white border-b border-slate-200 px-3 sm:px-4 py-2 sm:py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              {isCloudArchitecture ? (
+                <>
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                    <Cloud className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-base sm:text-lg font-bold text-slate-900">Cloud Architecture</h1>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold text-xs sm:text-sm">K</span>
+                  </div>
+                  <div>
+                    <h1 className="text-base sm:text-lg font-bold text-slate-900">KubeQuest</h1>
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="flex items-center space-x-2">
+              {/* User Profile in Mobile Header */}
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center ${
+                isCloudArchitecture ? 'bg-purple-100' : 'bg-blue-100'
+              }`}>
+                <User className={`w-4 h-4 ${
+                  isCloudArchitecture ? 'text-purple-600' : 'text-blue-600'
+                }`} />
+              </div>
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors touch-manipulation"
+              >
+                {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Breadcrumb Navigation - Desktop only */}
-        <div className="hidden md:block bg-white/80 backdrop-blur-sm border-b border-slate-200 px-6 py-3">
-          <div className="flex items-center space-x-2 text-sm">
+        {/* Mobile Menu Overlay */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <motion.div
+                initial={{ x: '-100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '-100%' }}
+                className="w-64 h-full bg-white shadow-lg"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="p-4">
+                  <h2 className="text-lg font-bold text-slate-900 mb-4">
+                    {isCloudArchitecture ? 'Cloud Architecture' : 'KubeQuest'}
+                  </h2>
+                  <nav className="space-y-2">
+                    {(isCloudArchitecture ? cloudArchitectureNavigation : kubernetesNavigation).map((item) => (
+                      <Link
+                        key={item.name}
+                        to={item.href}
+                        className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <item.icon className="w-5 h-5 text-slate-600" />
+                        <span className="text-sm font-medium text-slate-900">{item.name}</span>
+                      </Link>
+                    ))}
+                  </nav>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Breadcrumb Navigation - Mobile Responsive */}
+        <div className="hidden sm:block bg-white/80 backdrop-blur-sm border-b border-slate-200 px-3 sm:px-4 lg:px-6 py-2 sm:py-3">
+          <div className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm overflow-x-auto">
             <Link
               to="/"
-              className="text-slate-500 hover:text-slate-700 transition-colors flex items-center space-x-1"
+              className="text-slate-500 hover:text-slate-700 transition-colors flex items-center space-x-1 whitespace-nowrap"
             >
-              <Home className="w-4 h-4" />
+              <Home className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>SAMWI Learn</span>
             </Link>
-            <ChevronRight className="w-4 h-4 text-slate-400" />
-            <span className="text-slate-700 font-medium">
+            <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-slate-400 flex-shrink-0" />
+            <span className="text-slate-700 font-medium whitespace-nowrap">
               {isCloudArchitecture ? 'Cloud Architecture' : 'Kubernetes'}
             </span>
             {location.pathname !== '/kubernetes' && location.pathname !== '/cloud-architecture' && (
               <>
-                <ChevronRight className="w-4 h-4 text-slate-400" />
-                <span className="text-slate-900 font-semibold">
+                <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-slate-400 flex-shrink-0" />
+                <span className="text-slate-900 font-semibold truncate">
                   {(() => {
                     const pathSegments = location.pathname.split('/');
                     const lastSegment = pathSegments[pathSegments.length - 1];
@@ -344,7 +384,7 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
           </div>
         </div>
 
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-auto">
           {children}
         </div>
 
@@ -377,36 +417,7 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
           </div>
         </div>
 
-        {/* Floating Navigation for Playground Mode - Desktop */}
-        <AnimatePresence>
-          {isPlaygroundPage && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.3 }}
-              className="hidden md:flex fixed top-4 left-4 z-50 space-x-2"
-            >
-              <Link
-                to="/"
-                className="flex items-center space-x-2 px-4 py-3 bg-blue-600 text-white rounded-xl shadow-lg hover:shadow-xl hover:bg-blue-700 transition-all duration-200 group"
-                title="Go to SAMWI Learn Homepage"
-              >
-                <Home className="w-4 h-4" />
-                <span className="text-sm font-semibold">SAMWI Homepage</span>
-              </Link>
-
-              <Link
-                to="/kubernetes"
-                className="flex items-center space-x-2 px-3 py-2 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-lg shadow-lg hover:shadow-xl text-slate-700 hover:text-slate-900 hover:bg-white transition-all duration-200 group"
-                title="Kubernetes Dashboard"
-              >
-                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                <span className="text-sm font-medium">Dashboard</span>
-              </Link>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Floating Navigation for Playground Mode - REMOVED FOR CLEANER UI */}
       </div>
     </div>
   );

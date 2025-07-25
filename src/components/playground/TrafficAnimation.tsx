@@ -223,6 +223,10 @@ const TrafficAnimation: React.FC<TrafficAnimationProps> = ({ nodes, edges }) => 
                   ? 'bg-emerald-500 shadow-lg shadow-emerald-500/50'
                   : 'bg-red-500 shadow-lg shadow-red-500/50'
               }`}
+              style={{
+                willChange: 'transform, opacity',
+                backfaceVisibility: 'hidden',
+              }}
               initial={{
                 x: particle.path[0].x - 6, // Center the dot
                 y: particle.path[0].y - 6,
@@ -241,21 +245,25 @@ const TrafficAnimation: React.FC<TrafficAnimationProps> = ({ nodes, edges }) => 
               }}
               transition={{
                 duration,
-                ease: "easeInOut",
+                ease: [0.25, 0.46, 0.45, 0.94], // Optimized cubic-bezier
                 times: [0, 0.1, 0.9, 1]
               }}
             >
-              {/* Pulsing effect for active traffic */}
+              {/* Optimized pulsing effect for active traffic */}
               <motion.div
                 className={`absolute inset-0 rounded-full ${
                   particle.status === 'success' ? 'bg-emerald-400' : 'bg-red-400'
                 }`}
+                style={{
+                  willChange: 'transform, opacity',
+                  backfaceVisibility: 'hidden',
+                }}
                 initial={{ scale: 1, opacity: 0.8 }}
                 animate={{ scale: 2.5, opacity: 0 }}
                 transition={{
                   duration: 0.8,
                   repeat: Infinity,
-                  ease: "easeOut"
+                  ease: [0.25, 0.46, 0.45, 0.94]
                 }}
               />
 
