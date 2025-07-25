@@ -6,7 +6,8 @@ import {
   Award,
   Heart,
   Linkedin,
-  Mail
+  Mail,
+  Github
 } from 'lucide-react';
 
 const AboutPage: React.FC = () => {
