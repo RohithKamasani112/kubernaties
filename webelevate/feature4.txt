@@ -1,0 +1,138 @@
+Feature 4 Specification: The AI-Powered "Best Practices" Advisor
+This document details the user interface (UI), user experience (UX), and core functionality for the "AI Advisor." This feature acts as an intelligent, real-time mentor that analyzes user code within the Interactive Playground and provides contextual feedback on performance, security, and architectural best practices.
+
+1. Overall Interaction Model
+Passive Analysis: The AI Advisor runs silently in the background whenever a user is working within the "Interactive Playground" (Feature 2). It continuously analyzes the code as the user types.
+
+Non-Intrusive Feedback: When an issue or an opportunity for improvement is detected, the Advisor does not interrupt the user with pop-ups. Instead, it provides subtle, inline cues directly in the code editor.
+
+On-Demand Details: The user can choose to engage with the feedback by hovering over the highlighted code or opening a dedicated "Advisor Panel" for a comprehensive list of suggestions.
+
+Learning, Not Just Fixing: Every suggestion is a learning opportunity. It not only identifies the "what" (the issue) but also explains the "why" (the concept) and the "how" (the solution), with direct links to relevant learning modules.
+
+User Control: The user is always in control. They can choose to accept, ignore, or disable suggestions. The Advisor is a guide, not a gatekeeper.
+
+2. UI & Component Breakdown
+The AI Advisor's UI is deeply integrated into the existing "Interactive Playground" components.
+
+Component 1: Inline Code Annotations (in CodeEditorPanel)
+This is the primary, most immediate feedback mechanism.
+
+UI Mockup Idea (within the Code Editor):
+
+  14 |
+  15 |   return (
+  16 |     <div>
+  17 |       {items.map(item => (
+  18 |         <button key={item.id} onClick={() => doSomething(item.id)}>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  19 |           {item.name}
+  20 |         </button>
+  21 |       ))}
+  22 |     </div>
+  23 |   );
+  24 | }
+
+Component Details:
+
+InlineSquiggle: A colored, wavy underline that appears beneath the problematic line(s) of code. The color indicates the severity of the issue:
+
+Red: Critical issue (e.g., security vulnerability, crash-inducing bug).
+
+Yellow: Performance or best-practice warning (e.g., inefficient code).
+
+Blue: Architectural or stylistic suggestion.
+
+HoverTooltip: When the user hovers their mouse over the squiggled code, a small tooltip appears with a one-sentence summary of the issue.
+
+Example: "Performance: Creating a new function during every render can be inefficient."
+
+GutterIcon: A small icon (like a lightbulb or a wrench) appears in the editor's gutter (next to the line numbers). Clicking this icon can sometimes provide "Quick Fix" options, such as automatically refactoring the code.
+
+Component 2: The "Advisor" Panel
+This is a dedicated panel that provides a structured, detailed list of all suggestions for the current project. It would live in the BottomTabPanel alongside "Terminal," "Logs," and "Tests."
+
+UI Mockup Idea (for the panel):
+
++-------------------------------------------------------------------+
+| [Terminal] [Logs] [Tests] [Advisor (3)]                           |
++-------------------------------------------------------------------+
+| Filter: [All] [Security] [Performance]                            |
++-------------------------------------------------------------------+
+| ▼ [!] Security: Hardcoded secret detected in `server/auth.js:12`  |
+|   -------------------------------------------------------------   |
+|   **Why it's a problem:** Storing secrets like API keys or JWT    |
+|   secrets directly in your code is a major security risk. If    |
+|   your code is ever exposed, your secrets will be too.          |
+|   **Recommendation:** Store this value in an environment variable |
+|   and access it using `process.env.JWT_SECRET`.                 |
+|                                                                   |
+|   [ Learn more in "Concept: Environment Variables" > ]            |
++-------------------------------------------------------------------+
+| ▶ [!] Performance: Inefficient render in `components/List.js:18`  |
++-------------------------------------------------------------------+
+| ▶ [i] Architecture: Local file write in `routes/upload.js:45`     |
++-------------------------------------------------------------------+
+
+Component Details:
+
+SuggestionItem (The core component): An expandable list item for each suggestion.
+
+Collapsed State: Shows an icon for severity (!, i), a category (Security, Performance), a short title, and the file location. Clicking the location jumps the cursor to that line in the editor.
+
+Expanded State: Reveals three key sections:
+
+"Why it's a problem": A clear, concise explanation of the underlying concept.
+
+"Recommendation": Actionable advice on how to fix the issue, often with a small code snippet showing the better approach.
+
+"Learn More" Link: A direct link that takes the user to the relevant "Concept Deep Dive" module (from Feature 1) for a full refresher.
+
+3. Concrete Examples of Advisor in Action
+Example 1: Front-End Security (React)
+
+User Code: const url = "https://myapi.com/data?id=" + userId;
+
+Advisor Feedback:
+
+Type: Security (Red)
+
+Title: Potential XSS Vulnerability.
+
+Why: Directly concatenating user input into a URL or HTML can allow malicious scripts to be injected.
+
+Recommendation: Use the URLSearchParams API to safely construct URLs. const params = new URLSearchParams({ id: userId });
+
+Learn More: Links to "Web Security Fundamentals" module.
+
+Example 2: Back-End Performance (Node.js)
+
+User Code: An Express route that makes a database call inside a for loop.
+
+Advisor Feedback:
+
+Type: Performance (Yellow)
+
+Title: N+1 Query Detected.
+
+Why: Making a database query for each item in a collection is highly inefficient and scales poorly. One query for 10 items becomes 100 queries for 100 items.
+
+Recommendation: Refactor your code to fetch all the required data in a single, bulk query before the loop (e.g., using WHERE id IN (...)).
+
+Learn More: Links to "Database Optimization" module.
+
+Example 3: Back-End Architecture (Statelessness)
+
+User Code: let visitCount = 0; app.get('/', (req, res) => { visitCount++; res.send(Visits: ${visitCount}); });
+
+Advisor Feedback:
+
+Type: Architecture (Blue)
+
+Title: In-Memory State Detected.
+
+Why: Storing state in a server's memory variable means it will be lost on restart and won't be shared across multiple server instances if you scale horizontally.
+
+Recommendation: To persist data like a counter, use an external store like a database (e.g., Redis, Postgres).
+
+Learn More: Links to "Designing for Statelessness" module.

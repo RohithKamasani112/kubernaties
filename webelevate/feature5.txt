@@ -1,0 +1,137 @@
+Feature 5 Specification: The Developer Portfolio
+This document details the user interface (UI) and user experience (UX) for the "Developer Portfolio." This feature provides each user with a public, shareable web page that automatically showcases their completed projects, skills, and activity on the WebElevate platform.
+
+1. Overall Interaction Model
+Automatic Creation: A portfolio page is automatically created for every user upon signup. It remains private by default.
+
+Content Population: As the user completes "Challenges" and "Blueprints," these accomplishments are automatically added as entries to their portfolio. The "Skills Graph" is updated in real-time based on the concepts covered in the completed modules.
+
+Making it Public: From their account settings, the user can toggle their portfolio's visibility to "Public." When public, they get a clean, shareable URL (e.g., webelevate.io/profiles/username).
+
+Showcasing Work: The user can share this URL with potential employers, peers, or on their social media. Visitors to the portfolio can see the user's skills, browse their completed projects, and even view the running applications and source code for those projects.
+
+Continuous Improvement: The portfolio is a living document. As the user learns more on WebElevate, their portfolio grows, reflecting their continuous development and motivating them to keep progressing.
+
+2. Screen & Component Breakdown
+The portfolio is a single, well-designed public page.
+
+UI Mockup Idea:
+
++-------------------------------------------------------------------+
+| WebElevate                                                        |
++-------------------------------------------------------------------+
+|                                                                   |
+|  +-------------------------------------------------------------+  |
+|  |                                                             |  |
+|  |  (User Avatar)                                              |  |
+|  |  <h1>Alex Doe</h1>                                          |  |
+|  |  <p>Full-Stack Developer</p>                                |  |
+|  |  [LinkedIn Icon] [GitHub Icon] [Personal Website Icon]      |  |
+|  |                                                             |  |
+|  +-------------------------------------------------------------+  |
+|                                                                   |
+|  <h2>About Me</h2>                                               |
+|  <p>A passionate developer focused on building scalable back-end |
+|  systems and beautiful front-end experiences...</p>              |
+|                                                                   |
+|  <h2>Skills</h2>                                                 |
+|  +-------------------------------------------------------------+  |
+|  | [Skills Radar Chart or Bar Chart]                           |  |
+|  | React |##########|  Node.js |###########| Docker |#######|   |  |
+|  +-------------------------------------------------------------+  |
+|                                                                   |
+|  <h2>Activity</h2>                                               |
+|  +-------------------------------------------------------------+  |
+|  | [GitHub-style Activity Heatmap]                             |  |
+|  +-------------------------------------------------------------+  |
+|                                                                   |
+|  <h2>Featured Blueprints</h2>                                    |
+|  +--------------------------+  +--------------------------+       |
+|  | [Chat Icon]              |  | [Cart Icon]              |       |
+|  | Real-Time Chat App       |  | E-commerce Checkout API  |       |
+|  | [View Project]           |  | [View Project]           |       |
+|  +--------------------------+  +--------------------------+       |
+|                                                                   |
++-------------------------------------------------------------------+
+
+Component Details:
+
+ProfileHeader:
+
+Purpose: To introduce the user.
+
+Content:
+
+Avatar: The user's profile picture.
+
+UserName: The user's full name.
+
+Headline: A short, user-editable title (e.g., "Front-End Developer").
+
+SocialLinks: Icons linking to the user's GitHub, LinkedIn, or personal website (user-configurable).
+
+AboutMeSection:
+
+Purpose: A brief, personal summary.
+
+Content: A user-editable text block where they can write a short bio.
+
+SkillsGraph:
+
+Purpose: To provide an at-a-glance visualization of the user's technical competencies.
+
+UI: Can be a radar chart, a set of bar graphs, or a tag cloud.
+
+Data: The data is populated automatically. If a user completes 10 React modules, their "React" skill level will be higher than their "Docker" skill level if they've only completed 3 Docker modules. This provides an honest, data-driven representation of their experience on the platform.
+
+ActivityHeatmap:
+
+Purpose: To show the user's consistency and dedication.
+
+UI: A GitHub-style calendar heatmap where squares are colored based on the number of modules/challenges completed on that day.
+
+Interaction: Hovering over a square shows the date and the number of contributions (e.g., "5 modules completed on July 26, 2025").
+
+BlueprintShowcase:
+
+Purpose: The main section for displaying the user's project work.
+
+UI: A grid of ProjectCard components.
+
+ProjectCard (The core component):
+
+Content: Project icon, project title (e.g., "Real-Time Chat App"), and a short description.
+
+Interaction: Clicking the "[View Project]" button on a card opens a modal window or a new page.
+
+Screen 2: The "Project Detail" View
+This view is triggered when a visitor clicks on a project in the showcase. It provides a deep dive into the user's work.
+
+UI Mockup Idea (Modal Window):
+
++-------------------------------------------------------------------+
+| [X] Real-Time Chat App                                            |
++-------------------------------------------------------------------+
+|                                                                   |
+|  [Live Preview] [View Code]                                       |
+|  +-------------------------------------------------------------+  |
+|  |                                                             |  |
+|  |  (Live, running instance of the user's chat application)    |  |
+|  |                                                             |  |
+|  |                                                             |  |
+|  |                                                             |  |
+|  +-------------------------------------------------------------+  |
+|  | **Description:** This project demonstrates the use of       |  |
+|  | WebSockets for instant communication...                     |  |
+|  | **Key Concepts:** React Hooks, Node.js, WebSocket API.      |  |
++-------------------------------------------------------------------+
+
+Component Details:
+
+TabbedProjectViewer: A tabbed interface to explore the project.
+
+LivePreviewTab: The default view. It loads a read-only, running instance of the user's completed Blueprint application inside an <iframe>. This allows an employer to actually use the application the user built.
+
+ViewCodeTab: Shows a read-only version of the user's final code from the Playground, complete with syntax highlighting. This allows for a review of the user's code quality and problem-solving approach.
+
+ProjectSummary: A section below the viewer that displays the original project description and a list of the key concepts that were applied.

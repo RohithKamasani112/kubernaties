@@ -1,0 +1,137 @@
+Feature 3 Specification: Scenario-Based "Blueprints"
+This document details the user interface (UI) and user experience (UX) for the "Blueprints" feature. Blueprints are capstone projects that challenge users to solve real-world problems by applying the skills learned in the Guided Learning Paths.
+
+1. Overall User Flow
+Discovery & Unlocking: After completing a certain number of prerequisite modules in a Learning Path, related Blueprints are unlocked and become visible in the "Blueprints" library.
+
+Selection: The user browses the library of available Blueprints and selects one that aligns with their interests (e.g., "Build a Real-time Chat App").
+
+Briefing: The user is taken to a "Briefing" page that outlines the project scenario, user stories, technical requirements, and a list of concepts that will be tested.
+
+Design Phase: Before writing code, the user enters a simplified "Architecture Design" view. Here, they must drag and drop service components (e.g., "React App," "API Server," "Database," "Cache") onto a canvas and connect them to create a high-level system design. The platform provides feedback on their design.
+
+Build Phase: Upon successfully completing the design, the user enters the "Interactive Playground" (Feature 2), which is pre-configured with a boilerplate file structure and a set of failing tests that correspond to the project requirements.
+
+Completion & Showcase: The user writes the code to make all tests pass. Once the final test passes, the Blueprint is marked as "Complete." The user is prompted to add it to their public portfolio (Feature 5).
+
+2. Screen & Component Breakdown
+Screen 1: The "Blueprints" Library
+This is the gallery where users can browse and select capstone projects.
+
+UI Mockup Idea:
+
++-------------------------------------------------------------------+
+| WebElevate [ Filter by: React, Node.js, All ]       (Profile Icon) |
++-------------------------------------------------------------------+
+|                                                                   |
+|  <h1>Blueprints</h1>                                             |
+|  <p>Apply your skills to build real-world applications.</p>        |
+|                                                                   |
+|  +-------------------------------------------------------------+  |
+|  | [Chat Icon] Build a Real-Time Chat App        [Full-Stack]  |  |
+|  | Use WebSockets, React, and a Node.js back-end to build a    |  |
+|  | live chat application.                                      |  |
+|  | Concepts: WebSockets, State Management, REST APIs           |  |
+|  |                                             [ Start > ]     |  |
+|  +-------------------------------------------------------------+  |
+|  | [Cart Icon] E-commerce Checkout API           [Back-End]    |  |
+|  | Design and build a scalable API to handle payment processing|  |
+|  | and order creation.                                         |  |
+|  | Concepts: Stateless Auth, Database Transactions, Security   |  |
+|  |                                             [ Start > ]     |  |
+|  +-------------------------------------------------------------+  |
+|  | [Lock Icon] The URL Shortener Service         [Back-End]    |  |
+|  | Build a high-performance service like bit.ly.               |  |
+|  | Prereqs: Complete 'Stateless Architect' Path. [ View Path ] |  |
+|  +-------------------------------------------------------------+  |
++-------------------------------------------------------------------+
+
+Component Details:
+
+FilterBar: Allows users to filter the list of Blueprints by technology or domain (e.g., "React," "Python," "Front-End").
+
+BlueprintCard (The core component):
+
+Purpose: To advertise a single Blueprint project.
+
+Content:
+
+Icon: A representative icon for the project (e.g., a chat bubble, shopping cart).
+
+Title: The name of the Blueprint.
+
+CategoryTag: A tag indicating the domain (e.g., "Full-Stack," "Back-End," "DevOps").
+
+Description: A short, enticing summary of the project.
+
+ConceptsList: A list of the key concepts the user will apply.
+
+CallToAction: A button to start the project.
+
+States:
+
+Available: The card is fully interactive with a "Start" button.
+
+Locked: The card is greyed out. The "Start" button is replaced with text indicating the prerequisites and a link to the required Learning Path.
+
+Screen 2: The "Blueprint Briefing" Page
+This screen sets the stage for the project, acting like a ticket from a project manager.
+
+UI Mockup Idea:
+
++-------------------------------------------------------------------+
+| < Back to Blueprints                                              |
++-------------------------------------------------------------------+
+|                                                                   |
+|  <h1>Blueprint: Build a Real-Time Chat App</h1>                   |
+|                                                                   |
+|  [Scenario] [Requirements] [Architecture]                         |
+|  +-------------------------------------------------------------+  |
+|  | **The Scenario** |  |
+|  | Your team has been tasked with building a new internal chat |  |
+|  | tool to improve communication. It needs to be fast,         |  |
+|  | real-time, and support multiple users in a single room.     |  |
+|  |                                                             |  |
+|  | **User Stories** |  |
+|  | - As a user, I can enter a username.                        |  |
+|  | - As a user, I can send a message to the chat room.         |  |
+|  | - As a user, I can see messages from other users instantly. |  |
+|  +-------------------------------------------------------------+  |
+|                                                                   |
+|                                [ Design Your Architecture > ]     |
++-------------------------------------------------------------------+
+
+Component Details:
+
+BlueprintHeader: Displays the title of the selected Blueprint.
+
+TabbedInfoPanel: A tabbed interface to organize the briefing information cleanly.
+
+ScenarioTab: Contains the narrative background for the project and a list of "user stories" to guide development.
+
+RequirementsTab: A more technical, checklist-style view of the features to be implemented. This list directly corresponds to the tests in the Playground. (e.g., "✓ API must have a /messages POST endpoint.").
+
+ArchitectureTab: This tab is initially empty. It will be populated with the user's design after they complete the next step.
+
+PrimaryButton: A button at the bottom that reads "Design Your Architecture" to move the user to the next phase.
+
+Screen 3: The "Architecture Design" View
+A simplified, drag-and-drop interface for high-level system design.
+
+Component Details:
+
+ComponentPalette: A sidebar containing draggable blocks representing different services (e.g., "React App," "REST API," "WebSocket Server," "Postgres DB," "Redis Cache").
+
+DesignCanvas: The main area where the user drops and connects the components.
+
+Interaction:
+
+The user drags "React App" onto the canvas.
+
+The user drags "WebSocket Server" onto the canvas.
+
+The user draws a connecting line from the app to the server.
+
+A "Check Design" button validates the logic (e.g., it would fail if a front-end app tries to connect directly to a database).
+
+Once the design is valid, a "Start Building" button appears, which leads to the pre-configured Playground.

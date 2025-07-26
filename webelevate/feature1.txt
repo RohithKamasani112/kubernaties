@@ -1,0 +1,181 @@
+Feature 1 Specification: The Guided Learning Paths
+This document details the user interface (UI) and user experience (UX) for the "Guided Learning Paths" feature of WebElevate.
+
+1. Overall User Flow
+Discovery: A new or returning user lands on the main dashboard and sees the available Learning Paths.
+
+Selection: The user browses the paths, categorized by domain (Front-End, Back-End), and selects one that interests them (e.g., "React").
+
+Enrollment: The user views the detailed curriculum for the chosen path and clicks "Start Path" to enroll.
+
+Learning: The user progresses through the path module by module. Each module is a sequence of learning activities: Concept -> Code -> Playground -> Challenge.
+
+Progression: As the user completes modules, their progress is saved, and the next module is unlocked, guiding them linearly through the curriculum.
+
+2. Screen & Component Breakdown
+Screen 1: The "Paths" Dashboard
+This is the central hub where users discover and select their learning journey.
+
+UI Mockup Idea:
+
++-------------------------------------------------------------------+
+| WebElevate [ Search... ]                             (Profile Icon) |
++-------------------------------------------------------------------+
+|                                                                   |
+|  +-------------------------------------------------------------+  |
+|  |                                                             |  |
+|  |  Featured: The Full-Stack Blueprint                         |  |
+|  |  Build a complete Kanban board from React to Kubernetes.    |  |
+|  |                                                             |  |
+|  |                                             [ Start Now > ] |  |
+|  +-------------------------------------------------------------+  |
+|                                                                   |
+|  Front-End Mastery                                                |
+|  +--------------+   +--------------+   +--------------+            |
+|  | [React Icon] |   | [Angular Icon] | |  [Vue Icon]  |            |
+|  | React        |   | Angular      | |  Vue.js      |            |
+|  | 25% Complete |   | Start Path   | |  Start Path  |            |
+|  +--------------+   +--------------+   +--------------+            |
+|                                                                   |
+|  The Stateless Architect                                          |
+|  +--------------+   +--------------+   +--------------+            |
+|  | [NodeJS Icon]|   |  [Go Icon]   | | [Python Icon]|            |
+|  | Node.js API  |   | Go (Golang)  | |  Python API  |            |
+|  | Start Path   |   | Start Path   | |  Start Path  |            |
+|  +--------------+   +--------------+   +--------------+            |
++-------------------------------------------------------------------+
+
+Component Details:
+
+Header: Contains the app logo, a search bar (to find paths/modules), and the user's profile icon (which links to their portfolio).
+
+FeaturedPathCard: A large, prominent card to highlight a new, popular, or recommended path.
+
+Content: Eye-catching background image, Title, Subtitle, "Start Now" button.
+
+PathCategoryRow: A horizontal container for a group of related paths (e.g., "Front-End Mastery").
+
+Content: Category Title.
+
+PathCard (The core component of this screen):
+
+Purpose: To represent a single learning path.
+
+Content:
+
+Icon: Technology logo (React, Angular, Docker, etc.).
+
+Title: Name of the path (e.g., "React").
+
+ProgressBar (if started): A visual bar showing completion percentage.
+
+CallToAction: Text that says "Start Path," "Continue," or shows completion percentage.
+
+Interaction: Clicking anywhere on the card navigates the user to the "Path Detail" screen.
+
+Screen 2: The "Path Detail" Page
+This screen acts as the syllabus, showing the user everything they will learn in a specific path.
+
+UI Mockup Idea:
+
++-------------------------------------------------------------------+
+| < Back to Paths                                                   |
++-------------------------------------------------------------------+
+|                                                                   |
+|  [React Icon]                                                     |
+|  <h1>The React Path</h1>                                          |
+|  <p>Master the art of building modern, fast, and scalable user   |
+|  interfaces with React...</p>                                    |
+|                                                                   |
+|  [ Continue Path (4/25 Modules) ]                                 |
+|                                                                   |
+|  +---------------------------------------------------------------+
+|  | 1. Welcome to the Component World (Completed)      [Checkmark]|
+|  +---------------------------------------------------------------+
+|  | 2. Understanding JSX (Completed)                     [Checkmark]|
+|  +---------------------------------------------------------------+
+|  | 3. Props: Passing Data Down (In Progress)              [Spinner]|
+|  +---------------------------------------------------------------+
+|  | 4. State: Making Components Interactive (Next Up)        [Play]|
+|  +---------------------------------------------------------------+
+|  | 5. The Component Lifecycle (Locked)                        [Lock]|
+|  +---------------------------------------------------------------+
+|  | 6. Challenge: Build a Profile Card (Locked)              [Lock]|
+|  +---------------------------------------------------------------+
+|                                                                   |
++-------------------------------------------------------------------+
+
+Component Details:
+
+PathHeader: Contains the path's icon, title, a more detailed description, and a primary call-to-action button.
+
+Button Logic: The button text should be context-aware: "Start Path" for new users, "Continue Path" if in progress, and "Review Path" if completed.
+
+ModuleList: A vertical list of all modules in the path.
+
+ModuleListItem (The core component of this screen):
+
+Purpose: To represent one module in the curriculum.
+
+Content:
+
+ModuleNumber: e.g., "1.", "2.".
+
+ModuleTitle: e.g., "State: Making Components Interactive".
+
+StatusIcon: A visual indicator of the module's state.
+
+States & Icons:
+
+Completed: A green checkmark. Fully clickable to review content.
+
+In Progress: A spinning loader or half-filled circle. The primary "Continue" button will jump here.
+
+Next Up: A "Play" icon. This is the next unlocked module. Fully clickable.
+
+Locked: A grey "Lock" icon. Not clickable. A tooltip says "Complete previous modules to unlock."
+
+Interaction: Clicking an unlocked module navigates to the "Module View" screen.
+
+Screen 3: The "Module View"
+This is the main learning interface where the user interacts with the content.
+
+UI Mockup Idea:
+
++-------------------------------------------------------------------+
+| Path: React / Module: State                                       |
++-------------------------------------------------------------------+
+| [Concept >]----[Code >]----[Playground]----[Challenge]             |
++-------------------------------------------------------------------+
+|                                                                   |
+|  +-------------------------------------------------------------+  |
+|  |                                                             |  |
+|  |  This is the main content area.                            |  |
+|  |  Right now, it shows the Interactive Playground.           |  |
+|  |  (The component from Feature 2 is embedded here)           |  |
+|  |                                                             |  |
+|  |                                                             |  |
+|  |                                                             |  |
+|  |                                                             |  |
+|  +-------------------------------------------------------------+  |
+|                                                                   |
+|                                [ Run Tests ] [ Go to Challenge > ]|
++-------------------------------------------------------------------+
+
+Component Details:
+
+ModuleStepper: A visual indicator at the top showing the 4 steps of every module (Concept, Code, Playground, Challenge). It clearly shows the user where they are and what's next.
+
+ContentPanel: The main area that dynamically displays the component for the current step.
+
+Step 1: ConceptViewer: Renders an interactive article. This isn't just static text; it could include small, animated SVGs that demonstrate a concept, or simple quizzes.
+
+Step 2: CodeBreakdownViewer: A read-only code editor with features to step through explanations tied to specific lines of code.
+
+Step 3 & 4: PlaygroundEmbed: The full Interactive Playground (from Feature 2) is embedded here for the hands-on "Playground" and "Challenge" steps.
+
+NavigationFooter: A bar at the bottom with buttons.
+
+Primary Button: The main action button. Its text and function change based on the context. Examples: "Start Playground", "Run Tests", "Go to Challenge". It is disabled until the current step's requirements are met.
+
+Secondary Button (Optional): "Show Hint" or "Reveal Solution".

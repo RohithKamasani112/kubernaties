@@ -1,0 +1,23 @@
+Think in Components and States
+Every piece of the UI, from a PathCard to a SolutionCard, is a component. Before writing the code for a component, first define its possible states (e.g., a ModuleListItem can be locked, in-progress, completed). The UI should be a direct reflection of this state. The code must be modular, reusable, and built with a modern front-end framework like React, Angular, or Vue.
+
+2. The Playground is a Simulated Environment
+For Phase 1, the Interactive Playground will be a front-end simulation. The "sandboxed micro-environment" and terminal will be mocked within the browser. File systems will be managed in-memory, and "server-side" code execution (like running a Node.js file) will be simulated to produce the expected output for the user.
+
+3. Prioritize the User Journey Over Isolated Features
+The features form a narrative. A user discovers a Learning Path, progresses through Modules, applies skills in a Blueprint, gets feedback from the AI Advisor, showcases the result on their Portfolio, and collaborates in the Hub. The connections between these features will be managed on the client-side using state management and mock data services. For example, completing a Blueprint will update a local, mock version of the user's portfolio data.
+
+4. API-First Design (with Mocking) is Non-Negotiable
+Define the REST or GraphQL API contracts first. Then, implement mock API services (e.g., using mock service workers or by returning static JSON data) that simulate these endpoints. The front-end code must be written to consume this well-defined mock API. This is fundamental to ensuring the front-end can be seamlessly integrated with a real back-end later.
+
+5. Real-time is a Simulated Technology, Not an Add-on
+For Phase 1, collaboration features like Live Share and notifications will be simulated on the client side. Use tools like setTimeout or local event emitters to mimic WebSocket messages and create the feel of a real-time experience without a server connection.
+
+6. Embody the AI Advisor
+Generate code that is already secure, performant, and follows best practices. Do not write code with obvious flaws (like hardcoded secrets, N+1 query problems, or XSS vulnerabilities) that the AI Advisor would have to catch. The code you generate should be the "solution" that the Advisor would recommend. Always think about statelessness in the eventual back-end architecture.
+
+7. Data-Driven Visualizations are Key
+Features like the SkillsGraph and ActivityHeatmap are not static images. They are data-driven components that should be built to fetch their data from the mock API services. The same principle applies to the ArchitectureVisualizer, which must react to the simulated state of the application in the Playground.
+
+8. Build for Extensibility
+The platform is designed to grow. When generating code for the Learning Paths or Blueprints, use a structure (e.g., JSON or Markdown files for lesson content) that makes it easy to add new technologies (like Svelte or Rust) or new projects without rewriting the core platform logic.

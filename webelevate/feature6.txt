@@ -1,0 +1,125 @@
+Feature 6 Specification: The Collaboration Hub & Peer Code Reviews
+This document details the user interface (UI) and user experience (UX) for the "Collaboration Hub." This feature transforms WebElevate from a solo learning platform into a community-driven ecosystem where users can code together, review each other's work, and learn from different perspectives.
+
+1. Overall Interaction Model
+Pair Programming: A user working inside the "Interactive Playground" can initiate a "Live Share" session. They receive a unique URL they can send to a peer. The peer joins the session as a guest and can see the host's code, terminal, and live preview in real-time. The host can grant them write access to code together.
+
+Submitting for Review: After successfully completing a "Blueprint," the user is prompted to "Publish Solution to the Hub." If they agree, their solution becomes visible in a public gallery for that Blueprint. They can also explicitly "Request a Peer Review."
+
+Discovering Solutions: Other users can browse the "Blueprint Hub" to see how different developers solved the same problem. They can filter solutions and see the code.
+
+Conducting a Review: A user who has also completed the same Blueprint can "Start a Review" on a submitted solution. This opens a special UI where they can add inline comments and suggestions to the code, similar to a GitHub Pull Request.
+
+Receiving Feedback: The original author is notified of the review. They can see the feedback, reply to comments, and learn from the reviewer's suggestions.
+
+Building Reputation: Both the author and the reviewer gain reputation points for engaging in this process, fostering a positive and collaborative community.
+
+2. Screen & Component Breakdown
+Component 1: Live Share / Pair Programming (in Playground)
+This is an enhancement to the existing "Interactive Playground" (Feature 2).
+
+UI Mockup Idea (within the Playground header):
+
++--------------------------------------------------------------------------+
+| [File Tree] | [Code Editor]                                [Live Share]  |
+|             |                                                (Avatar)    |
++--------------------------------------------------------------------------+
+
+Component Details:
+
+LiveShareButton:
+
+Purpose: To initiate and manage a pair programming session.
+
+Interaction:
+
+Clicking the button opens a small dropdown/modal.
+
+The modal shows a unique, copyable URL for the session (e.g., webelevate.io/live/session-id).
+
+It also lists the participants currently in the session. Next to each participant, the host can toggle "write access."
+
+RealtimeCursors: When multiple users are in a session, each user's cursor is displayed in the CodeEditor with their name, allowing everyone to see who is typing what.
+
+Screen 2: The "Blueprint Hub"
+This is a new section of the site, accessible from the main navigation, that serves as a gallery for all completed Blueprint solutions.
+
+UI Mockup Idea:
+
++-------------------------------------------------------------------+
+| WebElevate [ Filter by Blueprint: Chat App ]        (Profile Icon) |
++-------------------------------------------------------------------+
+|                                                                   |
+|  <h1>Blueprint Hub: Real-Time Chat App</h1>                      |
+|  <p>See how other developers solved this challenge.</p>            |
+|                                                                   |
+|  +-------------------------------------------------------------+  |
+|  | Solution by Alex Doe        (Completed 2 days ago)          |  |
+|  | "I used a custom hook for the WebSocket logic. Check it out!" |  |
+|  | [View Code] [Request Review]                                |  |
+|  +-------------------------------------------------------------+  |
+|  | Solution by Priya Singh     (Completed 5 days ago)          |  |
+|  | "Focused on a mobile-first design with pure CSS."           |  |
+|  | [View Code] [Review in Progress by @Sam]                    |  |
+|  +-------------------------------------------------------------+  |
+|  | Solution by Ben Carter      (Completed 1 week ago)          |  |
+|  | "My first Go project! Open to feedback."                    |  |
+|  | [View Code] [Be the first to review!]                       |  |
+|  +-------------------------------------------------------------+  |
++-------------------------------------------------------------------+
+
+Component Details:
+
+SolutionCard:
+
+Purpose: To represent one user's submitted solution for a Blueprint.
+
+Content: User's avatar and name, completion date, an optional short comment from the author, and a call-to-action button.
+
+Button Logic: The button changes based on state:
+
+"Request Review": If it's your own solution and it hasn't been reviewed.
+
+"Start Review" / "Be the first to review!": If it's another user's solution that is open for review.
+
+"View Review": If a review has been completed.
+
+Screen 3: The "Code Review" View
+This is a dedicated interface for giving and receiving feedback.
+
+UI Mockup Idea:
+
++-------------------------------------------------------------------+
+| Reviewing Ben Carter's "Real-Time Chat App" Solution              |
++-------------------------------------------------------------------+
+| [File Tree] | [Code with Comments]                                |
+|             |                                                     |
+| server.js   | 15 | const db = connectToDatabase();                |
+|             | 16 |                                                |
+|             | 17 | app.get('/messages', (req, res) => {            |
+|             | 18 |   // TODO: Add pagination here                  |
+|             | 19 |   const messages = db.getAll();                |
+|             |    +----------------------------------------------+ |
+|             |    | Alex Doe: Nice! For production, you might    | |
+|             |    | want to add pagination to this endpoint to   | |
+|             |    | avoid loading thousands of messages at once. | |
+|             |    +----------------------------------------------+ |
+|             | 20 |   res.json(messages);                          |
+|             | 21 | });                                            |
+|             |                                                     |
++-------------+-----------------------------------------------------+
+| [Overall Comments]                                                |
+| +---------------------------------------------------------------+ |
+| | Great job overall, Ben! Your server setup is very clean. My   | |
+| | main suggestion would be to think about how this would scale. | |
+| |                                          [Finish Review]      | |
+| +---------------------------------------------------------------+ |
++-------------------------------------------------------------------+
+
+Component Details:
+
+ReviewerCodeEditor: A read-only code editor. When the reviewer clicks on a line number, a text box appears allowing them to add an inline comment.
+
+InlineCommentThread: The comment box that appears next to a line of code. It shows the reviewer's avatar and name, the comment text, and allows the original author to reply.
+
+OverallCommentsPanel: A text area at the bottom where the reviewer can leave general, high-level feedback and then submit the completed review.

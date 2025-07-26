@@ -1,0 +1,148 @@
+Feature 2 Specification: The "WebElevate" Interactive Playground
+This document details the user interface (UI), user experience (UX), and technical components for the "Interactive Playground" feature of WebElevate. This is the sandboxed environment where all coding, building, and testing takes place.
+
+1. Overall Interaction Model
+Entry: The user enters the Playground from a "Module View" (as defined in Feature 1 Spec) by clicking "Start Playground" or "Start Challenge".
+
+Environment Setup: The backend instantly provisions a secure, isolated container environment based on the module's requirements (e.g., a Node.js environment, a React boilerplate, or a Docker setup).
+
+Code & Interact: The user writes code in the editor, creates/manages files in the file tree, and runs commands in the integrated terminal.
+
+Observe Results:
+
+For Front-End: Changes to the code are instantly reflected in a "Live App Preview" panel.
+
+For Back-End: The user starts a server using the terminal, and then uses the "API Client" panel to send requests and see responses. Logs from the application stream into the "Logs" panel.
+
+Test & Validate: The user clicks a "Run Tests" button. A test runner executes in the background, and the results are displayed, showing which requirements have been met.
+
+Session Management: The session remains active as long as the user is on the page. It can be reset to its original state at any time.
+
+2. Screen & Component Breakdown
+The Playground is a single, complex screen composed of a flexible layout of several key components.
+
+UI Mockup Idea (for a Full-Stack Scenario):
+
++--------------------------------------------------------------------------+
+| [File Tree] | [Code Editor]                                              |
+|             |                                                            |
+| index.js    | import express from 'express';                             |
+| package.json| const app = express();                                     |
+|             | const port = 3000;                                         |
+|             |                                                            |
+|             | app.get('/', (req, res) => {                               |
+|             |   res.send('Hello World!');                                |
+|             | });                                                        |
+|             |                                                            |
+|             | app.listen(port, () => {                                   |
+|             |   console.log(`Example app listening on port ${port}`);    |
+|             | });                                                        |
+|             |                                                            |
++-------------+------------------------------------------------------------+
+| [Terminal / Logs / Tests] [API Client / Live Preview / Architecture]     |
+|                                                                          |
+| > node index.js                                                          |
+| Example app listening on port 3000                                       |
+|                                                                          |
++--------------------------------------------------------------------------+
+
+Component Details:
+
+ResizableLayout: The root component is a flexible grid system (like VS Code's) that allows the user to drag the borders between panels to resize them according to their focus.
+
+FileTreePanel:
+
+Purpose: To display and manage the project's file structure.
+
+UI: A standard collapsible tree view of files and folders.
+
+Interactions:
+
+Left-click on a file: Opens it in the CodeEditor.
+
+Right-click on a file/folder: Opens a context menu with options like "New File," "New Folder," "Rename," "Delete."
+
+CodeEditorPanel:
+
+Purpose: The primary area for writing and editing code.
+
+Technology: Based on the Monaco Editor for a rich, VS Code-like experience.
+
+Features: Syntax highlighting for all relevant languages (JS, TS, JSX, Python, Go, HTML, CSS, Dockerfile), basic autocompletion, and integration with the AI Advisor (Feature 4) for real-time feedback.
+
+BottomTabPanel: A container with multiple tabs for observing the application's output.
+
+TerminalTab:
+
+Purpose: Provides shell access to the sandboxed environment.
+
+UI: A fully functional, xterm.js-based terminal.
+
+Interaction: Users can type commands (npm install, docker-compose up, go run .) and see the raw output.
+
+LogsTab: A cleaner, formatted view of the application's stdout and stderr, often color-coded for clarity (e.g., errors in red).
+
+TestsTab:
+
+Purpose: To display the results of the module's challenges.
+
+UI: A list of test cases, each with a title and a status icon (Pass/Fail/Running). Clicking a failed test might show detailed error output.
+
+SideTabPanel: A container with multiple tabs for interacting with the running application.
+
+LivePreviewTab (Front-End focus):
+
+Purpose: To render the front-end application in real-time.
+
+UI: An <iframe> that points to the web server running inside the user's sandbox. It should support hot-reloading.
+
+APIClientTab (Back-End focus):
+
+Purpose: To make HTTP requests to the user's back-end services without needing an external tool.
+
+UI: Fields for URL, HTTP method (GET, POST, etc.), a section for headers, a body editor, and a response viewer.
+
+ArchitectureTab:
+
+Purpose: To show a live, visual representation of the project's components.
+
+UI Example: For a simple web app, it would show a box for "Browser (Live Preview)" and a box for "Node.js Server." When an API call is made, an animated line connects them, showing the request and response flow. This is crucial for understanding distributed systems.
+
+3. Concrete Examples of Playground Setups
+The Playground dynamically adapts its layout and available tools based on the lesson.
+
+Example 1: "React - Your First Component" Challenge
+
+Initial Files: index.js, App.js, styles.css.
+
+Default View:
+
+CodeEditorPanel showing App.js.
+
+SideTabPanel is visible and defaults to the LivePreviewTab, showing the rendered "Hello World" component.
+
+BottomTabPanel is less prominent, perhaps showing the LogsTab from the create-react-app dev server.
+
+User Goal: Modify the App.js file to add new text and styling. See the changes instantly in the Live Preview.
+
+Example 2: "Docker - Containerize a Node.js API" Challenge
+
+Initial Files: index.js (a simple Express server), package.json, and an empty Dockerfile.
+
+Default View:
+
+CodeEditorPanel showing the empty Dockerfile.
+
+FileTreePanel is prominent so the user can see all files.
+
+BottomTabPanel defaults to the TerminalTab.
+
+SideTabPanel defaults to the APIClientTab.
+
+User Goal:
+
+Write the correct commands in the Dockerfile.
+
+Use the TerminalTab to run docker build -t my-api . and then docker run -p 3000:3000 my-api.
+
+Use the APIClientTab to send a GET request to http://localhost:3000 and verify they get a "Hello World" response.
