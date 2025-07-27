@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  Container, 
-  Cloud, 
-  ArrowRight, 
-  Clock, 
-  Users, 
+import {
+  Container,
+  Cloud,
+  ArrowRight,
+  Clock,
+  Users,
   Star,
   BookOpen,
   Play,
   Award,
   Filter,
-  Search
+  Search,
+  Zap
 } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 
@@ -91,6 +92,42 @@ const CoursesPage: React.FC = () => {
         'DevOps Integration',
         'Enterprise Patterns'
       ]
+    },
+    {
+      id: 'web-elevate',
+      title: 'Web Elevate',
+      subtitle: 'Master Web Development',
+      description: 'Master modern web development from frontend artistry to scalable backend architecture. Learn through interactive playgrounds, real-world blueprints, and AI-powered guidance.',
+      icon: Zap,
+      color: 'from-indigo-500 to-purple-600',
+      bgColor: 'bg-indigo-50',
+      borderColor: 'border-indigo-200',
+      textColor: 'text-indigo-700',
+      level: 'Beginner to Expert',
+      duration: '80+ Hours',
+      students: 'Coming Soon',
+      rating: 'New',
+      path: '/web-elevate',
+      provider: 'web-development',
+      isUnderDevelopment: true,
+      features: [
+        'Interactive Code Playground',
+        'Real-world Project Blueprints',
+        'AI-Powered Code Analysis',
+        'Live Collaboration Features',
+        'Portfolio Builder',
+        'Peer Code Reviews'
+      ],
+      modules: [
+        'HTML & CSS Fundamentals',
+        'JavaScript Mastery',
+        'React Development',
+        'Node.js & Express',
+        'Database Integration',
+        'API Design',
+        'Testing & Deployment',
+        'Full-Stack Projects'
+      ]
     }
   ];
 
@@ -99,7 +136,7 @@ const CoursesPage: React.FC = () => {
                          course.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesLevel = selectedLevel === 'all' || course.level.toLowerCase().includes(selectedLevel);
     const matchesProvider = selectedProvider === 'all' || course.provider === selectedProvider;
-    
+
     return matchesSearch && matchesLevel && matchesProvider;
   });
 
@@ -170,6 +207,7 @@ const CoursesPage: React.FC = () => {
                     <option value="all">All Providers</option>
                     <option value="kubernetes">Kubernetes</option>
                     <option value="multi-cloud">Multi-Cloud</option>
+                    <option value="web-development">Web Development</option>
                   </select>
                 </div>
               </div>
@@ -180,7 +218,7 @@ const CoursesPage: React.FC = () => {
         {/* Courses Grid */}
         <section className="pb-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
               {filteredCourses.map((course, index) => {
                 const Icon = course.icon;
                 return (
@@ -189,7 +227,9 @@ const CoursesPage: React.FC = () => {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: index * 0.1 }}
-                    className="glass-effect rounded-2xl overflow-hidden hover:shadow-2xl hover:scale-105 transition-all duration-300 group"
+                    className={`glass-effect rounded-2xl overflow-hidden hover:shadow-2xl hover:scale-105 transition-all duration-300 group ${
+                      course.id === 'web-elevate' ? 'ring-4 ring-indigo-500 ring-opacity-50' : ''
+                    }`}
                   >
                     {/* Course Header */}
                     <div className={`${course.bgColor} ${course.borderColor} border-b-2 p-8`}>
@@ -198,7 +238,14 @@ const CoursesPage: React.FC = () => {
                           <Icon className="w-8 h-8 text-white" />
                         </div>
                         <div className="flex-1">
-                          <h2 className="text-2xl font-bold text-slate-900 mb-1">{course.title}</h2>
+                          <div className="flex items-center space-x-2 mb-1">
+                            <h2 className="text-2xl font-bold text-slate-900">{course.title}</h2>
+                            {course.id === 'web-elevate' && (
+                              <span className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                NEW
+                              </span>
+                            )}
+                          </div>
                           <p className="text-slate-600 font-medium">{course.subtitle}</p>
                         </div>
                       </div>
@@ -213,12 +260,18 @@ const CoursesPage: React.FC = () => {
                         </div>
                         <div className="flex items-center space-x-1">
                           <Users className="w-4 h-4" />
-                          <span>{course.students} students</span>
+                          <span>{course.students}{course.students !== 'Coming Soon' ? ' students' : ''}</span>
                         </div>
                         <div className="flex items-center space-x-1">
                           <Star className="w-4 h-4 text-yellow-500 fill-current" />
                           <span>{course.rating}</span>
                         </div>
+                        {course.isUnderDevelopment && (
+                          <div className="flex items-center space-x-1">
+                            <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
+                            <span className="text-orange-600 font-medium">Under Development</span>
+                          </div>
+                        )}
                       </div>
 
                       {/* Features */}
@@ -252,16 +305,27 @@ const CoursesPage: React.FC = () => {
 
                       {/* Action Buttons */}
                       <div className="flex space-x-4">
-                        <Link
-                          to={course.path}
-                          className={`flex-1 bg-gradient-to-r ${course.color} text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2 group`}
-                        >
-                          <Play className="w-5 h-5" />
-                          <span>Start Learning</span>
-                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </Link>
+                        {course.isUnderDevelopment ? (
+                          <Link
+                            to={course.path}
+                            className={`flex-1 bg-gradient-to-r ${course.color} text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2 group`}
+                          >
+                            <Zap className="w-5 h-5" />
+                            <span>Enter Platform</span>
+                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                          </Link>
+                        ) : (
+                          <Link
+                            to={course.path}
+                            className={`flex-1 bg-gradient-to-r ${course.color} text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2 group`}
+                          >
+                            <Play className="w-5 h-5" />
+                            <span>Start Learning</span>
+                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                          </Link>
+                        )}
                         <button className="px-6 py-3 border-2 border-slate-200 rounded-xl font-semibold text-slate-700 hover:border-slate-300 hover:bg-slate-50 transition-all duration-300">
-                          Preview
+                          {course.isUnderDevelopment ? 'In Development' : 'Preview'}
                         </button>
                       </div>
                     </div>
@@ -310,7 +374,7 @@ const CoursesPage: React.FC = () => {
                 We're constantly expanding our course library. Stay tuned for new modules on DevOps, Security, and more!
               </p>
               <div className="flex flex-wrap justify-center gap-4">
-                {['DevOps Pipeline', 'Security Fundamentals', 'Microservices', 'Data Engineering'].map((course) => (
+                {['DevOps Pipeline', 'Security Fundamentals', 'Microservices', 'Data Engineering', 'Mobile Development'].map((course) => (
                   <div key={course} className="bg-slate-100 text-slate-600 px-4 py-2 rounded-full text-sm font-medium">
                     {course} - Coming Soon
                   </div>

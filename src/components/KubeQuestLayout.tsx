@@ -46,6 +46,7 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
     { name: 'Docs', href: '/kubernetes/docs', icon: FileText },
     { name: 'About & Feedback', href: '/kubernetes/about-feedback', icon: MessageCircle },
     { name: 'Cloud Architecture', href: '/cloud-architecture', icon: Cloud },
+    { name: 'Web Elevate', href: '/web-elevate', icon: Zap },
   ];
 
   const cloudArchitectureNavigation = [

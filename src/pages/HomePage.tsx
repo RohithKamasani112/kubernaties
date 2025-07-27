@@ -126,6 +126,19 @@ const HomePage: React.FC = () => {
       rating: 4.9
     },
     {
+      icon: Zap,
+      title: 'Web Elevate',
+      description: 'Master modern web development from React to Node.js. Interactive playground, real projects, and AI-powered guidance.',
+      status: 'Live Now',
+      statusColor: 'bg-green-100 text-green-700',
+      path: '/web-elevate',
+      gradient: 'from-indigo-500 to-purple-600',
+      features: ['Interactive Playground', 'AI Code Advisor', 'Real Projects', 'Portfolio Builder'],
+      duration: '50+ Hours',
+      students: '2.1K',
+      rating: 4.9
+    },
+    {
       icon: Cloud,
       title: 'Cloud Architecture Studio',
       description: 'Design scalable solutions across AWS, Azure & GCP. Visual builder with security analysis and real-time collaboration.',

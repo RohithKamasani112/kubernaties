@@ -23,6 +23,9 @@ import AboutFeedback from './pages/AboutFeedback';
 // Cloud Architecture Module
 import CloudArchitectureApp from '../modules/cloud-architecture/src/CloudArchitectureApp';
 
+// Web Elevate Module
+import WebElevateApp from '../modules/web-elevate/src/WebElevateApp';
+
 // Layouts
 import Layout from './components/Layout';
 import KubeQuestLayout from './components/KubeQuestLayout';
@@ -57,6 +60,9 @@ function App() {
 
             {/* Cloud Architecture Module Routes - all prefixed with /cloud-architecture */}
             <Route path="/cloud-architecture/*" element={<CloudArchitectureApp />} />
+
+            {/* Web Elevate Module Routes - all prefixed with /web-elevate */}
+            <Route path="/web-elevate/*" element={<WebElevateApp />} />
 
             {/* 404 Page */}
             <Route path="*" element={<Layout><NotFoundPage /></Layout>} />
