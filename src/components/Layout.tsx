@@ -40,7 +40,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <span className="text-white font-bold text-lg">S</span>
               </div>
               <div className="hidden sm:block">
-                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SAMWI Learn</h1>
+                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Samwi Learn</h1>
                 <p className="text-xs text-slate-600 -mt-1">Interactive Tech Education</p>
               </div>
             </Link>
@@ -145,7 +145,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   <span className="text-white font-bold text-lg">S</span>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold">SAMWI Learn</h3>
+                  <h3 className="text-xl font-bold">Samwi Learn</h3>
                   <p className="text-slate-400 text-sm">Interactive Tech Education</p>
                 </div>
               </div>

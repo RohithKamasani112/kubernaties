@@ -77,7 +77,7 @@ const JoinPage: React.FC = () => {
     return (
       <>
         <Helmet>
-          <title>Registration Successful - SAMWI Learn</title>
+          <title>Registration Successful - Samwi Learn</title>
           <meta name="description" content="Thank you for your course registration and feedback. We'll review everything and keep you updated." />
         </Helmet>
 
@@ -124,7 +124,7 @@ const JoinPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Feedback / Course Registration - SAMWI Learn</title>
+        <title>Feedback / Course Registration - Samwi Learn</title>
         <meta name="description" content="Register for courses, share your feedback, and get early access to SAMWI Learn's latest features." />
       </Helmet>
 

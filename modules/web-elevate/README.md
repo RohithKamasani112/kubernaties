@@ -132,8 +132,8 @@ This module is currently in **preview mode**. All core features are implemented 
 
 ## Contributing
 
-This module is part of the SAMWI Learn platform. For contribution guidelines, please refer to the main project documentation.
+This module is part of the Samwi Learn platform. For contribution guidelines, please refer to the main project documentation.
 
 ## License
 
-Private - Part of SAMWI Learn Platform
+Private - Part of Samwi Learn Platform

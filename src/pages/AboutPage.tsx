@@ -77,7 +77,7 @@ const AboutPage: React.FC = () => {
               transition={{ duration: 0.8 }}
             >
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 mb-6">
-                About <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SAMWI Learn</span>
+                About <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Samwi Learn</span>
               </h1>
               <p className="text-xl sm:text-2xl text-slate-600 mb-8 leading-relaxed">
                 We're on a mission to make technology education accessible, interactive, and practical for everyone.

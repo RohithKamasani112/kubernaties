@@ -51,7 +51,7 @@ const HomePage: React.FC = () => {
   const [typingText, setTypingText] = React.useState('But by doing Real labs.');
   const [isTyping, setIsTyping] = React.useState(false);
 
-  const typingSequence = ['Real labs.', 'Real projects.', 'Real confidence.'];
+  const typingSequence = ['Real labs.', 'Real projects.', 'Real tasks.'];
   const [currentIndex, setCurrentIndex] = React.useState(0);
 
   React.useEffect(() => {
@@ -127,13 +127,13 @@ const HomePage: React.FC = () => {
     },
     {
       icon: Zap,
-      title: 'Web Elevate',
+      title: 'Web Development',
       description: 'Master modern web development from React to Node.js. Interactive playground, real projects, and AI-powered guidance.',
       status: 'Live Now',
       statusColor: 'bg-green-100 text-green-700',
       path: '/web-elevate',
       gradient: 'from-indigo-500 to-purple-600',
-      features: ['Interactive Playground', 'AI Code Advisor', 'Real Projects', 'Portfolio Builder'],
+      features: ['Interactive Playground', 'AI Code Advisor', 'Real Projects'],
       duration: '50+ Hours',
       students: '2.1K',
       rating: 4.9
@@ -142,15 +142,14 @@ const HomePage: React.FC = () => {
       icon: Cloud,
       title: 'Cloud Architecture Studio',
       description: 'Design scalable solutions across AWS, Azure & GCP. Visual builder with security analysis and real-time collaboration.',
-      status: 'Beta Version',
-      statusColor: 'bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-700 border border-orange-200',
+      status: 'Live Now',
+      statusColor: 'bg-green-100 text-green-700',
       path: '/cloud-architecture',
       gradient: 'from-purple-500 to-pink-500',
-      features: ['Visual Builder', 'Multi-Cloud Support', 'Cost Analysis', 'Beta Features'],
+      features: ['Visual Builder', 'Multi-Cloud Support', 'Cost Analysis'],
       duration: '60+ Hours',
       students: '3.8K',
-      rating: 4.8,
-      betaNote: 'New features added regularly!'
+      rating: 4.8
     },
     {
       icon: Server,
@@ -251,8 +250,8 @@ const HomePage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>SAMWI Learn - Master Real Technologies with Hands-On Learning</title>
-        <meta name="description" content="SAMWI Learn is a minimal, community-driven platform to help you learn by building. Master Kubernetes, Cloud Architecture, and more." />
+        <title>Samwi Learn - Master Real Technologies with Hands-On Learning</title>
+        <meta name="description" content="Samwi Learn is a minimal, community-driven platform to help you learn by building. Master Kubernetes, Cloud Architecture, and more." />
       </Helmet>
 
       {/* Hero Section */}
@@ -559,39 +558,7 @@ const HomePage: React.FC = () => {
             </motion.div>
           </div>
 
-          {/* Beta Announcement */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="bg-gradient-to-r from-orange-50 via-yellow-50 to-orange-50 border border-orange-200 rounded-xl p-3 max-w-sm mx-auto mt-8"
-          >
-            <div className="flex items-center justify-center space-x-2">
-              <motion.div
-                className="w-2 h-2 bg-orange-500 rounded-full"
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.7, 1, 0.7]
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
-              <div className="text-center">
-                <p className="text-xs font-semibold text-orange-800">
-                  🎉 Cloud Architecture Studio is now in Beta!
-                  <Link
-                    to="/cloud-architecture"
-                    className="text-orange-700 hover:text-orange-900 underline font-medium ml-1"
-                  >
-                    Try it →
-                  </Link>
-                </p>
-              </div>
-            </div>
-          </motion.div>
+
         </div>
 
         {/* Testimonial Bar */}
@@ -847,7 +814,7 @@ const HomePage: React.FC = () => {
                 We believe in learning by doing
               </h2>
               <p className="text-lg text-slate-600 leading-relaxed">
-                SAMWI is built for tech learners who want to build, not just watch.
+                Samwi is built for tech learners who want to build, not just watch.
                 We're creating a platform where you can master real technologies through
                 hands-on projects, practical scenarios, and community collaboration.
               </p>

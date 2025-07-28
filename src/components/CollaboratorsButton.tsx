@@ -82,7 +82,7 @@ const CollaboratorsButton: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-3xl font-bold tracking-tight">Meet Our Team</h2>
-                  <p className="text-blue-100 mt-2 text-lg">The amazing people behind SAMWI Learn ({collaborators.length} members)</p>
+                  <p className="text-blue-100 mt-2 text-lg">The amazing people behind Samwi Learn ({collaborators.length} members)</p>
                 </div>
                 <button
                   onClick={closeModal}

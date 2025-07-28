@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# SAMWI Learn Platform Setup Script
+# Samwi Learn Platform Setup Script
 # This script sets up the complete development environment
 
 set -e
 
-echo "🚀 Setting up SAMWI Learn Platform..."
+echo "🚀 Setting up Samwi Learn Platform..."
 echo "======================================"
 
 # Colors for output
@@ -78,8 +78,8 @@ create_env_files() {
     # Main web frontend
     if [ ! -f "apps/web-frontend/.env" ]; then
         cat > apps/web-frontend/.env << EOF
-# SAMWI Learn Web Frontend Environment
-VITE_APP_NAME=SAMWI Learn
+# Samwi Learn Web Frontend Environment
+VITE_APP_NAME=Samwi Learn
 VITE_APP_VERSION=1.0.0
 VITE_API_URL=http://localhost:8000
 VITE_ENABLE_ANALYTICS=false
@@ -219,7 +219,7 @@ main() {
     build_project
     
     echo
-    print_success "✅ SAMWI Learn Platform setup complete!"
+    print_success "✅ Samwi Learn Platform setup complete!"
     echo
     echo "🎉 Next steps:"
     echo "   1. Start development: npm run dev"

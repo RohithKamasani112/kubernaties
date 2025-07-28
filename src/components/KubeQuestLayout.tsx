@@ -147,7 +147,7 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
           <div className="space-y-2">
             <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 sm:mb-3 flex items-center space-x-2">
               <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full"></div>
-              <span>SAMWI Platform</span>
+              <span>Samwi Platform</span>
             </div>
 
             <Link
@@ -364,7 +364,7 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
               className="text-slate-500 hover:text-slate-700 transition-colors flex items-center space-x-1 whitespace-nowrap"
             >
               <Home className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span>SAMWI Learn</span>
+              <span>Samwi Learn</span>
             </Link>
             <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-slate-400 flex-shrink-0" />
             <span className="text-slate-700 font-medium whitespace-nowrap">

@@ -18,17 +18,20 @@ import {
   Database,
   Smartphone,
   Award,
-  TrendingUp
+  TrendingUp,
+  Layers,
+  Server,
+  Cpu
 } from 'lucide-react';
 import { useWebElevateStore } from '../store/webElevateStore';
-import { debugProjects } from '../data/debugProjects';
+import { debugChallenges } from '../data/debugChallenges';
 
 
 
 const DebugProjects: React.FC = () => {
   const { userProgress, getDebugProjectProgress, initializeApp, isInitialized } = useWebElevateStore();
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedTechStack, setSelectedTechStack] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
   // Initialize the app when component mounts
@@ -47,20 +50,20 @@ const DebugProjects: React.FC = () => {
     { id: 'advanced', name: 'Advanced', icon: Trophy }
   ];
 
-  const categories = [
-    { id: 'all', name: 'All Categories' },
-    { id: 'Frontend', name: 'Frontend' },
-    { id: 'Backend', name: 'Backend' },
-    { id: 'Full Stack', name: 'Full Stack' }
+  const techStacks = [
+    { id: 'all', name: 'All Tech Stacks', icon: Layers, color: 'text-gray-600' },
+    { id: 'React', name: 'React', icon: Code, color: 'text-blue-600' },
+    { id: 'Angular', name: 'Angular', icon: Globe, color: 'text-red-600' },
+    { id: 'Node.js', name: 'Node.js', icon: Server, color: 'text-green-600' }
   ];
 
-  const filteredProjects = debugProjects.filter(project => {
-    const matchesDifficulty = selectedDifficulty === 'all' || project.difficulty === selectedDifficulty;
-    const matchesCategory = selectedCategory === 'all' || project.category === selectedCategory;
-    const matchesSearch = project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         project.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         project.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesDifficulty && matchesCategory && matchesSearch;
+  const filteredChallenges = debugChallenges.filter(challenge => {
+    const matchesDifficulty = selectedDifficulty === 'all' || challenge.difficulty === selectedDifficulty;
+    const matchesTechStack = selectedTechStack === 'all' || challenge.techStack === selectedTechStack;
+    const matchesSearch = challenge.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         challenge.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         challenge.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+    return matchesDifficulty && matchesTechStack && matchesSearch;
   });
 
   const getDifficultyColor = (difficulty: string) => {
@@ -102,10 +105,10 @@ const DebugProjects: React.FC = () => {
         <div className="text-center">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 flex items-center justify-center space-x-3">
             <Bug className="w-10 h-10 text-red-500" />
-            <span>Debug Playground</span>
+            <span>Debug Challenges</span>
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Sharpen your debugging skills with real-world broken projects. Find the bugs, fix the code, and level up your development expertise!
+            Fix real-world bugs across React, Angular, and Node.js. Each challenge includes broken code, hints, and step-by-step guidance to help you master debugging.
           </p>
         </div>
       </motion.div>
@@ -123,7 +126,7 @@ const DebugProjects: React.FC = () => {
               <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mx-auto mb-2">
                 <Bug className="w-6 h-6 text-indigo-600" />
               </div>
-              <p className="text-2xl font-bold text-gray-900">{debugProjects.length}</p>
+              <p className="text-2xl font-bold text-gray-900">{debugChallenges.length}</p>
               <p className="text-sm text-gray-600">Total Challenges</p>
             </div>
             <div className="text-center">
@@ -131,9 +134,9 @@ const DebugProjects: React.FC = () => {
                 <CheckCircle className="w-6 h-6 text-green-600" />
               </div>
               <p className="text-2xl font-bold text-gray-900">
-                {debugProjects.filter(p => {
+                {debugChallenges.filter(c => {
                   try {
-                    return getDebugProjectProgress(p.id)?.isCompleted;
+                    return getDebugProjectProgress(c.id)?.isCompleted;
                   } catch (error) {
                     return false;
                   }
@@ -146,9 +149,9 @@ const DebugProjects: React.FC = () => {
                 <Trophy className="w-6 h-6 text-yellow-600" />
               </div>
               <p className="text-2xl font-bold text-gray-900">
-                {debugProjects.reduce((sum, p) => {
+                {debugChallenges.reduce((sum, c) => {
                   try {
-                    return sum + (getDebugProjectProgress(p.id)?.isCompleted ? p.points : 0);
+                    return sum + (getDebugProjectProgress(c.id)?.isCompleted ? c.xpReward : 0);
                   } catch (error) {
                     return sum;
                   }
@@ -161,13 +164,13 @@ const DebugProjects: React.FC = () => {
                 <Zap className="w-6 h-6 text-purple-600" />
               </div>
               <p className="text-2xl font-bold text-gray-900">
-                {Math.round((debugProjects.filter(p => {
+                {Math.round((debugChallenges.filter(c => {
                   try {
-                    return getDebugProjectProgress(p.id)?.isCompleted;
+                    return getDebugProjectProgress(c.id)?.isCompleted;
                   } catch (error) {
                     return false;
                   }
-                }).length / debugProjects.length) * 100)}%
+                }).length / debugChallenges.length) * 100)}%
               </p>
               <p className="text-sm text-gray-600">Progress</p>
             </div>
@@ -182,33 +185,51 @@ const DebugProjects: React.FC = () => {
         transition={{ delay: 0.2 }}
         className="mb-8"
       >
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+        <div className="space-y-4">
           {/* Search */}
-          <div className="relative flex-1 max-w-md">
+          <div className="relative max-w-md mx-auto">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
-              placeholder="Search projects, tags..."
+              placeholder="Search challenges, tags..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             />
           </div>
 
+          {/* Tech Stack Filter */}
+          <div className="flex flex-wrap justify-center gap-2">
+            {techStacks.map((stack) => (
+              <button
+                key={stack.id}
+                onClick={() => setSelectedTechStack(stack.id)}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                  selectedTechStack === stack.id
+                    ? 'bg-indigo-100 text-indigo-700 border-2 border-indigo-300'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 border-2 border-transparent'
+                }`}
+              >
+                <stack.icon className={`w-4 h-4 ${stack.color}`} />
+                <span>{stack.name}</span>
+              </button>
+            ))}
+          </div>
+
           {/* Difficulty Filter */}
-          <div className="flex items-center space-x-2">
+          <div className="flex flex-wrap justify-center gap-2">
             {difficulties.map((difficulty) => (
               <button
                 key={difficulty.id}
                 onClick={() => setSelectedDifficulty(difficulty.id)}
                 className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                   selectedDifficulty === difficulty.id
-                    ? 'bg-indigo-100 text-indigo-700'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    ? 'bg-purple-100 text-purple-700 border-2 border-purple-300'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 border-2 border-transparent'
                 }`}
               >
                 <difficulty.icon className="w-4 h-4" />
-                <span className="hidden sm:inline">{difficulty.name}</span>
+                <span>{difficulty.name}</span>
               </button>
             ))}
           </div>
@@ -223,27 +244,27 @@ const DebugProjects: React.FC = () => {
       >
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-semibold text-gray-900">
-            Debug Challenges ({filteredProjects.length})
+            Debug Challenges ({filteredChallenges.length})
           </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProjects.map((project, index) => {
+          {filteredChallenges.map((challenge, index) => {
             let progress = null;
             let isCompleted = false;
 
             try {
-              progress = getDebugProjectProgress(project.id);
+              progress = getDebugProjectProgress(challenge.id);
               isCompleted = progress?.isCompleted || false;
             } catch (error) {
-              console.warn('Error getting debug project progress:', error);
+              console.warn('Error getting debug challenge progress:', error);
               progress = null;
               isCompleted = false;
             }
 
             return (
               <motion.div
-                key={project.id}
+                key={challenge.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + index * 0.1 }}
@@ -252,12 +273,23 @@ const DebugProjects: React.FC = () => {
               <div className="p-6">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-red-500 to-orange-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                  <div className={`w-12 h-12 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200 ${
+                    challenge.techStack === 'React' ? 'bg-gradient-to-r from-blue-500 to-cyan-500' :
+                    challenge.techStack === 'Angular' ? 'bg-gradient-to-r from-red-500 to-pink-500' :
+                    'bg-gradient-to-r from-green-500 to-emerald-500'
+                  }`}>
                     <Bug className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex flex-col items-end space-y-2">
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getDifficultyColor(project.difficulty)}`}>
-                      {getDifficultyIcon(project.difficulty)} {project.difficulty}
+                    <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getDifficultyColor(challenge.difficulty)}`}>
+                      {getDifficultyIcon(challenge.difficulty)} {challenge.difficulty}
+                    </span>
+                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                      challenge.techStack === 'React' ? 'bg-blue-100 text-blue-700' :
+                      challenge.techStack === 'Angular' ? 'bg-red-100 text-red-700' :
+                      'bg-green-100 text-green-700'
+                    }`}>
+                      {challenge.techStack}
                     </span>
                     {isCompleted && (
                       <div className="flex flex-col items-end space-y-1">
@@ -281,12 +313,18 @@ const DebugProjects: React.FC = () => {
                 </div>
 
                 {/* Content */}
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{project.title}</h3>
-                <p className="text-gray-600 text-sm mb-4 line-clamp-3">{project.description}</p>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">{challenge.title}</h3>
+                <p className="text-gray-600 text-sm mb-3 line-clamp-2">{challenge.description}</p>
+
+                {/* Root Cause */}
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+                  <p className="text-xs font-medium text-red-800 mb-1">🐛 Root Cause:</p>
+                  <p className="text-sm text-red-700">{challenge.rootCause}</p>
+                </div>
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-1 mb-4">
-                  {project.tags.slice(0, 3).map((tag) => (
+                  {challenge.tags.slice(0, 3).map((tag) => (
                     <span
                       key={tag}
                       className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded"
@@ -294,9 +332,9 @@ const DebugProjects: React.FC = () => {
                       {tag}
                     </span>
                   ))}
-                  {project.tags.length > 3 && (
+                  {challenge.tags.length > 3 && (
                     <span className="text-xs text-gray-500">
-                      +{project.tags.length - 3} more
+                      +{challenge.tags.length - 3} more
                     </span>
                   )}
                 </div>
@@ -305,17 +343,21 @@ const DebugProjects: React.FC = () => {
                 <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
                   <div className="flex items-center space-x-1">
                     <Clock className="w-4 h-4" />
-                    <span>{project.estimatedTime}</span>
+                    <span>{challenge.estimatedTime}</span>
                   </div>
                   <div className="flex items-center space-x-1">
                     <Award className="w-4 h-4" />
-                    <span>{project.points} XP</span>
+                    <span>{challenge.xpReward} XP</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <Target className="w-4 h-4" />
+                    <span>{challenge.hints.length} hints</span>
                   </div>
                 </div>
 
                 {/* Action Button */}
                 <Link
-                  to={`/web-elevate/debug-playground/${project.id}`}
+                  to={`/web-elevate/debug-challenge/${challenge.id}`}
                   className={`w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
                     isCompleted
                       ? 'bg-green-100 text-green-700 hover:bg-green-200'
@@ -340,10 +382,10 @@ const DebugProjects: React.FC = () => {
           })}
         </div>
 
-        {filteredProjects.length === 0 && (
+        {filteredChallenges.length === 0 && (
           <div className="text-center py-12">
             <Bug className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No projects found</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No challenges found</h3>
             <p className="text-gray-500">
               Try adjusting your search or filter criteria.
             </p>

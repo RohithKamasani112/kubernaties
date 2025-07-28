@@ -185,22 +185,13 @@ const Playground: React.FC = () => {
   }, [terminalOutput]);
 
   return (
-    <div className="h-screen bg-gray-100 flex flex-col">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3 flex-shrink-0">
+    <div className="h-full bg-gray-100 flex flex-col">
+      {/* Compact Header */}
+      <div className="bg-white border-b border-gray-200 px-4 py-2 flex-shrink-0">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Link
-              to="/web-elevate/dashboard"
-              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span className="text-sm font-medium">Back to Dashboard</span>
-            </Link>
-            <div className="h-4 w-px bg-gray-300" />
-            <h1 className="text-lg font-semibold text-gray-900">Web Elevate Playground</h1>
+          <div className="flex items-center space-x-3">
             {sessionId && (
-              <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">
+              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
                 Session: {sessionId}
               </span>
             )}

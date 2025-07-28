@@ -16,11 +16,18 @@ import BlueprintDetail from './pages/BlueprintDetail';
 import Collaboration from './pages/Collaboration';
 import DebugProjects from './pages/DebugProjects';
 import DebugPlayground from './pages/DebugPlayground';
+import DebugChallengeEditor from './pages/DebugChallengeEditor';
+import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
 
 // Layout and Components
 import WebElevateLayout from './components/Layout/WebElevateLayout';
+import SidebarLayout from './components/SidebarLayout';
+import NewDashboard from './pages/NewDashboard';
 import ErrorBoundary from './components/ErrorBoundary';
+
+// Learning Module Components
+import LearningModule from './components/LearningModule';
 
 // Store
 import { useWebElevateStore } from './store/webElevateStore';
@@ -56,26 +63,36 @@ const WebElevateApp: React.FC = () => {
         <AnimatePresence mode="wait">
         <Routes>
           {/* Redirect root to dashboard - skip welcome page */}
-          <Route path="/" element={<Navigate to="/web-elevate/dashboard" replace />} />
+          <Route path="/" element={<Navigate to="/web-elevate" replace />} />
 
-          {/* Main Web Elevate Routes */}
-          <Route path="/dashboard" element={<WebElevateLayout><Dashboard /></WebElevateLayout>} />
+          {/* Main Web Elevate Routes with Sidebar Layout */}
+          <Route index element={<SidebarLayout><NewDashboard /></SidebarLayout>} />
+          <Route path="/dashboard" element={<Navigate to="/web-elevate" replace />} />
 
           {/* Keep welcome page accessible but not as default */}
           <Route path="/welcome" element={<Welcome />} />
-          <Route path="/paths" element={<WebElevateLayout><LearningPaths /></WebElevateLayout>} />
-          <Route path="/paths/:pathId" element={<WebElevateLayout><PathDetail /></WebElevateLayout>} />
-          <Route path="/paths/:pathId/modules/:moduleId" element={<WebElevateLayout><ModuleView /></WebElevateLayout>} />
-          <Route path="/blueprints" element={<WebElevateLayout><Blueprints /></WebElevateLayout>} />
-          <Route path="/blueprints/:blueprintId" element={<WebElevateLayout><BlueprintDetail /></WebElevateLayout>} />
-          <Route path="/collaboration" element={<WebElevateLayout><Collaboration /></WebElevateLayout>} />
-          <Route path="/playground" element={<Playground />} />
-          <Route path="/playground/:sessionId" element={<Playground />} />
-          <Route path="/portfolio" element={<WebElevateLayout><Portfolio /></WebElevateLayout>} />
+          <Route path="/paths" element={<SidebarLayout><LearningPaths /></SidebarLayout>} />
+          <Route path="/paths/:pathId" element={<SidebarLayout><PathDetail /></SidebarLayout>} />
+          <Route path="/paths/:pathId/modules/:moduleId" element={<SidebarLayout><ModuleView /></SidebarLayout>} />
+
+          {/* Enhanced Learning Module Routes */}
+          <Route path="/learning" element={<SidebarLayout><LearningModule /></SidebarLayout>} />
+          <Route path="/learning/:pathId" element={<SidebarLayout><LearningModule /></SidebarLayout>} />
+          <Route path="/blueprints" element={<SidebarLayout><Blueprints /></SidebarLayout>} />
+          <Route path="/blueprints/:blueprintId" element={<SidebarLayout><BlueprintDetail /></SidebarLayout>} />
+          <Route path="/collaboration" element={<SidebarLayout><Collaboration /></SidebarLayout>} />
+          <Route path="/playground" element={<SidebarLayout><Playground /></SidebarLayout>} />
+          <Route path="/playground/:sessionId" element={<SidebarLayout><Playground /></SidebarLayout>} />
+          <Route path="/portfolio" element={<SidebarLayout><Portfolio /></SidebarLayout>} />
 
           {/* Debug Playground Routes */}
-          <Route path="/debug-projects" element={<WebElevateLayout><DebugProjects /></WebElevateLayout>} />
-          <Route path="/debug-playground/:projectId" element={<DebugPlayground />} />
+          <Route path="/debug-projects" element={<SidebarLayout><DebugProjects /></SidebarLayout>} />
+          <Route path="/debug-playground/:projectId" element={<SidebarLayout><DebugPlayground /></SidebarLayout>} />
+          <Route path="/debug-challenge/:challengeId" element={<SidebarLayout><DebugChallengeEditor /></SidebarLayout>} />
+
+          {/* Additional Sidebar Routes */}
+          <Route path="/achievements" element={<SidebarLayout><div className="p-6"><h1 className="text-2xl font-bold">Achievements Coming Soon</h1></div></SidebarLayout>} />
+          <Route path="/settings" element={<SidebarLayout><Settings /></SidebarLayout>} />
 
           {/* Catch all - show 404 page */}
           <Route path="*" element={<NotFound />} />

@@ -1,4 +1,4 @@
-# SAMWI Learn - Interactive Technology Learning Platform
+# Samwi Learn - Interactive Technology Learning Platform
 
 A comprehensive, modular learning platform for modern technologies including Kubernetes and Cloud Architecture. Built with React, TypeScript, and modern web technologies.
 
@@ -192,7 +192,7 @@ Create `.env` files in each module as needed:
 ```bash
 # apps/web-frontend/.env
 VITE_API_URL=http://localhost:8000
-VITE_APP_NAME=SAMWI Learn
+VITE_APP_NAME=Samwi Learn
 
 # modules/cloud-architecture/.env
 VITE_ENABLE_ANALYTICS=true
@@ -313,8 +313,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 - **Email**: samwi.global@gmail.com
-- **LinkedIn**: [SAMWI Company Page](https://www.linkedin.com/company/samwi/)
+- **LinkedIn**: [Samwi Company Page](https://www.linkedin.com/company/samwi/)
 
 ---
 
-**Built with ❤️ by the SAMWI Learn Team**
+**Built with ❤️ by the Samwi Learn Team**

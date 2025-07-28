@@ -751,9 +751,7 @@ export const useWebElevateStore = create<WebElevateStore>()(
 // Helper functions to create mock data
 function createMockLearningPaths(): LearningPath[] {
   const reactModules = createReactModules();
-  const nodejsModules = createNodejsModules();
   const angularModules = createAngularModules();
-  const fullstackModules = createFullstackModules();
 
   return [
     {
@@ -772,21 +770,6 @@ function createMockLearningPaths(): LearningPath[] {
       modules: reactModules,
     },
     {
-      id: 'nodejs-backend',
-      title: '🟢 Node.js Backend Mastery',
-      description: '🚀 Master server-side JavaScript! Build powerful APIs, work with databases, and create scalable backend applications. From basics to production-ready apps!',
-      category: 'backend',
-      difficulty: 'intermediate',
-      duration: '40 hours',
-      progress: 0,
-      isStarted: false,
-      isCompleted: false,
-      icon: 'server',
-      color: 'from-green-500 to-emerald-500',
-      technologies: ['Node.js', 'Express', 'MongoDB', 'REST APIs', 'File System', 'HTTP'],
-      modules: nodejsModules,
-    },
-    {
       id: 'angular-fundamentals',
       title: '🅰️ Angular Complete Journey',
       description: '🚀 Master Angular from ground up! Learn TypeScript, components, services, routing, and build enterprise-grade applications with Google\'s powerful framework!',
@@ -800,21 +783,6 @@ function createMockLearningPaths(): LearningPath[] {
       color: 'from-red-500 to-pink-500',
       technologies: ['Angular', 'TypeScript', 'RxJS', 'Components', 'Services', 'Routing'],
       modules: angularModules,
-    },
-    {
-      id: 'fullstack-project',
-      title: 'Full-Stack Project',
-      description: 'Build a complete web application from frontend to deployment',
-      category: 'fullstack',
-      difficulty: 'advanced',
-      duration: '50 hours',
-      progress: 0,
-      isStarted: false,
-      isCompleted: false,
-      icon: 'layers',
-      color: 'from-purple-500 to-pink-500',
-      technologies: ['React', 'Node.js', 'Database', 'Docker', 'AWS'],
-      modules: fullstackModules,
     },
   ];
 }

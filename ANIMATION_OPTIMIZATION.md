@@ -1,6 +1,6 @@
 # Animation Optimization Guide
 
-This document outlines the optimizations implemented to ensure smooth, high-performance animations throughout the SAMWI Learn platform.
+This document outlines the optimizations implemented to ensure smooth, high-performance animations throughout the Samwi Learn platform.
 
 ## 🚀 Performance Optimizations Implemented
 

@@ -188,38 +188,7 @@ const HomePage: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-6 lg:py-8">
 
-          {/* Beta Notice - Mobile Responsive */}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-4 sm:mb-6"
-          >
-            <div className="bg-gradient-to-r from-orange-50 via-yellow-50 to-orange-50 border border-orange-200 rounded-lg sm:rounded-xl p-3 sm:p-4">
-              <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-3">
-                <motion.div
-                  className="w-3 h-3 bg-orange-500 rounded-full"
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.7, 1, 0.7]
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                />
-                <div className="text-center">
-                  <p className="text-xs sm:text-sm font-semibold text-orange-800 mb-1">
-                    🚀 You're using the Beta version of Cloud Architecture Studio!
-                  </p>
-                  <p className="text-xs text-orange-700">
-                    New features and improvements are being added regularly. Share your feedback to help us improve!
-                  </p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
+
 
           {/* Welcome Header - Mobile Responsive */}
           <motion.div

@@ -108,6 +108,41 @@ const CoursesPage: React.FC = () => {
       ]
     },
     {
+      id: 'web-elevate',
+      title: 'Web Development',
+      subtitle: 'Master Modern Web Development',
+      description: 'Master modern web development from frontend artistry to scalable backend architecture. Learn through interactive playgrounds, real-world blueprints, and AI-powered guidance.',
+      icon: Zap,
+      color: 'from-indigo-500 to-purple-600',
+      bgColor: 'bg-indigo-50',
+      borderColor: 'border-indigo-200',
+      textColor: 'text-indigo-700',
+      level: 'Beginner to Expert',
+      duration: '50+ Hours',
+      students: '2.1K',
+      rating: 4.9,
+      path: '/web-elevate',
+      provider: 'web-development',
+      features: [
+        'Interactive Code Playground',
+        'Real-world Project Blueprints',
+        'AI-Powered Code Analysis',
+        'Live Collaboration Features',
+        'Portfolio Builder',
+        'Peer Code Reviews'
+      ],
+      modules: [
+        'HTML & CSS Fundamentals',
+        'JavaScript Mastery',
+        'React Development',
+        'Node.js & Express',
+        'Database Integration',
+        'API Design',
+        'Testing & Deployment',
+        'Full-Stack Projects'
+      ]
+    },
+    {
       id: 'docker',
       title: 'Docker Mastery',
       subtitle: 'Containerization from Basics to Production',
@@ -219,43 +254,6 @@ const CoursesPage: React.FC = () => {
       ]
     },
     {
-      id: 'web-development',
-      title: 'Web Development',
-      subtitle: 'Build Modern Web Applications',
-      description: 'Master full-stack web development with modern frameworks, responsive design, and best practices for creating dynamic web applications.',
-      icon: Code,
-      color: 'from-violet-500 to-purple-500',
-      bgColor: 'bg-violet-50',
-      borderColor: 'border-violet-200',
-      textColor: 'text-violet-700',
-      level: 'Beginner to Advanced',
-      duration: '50+ Hours',
-      students: 'Coming Soon',
-      rating: 'New',
-      path: '#',
-      provider: 'web-dev',
-      status: 'coming-soon',
-      progress: 70,
-      features: [
-        'HTML, CSS, JavaScript',
-        'React & Modern Frameworks',
-        'Backend Development',
-        'Database Integration',
-        'Responsive Design',
-        'API Development'
-      ],
-      modules: [
-        'HTML & CSS Fundamentals',
-        'JavaScript Essentials',
-        'React Development',
-        'Backend with Node.js',
-        'Database Integration',
-        'API Design',
-        'Deployment & Hosting',
-        'Advanced Patterns'
-      ]
-    },
-    {
       id: 'cybersecurity',
       title: 'Cybersecurity',
       subtitle: 'Protect Digital Assets',
@@ -347,7 +345,7 @@ const CoursesPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Courses - SAMWI Learn</title>
+        <title>Courses - Samwi Learn</title>
         <meta name="description" content="Explore our comprehensive technology courses including Kubernetes and Cloud Architecture. Interactive, hands-on learning for all skill levels." />
       </Helmet>
 

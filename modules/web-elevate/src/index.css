@@ -2,6 +2,16 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+/* Global layout constraints - Kubernetes style */
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+#root {
+  height: 100%;
+}
+
 /* Custom styles for Web Elevate module */
 .web-elevate-gradient {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);

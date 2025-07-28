@@ -55,9 +55,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <div className="hidden sm:block">
                   <div className="flex items-center space-x-2">
                     <h1 className="text-lg font-bold text-gradient">Cloud Architecture</h1>
-                    <span className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-2 py-1 rounded-full text-xs font-bold">
-                      BETA
-                    </span>
                   </div>
                   <p className="text-xs text-slate-600 -mt-1">Interactive Learning Studio</p>
                 </div>
@@ -71,7 +68,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   className="flex items-center space-x-2 px-3 py-2 bg-purple-50 border border-purple-200 text-purple-700 hover:bg-purple-100 hover:border-purple-300 rounded-lg transition-all duration-200"
                 >
                   <Home className="w-4 h-4" />
-                  <span className="text-sm font-semibold">SAMWI Homepage</span>
+                  <span className="text-sm font-semibold">Samwi Homepage</span>
                 </Link>
 
                 <Link
@@ -210,7 +207,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             className="flex items-center space-x-2 px-4 py-3 bg-purple-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
           >
             <Home className="w-4 h-4" />
-            <span className="text-sm font-semibold">SAMWI Homepage</span>
+            <span className="text-sm font-semibold">Samwi Homepage</span>
           </Link>
         </div>
       </main>

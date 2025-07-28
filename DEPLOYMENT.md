@@ -1,6 +1,6 @@
-# Deployment Guide - SAMWI Learn Platform
+# Deployment Guide - Samwi Learn Platform
 
-This guide covers various deployment options for the SAMWI Learn platform.
+This guide covers various deployment options for the Samwi Learn platform.
 
 ## 🏗️ Build Process
 
@@ -205,7 +205,7 @@ jobs:
 
 **Main Platform (.env.production):**
 ```bash
-VITE_APP_NAME=SAMWI Learn
+VITE_APP_NAME=Samwi Learn
 VITE_APP_VERSION=1.0.0
 VITE_API_URL=https://api.samwilearn.com
 VITE_ENABLE_ANALYTICS=true

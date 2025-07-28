@@ -95,8 +95,8 @@ const CoursesPage: React.FC = () => {
     },
     {
       id: 'web-elevate',
-      title: 'Web Elevate',
-      subtitle: 'Master Web Development',
+      title: 'Web Development',
+      subtitle: 'Master Modern Web Development',
       description: 'Master modern web development from frontend artistry to scalable backend architecture. Learn through interactive playgrounds, real-world blueprints, and AI-powered guidance.',
       icon: Zap,
       color: 'from-indigo-500 to-purple-600',
@@ -105,11 +105,11 @@ const CoursesPage: React.FC = () => {
       textColor: 'text-indigo-700',
       level: 'Beginner to Expert',
       duration: '80+ Hours',
-      students: 'Coming Soon',
-      rating: 'New',
+      students: '2.1K',
+      rating: 4.9,
       path: '/web-elevate',
       provider: 'web-development',
-      isUnderDevelopment: true,
+      isUnderDevelopment: false,
       features: [
         'Interactive Code Playground',
         'Real-world Project Blueprints',
@@ -143,7 +143,7 @@ const CoursesPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Courses - SAMWI Learn</title>
+        <title>Courses - Samwi Learn</title>
         <meta name="description" content="Explore our comprehensive technology courses including Kubernetes and Cloud Architecture. Interactive, hands-on learning for all skill levels." />
       </Helmet>
 

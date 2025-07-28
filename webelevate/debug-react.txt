@@ -1,0 +1,2251 @@
+1. State Not Updating Immediately
+Description: User changes input, but value doesn’t reflect immediately.
+
+Root Cause: Misunderstanding that useState updates are async.
+
+Fix: Avoid logging state immediately after setState, use useEffect if needed.
+
+Tags: React, useState, Asynchronous
+
+Time: 10 min
+
+XP: 80
+
+Folder Structure:
+
+arduino
+Copy
+Edit
+/state-delay
+  ├── components/
+  │   └── InputBox.jsx
+  ├── App.jsx
+  └── index.js
+----------------------------------------------------------------------------
+2. Props Not Received in Child Component
+Description: Parent passes data, but child receives undefined.
+
+Root Cause: Wrong prop name or destructuring.
+
+Fix: Match prop names and ensure destructuring is correct.
+
+Tags: React, Props, Components
+
+Time: 8 min
+
+XP: 60
+
+Structure:
+
+bash
+Copy
+Edit
+/missing-props
+  ├── components/
+  │   └── ChildComponent.jsx
+  ├── App.jsx
+  └── index.js
+  ----------------------------------------------------------------------------
+3. Infinite useEffect Loop
+Description: App crashes due to useEffect running infinitely.
+
+Root Cause: Missing or incorrect dependency array.
+
+Fix: Add appropriate dependencies to the array.
+
+Tags: React, useEffect, Lifecycle
+
+Time: 15 min
+
+XP: 100
+
+Structure:
+
+bash
+Copy
+Edit
+/infinite-useeffect
+  ├── App.jsx
+  └── index.js
+----------------------------------------------------------------------------
+4. Form Submission Doesn't Prevent Reload
+Description: Form reloads page on submit.
+
+Root Cause: e.preventDefault() not called.
+
+Fix: Add e.preventDefault() in handler.
+
+Tags: React, Forms, Events
+
+Time: 5 min
+
+XP: 50
+
+Structure:
+
+bash
+Copy
+Edit
+/form-reload
+  ├── components/
+  │   └── ContactForm.jsx
+  ├── App.jsx
+  └── index.js
+
+----------------------------------------------------------------------------
+5. State Resetting on Re-render
+Description: Data disappears after a re-render.
+
+Root Cause: State initialized from props incorrectly.
+
+Fix: Use useEffect to update state from props, or lift state up.
+
+Tags: React, State, Props, Re-render
+
+Time: 12 min
+
+XP: 90
+
+Structure:
+
+bash
+Copy
+Edit
+/resetting-state
+  ├── components/
+  │   └── ProfileEditor.jsx
+  ├── App.jsx
+  └── index.js
+
+----------------------------------------------------------------------------
+6. Controlled vs Uncontrolled Input Warning
+Description: React warns about changing an input from uncontrolled to controlled.
+
+Root Cause: value or defaultValue not managed properly.
+
+Fix: Ensure input has consistent value and onChange.
+
+Tags: React, Forms, ControlledInput
+
+Time: 10 min
+
+XP: 75
+
+Structure:
+
+pgsql
+Copy
+Edit
+/controlled-input-warning
+  ├── components/
+  │   └── SignupForm.jsx
+  ├── App.jsx
+  └── index.js
+
+----------------------------------------------------------------------------
+7. useEffect Cleanup Missing
+Description: Memory leak warning in console.
+
+Root Cause: useEffect returns no cleanup function for subscriptions.
+
+Fix: Add cleanup inside useEffect return function.
+
+Tags: React, useEffect, Cleanup
+
+Time: 15 min
+
+XP: 100
+
+Structure:
+
+bash
+Copy
+Edit
+/effect-cleanup
+  ├── components/
+  │   └── Clock.jsx
+  ├── App.jsx
+  └── index.js
+
+----------------------------------------------------------------------------
+8. Component Not Re-rendering on State Change
+Description: Component doesn't update on state change.
+
+Root Cause: Mutating state directly instead of using setState.
+
+Fix: Always use setState with a new object/array.
+
+Tags: React, State, Immutability
+
+Time: 10 min
+
+XP: 80
+
+Structure:
+
+pgsql
+Copy
+Edit
+/no-re-render
+  ├── components/
+  │   └── TaskList.jsx
+  ├── App.jsx
+  └── index.js
+
+----------------------------------------------------------------------------
+9. onChange Event Not Working
+Description: Input changes not triggering handler.
+
+Root Cause: Wrong handler binding or incorrect value prop.
+
+Fix: Properly bind onChange and use correct value.
+
+Tags: React, Events, Forms
+
+Time: 7 min
+
+XP: 60
+
+Structure:
+
+pgsql
+Copy
+Edit
+/input-onchange
+  ├── components/
+  │   └── InputHandler.jsx
+  ├── App.jsx
+  └── index.js
+
+----------------------------------------------------------------------------
+10. Multiple State Updates Merged Unexpectedly
+Description: Multiple calls to setState inside same function don't reflect all changes.
+
+Root Cause: React batches state updates.
+
+Fix: Use functional updates when new state depends on previous.
+
+Tags: React, State, Batching
+
+Time: 15 min
+
+XP: 90
+
+Structure:
+
+bash
+Copy
+Edit
+/batched-updates
+  ├── components/
+  │   └── Counter.jsx
+  ├── App.jsx
+  └── index.js
+
+  _------------------------------------------------------------------------------------------
+
+  11. API Call Made on Every Render
+Description: fetch() or axios call runs on every component render.
+
+Root Cause: API call placed outside or inside useEffect without dependency array.
+
+Fix: Use useEffect with an empty dependency array to call once on mount.
+
+Tags: React, API, useEffect, Side Effects
+
+Time: 12 min
+
+XP: 90
+
+Structure:
+
+pgsql
+Copy
+Edit
+/api-on-every-render
+  ├── services/
+  │   └── api.js
+  ├── components/
+  │   └── UserFetcher.jsx
+  ├── App.jsx
+  └── index.js
+
+----------------------------------------------------------------------------
+12. API Loading State Not Displaying
+Description: No loading indication while fetching data.
+
+Root Cause: Missing loading state (useState for isLoading).
+
+Fix: Add conditional rendering for loading feedback.
+
+Tags: React, UX, API, Conditional Rendering
+
+Time: 10 min
+
+XP: 70
+
+Structure:
+
+bash
+Copy
+Edit
+/missing-loading-state
+  ├── components/
+  │   └── PostList.jsx
+  ├── App.jsx
+  └── index.js
+
+----------------------------------------------------------------------------
+13. Memory Leak with Axios CancelToken
+Description: Console warning about setting state on unmounted component.
+
+Root Cause: Async request not canceled when component unmounts.
+
+Fix: Use AbortController or axios.CancelToken.
+
+Tags: React, Axios, Cleanup, Memory Leak
+
+Time: 18 min
+
+XP: 110
+
+Structure:
+
+bash
+Copy
+Edit
+/cancel-token-leak
+  ├── services/
+  │   └── api.js
+  ├── components/
+  │   └── ProductFetcher.jsx
+  ├── App.jsx
+  └── index.js
+
+----------------------------------------------------------------------------
+14. Navigation Fails on Route Change
+Description: Clicking navigation links doesn't update the URL or content.
+
+Root Cause: Not using Link from react-router-dom or improper router setup.
+
+Fix: Use <BrowserRouter>, <Routes>, and <Link> correctly.
+
+Tags: React Router, Navigation, SPA
+
+Time: 15 min
+
+XP: 95
+
+Structure:
+
+bash
+Copy
+Edit
+/route-failure
+  ├── pages/
+  │   ├── Home.jsx
+  │   └── About.jsx
+  ├── App.jsx
+  ├── router.jsx
+  └── index.js
+
+----------------------------------------------------------------------------
+15. Route Params Not Accessible
+Description: useParams() returns undefined.
+
+Root Cause: Component not wrapped in Route or incorrect path param.
+
+Fix: Ensure Route path="/user/:id" wraps the component, and it's rendered via element.
+
+Tags: React Router, Params, Dynamic Routing
+
+Time: 12 min
+
+XP: 85
+
+Structure:
+
+bash
+Copy
+Edit
+/route-params-missing
+  ├── pages/
+  │   └── UserProfile.jsx
+  ├── router.jsx
+  └── App.jsx
+
+----------------------------------------------------------------------------
+16. Data Not Revalidating on Page Change
+Description: Data doesn’t update when route changes (e.g., user ID).
+
+Root Cause: API call doesn’t run again when route param changes.
+
+Fix: Add route param to useEffect dependency array.
+
+Tags: React, Routing, Dynamic Fetching
+
+Time: 10 min
+
+XP: 80
+
+Structure:
+
+bash
+Copy
+Edit
+/route-param-refresh
+  ├── pages/
+  │   └── UserDetails.jsx
+  ├── router.jsx
+  └── App.jsx
+
+----------------------------------------------------------------------------
+17. List Rendering Key Warning
+Description: React throws warning: "Each child in a list should have a unique key".
+
+Root Cause: Using index as key or missing key prop.
+
+Fix: Use unique ID from data as key.
+
+Tags: React, Rendering, Performance
+
+Time: 8 min
+
+XP: 60
+
+Structure:
+
+pgsql
+Copy
+Edit
+/key-warning
+  ├── components/
+  │   └── TodoList.jsx
+  ├── App.jsx
+  └── index.js
+
+----------------------------------------------------------------------------
+18. Component Renders Even If Props Don't Change
+Description: Component re-renders unnecessarily on parent update.
+
+Root Cause: No React.memo optimization or new object/array passed every time.
+
+Fix: Wrap with React.memo, memoize values with useMemo.
+
+Tags: React, Performance, Memoization
+
+Time: 14 min
+
+XP: 95
+
+Structure:
+
+bash
+Copy
+Edit
+/unnecessary-render
+  ├── components/
+  │   ├── ExpensiveChild.jsx
+  ├── App.jsx
+  └── index.js
+
+----------------------------------------------------------------------------
+19. Scroll Position Not Reset on Route Change
+Description: Navigating to a new page retains previous scroll position.
+
+Root Cause: SPA behavior – no scroll reset.
+
+Fix: Use useEffect with window.scrollTo(0,0) in route components.
+
+Tags: React, Router, UX
+
+Time: 7 min
+
+XP: 60
+
+Structure:
+
+bash
+Copy
+Edit
+/scroll-reset
+  ├── pages/
+  │   └── Article.jsx
+  ├── router.jsx
+  └── App.jsx
+
+----------------------------------------------------------------------------
+20. API Error Not Handled Gracefully
+Description: API fails, and app crashes or shows nothing.
+
+Root Cause: No try/catch or .catch() on promise.
+
+Fix: Wrap API in error handling and conditionally render fallback UI.
+
+Tags: React, Error Handling, API
+
+Time: 10 min
+
+XP: 80
+
+Structure:
+
+bash
+Copy
+Edit
+/api-error-handling
+  ├── components/
+  │   └── NewsFeed.jsx
+  ├── services/
+  │   └── api.js
+  ├── App.jsx
+  └── index.js
+
+
+------------------
+
+21. Custom Hook Not Returning Updated State
+Description: Custom hook updates internal state, but consuming component doesn’t re-render.
+
+Root Cause: Hook doesn’t return updated values properly or caches outdated reference.
+
+Fix: Ensure hook uses useState, useEffect, and returns fresh references.
+
+Tags: React, Custom Hook, State
+
+Time: 15 min
+
+XP: 95
+
+Structure:
+
+bash
+Copy
+Edit
+/custom-hook-stale-state
+  ├── hooks/
+  │   └── useCounter.js
+  ├── components/
+  │   └── CounterDisplay.jsx
+  └── App.jsx
+-----------------------------------------
+
+22. Context Value Doesn’t Update Across Components
+Description: Global context value updates in one component but not reflected in others.
+
+Root Cause: Value not derived from state, or provider not wrapping all components.
+
+Fix: Use useState inside context provider and ensure proper component hierarchy.
+
+Tags: React, Context, Global State
+
+Time: 18 min
+
+XP: 100
+
+Structure:
+
+bash
+Copy
+Edit
+/context-value-bug
+  ├── context/
+  │   └── ThemeContext.js
+  ├── components/
+  │   ├── ThemeToggle.jsx
+  │   └── Header.jsx
+  └── App.jsx
+-----------------------------------------
+
+23. Redux State Not Updating
+Description: Dispatch action but UI doesn’t reflect the updated state.
+
+Root Cause: Reducer doesn’t return a new state object or incorrect action type.
+
+Fix: Ensure reducer returns a new object, and type matches.
+
+Tags: Redux, State, Reducer
+
+Time: 15 min
+
+XP: 100
+
+Structure:
+
+bash
+Copy
+Edit
+/redux-update-fail
+  ├── store/
+  │   ├── actions.js
+  │   ├── reducer.js
+  │   └── store.js
+  ├── components/
+  │   └── Counter.jsx
+  └── App.jsx
+-----------------------------------------
+
+24. Authentication Context Not Persisting on Refresh
+Description: User logs in, but page refresh resets to logged-out state.
+
+Root Cause: Auth token stored only in memory, not localStorage.
+
+Fix: Sync auth state with localStorage or sessionStorage.
+
+Tags: Auth, Context, Persistence
+
+Time: 20 min
+
+XP: 120
+
+Structure:
+
+bash
+Copy
+Edit
+/auth-refresh-loss
+  ├── context/
+  │   └── AuthContext.js
+  ├── components/
+  │   └── LoginForm.jsx
+  └── App.jsx
+-----------------------------------------
+
+25. useReducer Dispatch Doesn’t Update State
+Description: Dispatching an action to useReducer doesn’t update state.
+
+Root Cause: Reducer returns original state object.
+
+Fix: Always return a new state object in the reducer.
+
+Tags: React, useReducer, State
+
+Time: 12 min
+
+XP: 90
+
+Structure:
+
+bash
+Copy
+Edit
+/useReducer-bug
+  ├── components/
+  │   └── CartManager.jsx
+  └── App.jsx
+-----------------------------------------
+
+26. Login Form Submits Without Validation
+Description: User can submit form with empty fields or wrong format.
+
+Root Cause: Missing input validation or onSubmit doesn't block bad input.
+
+Fix: Add validation logic and prevent submission if fields are invalid.
+
+Tags: Forms, Validation, Auth
+
+Time: 15 min
+
+XP: 100
+
+Structure:
+
+bash
+Copy
+Edit
+/login-validation-fail
+  ├── components/
+  │   └── LoginForm.jsx
+  └── App.jsx
+-----------------------------------------
+
+27. JWT Token Not Attached to API Request
+Description: API requests fail with 401 unauthorized.
+
+Root Cause: Missing Authorization header with JWT token.
+
+Fix: Attach token from localStorage or context in headers.
+
+Tags: Auth, JWT, API
+
+Time: 18 min
+
+XP: 110
+
+Structure:
+
+bash
+Copy
+Edit
+/jwt-header-missing
+  ├── services/
+  │   └── api.js
+  ├── context/
+  │   └── AuthContext.js
+  └── App.jsx
+-----------------------------------------
+
+28. Logout Doesn’t Clear User Session
+Description: Clicking logout doesn’t remove auth data or reset UI.
+
+Root Cause: Context or localStorage not cleared properly.
+
+Fix: Clear tokens, reset state, and redirect user.
+
+Tags: Auth, Logout, Context
+
+Time: 10 min
+
+XP: 80
+
+Structure:
+
+bash
+Copy
+Edit
+/logout-bug
+  ├── context/
+  │   └── AuthContext.js
+  ├── components/
+  │   └── LogoutButton.jsx
+  └── App.jsx
+-----------------------------------------
+
+29. Redux Middleware Not Triggering
+Description: Side effects (e.g., async API call) in middleware don’t run.
+
+Root Cause: Middleware not applied or misconfigured.
+
+Fix: Apply middleware like redux-thunk or redux-saga correctly.
+
+Tags: Redux, Middleware, Async
+
+Time: 20 min
+
+XP: 120
+
+Structure:
+
+bash
+Copy
+Edit
+/redux-middleware-issue
+  ├── store/
+  │   ├── middleware.js
+  │   └── store.js
+  ├── components/
+  │   └── PostList.jsx
+  └── App.jsx
+-----------------------------------------
+
+30. Nested Context Conflicts
+Description: Nested providers overwrite each other's values unexpectedly.
+
+Root Cause: Improper provider nesting or shared keys.
+
+Fix: Use separate contexts or memoized values, and debug value propagation.
+
+Tags: React, Context, Nesting
+
+Time: 15 min
+
+XP: 100
+
+Structure:
+
+pgsql
+Copy
+Edit
+/context-conflict
+  ├── context/
+  │   ├── ThemeContext.js
+  │   └── AuthContext.js
+  ├── components/
+  │   └── PageLayout.jsx
+  └── App.jsx
+-----------------------------------------
+
+31. Ref Not Updating on Component Re-render
+Description: useRef value appears stale after rerender.
+
+Root Cause: Trying to use useRef like useState or not referencing .current.
+
+Fix: Always use .current and remember useRef does not cause re-renders.
+
+Tags: React, useRef, Reactivity
+
+Time: 10 min
+
+XP: 80
+
+Structure:
+
+bash
+Copy
+Edit
+/ref-not-updating
+  ├── components/
+  │   └── InputFocusTracker.jsx
+  └── App.jsx
+-----------------------------------------
+
+32. Focus Doesn’t Move to Input on Modal Open
+Description: Modal opens but input doesn’t get focus.
+
+Root Cause: Input rendered after focus call.
+
+Fix: Use useEffect + useRef to focus input once modal is mounted.
+
+Tags: React, Ref, Accessibility
+
+Time: 12 min
+
+XP: 95
+
+Structure:
+
+bash
+Copy
+Edit
+/modal-focus-bug
+  ├── components/
+  │   └── LoginModal.jsx
+  └── App.jsx
+-----------------------------------------
+
+33. Animation Not Running on State Change
+Description: Class change doesn’t trigger animation.
+
+Root Cause: State change not triggering DOM change correctly, or CSS class not applied.
+
+Fix: Use CSSTransition or framer-motion with state triggers.
+
+Tags: React, CSS, Animation
+
+Time: 14 min
+
+XP: 90
+
+Structure:
+
+bash
+Copy
+Edit
+/animation-not-triggering
+  ├── components/
+  │   └── AlertBox.jsx
+  └── App.jsx
+-----------------------------------------
+
+34. WebSocket Reconnect Loop
+Description: WebSocket client keeps reconnecting every second.
+
+Root Cause: Connection errors not handled or not throttled.
+
+Fix: Add exponential backoff and error check in onclose.
+
+Tags: WebSocket, Real-Time, Error Handling
+
+Time: 20 min
+
+XP: 120
+
+Structure:
+
+bash
+Copy
+Edit
+/websocket-reconnect
+  ├── utils/
+  │   └── socketManager.js
+  ├── components/
+  │   └── LiveChat.jsx
+  └── App.jsx
+-----------------------------------------
+
+35. Portals Render Behind Backdrop
+Description: Portal modal or tooltip appears under dark overlay or hidden.
+
+Root Cause: DOM node not appended properly or z-index mismanaged.
+
+Fix: Ensure portal renders outside app root with higher z-index.
+
+Tags: React, Portals, Z-Index
+
+Time: 15 min
+
+XP: 100
+
+Structure:
+
+pgsql
+Copy
+Edit
+/portal-zindex-issue
+  ├── components/
+  │   └── Modal.jsx
+  ├── App.jsx
+  └── public/
+      └── index.html
+-----------------------------------------
+
+36. Live Typing Experience Lags
+Description: Typing in input lags when list updates in real-time.
+
+Root Cause: Heavy re-renders due to global state change.
+
+Fix: Debounce state, use React.memo, or isolate components.
+
+Tags: Performance, Input, Real-Time
+
+Time: 16 min
+
+XP: 100
+
+Structure:
+
+bash
+Copy
+Edit
+/typing-lag-fix
+  ├── components/
+  │   └── ChatInput.jsx
+  └── App.jsx
+-----------------------------------------
+
+37. Conflicting CSS in Portal + Main UI
+Description: Modal styles clash with underlying app styles.
+
+Root Cause: Global styles affect portal content.
+
+Fix: Use scoped CSS, CSS modules, or reset styles inside portal root.
+
+Tags: React, Portals, CSS Conflicts
+
+Time: 13 min
+
+XP: 85
+
+Structure:
+
+pgsql
+Copy
+Edit
+/portal-css-conflict
+  ├── components/
+  │   └── Tooltip.jsx
+  ├── styles/
+  │   └── tooltip.module.css
+  └── App.jsx
+-----------------------------------------
+
+38. Scroll Jank on Real-Time List
+Description: List auto-scrolls or jumps during real-time updates.
+
+Root Cause: DOM mutations not optimized or list re-renders from top.
+
+Fix: Use react-window or keep scroll position manually.
+
+Tags: UX, Real-Time, Performance
+
+Time: 20 min
+
+XP: 120
+
+Structure:
+
+bash
+Copy
+Edit
+/scroll-jank-realtime
+  ├── components/
+  │   └── ActivityFeed.jsx
+  └── App.jsx
+-----------------------------------------
+
+39. Click Outside Modal Doesn’t Close
+Description: Clicking outside doesn’t close overlay or menu.
+
+Root Cause: Missing event listener or improper ref check.
+
+Fix: Use useRef and mousedown event with boundary check.
+
+Tags: React, Event Handling, UX
+
+Time: 12 min
+
+XP: 95
+
+Structure:
+
+arduino
+Copy
+Edit
+/click-outside-close
+  ├── components/
+  │   └── Dropdown.jsx
+  └── App.jsx
+-----------------------------------------
+
+40. Ref Callback Called Multiple Times
+Description: ref={callback} triggers multiple times unexpectedly.
+
+Root Cause: Function ref is redefined on every render.
+
+Fix: Use useCallback to memoize the ref callback.
+
+Tags: React, Ref, Performance
+
+Time: 14 min
+
+XP: 100
+
+Structure:
+
+bash
+Copy
+Edit
+/callback-ref-issue
+  ├── components/
+  │   └── ResizablePanel.jsx
+  └── App.jsx
+-----------------------------------------
+
+41. Stale Auth Token Causes Silent 401 Errors
+Description: API calls silently fail with 401s after the token expires, but the UI shows no indication and doesn't redirect to login.
+
+Root Cause: No refresh token flow or interceptor in axios.
+
+Fix: Add an axios interceptor to detect 401 and refresh the token or redirect user.
+
+Tags: Security, Auth, JWT, Axios
+
+Time: 25 min
+
+XP: 130
+
+Structure:
+
+bash
+Copy
+Edit
+/auth-stale-token
+  ├── services/
+  │   └── axiosInstance.js
+  ├── context/
+  │   └── AuthProvider.js
+  └── App.jsx
+-----------------------------------------
+
+42. Sensitive Data Leaked in Client Bundle
+Description: Environment variable (API secret key) appears in browser network logs.
+
+Root Cause: Using server-only env vars (process.env.SECRET) in client code.
+
+Fix: Never expose secrets in the client. Use a backend proxy.
+
+Tags: Security, Env, Build, Vite, Webpack
+
+Time: 20 min
+
+XP: 150
+
+Structure:
+
+bash
+Copy
+Edit
+/env-leak
+  ├── .env
+  ├── client/
+  │   └── App.jsx
+  ├── server/
+  │   └── proxy.js
+-----------------------------------------
+
+43. Uncaught Promise Rejection Crashes App
+Description: A failed fetch() causes an app-wide crash with blank screen.
+
+Root Cause: No .catch() or try/catch around async calls.
+
+Fix: Wrap all async functions in error boundaries or try/catch.
+
+Tags: React, Error Handling, Async
+
+Time: 14 min
+
+XP: 110
+
+Structure:
+
+arduino
+Copy
+Edit
+/uncaught-promise
+  ├── components/
+  │   └── ErrorBoundary.jsx
+  ├── utils/
+  │   └── fetchWrapper.js
+  └── App.jsx
+-----------------------------------------
+
+44. Race Condition in Rapid API Updates
+Description: User types fast in a search box → API calls race, slower responses override newer ones.
+
+Root Cause: No cancellation or response version check.
+
+Fix: Cancel previous requests using AbortController or track request version.
+
+Tags: React, Race Condition, UX, API
+
+Time: 25 min
+
+XP: 140
+
+Structure:
+
+bash
+Copy
+Edit
+/race-condition
+  ├── components/
+  │   └── LiveSearch.jsx
+  ├── utils/
+  │   └── requestManager.js
+  └── App.jsx
+-----------------------------------------
+
+45. Double Submission of Form Data
+Description: User submits payment or form twice due to fast double click.
+
+Root Cause: No debounce or button state lockout.
+
+Fix: Disable button after first click, debounce submission.
+
+Tags: React, Forms, UX, Payments
+
+Time: 10 min
+
+XP: 100
+
+Structure:
+
+arduino
+Copy
+Edit
+/form-double-submit
+  ├── components/
+  │   └── PaymentForm.jsx
+  └── App.jsx
+-----------------------------------------
+
+46. Memory Leak in Polling Component
+Description: When component unmounts, polling continues in background.
+
+Root Cause: setInterval not cleared in useEffect cleanup.
+
+Fix: Clear interval in cleanup and check mount state.
+
+Tags: React, Memory Leak, Polling, Cleanup
+
+Time: 18 min
+
+XP: 110
+
+Structure:
+
+bash
+Copy
+Edit
+/polling-leak
+  ├── components/
+  │   └── StatusPoller.jsx
+  └── App.jsx
+-----------------------------------------
+
+47. SSR/CSR Hydration Mismatch in Next.js
+Description: React hydration warning due to different HTML between server and client.
+
+Root Cause: Using window, random IDs, or Date.now() during render.
+
+Fix: Use useEffect or useLayoutEffect for non-SSR-safe code.
+
+Tags: Next.js, SSR, Hydration, SEO
+
+Time: 20 min
+
+XP: 120
+
+Structure:
+
+bash
+Copy
+Edit
+/ssr-hydration-mismatch
+  ├── pages/
+  │   └── index.jsx
+  ├── components/
+  │   └── NonDeterministic.jsx
+-----------------------------------------
+
+48. Third-Party Script Crashes React Tree
+Description: Ad network or embed script throws error, crashing the app.
+
+Root Cause: Uncaught error from external script inserted via dangerouslySetInnerHTML.
+
+Fix: Wrap dynamic inserts in error boundaries and sanitize carefully.
+
+Tags: React, Security, Third-Party, Error Boundary
+
+Time: 15 min
+
+XP: 115
+
+Structure:
+
+bash
+Copy
+Edit
+/third-party-crash
+  ├── components/
+  │   └── EmbedHTML.jsx
+  └── App.jsx
+-----------------------------------------
+
+49. Large Lists Cause Jank on Scroll
+Description: App becomes unresponsive when scrolling thousands of items.
+
+Root Cause: Rendering all elements instead of virtualized list.
+
+Fix: Use react-window or react-virtualized.
+
+Tags: Performance, UX, Virtualization
+
+Time: 20 min
+
+XP: 130
+
+Structure:
+
+arduino
+Copy
+Edit
+/virtual-scroll-jank
+  ├── components/
+  │   └── VirtualList.jsx
+  └── App.jsx
+-----------------------------------------
+
+50. Critical CSS Not Loaded in Deployed Build
+Description: Styles missing or flash of unstyled content (FOUC) on production.
+
+Root Cause: Lazy-loaded or tree-shaken critical CSS, or chunk splitting misconfigured.
+
+Fix: Ensure critical CSS is bundled and preloaded using tools like react-helmet or SSR.
+
+Tags: React, CSS, Build, SSR
+
+Time: 18 min
+
+XP: 125
+
+Structure:
+
+bash
+Copy
+Edit
+/fouc-critical-css
+  ├── pages/
+  │   └── Home.jsx
+  ├── components/
+  │   └── StyledBanner.jsx
+  └── styles/
+      └── banner.css
+-----------------------------------------
+
+51. Live Data Feed Freezes After Network Interruption
+Description: Trading dashboard or monitor panel freezes after Wi-Fi drops and comes back.
+
+Root Cause: WebSocket is not reconnected automatically after a disconnect.
+
+Fix: Add auto-reconnection logic with backoff strategy in WebSocket client.
+
+Tags: WebSocket, Reconnect, Trading, Live
+
+Time: 25 min
+
+XP: 140
+
+Structure:
+
+bash
+Copy
+Edit
+/live-feed-reconnect
+  ├── services/
+  │   └── socketClient.js
+  ├── components/
+  │   └── LiveTicker.jsx
+  └── App.jsx
+-----------------------------------------
+
+52. Duplicate Messages in Chat on Reconnect
+Description: On reconnecting WebSocket, chat messages are duplicated.
+
+Root Cause: Chat history re-fetched + live feed resumes = duplicates.
+
+Fix: De-duplicate messages using message IDs before rendering.
+
+Tags: Chat, WebSocket, Reconnect, De-Dupe
+
+Time: 15 min
+
+XP: 120
+
+Structure:
+
+bash
+Copy
+Edit
+/chat-duplication
+  ├── components/
+  │   └── MessageList.jsx
+  ├── utils/
+  │   └── dedupe.js
+-----------------------------------------
+
+53. Real-Time Notification Badge Shows Wrong Count
+Description: Notification badge shows unread count even after reading messages.
+
+Root Cause: Real-time listener updates list, but count is from stale context state.
+
+Fix: Use a reducer or centralized state that reacts to real-time updates and user interaction.
+
+Tags: UX, State, Notifications, WebSocket
+
+Time: 18 min
+
+XP: 110
+
+Structure:
+
+bash
+Copy
+Edit
+/badge-sync-bug
+  ├── context/
+  │   └── NotificationContext.js
+  ├── components/
+  │   └── NotificationBell.jsx
+-----------------------------------------
+
+54. Real-Time Cursor in Collaborative App Jumps or Flickers
+Description: In live collaboration app, cursors of other users flicker or disappear.
+
+Root Cause: Out-of-order updates or multiple user cursors overlap.
+
+Fix: Debounce cursor updates and track timestamps or user IDs.
+
+Tags: Live Sync, Editor, WebSocket, UX
+
+Time: 22 min
+
+XP: 130
+
+Structure:
+
+arduino
+Copy
+Edit
+/collab-cursor-flicker
+  ├── components/
+  │   └── RemoteCursorLayer.jsx
+  ├── services/
+  │   └── cursorSync.js
+-----------------------------------------
+
+55. Missed Real-Time Alerts When Tab is in Background
+Description: User doesn’t receive alerts if tab was inactive.
+
+Root Cause: Page visibility API not used to wake tab or resync on focus.
+
+Fix: Use document.visibilityState and focus event to pull missed data.
+
+Tags: Visibility, Notifications, Sync, UX
+
+Time: 15 min
+
+XP: 115
+
+Structure:
+
+bash
+Copy
+Edit
+/tab-inactive-alert-miss
+  ├── hooks/
+  │   └── useVisibilitySync.js
+  └── components/
+      └── AlertList.jsx
+-----------------------------------------
+
+56. Latency in Real-Time Leaderboard Rankings
+Description: Leaderboard takes seconds to reflect new data.
+
+Root Cause: Rankings calculated client-side or updates throttled too aggressively.
+
+Fix: Move ranking logic to backend or optimize update intervals.
+
+Tags: Real-Time, Gaming, WebSocket, Optimization
+
+Time: 20 min
+
+XP: 130
+
+Structure:
+
+bash
+Copy
+Edit
+/leaderboard-lag
+  ├── components/
+  │   └── LiveLeaderboard.jsx
+  ├── services/
+  │   └── scoreService.js
+-----------------------------------------
+
+57. Real-Time Chat Scroll Doesn’t Stick to Bottom
+Description: Chat scroll doesn’t follow new messages — user has to scroll manually.
+
+Root Cause: No scroll-to-bottom on new message, or scroll blocked when user scrolled up.
+
+Fix: Auto-scroll unless user manually scrolled up (smart scroll).
+
+Tags: Chat, Scroll, UX, WebSocket
+
+Time: 17 min
+
+XP: 105
+
+Structure:
+
+bash
+Copy
+Edit
+/chat-scroll-bug
+  ├── components/
+  │   └── ChatWindow.jsx
+  ├── hooks/
+  │   └── useAutoScroll.js
+-----------------------------------------
+
+58. Unsubscribed WebSocket Still Sends Data
+Description: Component unsubscribes from WebSocket channel, but data still flows in.
+
+Root Cause: unsubscribe() not called or handler not removed from socket.
+
+Fix: Detach handler on useEffect cleanup properly.
+
+Tags: WebSocket, Cleanup, Memory
+
+Time: 14 min
+
+XP: 100
+
+Structure:
+
+bash
+Copy
+Edit
+/socket-unsubscribe-fail
+  ├── components/
+  │   └── ChannelListener.jsx
+  ├── services/
+  │   └── socket.js
+-----------------------------------------
+
+59. Polling Overloads Server After Tab Restores
+Description: Tab returns from sleep, all polls fire at once and flood the server.
+
+Root Cause: setInterval stacking or syncing all at once.
+
+Fix: Reset polling intervals on tab visibility change or back off initial ping.
+
+Tags: Polling, Performance, Visibility
+
+Time: 16 min
+
+XP: 110
+
+Structure:
+
+bash
+Copy
+Edit
+/poll-throttle-burst
+  ├── hooks/
+  │   └── useSmartPolling.js
+  └── App.jsx
+-----------------------------------------
+
+60. Wrong User Session Appears in Real-Time Feed
+Description: In multi-user admin view, messages appear under the wrong user's identity.
+
+Root Cause: Session state shared improperly across sockets or user context.
+
+Fix: Always bind userID/token to socket and validate on server-side.
+
+Tags: Security, WebSocket, Session, Auth
+
+Time: 25 min
+
+XP: 140
+
+Structure:
+
+bash
+Copy
+Edit
+/identity-mixup
+  ├── context/
+  │   └── AuthContext.js
+  ├── services/
+  │   └── socketManager.js
+  └── App.jsx
+-----------------------------------------
+
+
+
+61. Micro-Frontend Crashes on Shared Dependency Conflict
+Description: One remote app works, but when loaded inside host, it crashes due to a shared react-router version.
+
+Root Cause: Version mismatch in shared dependencies across MFEs.
+
+Fix: Pin shared deps in moduleFederationPlugin and align versions.
+
+Tags: Webpack 5, Micro-Frontend, Shared Deps, Module Federation
+
+Time: 25 min
+
+XP: 150
+
+Structure:
+
+arduino
+Copy
+Edit
+/mfe-dependency-crash
+  ├── shell/
+  │   └── webpack.config.js
+  ├── remote-app/
+  │   └── webpack.config.js
+-----------------------------------------
+
+62. MFE Doesn’t Load Due to Cross-Origin Restriction
+Description: Remote entry fails to load with CORS error.
+
+Root Cause: Remote app not serving Access-Control-Allow-Origin.
+
+Fix: Configure CORS headers properly on remote's CDN or dev server.
+
+Tags: CORS, Micro-Frontend, CDN, Security
+
+Time: 20 min
+
+XP: 130
+
+Structure:
+
+bash
+Copy
+Edit
+/mfe-cors-issue
+  ├── remote-app/
+  │   └── server.js
+  └── shell/
+      └── App.jsx
+-----------------------------------------
+
+63. Lazy-Loaded Route Causes Blank Screen on Refresh
+Description: Refreshing /dashboard gives white screen in deployed app.
+
+Root Cause: Missing rewrite rules or base path in router.
+
+Fix: Add SPA fallback in netlify.toml, vercel.json, or server routes.
+
+Tags: Lazy Loading, Routing, Deploy, CDN
+
+Time: 18 min
+
+XP: 110
+
+Structure:
+
+swift
+Copy
+Edit
+/lazy-refresh-blank
+  ├── routes/
+  │   └── Dashboard.jsx
+  └── public/
+      └── _redirects
+-----------------------------------------
+
+64. Stale Module Cached by CDN
+Description: Bug is fixed in deployment, but users still see the broken version.
+
+Root Cause: CDN caches old JS chunks without cache-busting.
+
+Fix: Use content hashes in build filenames and proper cache headers.
+
+Tags: Caching, CDN, Build, Deploy
+
+Time: 20 min
+
+XP: 125
+
+Structure:
+
+arduino
+Copy
+Edit
+/cdn-cache-issue
+  ├── webpack.config.js
+  └── public/
+      └── index.html
+-----------------------------------------
+
+65. Event Bus Conflict Between Remote Apps
+Description: One app’s event handler overwrites another’s in a shared bus.
+
+Root Cause: Shared window.eventBus object mutates globally.
+
+Fix: Use scoped event buses or context-based dispatchers per MFE.
+
+Tags: Micro-Frontend, Event, Architecture, Isolation
+
+Time: 24 min
+
+XP: 135
+
+Structure:
+
+pgsql
+Copy
+Edit
+/eventbus-conflict
+  ├── remote-1/
+  │   └── EventBus.js
+  ├── remote-2/
+  │   └── EventBus.js
+  └── shell/
+      └── App.jsx
+-----------------------------------------
+
+66. Dev and Prod Use Different API Endpoints
+Description: App works in dev but fails in prod due to bad endpoint.
+
+Root Cause: Incorrect use of process.env.REACT_APP_* vars.
+
+Fix: Inject environment variables at build-time via .env.production.
+
+Tags: Deployment, API, Environment, Config
+
+Time: 14 min
+
+XP: 100
+
+Structure:
+
+bash
+Copy
+Edit
+/env-api-mismatch
+  ├── .env.development
+  ├── .env.production
+  └── App.jsx
+-----------------------------------------
+
+67. Wrong Chunk Loaded in Multi-Locale App
+Description: French user loads /fr, but English bundle is rendered.
+
+Root Cause: Build doesn’t support locale-based code splitting.
+
+Fix: Use dynamic imports per locale and route-based chunking.
+
+Tags: i18n, Code Splitting, Chunk, UX
+
+Time: 20 min
+
+XP: 125
+
+Structure:
+
+bash
+Copy
+Edit
+/locale-split-bug
+  ├── locales/
+  │   ├── en.js
+  │   └── fr.js
+  ├── routes/
+      └── LocaleWrapper.jsx
+-----------------------------------------
+
+68. UI Breaks Due to Shared CSS Across MFE Apps
+Description: Remote app styles override host app layout.
+
+Root Cause: Shared CSS files bleed across micro-frontends.
+
+Fix: Use CSS modules, shadow DOM, or BEM convention.
+
+Tags: CSS, Micro-Frontend, Styling, Isolation
+
+Time: 15 min
+
+XP: 110
+
+Structure:
+
+pgsql
+Copy
+Edit
+/mfe-css-conflict
+  ├── remote-app/
+  │   └── styles/
+  └── shell/
+      └── styles/
+-----------------------------------------
+
+69. Build Size Explodes After Adding MFE
+Description: Production bundle increases by 5MB after federating modules.
+
+Root Cause: Duplicated dependencies between host and remote.
+
+Fix: Use shared modules in Webpack config, enable singleton for React.
+
+Tags: Build, Module Federation, Performance
+
+Time: 20 min
+
+XP: 130
+
+Structure:
+
+arduino
+Copy
+Edit
+/build-size-bloat
+  ├── shell/
+  │   └── webpack.config.js
+  ├── remote-app/
+      └── webpack.config.js
+-----------------------------------------
+
+70. Code-Splitting Doesn’t Work After Upgrade
+Description: After upgrading React or Webpack, dynamic imports stop working.
+
+Root Cause: Babel or Webpack config reset.
+
+Fix: Re-add Babel plugin for dynamic import or configure output.chunkFormat.
+
+Tags: Code Splitting, Build, Upgrades
+
+Time: 18 min
+
+XP: 120
+
+Structure:
+
+arduino
+Copy
+Edit
+/chunking-breaks
+  ├── babel.config.js
+  ├── webpack.config.js
+  └── components/
+      └── LazyComponent.jsx
+-----------------------------------------
+
+
+
+71. Memory Leak from Non-Cleared Subscriptions
+Description: App grows in memory over time, especially after page navigations.
+
+Root Cause: Event listeners (e.g., window.addEventListener) not removed in useEffect cleanup.
+
+Fix: Add proper cleanup in useEffect return.
+
+Tags: Memory, useEffect, Lifecycle, Perf
+
+Time: 20 min
+
+XP: 140
+
+Structure:
+
+bash
+Copy
+Edit
+/memory-leak-subscription
+  ├── components/
+  │   └── ScrollTracker.jsx
+-----------------------------------------
+
+72. Silent Failure in Error Boundary
+Description: Component fails but nothing is shown; screen remains blank.
+
+Root Cause: Error boundary doesn't log or display fallback.
+
+Fix: Add componentDidCatch logic and a visible fallback UI.
+
+Tags: Error Boundary, Crash, Fallback, Logging
+
+Time: 15 min
+
+XP: 110
+
+Structure:
+
+bash
+Copy
+Edit
+/silent-error
+  ├── components/
+  │   └── ErrorBoundary.jsx
+-----------------------------------------
+
+73. Crash When Third-Party Script Fails (e.g. Stripe, reCAPTCHA)
+Description: App crashes if CDN fails to load Stripe or Google script.
+
+Root Cause: No null check or fallback for external lib.
+
+Fix: Wrap in try/catch or conditionally load with script loader + error handling.
+
+Tags: Third-Party, Script Load, Crash
+
+Time: 18 min
+
+XP: 125
+
+Structure:
+
+bash
+Copy
+Edit
+/external-lib-failure
+  ├── utils/
+  │   └── loadScript.js
+  └── components/
+      └── PaymentForm.jsx
+-----------------------------------------
+
+74. Broken Logging in Production
+Description: Errors not visible in production even though they occur.
+
+Root Cause: console.error suppressed in production build + missing logger integration.
+
+Fix: Add logger like Sentry/LogRocket + fallback file logger for node apps.
+
+Tags: Logging, Monitoring, Production
+
+Time: 20 min
+
+XP: 135
+
+Structure:
+
+bash
+Copy
+Edit
+/prod-logging
+  ├── utils/
+  │   └── logger.js
+  ├── ErrorBoundary.jsx
+-----------------------------------------
+
+75. Global State Becomes Corrupted
+Description: App state becomes inconsistent after sequence of updates.
+
+Root Cause: Mutable updates to global Redux or context state.
+
+Fix: Ensure all state updates are immutable (use spread operators, immer, etc).
+
+Tags: State, Redux, Corruption, Debugging
+
+Time: 25 min
+
+XP: 145
+
+Structure:
+
+bash
+Copy
+Edit
+/corrupt-state-bug
+  ├── store/
+  │   └── userSlice.js
+  └── components/
+      └── Dashboard.jsx
+-----------------------------------------
+
+76. Client-Side and Server-Side Render Mismatch (Hydration Error)
+Description: App flashes or fails to hydrate properly after deploy.
+
+Root Cause: Dynamic client-only logic rendered server-side (like window, timers).
+
+Fix: Wrap in useEffect or dynamic import with ssr: false if using Next.js.
+
+Tags: SSR, Next.js, Hydration, Mismatch
+
+Time: 22 min
+
+XP: 130
+
+Structure:
+
+bash
+Copy
+Edit
+/ssr-hydration-bug
+  ├── components/
+  │   └── ChartWidget.jsx
+  └── pages/
+      └── dashboard.js
+-----------------------------------------
+
+77. Crash from LocalStorage Access in SSR
+Description: App crashes during SSR because localStorage is accessed.
+
+Root Cause: localStorage not defined on server.
+
+Fix: Guard with typeof window !== 'undefined'.
+
+Tags: SSR, localStorage, Crash, Next.js
+
+Time: 12 min
+
+XP: 100
+
+Structure:
+
+bash
+Copy
+Edit
+/localstorage-ssr-fail
+  ├── utils/
+  │   └── getUserToken.js
+-----------------------------------------
+
+78. Overlapping Toasts on Multi-Tab Usage
+Description: Users with multiple tabs get duplicated or overlapping toasts.
+
+Root Cause: Global state not synced between tabs.
+
+Fix: Use BroadcastChannel API or storage events for cross-tab coordination.
+
+Tags: Notifications, Multi-Tab, UX, BroadcastChannel
+
+Time: 18 min
+
+XP: 120
+
+Structure:
+
+bash
+Copy
+Edit
+/toast-cross-tab
+  ├── hooks/
+  │   └── useToastSync.js
+-----------------------------------------
+
+79. User Logged Out Unexpectedly on Refresh
+Description: After a hard refresh, session is lost.
+
+Root Cause: Session stored only in memory (context) and not persisted.
+
+Fix: Sync auth state with localStorage or secure cookies.
+
+Tags: Session, Auth, Persistence
+
+Time: 16 min
+
+XP: 115
+
+Structure:
+
+pgsql
+Copy
+Edit
+/session-lost-refresh
+  ├── context/
+  │   └── AuthContext.js
+  ├── utils/
+      └── sessionSync.js
+-----------------------------------------
+
+80. Login Button Click Does Nothing
+Description: User clicks login, but nothing happens in UI.
+
+Root Cause: Async handler is not awaited, and error silently swallowed.
+
+Fix: Add try/catch, await promise, and surface errors to user or logger.
+
+Tags: UX, Async, Login, Error Handling
+
+Time: 10 min
+
+XP: 90
+
+Structure:
+
+pgsql
+Copy
+Edit
+/login-no-response
+  ├── components/
+  │   └── LoginForm.jsx
+-----------------------------------------
+
+
+81. Broken Deployment Due to Missing .env.production
+Description: Production build fails silently or loads with undefined API keys.
+
+Root Cause: CI pipeline doesn't copy .env.production.
+
+Fix: Configure .env.production as part of deploy script or use a secrets manager.
+
+Tags: CI/CD, Environment, Secrets, Deploy
+
+Time: 12 min
+
+XP: 105
+
+Structure:
+
+r
+Copy
+Edit
+/env-missing-prod
+  ├── .env.production
+  └── scripts/
+      └── deploy.sh
+-----------------------------------------
+
+82. Feature Flag Disabled in Prod but Enabled in Staging
+Description: QA passes staging, but feature fails in prod.
+
+Root Cause: Feature flag not synced between environments.
+
+Fix: Use a centralized flag provider (LaunchDarkly, ConfigCat) or versioned rollout configs.
+
+Tags: Feature Flags, Environments, Rollout
+
+Time: 18 min
+
+XP: 125
+
+Structure:
+
+bash
+Copy
+Edit
+/feature-flag-desync
+  ├── utils/
+  │   └── useFeatureFlag.js
+  ├── configs/
+      └── featureFlags.json
+-----------------------------------------
+
+83. CI Test Pipeline Crashes from Browser API Usage
+Description: Unit tests fail with window is not defined.
+
+Root Cause: Code relies on DOM APIs but runs in Node context.
+
+Fix: Mock window, use jsdom, or isolate browser-specific logic.
+
+Tags: CI, Jest, DOM, Mocking
+
+Time: 15 min
+
+XP: 120
+
+Structure:
+
+markdown
+Copy
+Edit
+/ci-browser-crash
+  ├── __tests__/
+  │   └── VideoPlayer.test.js
+  ├── components/
+      └── VideoPlayer.jsx
+-----------------------------------------
+
+84. Long Load Times in Specific Regions
+Description: Users in Asia-Pacific report slow loading times.
+
+Root Cause: CDN not optimized or app not deployed to edge locations.
+
+Fix: Use geo-replication and regional CDN edge caching (e.g. Vercel, Cloudflare).
+
+Tags: CDN, Latency, Geo, Perf
+
+Time: 20 min
+
+XP: 135
+
+Structure:
+
+pgsql
+Copy
+Edit
+/region-load-slow
+  ├── vercel.json
+  └── netlify.toml
+-----------------------------------------
+
+85. API Gateway Throttling During Peak Hours
+Description: Requests randomly fail with 429 Too Many Requests.
+
+Root Cause: Rate limit exceeded at gateway (e.g. AWS API Gateway, NGINX).
+
+Fix: Add exponential backoff or circuit breakers in API handler.
+
+Tags: API, Rate Limit, Throttling, Retry
+
+Time: 24 min
+
+XP: 145
+
+Structure:
+
+bash
+Copy
+Edit
+/api-rate-throttle
+  ├── hooks/
+  │   └── useApiRetry.js
+-----------------------------------------
+
+86. Remote Config Breaks on Bad Format
+Description: App config loads from remote JSON but crashes.
+
+Root Cause: Invalid JSON or field missing in schema.
+
+Fix: Add validation schema (e.g. Zod, Yup) before consuming config.
+
+Tags: Remote Config, Validation, Crash
+
+Time: 16 min
+
+XP: 115
+
+Structure:
+
+arduino
+Copy
+Edit
+/remote-config-fail
+  ├── schema/
+  │   └── configSchema.js
+  └── utils/
+      └── loadRemoteConfig.js
+-----------------------------------------
+
+87. Build Breaks Due to Dependency Upgrade in CI
+Description: Build fails only in CI but not locally.
+
+Root Cause: CI pulls latest semver version (e.g. ^3.4.0) with breaking change.
+
+Fix: Lock dependency versions with package-lock.json or npm ci.
+
+Tags: Dependencies, CI/CD, Versioning
+
+Time: 14 min
+
+XP: 110
+
+Structure:
+
+kotlin
+Copy
+Edit
+/ci-dep-break
+  ├── package.json
+  └── .github/workflows/
+      └── build.yml
+-----------------------------------------
+
+88. Race Condition Between API Fetches
+Description: Two parallel fetches overwrite state inconsistently.
+
+Root Cause: No request deduplication or stale response override.
+
+Fix: Use AbortController or dedup logic in global fetch utility.
+
+Tags: Race Condition, Fetch, Concurrency
+
+Time: 20 min
+
+XP: 130
+
+Structure:
+
+sql
+Copy
+Edit
+/fetch-race-condition
+  ├── utils/
+  │   └── fetchWithAbort.js
+-----------------------------------------
+
+89. UI Flickers After Flag or Config Update
+Description: Feature toggle switch causes full re-render/flicker.
+
+Root Cause: Global flag provider triggers unscoped re-renders.
+
+Fix: Memoize flag values or debounce updates.
+
+Tags: Feature Flags, UX, Performance
+
+Time: 15 min
+
+XP: 110
+
+Structure:
+
+bash
+Copy
+Edit
+/flag-update-flicker
+  ├── context/
+  │   └── FlagContext.js
+  └── hooks/
+      └── useMemoFlag.js
+-----------------------------------------
+
+90. UI Breaks When One Remote MFE Goes Offline
+Description: MFE app loads host, but one remote throws 404 and breaks page.
+
+Root Cause: Host does not handle dynamic module failure gracefully.
+
+Fix: Use async error boundaries or fallback modules in Webpack 5 federation.
+
+Tags: Micro-Frontend, Resilience, Dynamic Import
+
+Time: 25 min
+
+XP: 150
+
+Structure:
+
+bash
+Copy
+Edit
+/mfe-resilience
+  ├── host/
+  │   └── loadRemote.js
+  └── remote-app/
+-----------------------------------------

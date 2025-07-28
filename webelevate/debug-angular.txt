@@ -1,0 +1,1953 @@
+ExpressionChangedAfterItHasBeenCheckedError
+Description: This common Angular error occurs when a bound value is updated after change detection has run.
+
+Root Cause: Value updated inside a setTimeout, ngAfterViewInit, or async pipe without ChangeDetectorRef.markForCheck().
+
+Fix: Use ChangeDetectorRef.detectChanges() or markForCheck() in proper lifecycle hook.
+
+Tags: ChangeDetection, Lifecycle, Async
+
+Time: 15 min
+
+XP: 120
+
+Structure:
+
+bash
+Copy
+Edit
+/expression-change-error/
+  ├── components/
+  │   └── child.component.ts
+  ├── app.component.ts
+-----------------------------------------
+
+2. Two-Way Binding Not Working ([(ngModel)])
+Description: Input changes in the UI but not reflected in the component.
+
+Root Cause: FormsModule not imported in module.
+
+Fix: Import FormsModule in the respective module.
+
+Tags: Forms, Binding, NgModel
+
+Time: 8 min
+
+XP: 80
+
+Structure:
+
+arduino
+Copy
+Edit
+/binding-issue/
+  ├── app.module.ts
+  └── form.component.ts
+-----------------------------------------
+
+3. Event Not Emitting from Child to Parent
+Description: Parent doesn't respond to event emitted by child.
+
+Root Cause: @Output() not declared or $event not handled in parent.
+
+Fix: Add @Output() event = new EventEmitter(); in child, and bind (event) in parent.
+
+Tags: Component Communication, EventEmitter, @Output
+
+Time: 10 min
+
+XP: 90
+
+Structure:
+
+bash
+Copy
+Edit
+/child-parent-event/
+  ├── child.component.ts
+  └── parent.component.ts
+-----------------------------------------
+
+4. HTTP Request Not Sending
+Description: API call never hits backend.
+
+Root Cause: HttpClientModule not imported.
+
+Fix: Import HttpClientModule in root or feature module.
+
+Tags: HttpClient, Module, Service
+
+Time: 10 min
+
+XP: 95
+
+Structure:
+
+arduino
+Copy
+Edit
+/http-not-working/
+  ├── app.module.ts
+  └── api.service.ts
+-----------------------------------------
+
+5. RouterLink Not Navigating
+Description: <a routerLink="/dashboard"> does not change view.
+
+Root Cause: <base href="/"> missing in index.html, or router not configured.
+
+Fix: Add <base href="/"> in index.html and check RouterModule.forRoot().
+
+Tags: Routing, Navigation, RouterModule
+
+Time: 12 min
+
+XP: 100
+
+Structure:
+
+arduino
+Copy
+Edit
+/routerlink-broken/
+  ├── app-routing.module.ts
+  ├── index.html
+-----------------------------------------
+
+6. Component Not Rendering with *ngIf
+Description: *ngIf evaluates to true but DOM element not visible.
+
+Root Cause: Using a primitive like undefined or missing async pipe.
+
+Fix: Use *ngIf="myObs$ | async as data" or make sure boolean condition is valid.
+
+Tags: Template, ngIf, Observable, Async
+
+Time: 10 min
+
+XP: 95
+
+Structure:
+
+kotlin
+Copy
+Edit
+/ngif-async-issue/
+  ├── data.component.ts
+  └── data.component.html
+-----------------------------------------
+
+7. ngOnInit Called Multiple Times
+Description: ngOnInit() logging multiple times.
+
+Root Cause: Component recreated by *ngIf or route reuse strategy failure.
+
+Fix: Use trackBy, avoid destroying DOM unnecessarily.
+
+Tags: Lifecycle, Performance, Optimization
+
+Time: 14 min
+
+XP: 110
+
+Structure:
+
+bash
+Copy
+Edit
+/init-repeated/
+  ├── parent.component.html
+  └── child.component.ts
+-----------------------------------------
+
+8. Form Validation Not Triggering
+Description: Invalid form fields allow submission.
+
+Root Cause: Not using formControlName properly or Validators.required missing.
+
+Fix: Ensure form is reactive or template-driven correctly.
+
+Tags: Forms, Validation, ReactiveForms
+
+Time: 12 min
+
+XP: 100
+
+Structure:
+
+pgsql
+Copy
+Edit
+/form-validation-missing/
+  ├── login.component.ts
+  └── login.component.html
+-----------------------------------------
+
+9. Service Injection Fails (Null or Undefined)
+Description: Service injection returns undefined.
+
+Root Cause: Service not marked with @Injectable({ providedIn: 'root' }) or not listed in providers.
+
+Fix: Annotate with @Injectable and register in module if not using providedIn.
+
+Tags: Dependency Injection, Services, Providers
+
+Time: 10 min
+
+XP: 90
+
+Structure:
+
+bash
+Copy
+Edit
+/service-injection-error/
+  ├── services/
+  │   └── logging.service.ts
+  └── dashboard.component.ts
+-----------------------------------------
+
+10. Child Component Styles Leaking Globally
+Description: Styles in child component affect parent/global.
+
+Root Cause: ViewEncapsulation.None used unintentionally.
+
+Fix: Use ViewEncapsulation.Emulated (default) unless global styles intended.
+
+Tags: Encapsulation, Style, Leak, Shadow DOM
+
+Time: 10 min
+
+XP: 100
+
+Structure:
+
+bash
+Copy
+Edit
+/style-leak/
+  ├── child.component.ts
+  ├── styles.css
+-----------------------------------------
+
+✅ 11. Pipe Not Found Error
+🪲 Scenario:
+Template throws:
+
+The pipe 'formatDate' could not be found
+
+🔍 Root Cause: Pipe exists but not exported from the SharedModule.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app
+      ├── /shared
+      │   ├── /pipes
+      │   │   └── format-date.pipe.ts
+      │   └── shared.module.ts
+      ├── /features
+      │   └── /invoice
+      │       └── invoice.component.ts
+✅ Debug Focus:
+
+Check SharedModule → exports: [FormatDatePipe]
+
+Verify SharedModule is imported into InvoiceModule
+
+-----------------------------------------
+
+✅ 12. OnPush Component Not Updating
+🪲 Scenario:
+DOM not updating even after API call resolves.
+
+🔍 Root Cause: OnPush strategy + object mutation.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app
+      ├── /features
+      │   └── /users
+      │       ├── users.component.ts
+      │       └── users.component.html
+      ├── /core
+      │   └── /services
+      │       └── users.service.ts
+✅ Debug Focus:
+
+ChangeDetectionStrategy.OnPush used?
+
+Object mutated (user.name = '...') instead of replaced?
+
+Use ChangeDetectorRef.detectChanges()?
+
+-----------------------------------------
+
+✅ 13. Route Change Cancels HTTP
+🪲 Scenario:
+Route change cancels in-progress HTTP calls.
+
+🔍 Root Cause: Subscription not cleaned.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app
+      ├── /features
+      │   └── /dashboard
+      │       ├── dashboard.component.ts
+      │       └── dashboard.component.html
+      ├── /core
+      │   ├── /services
+      │   │   └── analytics.service.ts
+      │   └── /utils
+      │       └── unsubscribe.util.ts
+✅ Debug Focus:
+
+Use takeUntil() with Subject<void> in ngOnDestroy()
+
+Alternative: Use async pipe if possible
+
+-----------------------------------------
+
+✅ 14. Shared Component Not Working
+🪲 Scenario:
+Shared component used in another module shows:
+
+Component not recognized
+
+🔍 Root Cause: Not exported in SharedModule
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app
+      ├── /shared
+      │   ├── /components
+      │   │   └── /button
+      │   │       └── button.component.ts
+      │   └── shared.module.ts
+      ├── /features
+      │   └── /auth
+      │       └── login.component.ts
+✅ Debug Focus:
+
+ButtonComponent declared AND exported in SharedModule
+
+SharedModule imported in AuthModule
+
+-----------------------------------------
+
+✅ 15. Async Pipe Triggering Multiple HTTP
+🪲 Scenario:
+Every time page re-renders, API is re-fetched.
+
+🔍 Root Cause: Observable declared in template or getter.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app
+      ├── /features
+      │   └── /orders
+      │       ├── orders.component.ts
+      │       └── orders.component.html
+      ├── /core
+      │   └── /services
+      │       └── orders.service.ts
+✅ Debug Focus:
+
+Move this.orders$ = this.ordersService.getAllOrders() to ngOnInit()
+
+Use AsyncPipe only with class observables
+
+-----------------------------------------
+
+✅ 16. Circular Dependency
+🪲 Scenario:
+
+NG0200: Circular dependency detected...
+
+🔍 Root Cause: Two services depend on each other.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app
+      ├── /core
+      │   └── /services
+      │       ├── auth.service.ts
+      │       └── user.service.ts
+✅ Debug Focus:
+
+Extract shared logic to a third service
+
+Use Injector to lazy-resolve dependencies if needed
+
+-----------------------------------------
+
+✅ 17. Lazy Module Crashing
+🪲 Scenario:
+
+Cannot find component 'X' in lazy route
+
+🔍 Root Cause: Component not declared or imported in lazy module.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app
+      ├── /features
+      │   └── /products
+      │       ├── product-list.component.ts
+      │       ├── products.module.ts
+      │       └── products-routing.module.ts
+✅ Debug Focus:
+
+Is ProductListComponent declared in ProductsModule?
+
+Is CommonModule imported?
+
+-----------------------------------------
+
+✅ 18. Dynamic Form Validation Not Working
+🪲 Scenario:
+Dynamic fields not triggering validators
+
+🔍 Root Cause: Control added after form creation, no validators attached.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app
+      ├── /features
+      │   └── /forms
+      │       └── dynamic-form.component.ts
+✅ Debug Focus:
+
+Use form.addControl(name, new FormControl('', Validators.required))
+
+Call control.updateValueAndValidity() after adding
+
+-----------------------------------------
+
+✅ 19. External Library Not Triggering Angular Change Detection
+🪲 Scenario:
+3rd party SDK (Stripe, PayPal) changes model but UI doesn't update.
+
+🔍 Root Cause: It runs outside Angular's zone.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app
+      ├── /features
+      │   └── /checkout
+      │       └── stripe.component.ts
+✅ Debug Focus:
+
+Wrap external callbacks: this.zone.run(() => { ... })
+
+Inject NgZone in constructor
+
+-----------------------------------------
+
+✅ 20. Component Styles Not Applied
+🪲 Scenario:
+Component SCSS not reflecting in browser.
+
+🔍 Root Cause: Wrong path in styleUrls, or styles are overwritten.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app
+      ├── /features
+      │   └── /profile
+      │       ├── profile.component.ts
+      │       └── profile.component.scss
+✅ Debug Focus:
+
+Check styleUrls: ['./profile.component.scss']
+
+Verify styles compile via Angular CLI
+
+Avoid global name collisions
+
+-----------------------------------------
+
+✅ 21. Reactive Form Not Submitting
+🪲 Scenario:
+Form not submitting even when all fields look valid.
+
+🔍 Root Cause: Submit blocked due to untouched or pending status.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app
+      ├── /features/forms/
+      │   ├── reactive-form.component.ts
+      │   └── reactive-form.component.html
+      └── /shared/validators/custom-password.validator.ts
+✅ Debug Tips:
+
+Use .markAllAsTouched() in onSubmit()
+
+Check .status of the form (should be VALID)
+
+Console log form.errors for hidden issues
+
+-----------------------------------------
+
+✅ 22. NGRX Store Not Updating View
+🪲 Scenario:
+State changes, but view doesn't re-render.
+
+🔍 Root Cause: Not selecting the correct slice, or AsyncPipe missing.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app
+      ├── /store/
+      │   ├── /user/
+      │   │   ├── user.actions.ts
+      │   │   ├── user.reducer.ts
+      │   │   └── user.selectors.ts
+      ├── /features/account/
+      │   └── account.component.ts
+✅ Debug Tips:
+
+Check selector logic
+
+Always pipe | async in templates
+
+Use Redux DevTools to monitor state
+
+-----------------------------------------
+
+✅ 23. Image Not Loading in Template
+🪲 Scenario:
+Template tries to load image but shows broken icon.
+
+🔍 Root Cause: Wrong path or missing asset.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  ├── /assets/images/
+  │   └── profile.jpg
+  └── /app/features/profile/profile.component.html
+✅ Debug Tips:
+
+Use src="assets/images/profile.jpg" (not /assets/...)
+
+Check angular.json > assets config
+
+View console 404 errors in DevTools
+
+-----------------------------------------
+
+✅ 24. ActivatedRoute Returns Undefined
+🪲 Scenario:
+Component reads this.route.snapshot.params.id, but it’s undefined.
+
+🔍 Root Cause: Route path misconfigured or parameter missing.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app
+      ├── /features/blog/
+      │   ├── blog-details.component.ts
+      │   └── blog-routing.module.ts
+✅ Debug Tips:
+
+Check route: path: 'blog/:id'
+
+Always subscribe to route.params or use snapshot properly
+
+Add *ngIf to wait for param in template
+
+-----------------------------------------
+
+✅ 25. Custom Directive Not Working
+🪲 Scenario:
+Directive logic not triggering
+
+🔍 Root Cause: Not declared or exported in module
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app
+      ├── /shared/directives/
+      │   └── autofocus.directive.ts
+      └── /shared/shared.module.ts
+✅ Debug Tips:
+
+Declare & export in SharedModule
+
+Add logs inside directive’s ngAfterViewInit()
+
+Make sure it's used on the correct element type
+
+-----------------------------------------
+
+✅ 26. Guard Always Redirects
+🪲 Scenario:
+Guard incorrectly redirects user despite being authenticated
+
+🔍 Root Cause: Guard logic returns false, or async logic not handled
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app
+      ├── /core/guards/
+      │   └── auth.guard.ts
+      ├── /core/services/
+      │   └── auth.service.ts
+✅ Debug Tips:
+
+Console log inside canActivate()
+
+Ensure authService.isLoggedIn() is returning correct value
+
+If async, return Observable<boolean>
+
+-----------------------------------------
+
+✅ 27. Global Styles Not Applied
+🪲 Scenario:
+CSS class like .text-danger doesn’t apply
+
+🔍 Root Cause: Style not imported globally or class overridden locally
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  ├── /styles/
+  │   └── global.scss
+  └── angular.json
+✅ Debug Tips:
+
+Check angular.json > styles[] includes styles/global.scss
+
+Use browser DevTools to inspect element and style cascade
+
+Watch for Shadow DOM encapsulation in components
+
+-----------------------------------------
+
+✅ 28. Module Not Recognized on Lazy Load
+🪲 Scenario:
+Angular says lazy-loaded module not found
+
+🔍 Root Cause: Wrong path in route or missing NgModule export
+
+📁 Folder Structure:
+
+pgsql
+Copy
+Edit
+/src
+  └── /app/features/admin/
+      ├── admin.module.ts
+      ├── admin-routing.module.ts
+      └── dashboard.component.ts
+✅ Debug Tips:
+
+Confirm correct loadChildren syntax in parent router
+
+Use import paths like () => import('./features/admin/admin.module').then(m => m.AdminModule)
+
+-----------------------------------------
+
+✅ 29. Event Binding Not Working
+🪲 Scenario:
+Button click doesn’t trigger method
+
+🔍 Root Cause: Method undefined or wrong binding syntax
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app/features/chat/
+      ├── chat.component.ts
+      └── chat.component.html
+✅ Debug Tips:
+
+Console log on click method
+
+Check that method is not private
+
+Ensure there are no typos in (click)="sendMessage()"
+
+-----------------------------------------
+
+✅ 30. Dependency Injection Failing
+🪲 Scenario:
+Angular throws:
+
+NullInjectorError: No provider for XService!
+
+🔍 Root Cause: Service not provided
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app/core/services/
+      └── notification.service.ts
+✅ Debug Tips:
+
+Use @Injectable({ providedIn: 'root' }) OR provide in CoreModule
+
+Make sure module importing service is loaded at root
+
+-----------------------------------------
+✅ 31. SSR Hydration Mismatch Error
+🪲 Scenario:
+Angular Universal throws:
+
+WARNING: Content mismatch between server and client
+
+🔍 Root Cause: DOM differs between server render and client bootstrap.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app
+      ├── /features/news/
+      │   └── news-feed.component.ts
+      └── /app.server.module.ts
+✅ Debug Tips:
+
+Avoid browser-only APIs in SSR (e.g., window, localStorage)
+
+Wrap them in isPlatformBrowser() checks
+
+Use TransferState to sync data across SSR
+
+-----------------------------------------
+
+✅ 32. WebSocket Memory Leak
+🪲 Scenario:
+App slows down over time due to growing WebSocket subscriptions
+
+🔍 Root Cause: Sockets not unsubscribed on ngOnDestroy
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app
+      ├── /core/websocket/
+      │   ├── socket.service.ts
+      ├── /features/market/
+      │   └── market-stream.component.ts
+✅ Debug Tips:
+
+Always unsubscribe with takeUntil() or Subscription.unsubscribe()
+
+Use RxJS shareReplay() or publishReplay(1) to prevent re-connection
+
+Monitor open socket count via browser DevTools
+
+-----------------------------------------
+
+✅ 33. i18n Translation Key Missing
+🪲 Scenario:
+
+Translation for key 'dashboard.title' not found
+
+🔍 Root Cause: Key missing from loaded language file
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /assets/i18n/
+      ├── en.json
+      ├── es.json
+  └── /app/features/dashboard/dashboard.component.html
+✅ Debug Tips:
+
+Verify translation key exists in selected locale
+
+Use fallback strategy via TranslateService.setDefaultLang()
+
+Log missing translations during dev
+
+-----------------------------------------
+
+✅ 34. RxJS Debounce Not Working
+🪲 Scenario:
+Rapid keystrokes trigger multiple backend calls
+
+🔍 Root Cause: debounceTime() not properly used in reactive stream
+
+📁 Folder Structure:
+
+pgsql
+Copy
+Edit
+/src
+  └── /app/features/search/
+      ├── search.component.ts
+      └── search.service.ts
+✅ Debug Tips:
+
+Chain debounceTime(300) before HTTP call
+
+Use distinctUntilChanged()
+
+Verify that FormControl.valueChanges.pipe(...) is properly handled
+
+-----------------------------------------
+
+✅ 35. Effect Not Dispatching Action
+🪲 Scenario:
+NGRX effect runs but does not emit success/failure action
+
+🔍 Root Cause: Observable not returning of() or map() properly
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app/store/products/
+      ├── products.actions.ts
+      ├── products.effects.ts
+      └── products.reducer.ts
+✅ Debug Tips:
+
+Log inside effect to confirm entry
+
+Always return of(action) from inside pipe()
+
+Catch errors using catchError(() => of(...))
+
+-----------------------------------------
+
+✅ 36. ElementRef Not Working in SSR
+🪲 Scenario:
+Component with ElementRef.nativeElement breaks in SSR
+
+🔍 Root Cause: DOM is not available during SSR phase
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app/features/landing/
+      ├── landing.component.ts
+      └── landing.component.html
+✅ Debug Tips:
+
+Always wrap ElementRef logic in isPlatformBrowser()
+
+Never access nativeElement in constructors
+
+SSR-safe DOM access = use Angular Renderer2
+
+-----------------------------------------
+
+✅ 37. Lifecycle Hooks Not Triggering
+🪲 Scenario:
+ngOnInit or ngAfterViewInit doesn’t fire
+
+🔍 Root Cause: Component incorrectly used or destroyed immediately
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app/features/tasks/
+      ├── task-item.component.ts
+      └── task-list.component.html
+✅ Debug Tips:
+
+Check that component is inside *ngIf="true"
+
+Ensure it’s declared and used in correct module
+
+Console log in each lifecycle method
+
+-----------------------------------------
+
+✅ 38. HostListener Not Firing
+🪲 Scenario:
+Keyboard or scroll events not detected
+
+🔍 Root Cause: Wrong target, lifecycle issues, or listener misconfigured
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app/shared/directives/
+      └── keypress.directive.ts
+✅ Debug Tips:
+
+Use @HostListener('window:scroll')
+
+Make sure directive is attached to an active element
+
+Don't use private method for @HostListener
+
+-----------------------------------------
+
+✅ 39. Preload Strategy Not Working
+🪲 Scenario:
+Lazy-loaded routes not preloaded even after navigating to them
+
+🔍 Root Cause: Strategy not configured or module lazy-imported incorrectly
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app/app-routing.module.ts
+  └── /app/features/admin/admin.module.ts
+✅ Debug Tips:
+
+Use PreloadAllModules in RouterModule.forRoot()
+
+Lazy modules must use proper dynamic import
+
+Use custom preloading strategies if needed
+
+-----------------------------------------
+
+✅ 40. Date Formatting Issues with LOCALE
+🪲 Scenario:
+Pipes like date | date: 'longDate' show unexpected format
+
+🔍 Root Cause: App not configured with correct LOCALE_ID
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app/app.module.ts
+✅ Debug Tips:
+
+Add:
+
+ts
+Copy
+Edit
+providers: [{ provide: LOCALE_ID, useValue: 'fr' }]
+Import locale data in main.ts with:
+
+ts
+Copy
+Edit
+import localeFr from '@angular/common/locales/fr';
+registerLocaleData(localeFr);
+-----------------------------------------
+
+
+
+Angular Debug Batch5
+🔧 Angular Debugging Scenarios – 🔥 Batch 5 (Scenarios 41–50)
+Each scenario includes detailed debugging strategies, full folder structure, and real-world root causes from production Angular projects.
+
+✅ 41. ViewChild Not Updating After DOM Change
+🪨 Scenario: @ViewChild() returns undefined or stale reference
+
+🔍 Root Cause: ViewChild queried before DOM renders
+
+📁 Folder Structure:
+
+/src
+  /app
+    /features/profile/
+      profile.component.ts
+      profile.component.html
+✅ Debug Tips:
+
+Access ViewChild inside ngAfterViewInit() only
+
+If using *ngIf, use static: false in @ViewChild
+
+Use ChangeDetectorRef.detectChanges() if needed
+
+-----------------------------------------
+
+✅ 42. NgZone Performance Bottleneck
+🪨 Scenario: Too many NgZone triggers causing performance hits
+
+🔍 Root Cause: DOM events triggering Angular CD repeatedly
+
+📁 Folder Structure:
+
+/src
+  /app
+    /core/performance/
+      heavy-task.component.ts
+      performance.service.ts
+✅ Debug Tips:
+
+Use runOutsideAngular() for non-Angular logic
+
+Profile change detection in Chrome DevTools
+
+Avoid global events inside Angular zone
+
+-----------------------------------------
+
+✅ 43. Invalid Form Feedback Loop
+🪨 Scenario: Form repeatedly shows errors even after corrections
+
+🔍 Root Cause: Validation or async errors re-attached incorrectly
+
+📁 Folder Structure:
+
+/src
+  /app
+    /features/auth/
+      login.component.ts
+      login.component.html
+    /shared/validators/
+      username.validator.ts
+✅ Debug Tips:
+
+Use updateValueAndValidity() after setting errors
+
+Watch for incorrect setErrors() or missing clearValidators()
+
+Avoid triggering submit on dirty/incomplete form
+
+-----------------------------------------
+
+✅ 44. APP_INITIALIZER Hangs During Bootstrap
+🪨 Scenario: App freezes at white screen on startup
+
+🔍 Root Cause: Promise inside APP_INITIALIZER never resolves
+
+📁 Folder Structure:
+
+/src
+  /app
+    /core/init/
+      app-init.service.ts
+      init-config.ts
+  /main.ts
+✅ Debug Tips:
+
+Ensure APP_INITIALIZER returns Promise.resolve() or Observable that completes
+
+Use timeout logs to track loading sequence
+
+Catch and log errors in init chain
+
+-----------------------------------------
+
+✅ 45. Material Dialog Doesn't Close
+🪨 Scenario: Clicking close button or backdrop does nothing
+
+🔍 Root Cause: DialogRef not injected or custom backdrop config
+
+📁 Folder Structure:
+
+/src
+  /app
+    /features/modals/
+      delete-confirmation.component.ts
+      modal-launcher.component.ts
+✅ Debug Tips:
+
+Inject MatDialogRef<YourComponent> and call .close()
+
+Ensure hasBackdrop: true if backdrop close is expected
+
+Listen to afterClosed() for post-close logic
+
+-----------------------------------------
+
+✅ 46. Z-Index Clash Between Overlays
+🪨 Scenario: Dropdown or modal hidden behind another UI layer
+
+🔍 Root Cause: Conflicting z-index in CSS/Material overlays
+
+📁 Folder Structure:
+
+/src
+  /styles/
+    global.scss
+  /app
+    /shared/components/
+      tooltip.component.scss
+✅ Debug Tips:
+
+Inspect using DevTools: check stacking context
+
+Modify cdk-overlay-container z-index if needed
+
+Prefer Material overlay strategies for safe layering
+
+-----------------------------------------
+
+✅ 47. ngIf Not Reflecting Updated Boolean
+🪨 Scenario: Condition changes in TypeScript but not in DOM
+
+🔍 Root Cause: Async call changes value outside Angular zone
+
+📁 Folder Structure:
+
+/src
+  /app
+    /features/ui/
+      toggle-view.component.ts
+✅ Debug Tips:
+
+Inject ChangeDetectorRef and call .detectChanges()
+
+Wrap async logic in NgZone.run()
+
+Confirm boolean is bound via {{ val }} temporarily for test
+
+-----------------------------------------
+
+✅ 48. Dynamic Component Injection Fails
+🪨 Scenario: Component not rendering inside ViewContainerRef
+
+🔍 Root Cause: Component not declared in entryComponents (pre Ivy) or missing in module
+
+📁 Folder Structure:
+
+/src
+  /app
+    /dynamic/
+      placeholder.directive.ts
+      dynamic-host.component.ts
+      modal-content.component.ts
+✅ Debug Tips:
+
+Use ComponentFactoryResolver or createComponent() (Ivy)
+
+Clear and attach via ViewContainerRef
+
+Ensure component is exported in its module
+
+-----------------------------------------
+
+✅ 49. TestBed Errors in Unit Tests
+🪨 Scenario: Karma/Jest fails: NullInjectorError or component not created
+
+🔍 Root Cause: Missing declarations/providers in TestBed
+
+📁 Folder Structure:
+
+/src
+  /app
+    /features/notifications/
+      notification.component.ts
+      notification.component.spec.ts
+✅ Debug Tips:
+
+Declare component under test
+
+Mock or stub services using useClass or useValue
+
+Import shared modules or pipes used in template
+
+-----------------------------------------
+
+✅ 50. Lazy-Loaded Route Guard Not Triggered
+🪨 Scenario: User navigates directly to lazy route bypassing guard
+
+🔍 Root Cause: Route-level canLoad or canActivate misconfigured
+
+📁 Folder Structure:
+
+/src
+  /app
+    /guards/
+      auth.guard.ts
+    /features/admin/
+      admin.module.ts
+      admin-routing.module.ts
+✅ Debug Tips:
+
+Use canLoad for lazy loading, canActivate for route nav
+
+Log entry and return value of guard
+
+Check route definition: canLoad: [AuthGuard], etc.
+
+-----------------------------------------
+
+
+
+
+✅ 51. State Not Persisting After Page Refresh
+🪲 Scenario:
+NGRX or local state resets after page reload.
+
+🔍 Root Cause: State not stored in localStorage or not rehydrated on app init.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app
+      ├── /store/meta-reducers/
+      │   └── local-storage.reducer.ts
+      ├── /store/app.state.ts
+      ├── /core/services/state-persistence.service.ts
+✅ Debug Tips:
+
+Use metaReducers with localStorage sync
+
+Log serialization/deserialization errors
+
+Guard against circular references in state
+
+-----------------------------------------
+
+✅ 52. Route Transition Animation Not Triggering
+🪲 Scenario:
+Expected page transition animations do not play.
+
+🔍 Root Cause: Missing or incorrect RouterOutlet animations.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app
+      ├── /core/animations/
+      │   └── router.animations.ts
+      └── /app.component.ts
+✅ Debug Tips:
+
+Add [@routeAnimations] to <router-outlet>
+
+Use AnimationEvent logs to debug
+
+Confirm components have unique data: { animation: 'pageX' }
+
+-----------------------------------------
+
+✅ 53. Component Reuse Breaks Inputs
+🪲 Scenario:
+Component doesn’t react to input changes when reused in router.
+
+🔍 Root Cause: Angular reuses component instance, doesn’t re-init.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app/features/catalog/
+      ├── product-list.component.ts
+      └── product-detail.component.ts
+✅ Debug Tips:
+
+Use ngOnChanges() to respond to @Input() updates
+
+Use key in <router-outlet> to force reinit
+
+Manually call a reload method in ngOnInit
+
+-----------------------------------------
+
+✅ 54. HTTP Interceptor Not Triggering
+🪲 Scenario:
+Interceptor logic not invoked on some requests
+
+🔍 Root Cause: Requests bypass Angular's HttpClient (e.g., via fetch())
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app/core/interceptors/
+      └── auth.interceptor.ts
+✅ Debug Tips:
+
+Ensure all requests use HttpClient
+
+Interceptor must be registered in providers[]
+
+Add logs to intercept() and check if it fires
+
+-----------------------------------------
+
+✅ 55. Change Detection Race Conditions
+🪲 Scenario:
+UI updates inconsistently when async changes happen
+
+🔍 Root Cause: External events mutate data outside Angular zone
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app/core/services/
+      └── web-api.service.ts
+  └── /features/activity/
+      └── activity-feed.component.ts
+✅ Debug Tips:
+
+Use NgZone.run() to re-enter Angular zone
+
+Console log data update flow
+
+Use ChangeDetectorRef.detectChanges() cautiously
+
+-----------------------------------------
+
+✅ 56. Unit Tests Not Triggering Lifecycle Hooks
+🪲 Scenario:
+Component unit test doesn’t call ngOnInit
+
+🔍 Root Cause: fixture.detectChanges() missing or test not asynchronous
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app/features/settings/
+      ├── settings.component.ts
+      └── settings.component.spec.ts
+✅ Debug Tips:
+
+Always run fixture.detectChanges()
+
+Use waitForAsync() or fakeAsync() when needed
+
+Test method calls using spyOn(component, 'ngOnInit')
+
+-----------------------------------------
+
+✅ 57. Dynamic Component Injection Crashes
+🪲 Scenario:
+App throws error when injecting dynamic component
+
+🔍 Root Cause: Missing entryComponents in older Angular or wrong ViewContainerRef
+
+📁 Folder Structure:
+
+swift
+Copy
+Edit
+/src
+  └── /app/shared/dynamic-loader/
+      ├── dynamic-loader.component.ts
+      └── dynamic.service.ts
+✅ Debug Tips:
+
+Confirm ViewContainerRef.createComponent(...) target is correct
+
+Make sure component is in current module declarations
+
+Use ComponentFactoryResolver only for pre-Ivy versions
+
+-----------------------------------------
+
+✅ 58. IntersectionObserver Doesn’t Trigger
+🪲 Scenario:
+Lazy load image or section doesn’t detect scroll
+
+🔍 Root Cause: Target element not in viewport, or observer not attached
+
+📁 Folder Structure:
+
+swift
+Copy
+Edit
+/src
+  └── /app/shared/directives/
+      └── lazy-load.directive.ts
+✅ Debug Tips:
+
+Confirm observer attaches after DOM render (ngAfterViewInit)
+
+Use rootMargin: '0px 0px -100px 0px' to tweak visibility
+
+Check container scroll if using nested scroll views
+
+-----------------------------------------
+
+✅ 59. APP_INITIALIZER Hangs Application Boot
+🪲 Scenario:
+App stalls on startup without loading main view
+
+🔍 Root Cause: APP_INITIALIZER Promise never resolves
+
+📁 Folder Structure:
+
+swift
+Copy
+Edit
+/src
+  └── /app/core/init/
+      ├── app-init.service.ts
+      └── app.module.ts
+✅ Debug Tips:
+
+Console log before/after initializer completes
+
+Always return () => promise that resolves/rejects
+
+Timeout after safe window if required
+
+-----------------------------------------
+
+✅ 60. Z-Index Conflicts in Overlays
+🪲 Scenario:
+MatDialog or tooltip renders behind other content
+
+🔍 Root Cause: Custom CSS or third-party z-index override
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  └── /app/shared/dialogs/
+      └── confirm-dialog.component.ts
+  └── /styles/theme/
+      └── material-theme.scss
+✅ Debug Tips:
+
+Inspect element with DevTools to compare z-index layers
+
+Override via ::ng-deep or CDK theming variables
+
+Set high z-index for dialog container:
+
+scss
+Copy
+Edit
+.cdk-overlay-container { z-index: 1000; }
+-----------------------------------------
+
+✅ 61. Circular Dependency Between Angular Modules
+🪲 Scenario: App fails on build/runtime with injection or resolution errors.
+
+🔍 Root Cause: Two Angular modules import each other directly or indirectly.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /app
+    /core/core.module.ts
+    /shared/shared.module.ts
+    /features/dashboard/dashboard.module.ts
+✅ Debug Tips:
+
+Extract singleton services into CoreModule.
+
+Keep SharedModule for pure UI components (no providers).
+
+Use forwardRef() for cyclic DI only if unavoidable.
+
+✅ 62. DomSanitizer Not Rendering HTML
+🪲 Scenario: Dynamic HTML shows as plain text instead of rendering.
+
+🔍 Root Cause: Angular sanitizes HTML, stripping unsafe elements.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /app/features/editor/
+    html-renderer.component.ts
+✅ Debug Tips:
+
+Use DomSanitizer.bypassSecurityTrustHtml() only after sanitizing input.
+
+Never bypass for user-generated content without validation.
+
+Log both raw and trusted HTML values.
+
+✅ 63. ContentChild Not Updating When Content Changes
+🪲 Scenario: ContentChild reference remains undefined even when the projected content changes.
+
+🔍 Root Cause: Query lifecycle doesn’t run after dynamic slot change.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /app/shared/components/
+    container.component.ts
+    content-slot.component.ts
+✅ Debug Tips:
+
+Use ngAfterContentInit() or ngAfterContentChecked() to detect changes.
+
+Trigger ChangeDetectorRef.detectChanges() if DOM doesn’t update.
+
+✅ 64. RouteReuseStrategy Caches Wrong Component
+🪲 Scenario: Old/stale component state appears on route back.
+
+🔍 Root Cause: Custom reuse strategy mishandles route storage.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /app/core/routing/
+    custom-reuse-strategy.ts
+    app-routing.module.ts
+✅ Debug Tips:
+
+Ensure shouldAttach() and shouldDetach() are selective.
+
+Tag routes with data: { reuse: true } to control reuse.
+
+Log cache keys and validate component restoration.
+
+✅ 65. @HostBinding Doesn’t Reflect in DOM
+🪲 Scenario: Styles or classes bound via @HostBinding don’t apply.
+
+🔍 Root Cause: Value doesn’t change during Angular's lifecycle or outside zone.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /app/shared/directives/
+    highlight.directive.ts
+✅ Debug Tips:
+
+Use set on input and log value change.
+
+Ensure you’re updating properties inside Angular zone.
+
+Use ChangeDetectorRef.markForCheck() with OnPush.
+
+✅ 66. Jasmine fakeAsync() Timeout
+🪲 Scenario: Test times out or hangs using fakeAsync.
+
+🔍 Root Cause: Unresolved macroTask or missed flush().
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /app/features/api/
+    data.service.spec.ts
+✅ Debug Tips:
+
+Avoid mixing waitForAsync() and fakeAsync().
+
+Call flush() for timers and flushMicrotasks() for promises.
+
+Inspect unsubscribed observables.
+
+✅ 67. Angular Profiler Detects Excessive Change Detection
+🪲 Scenario: App slows down; too many CD cycles shown in profiler.
+
+🔍 Root Cause: Component not using OnPush, or expensive functions in template.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /app/features/chart/
+    realtime-chart.component.ts
+✅ Debug Tips:
+
+Switch to ChangeDetectionStrategy.OnPush.
+
+Never use function() in templates.
+
+Use trackBy in *ngFor.
+
+✅ 68. Angular Animations Not Running
+🪲 Scenario: Animation trigger doesn’t work; no visible error.
+
+🔍 Root Cause: Animation state not initialized or missing trigger in template.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /app/shared/animations/
+    expand-collapse.animation.ts
+  /features/sidebar/
+    sidebar.component.ts
+✅ Debug Tips:
+
+Add [@yourTrigger] to element in template.
+
+Validate state transitions in component.
+
+Use Chrome DevTools > Elements > Styles to inspect changes.
+
+✅ 69. Memory Leak in Large List Components
+🪲 Scenario: Performance degrades after navigating multiple times.
+
+🔍 Root Cause: Observables or event listeners not cleaned up.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /app/features/listing/
+    user-list.component.ts
+✅ Debug Tips:
+
+Use takeUntil() pattern for unsubscribing.
+
+Implement ngOnDestroy() and clean resources.
+
+Use Chrome Memory tab → Heap snapshot to check retained DOM nodes.
+
+✅ 70. RxJS Operator Chain Emits Unexpected Results
+🪲 Scenario: switchMap, mergeMap, or concatMap produce wrong output or no emission.
+
+🔍 Root Cause: Misunderstood concurrency/flattening strategy.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /app/core/services/
+    reactive-data.service.ts
+✅ Debug Tips:
+
+Use tap() and finalize() to observe lifecycle.
+
+Visualize logic with RxJS Marbles.
+
+Know when to use switchMap (cancel), concatMap (queue), mergeMap (parallel).
+
+-------------------------------
+ 71. SSR Hydration Fails on Initial Load
+🪲 Scenario: App loads blank or inconsistently rendered on first paint during SSR (Server-Side Rendering).
+
+🔍 Root Cause: Mismatched DOM during hydration (Angular Universal).
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /app
+    /app.module.ts
+    /app.server.module.ts
+    /main.server.ts
+/server.ts
+✅ Debug Tips:
+
+Avoid side effects (e.g. DOM access) in constructors.
+
+Use isPlatformBrowser() for browser-only logic.
+
+Validate Angular Universal config matches your routing and lazy-loaded modules.
+
+✅ 72. i18n Runtime Translations Don’t Load
+🪲 Scenario: Translation keys show as-is in template (HOME.TITLE) or show in default language only.
+
+🔍 Root Cause: Missing JSON translation file or wrong loader path.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /assets/i18n/en.json
+  /assets/i18n/fr.json
+  /app/core/i18n/
+    translate-loader.factory.ts
+✅ Debug Tips:
+
+Check HTTP path and TranslateHttpLoader config.
+
+Use TranslateService.getLangs() and onLangChange.
+
+Set fallback language (TranslateModule.forRoot({ defaultLanguage })).
+
+✅ 73. NgZone Blocks UI During Heavy Operation
+🪲 Scenario: App hangs during large loops or data loads.
+
+🔍 Root Cause: Long-running sync code runs inside Angular zone.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /app/core/services/
+    computation.service.ts
+✅ Debug Tips:
+
+Use NgZone.runOutsideAngular() for heavy logic.
+
+Re-enter Angular using NgZone.run() when DOM update needed.
+
+Profile performance using Chrome Lighthouse.
+
+✅ 74. Service Worker Doesn’t Cache Files
+🪲 Scenario: PWA doesn’t work offline, or updates don’t trigger.
+
+🔍 Root Cause: Improper ngsw-config.json setup.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /ngsw-config.json
+  /app/core/pwa/
+    sw-registration.service.ts
+✅ Debug Tips:
+
+Include all assets in ngsw-config.json.
+
+Use SwUpdate.available and SwUpdate.checkForUpdate().
+
+Log registration lifecycle in ngsw-worker.js.
+
+✅ 75. WebSocket Disconnects Unexpectedly
+🪲 Scenario: Real-time data stops streaming silently after a while.
+
+🔍 Root Cause: WebSocket not auto-reconnecting or error unhandled.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /app/core/services/
+    websocket.service.ts
+✅ Debug Tips:
+
+Implement reconnect logic using RxJS retryWhen() and delay().
+
+Use WebSocketSubject from rxjs/webSocket.
+
+Log disconnect reasons and observe lifecycle.
+
+✅ 76. Lazy Loaded Module Translation Doesn’t Work
+🪲 Scenario: Lazy-loaded feature modules show untranslated content.
+
+🔍 Root Cause: TranslateModule not imported properly or no reinitialization.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /app/features/admin/admin.module.ts
+  /app/core/i18n/translate-loader.factory.ts
+✅ Debug Tips:
+
+Re-import TranslateModule.forChild() in each lazy module.
+
+Ensure service is singleton by loading only in CoreModule.
+
+Use route-level i18n resolution if needed.
+
+✅ 77. Debugging @Input Setters Not Triggering
+🪲 Scenario: @Input() value doesn’t reflect when parent updates.
+
+🔍 Root Cause: Input not bound properly or updates outside Angular lifecycle.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /app/shared/components/
+    card.component.ts
+✅ Debug Tips:
+
+Use @Input() set fieldName(val) { ... } with logging.
+
+Check parent template binding correctness.
+
+Use ngOnChanges() and compare old/new values.
+
+✅ 78. Dynamic Component Loader Injects Incorrect Type
+🪲 Scenario: ComponentFactoryResolver loads wrong or blank component.
+
+🔍 Root Cause: ModuleRef or injector misused in dynamic loader.
+
+📁 Folder Structure:
+
+swift
+Copy
+Edit
+/src
+  /app/shared/dynamic/
+    dynamic-host.directive.ts
+    dynamic-loader.service.ts
+✅ Debug Tips:
+
+Validate that the component is declared in entryComponents (if Angular < 9).
+
+Inject using ViewContainerRef.createComponent() in Angular 14+.
+
+Log injected instance and check its type at runtime.
+
+✅ 79. ViewChild Is undefined in ngOnInit
+🪲 Scenario: ViewChild ref is undefined inside ngOnInit().
+
+🔍 Root Cause: DOM not rendered yet during ngOnInit().
+
+📁 Folder Structure:
+
+pgsql
+Copy
+Edit
+/src
+  /app/features/form-builder/
+    field-wrapper.component.ts
+✅ Debug Tips:
+
+Access ViewChild inside ngAfterViewInit() instead.
+
+Use { static: true } only if element is present at init.
+
+Log when the DOM actually renders.
+
+✅ 80. Scoped CSS Leaks Into Global Styles
+🪲 Scenario: Component styles unexpectedly affect others.
+
+🔍 Root Cause: ViewEncapsulation disabled or missing.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /app/shared/styles/
+    global-styles.scss
+  /features/table/
+    table.component.ts
+✅ Debug Tips:
+
+Use ViewEncapsulation.Emulated (default) to isolate styles.
+
+Audit global styles and imports in angular.json.
+
+Inspect via DevTools → check if styles are scoped via _ngcontent-*

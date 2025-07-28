@@ -91,7 +91,7 @@ const HomePage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>SAMWI Learn - Interactive Technology Education</title>
+        <title>Samwi Learn - Interactive Technology Education</title>
         <meta name="description" content="Master Kubernetes, Cloud Architecture, and modern technologies through interactive, hands-on learning experiences." />
         <meta name="keywords" content="kubernetes, cloud architecture, aws, azure, gcp, learning, education, interactive" />
       </Helmet>
@@ -110,7 +110,7 @@ const HomePage: React.FC = () => {
             >
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 mb-6">
                 Welcome to{' '}
-                <span className="text-gradient">SAMWI Learn</span>
+                <span className="text-gradient">Samwi Learn</span>
               </h1>
               <p className="text-xl sm:text-2xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed">
                 Master modern technologies through interactive, hands-on learning experiences. 
@@ -162,7 +162,7 @@ const HomePage: React.FC = () => {
             className="text-center mb-16"
           >
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
-              Why Choose SAMWI Learn?
+              Why Choose Samwi Learn?
             </h2>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
               Experience the future of technical education with our innovative learning platform
@@ -311,7 +311,7 @@ const HomePage: React.FC = () => {
               Ready to Start Your Learning Journey?
             </h2>
             <p className="text-xl mb-8 opacity-90">
-              Join thousands of professionals who have advanced their careers with SAMWI Learn
+              Join thousands of professionals who have advanced their careers with Samwi Learn
             </p>
             <Link
               to="/courses"

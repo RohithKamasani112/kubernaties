@@ -1,0 +1,1829 @@
+✅ 1. Unhandled Promise Rejection Crashes App
+🪲 Bug: App crashes silently or shows UnhandledPromiseRejectionWarning.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /services/
+    userService.js
+  /controllers/
+    userController.js
+  /index.js
+🔍 Root Cause:
+
+Missing .catch() in an async operation.
+
+🧰 Debug Tips:
+
+Use process.on('unhandledRejection') to catch all rejections.
+
+Wrap async routes in try-catch or use libraries like express-async-handler.
+------------------------------------------------------------------
+✅ 2. Port Already in Use
+🪲 Bug: App fails to start with EADDRINUSE error.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /config/
+    server.js
+🔍 Root Cause:
+
+Old process didn’t release the port.
+
+🧰 Debug Tips:
+
+Run lsof -i :3000 to see which process is using it.
+
+Kill process via kill -9 <pid>.
+
+Use environment variables to change port dynamically.
+------------------------------------------------------------------
+✅ 3. Environment Variables Not Loading
+🪲 Bug: process.env.XYZ is undefined.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /config/
+    env.js
+.env
+🔍 Root Cause:
+
+.env file not loaded via dotenv.
+
+🧰 Debug Tips:
+
+Ensure require('dotenv').config() runs early (in index.js or env.js).
+
+Log process.env keys during boot.
+------------------------------------------------------------------
+✅ 4. Slow API Responses in Express
+🪲 Bug: API takes long to respond without clear bottlenecks.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /middlewares/
+    logger.js
+  /routes/
+    users.js
+🔍 Root Cause:
+
+Heavy sync logic in the request thread.
+
+N+1 database query pattern.
+
+🧰 Debug Tips:
+
+Add timestamps via custom middleware.
+
+Use Node’s --inspect and Chrome DevTools to profile.
+
+Use Promise.all() for parallel DB calls.
+------------------------------------------------------------------
+✅ 5. JSON Parse Error on Request Body
+🪲 Bug: SyntaxError: Unexpected token during request body parsing.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /middlewares/
+    bodyParser.js
+🔍 Root Cause:
+
+Malformed JSON sent by client.
+
+No express.json() middleware.
+
+🧰 Debug Tips:
+
+Validate content-type on client.
+
+Use try-catch in global error handler.
+------------------------------------------------------------------
+✅ 6. CORS Errors in Production
+🪲 Bug: Frontend gets blocked with CORS policy: No 'Access-Control-Allow-Origin'.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /middlewares/
+    cors.js
+🔍 Root Cause:
+
+Missing or incorrect CORS middleware setup.
+
+🧰 Debug Tips:
+
+Use cors package and log incoming origin headers.
+
+Allow credentials: true if using cookies.
+------------------------------------------------------------------
+✅ 7. Memory Leak on Long-running Server
+🪲 Bug: Server uses increasing RAM over time.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /services/
+    cacheService.js
+🔍 Root Cause:
+
+Global arrays/maps never cleaned.
+
+Event listeners not removed.
+
+🧰 Debug Tips:
+
+Use --inspect and heap snapshots.
+
+Profile memory in Chrome DevTools.
+
+Log object counts in intervals.
+------------------------------------------------------------------
+✅ 8. MongoDB Connection Hangs or Times Out
+🪲 Bug: Server doesn’t connect to MongoDB or hangs during init.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /config/
+    db.js
+🔍 Root Cause:
+
+Wrong URI, missing port, or no DB access.
+
+🧰 Debug Tips:
+
+Log full URI (except password).
+
+Use mongoose.connection.on('error').
+
+Validate firewall or docker bridge.
+------------------------------------------------------------------
+✅ 9. require() Not Finding Module
+🪲 Bug: MODULE_NOT_FOUND even though file exists.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /utils/
+    helper.js
+🔍 Root Cause:
+
+Wrong path in require() (relative vs absolute).
+
+🧰 Debug Tips:
+
+Use path.resolve() for absolute paths.
+
+Prefer import syntax with Babel or TypeScript.
+------------------------------------------------------------------
+✅ 10. Nodemon Doesn’t Reload on Changes
+🪲 Bug: App doesn’t restart when files are edited.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/nodemon.json
+/src/index.js
+🔍 Root Cause:
+
+Missing extensions or file watch limits.
+
+🧰 Debug Tips:
+
+Use nodemon.json with:
+
+json
+Copy
+Edit
+{
+  "watch": ["src"],
+  "ext": "js,json"
+}
+On Linux, increase file watch limit with:
+
+bash
+Copy
+Edit
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+--------------------
+
+✅ 11. CPU Spikes on High Traffic
+🪲 Bug: App uses 100% CPU under load.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /services/
+    pdfGenerator.js
+  /routes/
+    report.js
+🔍 Root Cause:
+
+Blocking operations (e.g., for, crypto, PDF rendering) on main thread.
+
+🧰 Debug Tips:
+
+Use node --inspect and Chrome CPU profiler.
+
+Offload to worker_threads or spawn child processes.
+
+Use setImmediate() or streaming APIs where possible.
+
+--------------------------------------------------
+
+✅ 12. cluster Workers Not Sharing Cache
+🪲 Bug: Shared memory (like in-memory cache or sessions) is inconsistent across worker processes.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /cluster/
+    index.js
+  /services/
+    cacheService.js
+🔍 Root Cause:
+
+cluster forks separate memory for each worker.
+
+🧰 Debug Tips:
+
+Use external shared cache (e.g., Redis, Memcached).
+
+Avoid global variables for shared data.
+
+Log cluster.worker.id to trace memory isolation.
+
+--------------------------------------------------
+
+✅ 13. JWT Token Always Invalid After Refresh
+🪲 Bug: New token issued but fails authentication.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /auth/
+    jwt.service.js
+    auth.middleware.js
+🔍 Root Cause:
+
+Old token not removed; key mismatch or clock skew.
+
+🧰 Debug Tips:
+
+Validate jwt.verify() with ignoreExpiration: true to inspect payload.
+
+Log secret used at signing and verifying.
+
+Sync time on server if running on containers.
+
+--------------------------------------------------
+
+✅ 14. Logging Library Silently Fails in Production
+🪲 Bug: No logs appear in log files or output streams.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /utils/
+    logger.js
+🔍 Root Cause:
+
+Write stream error or incorrect file permissions.
+
+🧰 Debug Tips:
+
+Use winston, pino, or bunyan with error listeners.
+
+Test file permissions via fs.accessSync().
+
+Fallback to console on failure.
+
+--------------------------------------------------
+
+✅ 15. Express Middleware Executes Twice
+🪲 Bug: Middleware logic like DB calls runs twice unexpectedly.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /middlewares/
+    audit.js
+🔍 Root Cause:
+
+Middleware registered globally and locally per route.
+
+🧰 Debug Tips:
+
+Use console trace to inspect stack.
+
+Break large app.use() chains into route-scoped groups.
+
+Add flags to detect double execution in memory.
+
+--------------------------------------------------
+
+✅ 16. Async fs.writeFile Causes Race Condition
+🪲 Bug: File content missing or truncated when written by parallel processes.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /utils/
+    fileWriter.js
+🔍 Root Cause:
+
+Async writes overwrite each other due to no locking.
+
+🧰 Debug Tips:
+
+Use append mode with timestamp filenames.
+
+Implement mutex/semaphore control.
+
+Use fs.promises.open() with safe flags (wx, a+).
+
+--------------------------------------------------
+
+✅ 17. Worker Threads Not Returning Messages
+🪲 Bug: Worker thread starts but message event never returns to parent.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /threads/
+    jobWorker.js
+    threadService.js
+🔍 Root Cause:
+
+No parentPort.postMessage() call or thread exits before it.
+
+🧰 Debug Tips:
+
+Add exit and error listeners.
+
+Log early inside worker file to check execution flow.
+
+Validate correct threadData serialization.
+
+--------------------------------------------------
+
+✅ 18. req.body is Empty in Express
+🪲 Bug: req.body is {} in POST/PUT even though JSON is sent.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /middlewares/
+    bodyParser.js
+🔍 Root Cause:
+
+Missing or misordered express.json() middleware.
+
+🧰 Debug Tips:
+
+Ensure app.use(express.json()) is declared before routes.
+
+Validate request Content-Type: application/json.
+
+Log raw body using a debug middleware.
+
+--------------------------------------------------
+
+✅ 19. API Returns undefined Instead of Error
+🪲 Bug: Route returns undefined instead of proper response or error.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /routes/
+    product.js
+🔍 Root Cause:
+
+Forgot return res.send() or missed await.
+
+🧰 Debug Tips:
+
+Wrap all handlers in try/catch.
+
+Lint for missing return in arrow functions.
+
+Use ESLint rule consistent-return.
+
+--------------------------------------------------
+
+✅ 20. Uncaught Exception Crashes Entire App
+🪲 Bug: One route crashes app, taking down all users.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /app.js
+  /middlewares/
+    errorHandler.js
+🔍 Root Cause:
+
+Sync throw not caught or async error not handled.
+
+🧰 Debug Tips:
+
+Use process.on('uncaughtException') only for logging (not recovery).
+
+Set global error middleware:
+
+js
+Copy
+Edit
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).send('Something broke!');
+});
+Use domains or AsyncLocalStorage cautiously.
+
+
+
+
+---------------------------
+✅ 21. Async Race Condition in Service Layer
+🪲 Bug: Two async DB updates overwrite each other’s values.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /services/
+    orderService.js
+  /controllers/
+    orderController.js
+🔍 Root Cause:
+
+Simultaneous updateOne() calls without version checks.
+
+🧰 Debug Tips:
+
+Use findOneAndUpdate() with atomic $set.
+
+Leverage database-level optimistic locking (e.g., __v in Mongoose).
+
+Log before and after update payloads with timestamps.
+
+--------------------------------------------------
+
+✅ 22. Proxy Hides Real IP / Headers
+🪲 Bug: req.ip or req.headers['x-forwarded-for'] returns wrong IP.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /middlewares/
+    proxyFix.js
+🔍 Root Cause:
+
+Missing app.set('trust proxy', true) in Express when using nginx or reverse proxy.
+
+🧰 Debug Tips:
+
+Inspect headers using middleware.
+
+Configure reverse proxy to send X-Forwarded-* headers.
+
+Use req.ips instead of req.ip.
+
+--------------------------------------------------
+
+✅ 23. ts-node Ignores Some Files in Debug
+🪲 Bug: TypeScript files don’t reflect latest changes or aren't hit in breakpoints.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /models/
+    product.ts
+  /app.ts
+🔍 Root Cause:
+
+Wrong tsconfig.json includes or bad sourceMap setting.
+
+🧰 Debug Tips:
+
+Ensure:
+
+json
+Copy
+Edit
+"sourceMap": true,
+"include": ["src"]
+Use ts-node --files --inspect to enable live reload.
+
+Clear .tsbuildinfo if caching is involved.
+
+--------------------------------------------------
+
+✅ 24. CI/CD Pipeline Ignores .env Variables
+🪲 Bug: App fails in CI due to missing env values.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /config/
+    envLoader.js
+🔍 Root Cause:
+
+.env not committed or pipeline doesn’t load it.
+
+🧰 Debug Tips:
+
+Use .env.example for base reference.
+
+Inject secrets via GitHub Actions/Secrets, GitLab env vars, or Jenkins config.
+
+Log keys presence (Object.keys(process.env)).
+
+--------------------------------------------------
+
+✅ 25. Zombie Child Processes After Crash
+🪲 Bug: Node restarts leave behind node or ffmpeg processes.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /utils/
+    videoConverter.js
+🔍 Root Cause:
+
+No cleanup handler on child_process.spawn().
+
+🧰 Debug Tips:
+
+Add exit, SIGINT, SIGTERM handlers to cleanup:
+
+js
+Copy
+Edit
+process.on('exit', () => child.kill('SIGINT'));
+Track child.pid and log them.
+
+--------------------------------------------------
+
+✅ 26. Scaling with Cluster Causes Log Duplication
+🪲 Bug: Log entries appear multiple times.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /cluster/
+    worker.js
+  /utils/
+    logger.js
+🔍 Root Cause:
+
+All cluster workers log to same file without mutex.
+
+🧰 Debug Tips:
+
+Centralize logging in master via process.send() from workers.
+
+Use external log collector (e.g., Fluent Bit, Loki).
+
+Append worker.id in every log entry.
+
+--------------------------------------------------
+
+✅ 27. UnhandledPromiseRejection Not Caught in Unit Tests
+🪲 Bug: Test runner finishes silently on async failure.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/tests/
+  auth.test.js
+/src/
+  /auth/
+    authService.js
+🔍 Root Cause:
+
+No await on async test, or done() not called in time.
+
+🧰 Debug Tips:
+
+Always return/await promises in test blocks.
+
+Use:
+
+js
+Copy
+Edit
+await expect(fn()).rejects.toThrow();
+Set process.on('unhandledRejection') to fail CI.
+
+--------------------------------------------------
+
+✅ 28. Memory Leak with setInterval
+🪲 Bug: App memory increases over time.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /services/
+    poller.js
+🔍 Root Cause:
+
+setInterval() declared multiple times without clearInterval().
+
+🧰 Debug Tips:
+
+Use Node.js inspector + heap snapshot.
+
+Clear intervals on shutdown.
+
+Limit polling using setTimeout() recursion instead of setInterval().
+
+--------------------------------------------------
+
+✅ 29. Circular Dependency Freezes Startup
+🪲 Bug: App hangs with no error during require() boot.
+
+📁 Folder Structure:
+
+css
+Copy
+Edit
+/src
+  /services/
+    A.js
+    B.js
+🔍 Root Cause:
+
+A imports B and B imports A, leading to empty object.
+
+🧰 Debug Tips:
+
+Break shared logic into a third module.
+
+Temporarily log require.cache at boot to see circular loops.
+
+Use ESLint plugin: eslint-plugin-import/no-cycle.
+
+--------------------------------------------------
+
+✅ 30. Slow Start from Synchronous Config Load
+🪲 Bug: App startup takes long due to config read delay.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /config/
+    configLoader.js
+🔍 Root Cause:
+
+Using fs.readFileSync() for large files or secrets.
+
+🧰 Debug Tips:
+
+Replace with fs.promises.readFile() + caching.
+
+Log timestamp between load stages.
+
+Consider loading configs via .env or Vault-based async APIs.
+
+--------------------------------------------------
+✅ 31. File Upload via Multer Fails Silently
+🪲 Bug: Files are not saved, and no error is thrown.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /routes/
+    upload.js
+  /middlewares/
+    multerConfig.js
+🎯 Root Cause:
+
+Multer misconfigured or form field mismatch.
+
+dest missing or invalid field name in formData.
+
+🔍 Debug Strategy:
+
+Check field names in frontend and backend match.
+
+Log incoming fields using:
+
+js
+Copy
+Edit
+req.on('data', chunk => console.log(chunk.toString()));
+Add limits.fileSize and check for silent rejection.
+
+✅ Fix:
+
+Set field name correctly in upload.single('avatar').
+
+Use:
+
+js
+Copy
+Edit
+const upload = multer({ dest: 'uploads/' });
+--------------------------------------------------
+
+✅ 32. TLS/HTTPS Certificate Chain Error
+🪲 Bug: HTTPS server fails with UNABLE_TO_VERIFY_LEAF_SIGNATURE.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /server/
+    httpsServer.js
+  /certs/
+    cert.pem
+    key.pem
+🎯 Root Cause:
+
+Missing intermediate cert in PEM chain.
+
+🔍 Debug Strategy:
+
+Use OpenSSL to inspect:
+
+bash
+Copy
+Edit
+openssl s_client -connect localhost:443
+Compare output with chain files.
+
+✅ Fix:
+
+Concatenate intermediate and root certs:
+
+js
+Copy
+Edit
+cert: fs.readFileSync('fullchain.pem')
+--------------------------------------------------
+
+✅ 33. Large File Stream Ends Prematurely
+🪲 Bug: .pipe() ends early, only partial file written.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /utils/
+    streamFile.js
+🎯 Root Cause:
+
+Source stream emits error or close before end.
+
+🔍 Debug Strategy:
+
+Add .on('error'), .on('close') handlers on both source and dest.
+
+Monitor memory and CPU usage.
+
+✅ Fix:
+
+Use pipeline from stream/promises (Node 14+):
+
+js
+Copy
+Edit
+await pipeline(readStream, writeStream);
+--------------------------------------------------
+
+✅ 34. EventEmitter Memory Leak Warning
+🪲 Bug: Warning: "Possible EventEmitter memory leak detected..."
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /events/
+    socketManager.js
+🎯 Root Cause:
+
+More than 10 listeners attached to same event.
+
+🔍 Debug Strategy:
+
+Check .on() calls — do they stack without .off()?
+
+Use:
+
+js
+Copy
+Edit
+console.log(emitter.listenerCount('event'));
+✅ Fix:
+
+Call .removeListener() or .off() in cleanup.
+
+Increase limit temporarily:
+
+js
+Copy
+Edit
+emitter.setMaxListeners(50);
+--------------------------------------------------
+
+✅ 35. HTTPS Server Fails on Heroku/Elastic Beanstalk
+🪲 Bug: Works locally, fails in cloud. Error: address already in use or TLS mismatch.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /server/
+    index.js
+🎯 Root Cause:
+
+Cloud providers terminate TLS at load balancer.
+
+🔍 Debug Strategy:
+
+Log headers to detect proxy:
+
+js
+Copy
+Edit
+console.log(req.headers['x-forwarded-proto']);
+✅ Fix:
+
+Use HTTP server with redirection:
+
+js
+Copy
+Edit
+if (req.headers['x-forwarded-proto'] !== 'https') {
+  return res.redirect('https://' + req.headers.host + req.url);
+}
+--------------------------------------------------
+
+✅ 36. Buffer Overflows or Corrupted Payloads
+🪲 Bug: Corrupted payloads when reading TCP stream or files.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /utils/
+    bufferParser.js
+🎯 Root Cause:
+
+Buffer slicing wrong length or encoding mismatch.
+
+🔍 Debug Strategy:
+
+Log buffer size and use:
+
+js
+Copy
+Edit
+console.log(buffer.toString('hex'));
+Use Buffer.concat() instead of naive chunk merging.
+
+✅ Fix:
+
+Use Buffer.allocSafe(), avoid new Buffer().
+
+Validate buffer lengths before read.
+
+--------------------------------------------------
+
+✅ 37. Socket.IO Clients Disconnect Randomly
+🪲 Bug: WebSockets drop intermittently.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /realtime/
+    socket.js
+🎯 Root Cause:
+
+Network timeout, CORS, or heartbeat config mismatch.
+
+🔍 Debug Strategy:
+
+Listen to:
+
+js
+Copy
+Edit
+socket.on('disconnect', reason => console.log(reason));
+Capture on client too: socket.io-client.
+
+✅ Fix:
+
+Configure heartbeat and ping:
+
+js
+Copy
+Edit
+pingInterval: 10000, pingTimeout: 5000
+Ensure correct CORS:
+
+js
+Copy
+Edit
+cors: {
+  origin: '*',
+  methods: ['GET', 'POST']
+}
+--------------------------------------------------
+
+✅ 38. TCP Socket Server Doesn’t Close on SIGINT
+🪲 Bug: Ctrl+C doesn’t stop app; socket keeps accepting connections.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /network/
+    tcpServer.js
+🎯 Root Cause:
+
+server.close() not called.
+
+🔍 Debug Strategy:
+
+Handle process.on('SIGINT') and log cleanup steps.
+
+✅ Fix:
+
+Add:
+
+js
+Copy
+Edit
+process.on('SIGINT', () => {
+  server.close(() => process.exit(0));
+});
+--------------------------------------------------
+
+✅ 39. process.env.NODE_ENV is undefined
+🪲 Bug: Config behaves inconsistently — dev settings leak in production.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /config/
+    index.js
+🎯 Root Cause:
+
+Not set in start script or CI/CD runner.
+
+🔍 Debug Strategy:
+
+Log:
+
+js
+Copy
+Edit
+console.log('ENV:', process.env.NODE_ENV);
+Inspect deploy config or .env file.
+
+✅ Fix:
+
+Set in npm scripts:
+
+json
+Copy
+Edit
+"start": "NODE_ENV=production node src/app.js"
+--------------------------------------------------
+
+✅ 40. res.send() Throws "Headers Already Sent"
+🪲 Bug: API errors with: Error: Can't set headers after they are sent.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /middlewares/
+    errorHandler.js
+🎯 Root Cause:
+
+Calling res.send() or res.json() multiple times.
+
+🔍 Debug Strategy:
+
+Add logging before every response line.
+
+Set res.headersSent guard:
+
+js
+Copy
+Edit
+if (!res.headersSent) res.send();
+✅ Fix:
+
+Ensure only one response path.
+
+Place return before all res.send()/res.end().
+
+-------------------------------------------------------
+✅ 41. PM2 Restart Loop With No Error Output
+🪲 Bug: PM2 restarts the Node process endlessly with no visible logs.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/ecosystem.config.js
+/src
+  /app.js
+🎯 Root Cause:
+
+Uncaught exception or rejection causing silent exits.
+
+Logs not flushed due to sync log write after crash.
+
+🔍 Debug Strategy:
+
+Enable PM2 logs:
+
+bash
+Copy
+Edit
+pm2 logs
+Add:
+
+js
+Copy
+Edit
+process.on('uncaughtException', err => console.error(err));
+process.on('unhandledRejection', err => console.error(err));
+✅ Fix:
+
+Wrap entrypoint in try-catch or add global handlers.
+
+Use:
+
+bash
+Copy
+Edit
+pm2 start ecosystem.config.js --no-daemon
+--------------------------------------------------
+
+✅ 42. Load Balancer Sends Requests to Dead Node
+🪲 Bug: Requests fail intermittently.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /server/
+    httpServer.js
+🎯 Root Cause:
+
+Node instance crashed but health check endpoint still passes (e.g. GET /healthz returns 200 even when app logic is dead).
+
+🔍 Debug Strategy:
+
+Monitor active threads, async state, and app-level check (e.g., DB connectivity).
+
+✅ Fix:
+
+Make /healthz do real checks (e.g., DB ping, cache ping).
+
+Use:
+
+js
+Copy
+Edit
+res.status(db.connected ? 200 : 500)
+--------------------------------------------------
+
+✅ 43. AWS Lambda Timeout But Code Runs Successfully
+🪲 Bug: Lambda completes work, but AWS times out.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /handlers/
+    processOrder.js
+🎯 Root Cause:
+
+Function ends but callback never triggered (async + callback used together).
+
+Open handles (DB connections) prevent exit.
+
+🔍 Debug Strategy:
+
+Use context.getRemainingTimeInMillis().
+
+Set context.callbackWaitsForEmptyEventLoop = false.
+
+✅ Fix:
+
+Use only async/await or callback — not both.
+
+Close any long-lived resources.
+
+--------------------------------------------------
+
+✅ 44. Native Module Crashes Node Without Logs
+🪲 Bug: App exits abruptly when using .node or .so native modules.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /native/
+    addon.node
+🎯 Root Cause:
+
+Segfault inside native code (C++/Rust module).
+
+🔍 Debug Strategy:
+
+Use:
+
+bash
+Copy
+Edit
+node --abort-on-uncaught-exception app.js
+Enable core dumps.
+
+✅ Fix:
+
+Rebuild with debugging symbols.
+
+Check module versions compatible with Node ABI.
+
+--------------------------------------------------
+
+✅ 45. Backpressure Not Handled in Stream Chain
+🪲 Bug: Stream slows down or crashes on large files.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /utils/
+    fileStreamer.js
+🎯 Root Cause:
+
+Write stream doesn’t respect .write() backpressure signals.
+
+🔍 Debug Strategy:
+
+Monitor write() return value.
+
+Pause/resume read stream manually if needed.
+
+✅ Fix:
+
+Use pipeline() API from stream/promises (Node 14+).
+
+Always handle .on('drain').
+
+--------------------------------------------------
+
+✅ 46. Heap Out of Memory During Load Test
+🪲 Bug: FATAL ERROR: Reached heap limit Allocation failed
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /services/
+    dataParser.js
+🎯 Root Cause:
+
+Large JSON objects in memory, circular references, or leaks.
+
+🔍 Debug Strategy:
+
+Use:
+
+bash
+Copy
+Edit
+node --inspect-brk
+Then load Chrome DevTools → Memory Tab → Heap snapshot.
+
+✅ Fix:
+
+Process data in batches, avoid .toString() on huge buffers.
+
+Use stream parsers like JSONStream.
+
+--------------------------------------------------
+
+✅ 47. res.end() Without Headers Set Crashes API
+🪲 Bug: Calling res.end() before res.writeHead() causes crash or empty response.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /api/
+    rawHttpHandler.js
+🎯 Root Cause:
+
+In raw HTTP APIs (http.createServer()), headers aren’t auto-set.
+
+🔍 Debug Strategy:
+
+Add guards:
+
+js
+Copy
+Edit
+if (!res.headersSent) res.writeHead(200, { ... });
+✅ Fix:
+
+Always call res.writeHead() explicitly before res.end().
+
+--------------------------------------------------
+
+✅ 48. Worker Threads Hang on parentPort Message Miss
+🪲 Bug: Worker thread starts but does not respond.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /workers/
+    cruncher.js
+🎯 Root Cause:
+
+parentPort.on('message') never fires due to channel misconfig.
+
+🔍 Debug Strategy:
+
+Check if message was actually sent from main thread.
+
+Log inside on('message') and outside.
+
+✅ Fix:
+
+Use isMainThread to confirm role.
+
+Always send JSON-safe values.
+
+--------------------------------------------------
+
+✅ 49. Express API Slow on First Hit, Fast Later
+🪲 Bug: Cold start latency on specific endpoint.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /routes/
+    pdfRoute.js
+  /utils/
+    heavyLib.js
+🎯 Root Cause:
+
+Lazy load of heavy native dependency (e.g., pdfkit, sharp) at runtime.
+
+🔍 Debug Strategy:
+
+Use:
+
+js
+Copy
+Edit
+console.time('load')
+require('sharp');
+console.timeEnd('load')
+✅ Fix:
+
+Warm up during server start.
+
+Use async import() for conditional load if needed.
+
+--------------------------------------------------
+
+✅ 50. Cluster Forks Freeze Under CPU Load
+🪲 Bug: Requests time out when under CPU-intensive tasks.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /cluster/
+    master.js
+    worker.js
+🎯 Root Cause:
+
+Heavy computation blocks event loop — even in one worker, all users impacted.
+
+🔍 Debug Strategy:
+
+Monitor event loop delay:
+
+js
+Copy
+Edit
+const { monitorEventLoopDelay } = require('perf_hooks');
+✅ Fix:
+
+Offload to Worker Threads or external job queue (like Bull, Redis, or child_process.fork()).
+
+--------------------------------------------------
+✅ 51. Redis Connection Doesn’t Reconnect After Drop
+🪲 Bug: Redis disconnects during a network blip and never reconnects.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /services/
+    redisClient.js
+🎯 Root Cause:
+
+Default Redis client (ioredis or redis) not configured to retry.
+
+🔍 Debug Strategy:
+
+Listen for:
+
+js
+Copy
+Edit
+client.on('error', console.error);
+client.on('reconnecting', () => console.log('Retrying...'));
+✅ Fix:
+
+Use retry_strategy or autoResubscribe in ioredis.
+
+--------------------------------------------------
+
+✅ 52. Bull Queue Jobs Stuck in "active" State
+🪲 Bug: Jobs appear to run but never complete or fail.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /queues/
+    processor.js
+    worker.js
+🎯 Root Cause:
+
+Job handler crashes or never calls done()/resolves promise.
+
+🔍 Debug Strategy:
+
+Enable job-level logs:
+
+js
+Copy
+Edit
+job.log('Job received...');
+Listen to:
+
+js
+Copy
+Edit
+queue.on('failed', handler);
+✅ Fix:
+
+Wrap processing logic in try/catch.
+
+Ensure return in async handlers:
+
+js
+Copy
+Edit
+queue.process(async job => {
+  await doWork();
+  return;
+});
+--------------------------------------------------
+
+✅ 53. Promise.all() Exits Early When One Promise Fails
+🪲 Bug: Multiple operations, but one rejection aborts all.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /services/
+    batchRunner.js
+🎯 Root Cause:
+
+Promise.all() fails fast on first rejection.
+
+🔍 Debug Strategy:
+
+Use Promise.allSettled() instead for fault-tolerant execution.
+
+✅ Fix:
+
+Replace:
+
+js
+Copy
+Edit
+await Promise.all(promises)
+with:
+
+js
+Copy
+Edit
+const results = await Promise.allSettled(promises);
+results.forEach(r => {
+  if (r.status === 'rejected') console.error(r.reason);
+});
+--------------------------------------------------
+
+✅ 54. RabbitMQ Consumer Memory Leak
+🪲 Bug: Memory usage spikes over time.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /messaging/
+    consumer.js
+🎯 Root Cause:
+
+Message handler leaks state or connections.
+
+Ack not sent → unacked messages pile up.
+
+🔍 Debug Strategy:
+
+Use:
+
+js
+Copy
+Edit
+rabbitChannel.on('error', err => console.error(err));
+Monitor message queue depth with rabbitmqctl.
+
+✅ Fix:
+
+Always send ack() or nack() properly.
+
+Auto-nack on failure with:
+
+js
+Copy
+Edit
+try {
+  // do work
+  ch.ack(msg);
+} catch (e) {
+  ch.nack(msg, false, false);
+}
+--------------------------------------------------
+
+✅ 55. Kafka Consumer Skips Messages
+🪲 Bug: Some messages are missed or never processed.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /brokers/
+    kafkaConsumer.js
+🎯 Root Cause:
+
+Auto offset commits before message processing finishes.
+
+🔍 Debug Strategy:
+
+Log offset commit status.
+
+Use autoCommit: false for control.
+
+✅ Fix:
+
+Use:
+
+js
+Copy
+Edit
+await consumer.run({
+  eachMessage: async ({ topic, partition, message }) => {
+    await process(message);
+    await consumer.commitOffsets([{ topic, partition, offset }]);
+  },
+});
+--------------------------------------------------
+
+✅ 56. Cluster Worker Dies Without Triggering Master Restart
+🪲 Bug: Forked process dies, app continues in degraded state.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /cluster/
+    master.js
+    worker.js
+🎯 Root Cause:
+
+Master doesn’t respawn worker.
+
+🔍 Debug Strategy:
+
+Listen to:
+
+js
+Copy
+Edit
+cluster.on('exit', (worker, code) => console.log(`Worker ${worker.id} exited`));
+✅ Fix:
+
+Add:
+
+js
+Copy
+Edit
+cluster.on('exit', (worker) => {
+  console.log('Respawning worker...');
+  cluster.fork();
+});
+--------------------------------------------------
+
+✅ 57. API Works Locally, Fails in Docker with ENOTFOUND
+🪲 Bug: DNS resolution failure when making requests from inside container.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /api/
+    requestService.js
+/Dockerfile
+🎯 Root Cause:
+
+Internal DNS (e.g., host.docker.internal) doesn’t work on Linux.
+
+🔍 Debug Strategy:
+
+Check if DNS is resolvable inside container:
+
+bash
+Copy
+Edit
+docker exec -it container bash
+nslookup host.docker.internal
+✅ Fix:
+
+Use network aliases or container name (Docker Compose):
+
+yaml
+Copy
+Edit
+services:
+  app:
+  backend:
+    container_name: backend
+--------------------------------------------------
+
+✅ 58. Distributed Transaction Fails Midway
+🪲 Bug: Two DB writes, one succeeds, other fails → data inconsistency.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /services/
+    paymentService.js
+    orderService.js
+🎯 Root Cause:
+
+No rollback logic between steps.
+
+🔍 Debug Strategy:
+
+Use transaction IDs, or two-phase commit simulation.
+
+✅ Fix:
+
+Use sagas or event-driven compensation pattern.
+
+In SQL: use transactions.
+
+In microservices: persist rollback events if failure detected.
+
+--------------------------------------------------
+
+✅ 59. async Middleware in Express Doesn’t Catch Errors
+🪲 Bug: Unhandled promise rejection; Express doesn't call error handler.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/src
+  /middlewares/
+    asyncWrapper.js
+🎯 Root Cause:
+
+Express doesn’t catch async errors unless next() is called.
+
+🔍 Debug Strategy:
+
+Wrap middleware:
+
+js
+Copy
+Edit
+const wrap = fn => (req, res, next) => fn(req, res, next).catch(next);
+✅ Fix:
+
+Use wrapper on all async routes:
+
+js
+Copy
+Edit
+router.get('/users', wrap(async (req, res) => {
+  const users = await getUsers();
+  res.json(users);
+}));
+--------------------------------------------------
+
+✅ 60. Docker Container Memory Usage Unbounded
+🪲 Bug: Node uses all memory until it crashes.
+
+📁 Folder Structure:
+
+bash
+Copy
+Edit
+/Dockerfile
+/src
+  /server.js
+🎯 Root Cause:
+
+Node sees host memory, not container memory.
+
+🔍 Debug Strategy:
+
+Log memory limits:
+
+js
+Copy
+Edit
+console.log(process.memoryUsage());
+✅ Fix:
+
+Add memory cap in Docker:
+
+bash
+Copy
+Edit
+docker run --memory=512m myapp
+Set:
+
+json
+Copy
+Edit
+"start": "node --max-old-space-size=256 server.js"

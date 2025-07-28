@@ -26,6 +26,7 @@ const WebElevateLayout: React.FC<WebElevateLayoutProps> = ({ children }) => {
 
   const navigation = [
     { name: 'Dashboard', href: '/web-elevate/dashboard', icon: Home },
+    { name: 'React Learning', href: '/web-elevate/learning', icon: BookOpen, featured: true },
     { name: 'Learning Paths', href: '/web-elevate/paths', icon: BookOpen },
     { name: 'Debug Challenges', href: '/web-elevate/debug-projects', icon: Zap },
     { name: 'Blueprints', href: '/web-elevate/blueprints', icon: Target },
@@ -74,14 +75,19 @@ const WebElevateLayout: React.FC<WebElevateLayoutProps> = ({ children }) => {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 ${
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 relative ${
                     isActive(item.href)
                       ? 'bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700 shadow-sm'
+                      : item.featured
+                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg hover:shadow-xl'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
                   <item.icon className="w-4 h-4" />
                   <span>{item.name}</span>
+                  {item.featured && (
+                    <span className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
+                  )}
                 </Link>
               ))}
             </nav>
