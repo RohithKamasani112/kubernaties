@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { allBlueprints } from '../data/blueprintData';
+import { Blueprint as BlueprintData } from '../data/blueprintTypes';
 import { all43ReactTopicsIndex, topicStats } from '../data/reactTopicsIndex43';
 import { debugPlatformStats } from '../data/debugPlatformComplete';
 import { reactDebugChallenges } from '../data/reactDebugChallenges';
@@ -229,28 +231,11 @@ export interface PlaygroundSession {
   lastSaved: Date;
 }
 
-export interface Blueprint {
-  id: string;
-  title: string;
-  description: string;
-  scenario: string;
-  category: 'frontend' | 'backend' | 'fullstack' | 'mobile';
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  estimatedTime: string;
-  prerequisites: string[];
-  userStories: string[];
-  technicalRequirements: string[];
-  concepts: string[];
-  isUnlocked: boolean;
-  isStarted: boolean;
-  isCompleted: boolean;
-  progress: number;
-  technologies: string[];
-  deliverables: string[];
-  architectureComponents: ArchitectureComponent[];
-  initialFiles: FileStructure;
-  tests: Test[];
-  solution?: FileStructure;
+export interface Blueprint extends BlueprintData {
+  isUnlocked?: boolean;
+  isStarted?: boolean;
+  isCompleted?: boolean;
+  progress?: number;
 }
 
 export interface ArchitectureComponent {
@@ -380,13 +365,17 @@ export const useWebElevateStore = create<WebElevateStore>()(
       initializeApp: () => {
         // Initialize with mock data
         const mockPaths = createMockLearningPaths();
-        const mockBlueprints = createMockBlueprints();
         const mockSkills = createMockSkillsGraph();
 
         set({
           isInitialized: true,
           learningPaths: mockPaths,
-          blueprints: mockBlueprints,
+          blueprints: allBlueprints.map(blueprint => ({
+            ...blueprint,
+            isStarted: false,
+            isCompleted: false,
+            progress: 0
+          })),
           userProgress: {
             ...get().userProgress,
             skillsGraph: mockSkills,
@@ -2149,8 +2138,8 @@ function createFullstackModules(): Module[] {
   ];
 }
 
-// Mock Blueprints Data
-function createMockBlueprints(): Blueprint[] {
+// Mock Blueprints Data (DEPRECATED - using real blueprint data)
+function createMockBlueprints(): any[] {
   return [
     {
       id: 'kanban-board',

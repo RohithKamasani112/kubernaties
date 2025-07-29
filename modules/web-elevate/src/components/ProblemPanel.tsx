@@ -1,11 +1,11 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  FileText, 
-  CheckCircle, 
-  XCircle, 
-  Lightbulb, 
-  Lock, 
+import {
+  FileText,
+  CheckCircle,
+  XCircle,
+  Lightbulb,
+  Lock,
   Unlock,
   AlertCircle,
   Clock,
@@ -14,7 +14,8 @@ import {
   Zap,
   Eye,
   Copy,
-  ExternalLink
+  ExternalLink,
+  File
 } from 'lucide-react';
 import { DebugChallenge } from '../data/debugPlatformComplete';
 
@@ -380,7 +381,7 @@ const ProblemPanel: React.FC<ProblemPanelProps> = ({
   );
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col bg-white">
       {/* Tab Navigation */}
       <div className="border-b border-gray-200 bg-white">
         <nav className="flex space-x-1 p-2">
@@ -388,7 +389,7 @@ const ProblemPanel: React.FC<ProblemPanelProps> = ({
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
             const isLocked = tab.id === 'solution' && !solutionUnlocked;
-            
+
             return (
               <button
                 key={tab.id}

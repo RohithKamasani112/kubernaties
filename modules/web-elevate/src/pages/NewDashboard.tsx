@@ -192,6 +192,41 @@ const NewDashboard: React.FC = () => {
         </Link>
       </motion.div>
 
+      {/* Blueprint Feature Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.15 }}
+        className="mb-4"
+      >
+        <Link
+          to="/blueprint-builder"
+          className="block bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-4 text-white hover:shadow-lg transition-all duration-200 group"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                <Target className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold mb-1">
+                  🚀 New: Project Blueprints
+                </h3>
+                <p className="text-indigo-100 text-sm">
+                  Build real-world projects with guided milestones and AI assistance
+                </p>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="bg-white/20 px-3 py-1 rounded-full text-sm font-medium mb-1">
+                24 Projects
+              </div>
+              <ChevronRight className="w-5 h-5 text-white/80 group-hover:text-white transition-colors ml-auto" />
+            </div>
+          </div>
+        </Link>
+      </motion.div>
+
       {/* Compact Stats */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

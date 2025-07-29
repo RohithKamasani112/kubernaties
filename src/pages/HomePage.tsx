@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { Link, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { easingCurves, durations, animationVariants, transitions } from '../utils/animationConfig';
 import {
@@ -30,13 +30,15 @@ import {
   TrendingUp,
   Rocket,
   Settings,
-  Sparkles
+  Sparkles,
+  X
 } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 
 
 
 const HomePage: React.FC = () => {
+  const navigate = useNavigate();
   const [heroRef, heroInView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [pathsRef, pathsInView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [whyRef, whyInView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -53,6 +55,82 @@ const HomePage: React.FC = () => {
 
   const typingSequence = ['Real labs.', 'Real projects.', 'Real tasks.'];
   const [currentIndex, setCurrentIndex] = React.useState(0);
+
+  // Technology carousel state
+  const [currentTechIndex, setCurrentTechIndex] = React.useState(0);
+
+  // Feedback modal state
+  const [showFeedbackModal, setShowFeedbackModal] = React.useState(false);
+  const [feedbackData, setFeedbackData] = React.useState({
+    name: '',
+    email: '',
+    interest: '',
+    experience: '',
+    message: ''
+  });
+
+  const technologies = [
+    {
+      id: 'web-dev',
+      name: 'Web Development',
+      icon: '⚛',
+      color: 'bg-blue-500',
+      title: 'React & Next.js Studio',
+      subtitle: 'Component Builder',
+      type: 'ui',
+      progress: 85,
+      status: 'Component Built',
+      users: '12.3K'
+    },
+    {
+      id: 'cloud',
+      name: 'Cloud Architecture',
+      icon: '☁',
+      color: 'bg-cyan-500',
+      title: 'AWS Cloud Console',
+      subtitle: 'Infrastructure Dashboard',
+      type: 'dashboard',
+      progress: 72,
+      status: 'Stack Deployed',
+      users: '8.7K'
+    },
+    {
+      id: 'ai-ml',
+      name: 'AI/ML',
+      icon: '🤖',
+      color: 'bg-purple-500',
+      title: 'ML Model Trainer',
+      subtitle: 'Neural Network Builder',
+      type: 'chart',
+      progress: 90,
+      status: 'Model Trained',
+      users: '6.2K'
+    },
+    {
+      id: 'devops',
+      name: 'DevOps',
+      icon: '⚙',
+      color: 'bg-orange-500',
+      title: 'CI/CD Pipeline',
+      subtitle: 'Deployment Monitor',
+      type: 'pipeline',
+      progress: 78,
+      status: 'Pipeline Active',
+      users: '9.1K'
+    },
+    {
+      id: 'data',
+      name: 'Data Engineering',
+      icon: '📊',
+      color: 'bg-green-500',
+      title: 'Data Analytics Hub',
+      subtitle: 'Real-time Dashboard',
+      type: 'analytics',
+      progress: 65,
+      status: 'Data Processed',
+      users: '4.8K'
+    }
+  ];
 
   React.useEffect(() => {
     if (heroInView) {
@@ -111,6 +189,15 @@ const HomePage: React.FC = () => {
     }
   }, [showSecondLine, currentIndex]);
 
+  // Technology carousel effect
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTechIndex((prev) => (prev + 1) % technologies.length);
+    }, 3000); // Change every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [technologies.length]);
+
   // Custom icon component for course cards
   const CourseIcon = ({ iconType, className }: { iconType: string; className: string }) => {
     const iconMap = {
@@ -127,6 +214,145 @@ const HomePage: React.FC = () => {
     // Fallback to Lucide icons
     const LucideIcon = iconType === 'kubernetes' ? Container : iconType === 'web-elevate' ? Zap : Cloud;
     return <LucideIcon className={className} />;
+  };
+
+  // Technology UI mockup renderer
+  const renderTechUI = (tech: typeof technologies[0]) => {
+    switch (tech.type) {
+      case 'ui':
+        return (
+          <div className="bg-gray-50 rounded-lg p-3 space-y-2">
+            <div className="flex items-center justify-between bg-white rounded p-2 shadow-sm">
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-blue-500 rounded"></div>
+                <span className="text-xs font-medium">Header.jsx</span>
+              </div>
+              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+            </div>
+            <div className="bg-white rounded p-2 shadow-sm">
+              <div className="flex space-x-1 mb-2">
+                <div className="w-8 h-2 bg-blue-200 rounded"></div>
+                <div className="w-12 h-2 bg-gray-200 rounded"></div>
+                <div className="w-6 h-2 bg-purple-200 rounded"></div>
+              </div>
+              <div className="w-full h-8 bg-gradient-to-r from-blue-100 to-purple-100 rounded"></div>
+            </div>
+          </div>
+        );
+
+      case 'dashboard':
+        return (
+          <div className="bg-gray-50 rounded-lg p-3 space-y-2">
+            <div className="grid grid-cols-3 gap-2">
+              <div className="bg-white rounded p-2 text-center">
+                <div className="w-full h-2 bg-cyan-200 rounded mb-1"></div>
+                <div className="text-xs text-gray-600">EC2</div>
+              </div>
+              <div className="bg-white rounded p-2 text-center">
+                <div className="w-full h-2 bg-green-200 rounded mb-1"></div>
+                <div className="text-xs text-gray-600">S3</div>
+              </div>
+              <div className="bg-white rounded p-2 text-center">
+                <div className="w-full h-2 bg-orange-200 rounded mb-1"></div>
+                <div className="text-xs text-gray-600">RDS</div>
+              </div>
+            </div>
+            <div className="bg-white rounded p-2">
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-xs text-gray-600">Network</span>
+                <span className="text-xs text-green-600">●</span>
+              </div>
+              <div className="w-full h-1 bg-gray-200 rounded">
+                <div className="w-3/4 h-1 bg-cyan-400 rounded"></div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'chart':
+        return (
+          <div className="bg-gray-50 rounded-lg p-3">
+            <div className="bg-white rounded p-2 mb-2">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-xs text-gray-600">Training Progress</span>
+                <span className="text-xs text-purple-600">Epoch 8/10</span>
+              </div>
+              <div className="flex items-end space-x-1 h-8">
+                {[0.2, 0.4, 0.6, 0.8, 0.9, 0.95, 0.97, 0.98].map((height, i) => (
+                  <div
+                    key={i}
+                    className="bg-purple-400 rounded-t flex-1"
+                    style={{ height: `${height * 100}%` }}
+                  ></div>
+                ))}
+              </div>
+            </div>
+            <div className="bg-white rounded p-2">
+              <div className="text-xs text-gray-600 mb-1">Accuracy: 98.2%</div>
+              <div className="w-full h-1 bg-gray-200 rounded">
+                <div className="w-full h-1 bg-purple-400 rounded"></div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'pipeline':
+        return (
+          <div className="bg-gray-50 rounded-lg p-3">
+            <div className="flex items-center space-x-2 mb-2">
+              {['Build', 'Test', 'Deploy'].map((stage, i) => (
+                <div key={stage} className="flex items-center space-x-1">
+                  <div className={`w-3 h-3 rounded-full ${i < 2 ? 'bg-green-400' : 'bg-orange-400'}`}></div>
+                  <span className="text-xs text-gray-600">{stage}</span>
+                  {i < 2 && <div className="w-2 h-0.5 bg-gray-300"></div>}
+                </div>
+              ))}
+            </div>
+            <div className="bg-white rounded p-2">
+              <div className="flex justify-between items-center">
+                <span className="text-xs text-gray-600">main branch</span>
+                <span className="text-xs text-green-600">✓ Deployed</span>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'analytics':
+        return (
+          <div className="bg-gray-50 rounded-lg p-3 space-y-2">
+            <div className="grid grid-cols-2 gap-2">
+              <div className="bg-white rounded p-2">
+                <div className="text-xs text-gray-600 mb-1">Users</div>
+                <div className="text-sm font-bold text-green-600">24.5K</div>
+              </div>
+              <div className="bg-white rounded p-2">
+                <div className="text-xs text-gray-600 mb-1">Revenue</div>
+                <div className="text-sm font-bold text-blue-600">$12.3K</div>
+              </div>
+            </div>
+            <div className="bg-white rounded p-2">
+              <div className="flex items-end space-x-1 h-6">
+                {[0.3, 0.7, 0.5, 0.9, 0.6, 0.8, 1.0].map((height, i) => (
+                  <div
+                    key={i}
+                    className="bg-green-400 rounded-t flex-1"
+                    style={{ height: `${height * 100}%` }}
+                  ></div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+
+      default:
+        return (
+          <div className="bg-gray-900 rounded-lg p-3 font-mono text-xs">
+            <div className="text-green-400 mb-1">$ npm start</div>
+            <div className="text-blue-400 mb-1">Server running ✓</div>
+            <div className="text-green-400 animate-pulse">$ _</div>
+          </div>
+        );
+    }
   };
 
   const learningPaths = [
@@ -274,7 +500,7 @@ const HomePage: React.FC = () => {
     <>
       <Helmet>
         <title>Samwi Learn - Master Real Technologies with Hands-On Learning</title>
-        <meta name="description" content="Samwi Learn is a minimal, community-driven platform to help you learn by building. Master Kubernetes, Cloud Architecture, and more." />
+        <meta name="description" content="Samwi Learn is a minimal, community-driven platform to help you learn by building. Master Web Development, Cloud Architecture, AI/ML, DevOps, and more." />
       </Helmet>
 
       {/* Hero Section */}
@@ -377,7 +603,7 @@ const HomePage: React.FC = () => {
                     animate={showFirstLine ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.6, ease: "easeOut" }}
                   >
-                    Master Kubernetes, DevOps, and Cloud — not by reading or watching,
+                    Master Web Development, Cloud, AI/ML, and DevOps — not by reading or watching,
                   </motion.div>
                   <motion.div
                     className="block min-h-[2.5rem] sm:min-h-[3rem] lg:min-h-[3.5rem] py-1"
@@ -423,15 +649,15 @@ const HomePage: React.FC = () => {
                   }}
                   className="group"
                 >
-                  <Link
-                    to="/courses"
+                  <button
+                    onClick={() => navigate('/courses')}
                     className="inline-flex items-center justify-center space-x-2 sm:space-x-3 bg-gradient-to-r from-[#6C63FF] to-[#8B7CF6] hover:from-[#5848E2] hover:to-[#7C3AED] text-white px-6 sm:px-8 py-4 sm:py-4 rounded-2xl font-semibold text-base sm:text-lg transition-all duration-300 shadow-lg hover:shadow-2xl w-full sm:w-auto relative overflow-hidden min-h-[48px] touch-manipulation"
                     style={{ fontFamily: 'Inter, "Segoe UI", Roboto, sans-serif' }}
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                     <Play className="w-4 h-4 sm:w-5 sm:h-5 relative z-10" />
                     <span className="relative z-10">Start Learning Free</span>
-                  </Link>
+                  </button>
                 </motion.div>
 
                 <motion.div
@@ -453,15 +679,15 @@ const HomePage: React.FC = () => {
                   }}
                   className="group"
                 >
-                  <Link
-                    to="/kubernetes/debugging"
-                    className="inline-flex items-center justify-center space-x-2 sm:space-x-3 bg-white border-2 border-[#6C63FF] text-[#6C63FF] hover:bg-[#6C63FF] hover:text-white px-6 sm:px-8 py-4 sm:py-4 rounded-2xl font-semibold text-base sm:text-lg transition-all duration-300 shadow-md hover:shadow-xl w-full sm:w-auto relative overflow-hidden min-h-[48px] touch-manipulation"
+                  <button
+                    onClick={() => navigate('/join')}
+                    className="inline-flex items-center justify-center space-x-2 sm:space-x-3 bg-white border-2 border-[#6C63FF] text-[#6C63FF] hover:bg-[#6C63FF] hover:text-white px-6 sm:px-8 py-4 sm:py-4 rounded-2xl font-semibold text-base sm:text-lg transition-all duration-300 shadow-md hover:shadow-xl w-full sm:w-auto relative overflow-hidden min-h-[48px] touch-manipulation group"
                     style={{ fontFamily: 'Inter, "Segoe UI", Roboto, sans-serif' }}
                   >
                     <div className="absolute inset-0 bg-[#6C63FF] -translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                    <Code className="w-4 h-4 sm:w-5 sm:h-5 relative z-10 transition-transform group-hover:rotate-12 duration-300" />
-                    <span className="relative z-10">Preview a Lab</span>
-                  </Link>
+                    <Mail className="w-4 h-4 sm:w-5 sm:h-5 relative z-10 transition-transform group-hover:rotate-12 duration-300" />
+                    <span className="relative z-10">Give Feedback</span>
+                  </button>
                 </motion.div>
               </motion.div>
 
@@ -503,19 +729,42 @@ const HomePage: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="lg:col-span-5 relative mt-6 sm:mt-8 lg:mt-0 px-2 sm:px-0"
             >
-              {/* Dashboard Mockup */}
+              {/* Technology Carousel */}
               <div className="relative bg-white rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-2xl p-3 sm:p-4 lg:p-6 border border-gray-100 max-w-sm sm:max-w-lg mx-auto lg:max-w-none">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-3 sm:mb-4 lg:mb-6">
                   <div className="flex items-center space-x-2 sm:space-x-3">
-                    <div className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 bg-[#6C63FF] rounded-lg flex items-center justify-center">
-                      <span className="text-white font-bold text-xs sm:text-xs lg:text-sm">K</span>
-                    </div>
+                    <motion.div
+                      key={currentTechIndex}
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                      className={`w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 ${technologies[currentTechIndex].color} rounded-lg flex items-center justify-center`}
+                    >
+                      <span className="text-white font-bold text-xs sm:text-xs lg:text-sm">
+                        {technologies[currentTechIndex].icon}
+                      </span>
+                    </motion.div>
                     <div>
-                      <h3 className="font-semibold text-gray-900 text-xs sm:text-sm lg:text-base" style={{ fontFamily: 'Inter, "Segoe UI", Roboto, sans-serif' }}>
-                        Kubernetes Lab
-                      </h3>
-                      <p className="text-xs text-gray-500 hidden sm:block">Interactive Terminal</p>
+                      <motion.h3
+                        key={`title-${currentTechIndex}`}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: 0.1 }}
+                        className="font-semibold text-gray-900 text-xs sm:text-sm lg:text-base"
+                        style={{ fontFamily: 'Inter, "Segoe UI", Roboto, sans-serif' }}
+                      >
+                        {technologies[currentTechIndex].title}
+                      </motion.h3>
+                      <motion.p
+                        key={`subtitle-${currentTechIndex}`}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: 0.2 }}
+                        className="text-xs text-gray-500 hidden sm:block"
+                      >
+                        {technologies[currentTechIndex].subtitle}
+                      </motion.p>
                     </div>
                   </div>
                   <div className="flex space-x-1 sm:space-x-2">
@@ -525,17 +774,16 @@ const HomePage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Terminal Content */}
-                <div className="bg-gray-900 rounded-lg sm:rounded-xl p-2 sm:p-3 lg:p-4 font-mono text-xs sm:text-sm overflow-x-auto">
-                  <div className="text-green-400 mb-1 sm:mb-2">$ kubectl get pods</div>
-                  <div className="text-gray-300 mb-1 hidden sm:block">NAME                    READY   STATUS</div>
-                  <div className="text-gray-300 mb-1 sm:hidden">NAME           READY</div>
-                  <div className="text-blue-400 mb-1">web-app-7d4b8c9f-xyz12  1/1     Running</div>
-                  <div className="text-blue-400 mb-1 hidden sm:block">database-5f6g7h8-abc34   1/1     Running</div>
-                  <div className="text-green-400 mb-1 sm:mb-2">$ kubectl apply -f deployment.yaml</div>
-                  <div className="text-yellow-400">deployment.apps/web-app created ✓</div>
-                  <div className="text-green-400 mt-1 sm:mt-2 animate-pulse">$ _</div>
-                </div>
+                {/* Technology UI Mockup */}
+                <motion.div
+                  key={`ui-${currentTechIndex}`}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.4, delay: 0.2 }}
+                  className="rounded-lg sm:rounded-xl overflow-hidden"
+                >
+                  {renderTechUI(technologies[currentTechIndex])}
+                </motion.div>
 
                 {/* Progress Indicator */}
                 <div className="mt-2 sm:mt-3 lg:mt-4 flex items-center justify-between">
@@ -545,14 +793,35 @@ const HomePage: React.FC = () => {
                   <div className="flex items-center space-x-1 sm:space-x-2">
                     <div className="w-12 sm:w-16 lg:w-24 h-1.5 sm:h-2 bg-gray-200 rounded-full">
                       <motion.div
-                        className="h-full bg-[#6C63FF] rounded-full"
+                        key={`progress-${currentTechIndex}`}
+                        className={`h-full ${technologies[currentTechIndex].color} rounded-full`}
                         initial={{ width: "0%" }}
-                        animate={{ width: "75%" }}
-                        transition={{ duration: 2, delay: 1 }}
+                        animate={{ width: `${technologies[currentTechIndex].progress}%` }}
+                        transition={{ duration: 1, delay: 0.5 }}
                       />
                     </div>
-                    <span className="text-xs sm:text-sm font-medium text-[#6C63FF]">75%</span>
+                    <motion.span
+                      key={`progress-text-${currentTechIndex}`}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3, delay: 0.7 }}
+                      className={`text-xs sm:text-sm font-medium ${technologies[currentTechIndex].color.replace('bg-', 'text-')}`}
+                    >
+                      {technologies[currentTechIndex].progress}%
+                    </motion.span>
                   </div>
+                </div>
+
+                {/* Technology Indicators */}
+                <div className="flex justify-center space-x-2 mt-4">
+                  {technologies.map((_, index) => (
+                    <div
+                      key={index}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        index === currentTechIndex ? 'bg-blue-500 w-6' : 'bg-gray-300'
+                      }`}
+                    />
+                  ))}
                 </div>
               </div>
 
@@ -562,10 +831,18 @@ const HomePage: React.FC = () => {
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               >
-                <div className="flex items-center space-x-1 sm:space-x-2">
+                <motion.div
+                  key={`status-${currentTechIndex}`}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex items-center space-x-1 sm:space-x-2"
+                >
                   <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
-                  <span className="text-xs font-medium text-gray-700">Pod Created</span>
-                </div>
+                  <span className="text-xs font-medium text-gray-700">
+                    {technologies[currentTechIndex].status}
+                  </span>
+                </motion.div>
               </motion.div>
 
               <motion.div
@@ -573,10 +850,18 @@ const HomePage: React.FC = () => {
                 animate={{ y: [0, 10, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
               >
-                <div className="flex items-center space-x-1 sm:space-x-2">
+                <motion.div
+                  key={`users-${currentTechIndex}`}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                  className="flex items-center space-x-1 sm:space-x-2"
+                >
                   <Users className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500" />
-                  <span className="text-xs font-medium text-gray-700">5 Active Users</span>
-                </div>
+                  <span className="text-xs font-medium text-gray-700">
+                    {technologies[currentTechIndex].users} Active Users
+                  </span>
+                </motion.div>
               </motion.div>
             </motion.div>
           </div>
@@ -970,7 +1255,7 @@ const HomePage: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
               {[
                 {
-                  quote: "Finally, a platform that teaches by doing. The Kubernetes labs are incredible!",
+                  quote: "Finally, a platform that teaches by doing. The hands-on labs are incredible!",
                   author: "DevOps Engineer",
                   role: "Early Adopter",
                   avatar: "DE"
@@ -1110,6 +1395,154 @@ const HomePage: React.FC = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Feedback Modal */}
+      <AnimatePresence>
+        {showFeedbackModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            onClick={() => setShowFeedbackModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-gray-900">Join Our Learning Platform</h3>
+                <button
+                  onClick={() => setShowFeedbackModal(false)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              <p className="text-gray-600 mb-6">
+                Help us create the perfect learning experience for you. Share your interests and get personalized course recommendations!
+              </p>
+
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  // Handle form submission - could integrate with email service
+                  console.log('Feedback submitted:', feedbackData);
+                  setShowFeedbackModal(false);
+                  // Reset form
+                  setFeedbackData({
+                    name: '',
+                    email: '',
+                    interest: '',
+                    experience: '',
+                    message: ''
+                  });
+                  // Redirect to registration page
+                  navigate('/register');
+                }}
+                className="space-y-4"
+              >
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={feedbackData.name}
+                    onChange={(e) => setFeedbackData(prev => ({ ...prev, name: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Your full name"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={feedbackData.email}
+                    onChange={(e) => setFeedbackData(prev => ({ ...prev, email: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="your.email@example.com"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    What interests you most?
+                  </label>
+                  <select
+                    value={feedbackData.interest}
+                    onChange={(e) => setFeedbackData(prev => ({ ...prev, interest: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select an option</option>
+                    <option value="web-development">Web Development</option>
+                    <option value="cloud-architecture">Cloud Architecture</option>
+                    <option value="ai-ml">AI/ML</option>
+                    <option value="devops">DevOps</option>
+                    <option value="data-engineering">Data Engineering</option>
+                    <option value="all">All of the above</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Experience Level
+                  </label>
+                  <select
+                    value={feedbackData.experience}
+                    onChange={(e) => setFeedbackData(prev => ({ ...prev, experience: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select your level</option>
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                    <option value="expert">Expert</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Additional Message
+                  </label>
+                  <textarea
+                    value={feedbackData.message}
+                    onChange={(e) => setFeedbackData(prev => ({ ...prev, message: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    rows={3}
+                    placeholder="Tell us more about your learning goals..."
+                  />
+                </div>
+
+                <div className="flex space-x-3 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setShowFeedbackModal(false)}
+                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 px-4 py-2 bg-gradient-to-r from-[#6C63FF] to-[#8B7CF6] text-white rounded-lg hover:from-[#5848E2] hover:to-[#7C3AED] transition-all duration-300"
+                  >
+                    Start Learning
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };
