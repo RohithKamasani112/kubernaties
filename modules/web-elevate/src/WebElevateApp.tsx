@@ -16,7 +16,7 @@ import BlueprintDetail from './pages/BlueprintDetail';
 import Collaboration from './pages/Collaboration';
 import DebugProjects from './pages/DebugProjects';
 import DebugPlayground from './pages/DebugPlayground';
-import DebugChallengeEditor from './pages/DebugChallengeEditor';
+import DebugChallengePage from './pages/DebugChallengePage';
 import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
 
@@ -88,7 +88,7 @@ const WebElevateApp: React.FC = () => {
           {/* Debug Playground Routes */}
           <Route path="/debug-projects" element={<SidebarLayout><DebugProjects /></SidebarLayout>} />
           <Route path="/debug-playground/:projectId" element={<SidebarLayout><DebugPlayground /></SidebarLayout>} />
-          <Route path="/debug-challenge/:challengeId" element={<SidebarLayout><DebugChallengeEditor /></SidebarLayout>} />
+          <Route path="/debug-challenge/:challengeId" element={<SidebarLayout><DebugChallengePage /></SidebarLayout>} />
 
           {/* Additional Sidebar Routes */}
           <Route path="/achievements" element={<SidebarLayout><div className="p-6"><h1 className="text-2xl font-bold">Achievements Coming Soon</h1></div></SidebarLayout>} />

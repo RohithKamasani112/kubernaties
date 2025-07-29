@@ -151,6 +151,7 @@ const HomePage: React.FC = () => {
       description: 'Master modern web development from React to Node.js. Interactive playground, real projects, and AI-powered guidance.',
       status: 'Beta',
       statusColor: 'bg-blue-100 text-blue-700',
+      betaNote: 'New features being added weekly! Join the beta and help shape the future of web development learning.',
       path: '/web-elevate',
       gradient: 'from-indigo-500 to-purple-600',
       features: ['Interactive Playground', 'AI Code Advisor', 'Real Projects'],
@@ -165,6 +166,7 @@ const HomePage: React.FC = () => {
       description: 'Design scalable solutions across AWS, Azure & GCP. Visual builder with security analysis and real-time collaboration.',
       status: 'Beta',
       statusColor: 'bg-blue-100 text-blue-700',
+      betaNote: 'Advanced cloud patterns and AI-powered architecture suggestions coming soon! Experience the future of cloud design.',
       path: '/cloud-architecture',
       gradient: 'from-purple-500 to-pink-500',
       features: ['Visual Builder', 'Multi-Cloud Support', 'Cost Analysis'],
@@ -650,7 +652,7 @@ const HomePage: React.FC = () => {
                 animate={pathsInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                {(path.status === 'Live Now' || path.status === 'Beta Version') ? (
+                {(path.status === 'Live Now' || path.status === 'Beta Version' || path.status === 'Beta') ? (
                   <Link
                     to={path.path}
                     className="group bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-slate-200 p-4 sm:p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] block relative overflow-hidden touch-manipulation"
@@ -665,7 +667,7 @@ const HomePage: React.FC = () => {
                         </div>
                         <motion.span
                           className={`px-2 sm:px-3 py-1 text-xs font-semibold rounded-full ${path.statusColor}`}
-                          animate={path.status === 'Beta Version' ? {
+                          animate={(path.status === 'Beta Version' || path.status === 'Beta') ? {
                             scale: [1, 1.05, 1],
                             boxShadow: [
                               '0 2px 4px rgba(0, 0, 0, 0.1)',
@@ -687,7 +689,7 @@ const HomePage: React.FC = () => {
                       <p className="text-slate-600 mb-3 sm:mb-4 text-sm leading-relaxed">{path.description}</p>
 
                       {/* Beta Notice */}
-                      {path.status === 'Beta Version' && path.betaNote && (
+                      {(path.status === 'Beta Version' || path.status === 'Beta') && path.betaNote && (
                         <motion.div
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
