@@ -111,9 +111,28 @@ const HomePage: React.FC = () => {
     }
   }, [showSecondLine, currentIndex]);
 
+  // Custom icon component for course cards
+  const CourseIcon = ({ iconType, className }: { iconType: string; className: string }) => {
+    const iconMap = {
+      'kubernetes': '/icons/kubequest-icon.svg',
+      'web-elevate': '/icons/web-elevate-icon.svg',
+      'cloud-architecture': '/icons/cloud-architecture-icon.svg'
+    };
+
+    const iconSrc = iconMap[iconType as keyof typeof iconMap];
+    if (iconSrc) {
+      return <img src={iconSrc} alt={iconType} className={className} />;
+    }
+
+    // Fallback to Lucide icons
+    const LucideIcon = iconType === 'kubernetes' ? Container : iconType === 'web-elevate' ? Zap : Cloud;
+    return <LucideIcon className={className} />;
+  };
+
   const learningPaths = [
     {
       icon: Container,
+      iconType: 'kubernetes',
       title: 'Kubernetes Mastery',
       description: 'From container basics to production clusters. Interactive labs, real scenarios, and hands-on practice.',
       status: 'Live Now',
@@ -127,10 +146,11 @@ const HomePage: React.FC = () => {
     },
     {
       icon: Zap,
+      iconType: 'web-elevate',
       title: 'Web Development',
       description: 'Master modern web development from React to Node.js. Interactive playground, real projects, and AI-powered guidance.',
-      status: 'Live Now',
-      statusColor: 'bg-green-100 text-green-700',
+      status: 'Beta',
+      statusColor: 'bg-blue-100 text-blue-700',
       path: '/web-elevate',
       gradient: 'from-indigo-500 to-purple-600',
       features: ['Interactive Playground', 'AI Code Advisor', 'Real Projects'],
@@ -140,10 +160,11 @@ const HomePage: React.FC = () => {
     },
     {
       icon: Cloud,
+      iconType: 'cloud-architecture',
       title: 'Cloud Architecture Studio',
       description: 'Design scalable solutions across AWS, Azure & GCP. Visual builder with security analysis and real-time collaboration.',
-      status: 'Live Now',
-      statusColor: 'bg-green-100 text-green-700',
+      status: 'Beta',
+      statusColor: 'bg-blue-100 text-blue-700',
       path: '/cloud-architecture',
       gradient: 'from-purple-500 to-pink-500',
       features: ['Visual Builder', 'Multi-Cloud Support', 'Cost Analysis'],
@@ -639,8 +660,8 @@ const HomePage: React.FC = () => {
 
                     <div className="relative">
                       <div className="flex items-start justify-between mb-3 sm:mb-4">
-                        <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r ${path.gradient} rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                          <path.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                          <CourseIcon iconType={path.iconType} className="w-10 h-10 sm:w-12 sm:h-12" />
                         </div>
                         <motion.span
                           className={`px-2 sm:px-3 py-1 text-xs font-semibold rounded-full ${path.statusColor}`}
@@ -732,8 +753,8 @@ const HomePage: React.FC = () => {
 
                     <div className="relative">
                       <div className="flex items-start justify-between mb-4">
-                        <div className={`w-12 h-12 bg-gradient-to-r ${path.gradient} opacity-50 rounded-xl flex items-center justify-center`}>
-                          <path.icon className="w-6 h-6 text-white" />
+                        <div className={`w-12 h-12 opacity-50 rounded-xl flex items-center justify-center`}>
+                          <CourseIcon iconType={path.iconType} className="w-12 h-12" />
                         </div>
                         <span className={`px-3 py-1 text-xs font-semibold rounded-full ${path.statusColor}`}>
                           {path.status}

@@ -88,8 +88,8 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
             <div className="flex items-center space-x-3">
               {isCloudArchitecture ? (
                 <>
-                  <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                    <Cloud className="w-4 h-4 text-white" />
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+                    <img src="/icons/cloud-architecture-icon.svg" alt="Cloud Architecture" className="w-8 h-8" />
                   </div>
                   <AnimatePresence>
                     {!isPlaygroundPage && (
@@ -121,8 +121,8 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
                 </>
               ) : (
                 <>
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">K</span>
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+                    <img src="/icons/kubequest-icon.svg" alt="KubeQuest" className="w-8 h-8" />
                   </div>
                   <AnimatePresence>
                     {!isPlaygroundPage && (
@@ -276,8 +276,8 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
             <div className="flex items-center space-x-2 sm:space-x-3">
               {isCloudArchitecture ? (
                 <>
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                    <Cloud className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center">
+                    <img src="/icons/cloud-architecture-icon.svg" alt="Cloud Architecture" className="w-7 h-7 sm:w-8 sm:h-8" />
                   </div>
                   <div>
                     <h1 className="text-base sm:text-lg font-bold text-slate-900">Cloud Architecture</h1>
@@ -285,8 +285,8 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
                 </>
               ) : (
                 <>
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-xs sm:text-sm">K</span>
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center">
+                    <img src="/icons/kubequest-icon.svg" alt="KubeQuest" className="w-7 h-7 sm:w-8 sm:h-8" />
                   </div>
                   <div>
                     <h1 className="text-base sm:text-lg font-bold text-slate-900">KubeQuest</h1>

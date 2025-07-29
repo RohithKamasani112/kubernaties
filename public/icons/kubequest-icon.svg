@@ -1,0 +1,31 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Compass Circle -->
+  <circle cx="200" cy="200" r="120" fill="none" stroke="#4ECDC4" stroke-width="6"/>
+  
+  <!-- Compass Star/Navigation -->
+  <g transform="translate(200,200)">
+    <!-- Main compass points -->
+    <path d="M0,-100 L15,-30 L0,-20 L-15,-30 Z" fill="#1E88E5"/>
+    <path d="M100,0 L30,15 L20,0 L30,-15 Z" fill="#1E88E5"/>
+    <path d="M0,100 L-15,30 L0,20 L15,30 Z" fill="#1E88E5"/>
+    <path d="M-100,0 L-30,-15 L-20,0 L-30,15 Z" fill="#1E88E5"/>
+    
+    <!-- Diagonal points -->
+    <path d="M70,-70 L25,-45 L20,-50 L15,-25 Z" fill="#4ECDC4"/>
+    <path d="M70,70 L45,25 L50,20 L25,15 Z" fill="#4ECDC4"/>
+    <path d="M-70,70 L-25,45 L-20,50 L-15,25 Z" fill="#4ECDC4"/>
+    <path d="M-70,-70 L-45,-25 L-50,-20 L-25,-15 Z" fill="#4ECDC4"/>
+    
+    <!-- Center cross -->
+    <path d="M0,-40 L8,-8 L40,0 L8,8 L0,40 L-8,8 L-40,0 L-8,-8 Z" fill="#FF9800"/>
+    
+    <!-- Dots at compass points -->
+    <circle cx="0" cy="-85" r="8" fill="#4ECDC4"/>
+    <circle cx="85" cy="0" r="8" fill="#4ECDC4"/>
+    <circle cx="0" cy="85" r="8" fill="#4ECDC4"/>
+    <circle cx="-85" cy="0" r="8" fill="#4ECDC4"/>
+    
+    <!-- Small center circle -->
+    <circle cx="0" cy="0" r="12" fill="#1E88E5"/>
+  </g>
+</svg>
