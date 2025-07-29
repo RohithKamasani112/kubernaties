@@ -124,7 +124,7 @@ const DebugChallengeEditor: React.FC = () => {
   };
 
   const nextHint = () => {
-    if (currentHintIndex < challenge.hints.length - 1) {
+    if (challenge.hints && currentHintIndex < challenge.hints.length - 1) {
       setCurrentHintIndex(currentHintIndex + 1);
     }
   };
@@ -187,17 +187,33 @@ const DebugChallengeEditor: React.FC = () => {
                 <p className="text-sm text-red-700">{challenge.rootCause}</p>
               </div>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h3 className="text-sm font-medium text-blue-800 mb-2">Learning Objectives:</h3>
-                <ul className="text-sm text-blue-700 space-y-1">
-                  {challenge.learningObjectives.map((objective, index) => (
-                    <li key={index} className="flex items-start space-x-2">
-                      <Target className="w-3 h-3 mt-1 flex-shrink-0" />
-                      <span>{objective}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {challenge.learningObjectives && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h3 className="text-sm font-medium text-blue-800 mb-2">Learning Objectives:</h3>
+                  <ul className="text-sm text-blue-700 space-y-1">
+                    {challenge.learningObjectives.map((objective, index) => (
+                      <li key={index} className="flex items-start space-x-2">
+                        <Target className="w-3 h-3 mt-1 flex-shrink-0" />
+                        <span>{objective}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {challenge.preventionTips && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h3 className="text-sm font-medium text-green-800 mb-2">Prevention Tips:</h3>
+                  <ul className="text-sm text-green-700 space-y-1">
+                    {challenge.preventionTips.map((tip, index) => (
+                      <li key={index} className="flex items-start space-x-2">
+                        <Target className="w-3 h-3 mt-1 flex-shrink-0" />
+                        <span>{tip}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
 
             {/* Hints Section */}
@@ -212,7 +228,7 @@ const DebugChallengeEditor: React.FC = () => {
                 </button>
               </div>
               
-              {showHints && (
+              {showHints && challenge.hints && (
                 <div className="space-y-3">
                   {challenge.hints.slice(0, currentHintIndex + 1).map((hint, index) => (
                     <motion.div
@@ -228,7 +244,7 @@ const DebugChallengeEditor: React.FC = () => {
                     </motion.div>
                   ))}
                   
-                  {currentHintIndex < challenge.hints.length - 1 && (
+                  {challenge.hints && currentHintIndex < challenge.hints.length - 1 && (
                     <button
                       onClick={nextHint}
                       className="w-full px-4 py-2 text-sm text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50 transition-colors"
@@ -244,7 +260,7 @@ const DebugChallengeEditor: React.FC = () => {
             <div className="mb-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-3">✅ Success Criteria</h2>
               <ul className="space-y-2">
-                {challenge.testCriteria.map((criteria, index) => (
+                {(challenge.testCriteria || challenge.testCases || []).map((criteria, index) => (
                   <li key={index} className="flex items-start space-x-2 text-sm text-gray-700">
                     <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
                     <span>{criteria}</span>
@@ -278,7 +294,7 @@ const DebugChallengeEditor: React.FC = () => {
           {/* File Tabs */}
           <div className="bg-gray-100 border-b border-gray-200 px-4 py-2">
             <div className="flex space-x-2">
-              {Object.keys(currentFiles).map((filename) => (
+              {Object.keys(currentFiles || {}).map((filename) => (
                 <button
                   key={filename}
                   onClick={() => setActiveFile(filename)}

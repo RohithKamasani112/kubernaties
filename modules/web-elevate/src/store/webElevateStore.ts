@@ -1,6 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { all43ReactTopicsIndex, topicStats } from '../data/reactTopicsIndex43';
+import { debugPlatformStats } from '../data/debugPlatformComplete';
+import { reactDebugChallenges } from '../data/reactDebugChallenges';
+import { angularDebugChallenges } from '../data/angularDebugChallenges';
+import { nodeDebugChallenges } from '../data/nodeDebugChallenges';
 
 // Types
 export interface LearningPath {
@@ -267,6 +271,23 @@ interface WebElevateStore {
   blueprints: Blueprint[];
   userProgress: UserProgress;
   currentPlaygroundSession?: PlaygroundSession;
+
+  // Debug Platform State
+  debugPlatform: {
+    challenges: any[];
+    completedChallenges: string[];
+    currentChallenge: any | null;
+    totalXP: number;
+    earnedXP: number;
+    stats: {
+      totalChallenges: number;
+      reactChallenges: number;
+      angularChallenges: number;
+      nodeChallenges: number;
+      completedByTech: Record<string, number>;
+      completedByDifficulty: Record<string, number>;
+    };
+  };
   
   // Actions
   initializeApp: () => void;
@@ -294,6 +315,14 @@ interface WebElevateStore {
   // Debug playground actions
   completeDebugProject: (projectId: string, timeSpent: number, score: number, hintsUsed: number) => void;
   getDebugProjectProgress: (projectId: string) => DebugProjectProgress | null;
+
+  // Debug Platform actions
+  initializeDebugPlatform: () => void;
+  selectDebugChallenge: (challenge: any) => void;
+  completeDebugChallenge: (challengeId: string, xpEarned: number) => void;
+  getDebugChallengesByTech: (tech: 'React' | 'Angular' | 'Node.js') => any[];
+  getDebugChallengesByDifficulty: (difficulty: 'beginner' | 'intermediate' | 'advanced') => any[];
+  searchDebugChallenges: (query: string) => any[];
 }
 
 export const useWebElevateStore = create<WebElevateStore>()(
@@ -329,6 +358,23 @@ export const useWebElevateStore = create<WebElevateStore>()(
         debugProjects: [],
       },
       currentPlaygroundSession: undefined,
+
+      // Debug Platform initial state
+      debugPlatform: {
+        challenges: [],
+        completedChallenges: [],
+        currentChallenge: null,
+        totalXP: 0,
+        earnedXP: 0,
+        stats: {
+          totalChallenges: 0,
+          reactChallenges: 0,
+          angularChallenges: 0,
+          nodeChallenges: 0,
+          completedByTech: { React: 0, Angular: 0, 'Node.js': 0 },
+          completedByDifficulty: { beginner: 0, intermediate: 0, advanced: 0 }
+        }
+      },
 
       // Actions
       initializeApp: () => {
@@ -729,6 +775,92 @@ export const useWebElevateStore = create<WebElevateStore>()(
       getDebugProjectProgress: (projectId: string) => {
         const state = get();
         return state.userProgress?.debugProjects?.find(p => p.projectId === projectId) || null;
+      },
+
+      // Debug Platform actions
+      initializeDebugPlatform: () => {
+        const allChallenges = [
+          ...reactDebugChallenges,
+          ...angularDebugChallenges,
+          ...nodeDebugChallenges
+        ];
+
+        set((state) => ({
+          debugPlatform: {
+            ...state.debugPlatform,
+            challenges: allChallenges,
+            totalXP: allChallenges.reduce((sum, challenge) => sum + challenge.xpReward, 0),
+            stats: {
+              totalChallenges: allChallenges.length,
+              reactChallenges: reactDebugChallenges.length,
+              angularChallenges: angularDebugChallenges.length,
+              nodeChallenges: nodeDebugChallenges.length,
+              completedByTech: { React: 0, Angular: 0, 'Node.js': 0 },
+              completedByDifficulty: { beginner: 0, intermediate: 0, advanced: 0 }
+            }
+          }
+        }));
+      },
+
+      selectDebugChallenge: (challenge: any) => {
+        set((state) => ({
+          debugPlatform: {
+            ...state.debugPlatform,
+            currentChallenge: challenge
+          }
+        }));
+      },
+
+      completeDebugChallenge: (challengeId: string, xpEarned: number) => {
+        set((state) => {
+          const challenge = state.debugPlatform.challenges.find(c => c.id === challengeId);
+          if (!challenge || state.debugPlatform.completedChallenges.includes(challengeId)) {
+            return state;
+          }
+
+          const newCompletedChallenges = [...state.debugPlatform.completedChallenges, challengeId];
+          const newEarnedXP = state.debugPlatform.earnedXP + xpEarned;
+
+          // Update completion stats
+          const newStats = { ...state.debugPlatform.stats };
+          newStats.completedByTech[challenge.techStack as keyof typeof newStats.completedByTech]++;
+          newStats.completedByDifficulty[challenge.difficulty as keyof typeof newStats.completedByDifficulty]++;
+
+          return {
+            debugPlatform: {
+              ...state.debugPlatform,
+              completedChallenges: newCompletedChallenges,
+              earnedXP: newEarnedXP,
+              stats: newStats
+            },
+            userProgress: {
+              ...state.userProgress,
+              experiencePoints: state.userProgress.experiencePoints + xpEarned,
+              totalPoints: state.userProgress.totalPoints + xpEarned
+            }
+          };
+        });
+      },
+
+      getDebugChallengesByTech: (tech: 'React' | 'Angular' | 'Node.js') => {
+        const state = get();
+        return state.debugPlatform.challenges.filter(challenge => challenge.techStack === tech);
+      },
+
+      getDebugChallengesByDifficulty: (difficulty: 'beginner' | 'intermediate' | 'advanced') => {
+        const state = get();
+        return state.debugPlatform.challenges.filter(challenge => challenge.difficulty === difficulty);
+      },
+
+      searchDebugChallenges: (query: string) => {
+        const state = get();
+        const lowercaseQuery = query.toLowerCase();
+        return state.debugPlatform.challenges.filter(challenge =>
+          challenge.title.toLowerCase().includes(lowercaseQuery) ||
+          challenge.description.toLowerCase().includes(lowercaseQuery) ||
+          challenge.tags.some((tag: string) => tag.toLowerCase().includes(lowercaseQuery)) ||
+          challenge.rootCause.toLowerCase().includes(lowercaseQuery)
+        );
       },
     }),
     {
@@ -2267,3 +2399,96 @@ function createMockBlueprints(): Blueprint[] {
     }
   ];
 }
+
+// Debug Platform Actions Implementation
+const debugPlatformActions = {
+  initializeDebugPlatform: () => {
+    const allChallenges = [
+      ...reactDebugChallenges,
+      ...angularDebugChallenges,
+      ...nodeDebugChallenges
+    ];
+
+    set((state) => ({
+      debugPlatform: {
+        ...state.debugPlatform,
+        challenges: allChallenges,
+        totalXP: allChallenges.reduce((sum, challenge) => sum + challenge.xpReward, 0),
+        stats: {
+          totalChallenges: allChallenges.length,
+          reactChallenges: reactDebugChallenges.length,
+          angularChallenges: angularDebugChallenges.length,
+          nodeChallenges: nodeDebugChallenges.length,
+          completedByTech: { React: 0, Angular: 0, 'Node.js': 0 },
+          completedByDifficulty: { beginner: 0, intermediate: 0, advanced: 0 }
+        }
+      }
+    }));
+  },
+
+  selectDebugChallenge: (challenge: any) => {
+    set((state) => ({
+      debugPlatform: {
+        ...state.debugPlatform,
+        currentChallenge: challenge
+      }
+    }));
+  },
+
+  completeDebugChallenge: (challengeId: string, xpEarned: number) => {
+    set((state) => {
+      const challenge = state.debugPlatform.challenges.find(c => c.id === challengeId);
+      if (!challenge || state.debugPlatform.completedChallenges.includes(challengeId)) {
+        return state;
+      }
+
+      const newCompletedChallenges = [...state.debugPlatform.completedChallenges, challengeId];
+      const newEarnedXP = state.debugPlatform.earnedXP + xpEarned;
+
+      // Update completion stats
+      const newStats = { ...state.debugPlatform.stats };
+      newStats.completedByTech[challenge.techStack as keyof typeof newStats.completedByTech]++;
+      newStats.completedByDifficulty[challenge.difficulty as keyof typeof newStats.completedByDifficulty]++;
+
+      return {
+        debugPlatform: {
+          ...state.debugPlatform,
+          completedChallenges: newCompletedChallenges,
+          earnedXP: newEarnedXP,
+          stats: newStats
+        },
+        userProgress: {
+          ...state.userProgress,
+          experiencePoints: state.userProgress.experiencePoints + xpEarned,
+          totalPoints: state.userProgress.totalPoints + xpEarned
+        }
+      };
+    });
+  },
+
+  getDebugChallengesByTech: (tech: 'React' | 'Angular' | 'Node.js') => {
+    const state = get();
+    return state.debugPlatform.challenges.filter(challenge => challenge.techStack === tech);
+  },
+
+  getDebugChallengesByDifficulty: (difficulty: 'beginner' | 'intermediate' | 'advanced') => {
+    const state = get();
+    return state.debugPlatform.challenges.filter(challenge => challenge.difficulty === difficulty);
+  },
+
+  searchDebugChallenges: (query: string) => {
+    const state = get();
+    const lowercaseQuery = query.toLowerCase();
+    return state.debugPlatform.challenges.filter(challenge =>
+      challenge.title.toLowerCase().includes(lowercaseQuery) ||
+      challenge.description.toLowerCase().includes(lowercaseQuery) ||
+      challenge.tags.some((tag: string) => tag.toLowerCase().includes(lowercaseQuery)) ||
+      challenge.rootCause.toLowerCase().includes(lowercaseQuery)
+    );
+  }
+};
+
+// Add debug platform actions to the main store
+const storeWithDebugPlatform = {
+  ...debugPlatformActions
+};

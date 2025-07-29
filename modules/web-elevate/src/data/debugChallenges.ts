@@ -1,4 +1,20 @@
+// Import comprehensive debugging challenges
+import { reactDebugChallenges } from './reactDebugChallenges';
+import { angularDebugChallenges } from './angularDebugChallenges';
+import { nodeDebugChallenges } from './nodeDebugChallenges';
+
+// Combine all debugging challenges for the Web Elevate platform
 export const debugChallenges = [
+  // React Debugging Challenges (8+ scenarios)
+  ...reactDebugChallenges,
+
+  // Angular Debugging Challenges (3+ scenarios)
+  ...angularDebugChallenges,
+
+  // Node.js Debugging Challenges (3+ scenarios)
+  ...nodeDebugChallenges,
+
+  // Additional Web Development Challenges
   {
     id: 'react-state-delay',
     title: 'State Not Updating Immediately',
@@ -9,6 +25,7 @@ export const debugChallenges = [
     xpReward: 80,
     tags: ['React', 'useState', 'Asynchronous'],
     rootCause: 'Misunderstanding that useState updates are async',
+    category: 'State Management',
     files: {
       'App.jsx': `import React, { useState } from 'react';
 
@@ -22,10 +39,10 @@ function InputBox() {
 
   return (
     <div>
-      <input 
-        type="text" 
-        value={value} 
-        onChange={handleChange} 
+      <input
+        type="text"
+        value={value}
+        onChange={handleChange}
         placeholder="Type something..."
       />
       <p>You typed: {value}</p>
@@ -73,15 +90,26 @@ function InputBox() {
 
 export default InputBox;`
     },
-    testCriteria: [
+    testCases: [
       'Console should log the correct current value when typing',
       'State should update and display correctly in the UI',
       'No delay between typing and state update'
     ],
-    learningObjectives: [
-      'Understand asynchronous nature of useState',
-      'Learn when state updates are applied',
-      'Practice debugging state-related issues'
+    debuggingSteps: [
+      'Check console output when typing in input',
+      'Compare logged value with displayed value',
+      'Use React DevTools to inspect state changes'
+    ],
+    commonMistakes: [
+      'Expecting synchronous state updates',
+      'Using stale state values in calculations',
+      'Not understanding React batching behavior'
+    ],
+    productionImpact: 'Can lead to incorrect calculations and race conditions in real applications',
+    preventionTips: [
+      'Use functional updates when new state depends on previous state',
+      'Use useEffect to perform side effects after state updates',
+      'Log event values instead of state for immediate feedback'
     ]
   },
   {
@@ -94,6 +122,7 @@ export default InputBox;`
     xpReward: 60,
     tags: ['React', 'Lists', 'Keys'],
     rootCause: 'Missing key prop in mapped list items',
+    category: 'Performance',
     files: {
       'TodoList.jsx': `import React from 'react';
 
@@ -130,15 +159,27 @@ function TodoList({ todos }) {
 
 export default TodoList;`
     },
-    testCriteria: [
+    testCases: [
       'No React warnings in console',
       'List renders correctly',
       'Each item has unique key'
     ],
-    learningObjectives: [
-      'Understand importance of keys in React lists',
-      'Learn how to choose appropriate keys',
-      'Practice fixing React warnings'
+    debuggingSteps: [
+      'Open browser console to see React warnings',
+      'Identify which list items are missing keys',
+      'Add unique key prop to each list item',
+      'Verify warnings are resolved'
+    ],
+    commonMistakes: [
+      'Using array index as key for dynamic lists',
+      'Using non-unique values as keys',
+      'Not providing keys at all'
+    ],
+    productionImpact: 'Poor performance and incorrect UI updates when list items change',
+    preventionTips: [
+      'Always use unique, stable identifiers as keys',
+      'Avoid using array index for dynamic lists',
+      'Use proper ID generation for list items'
     ]
   },
   {
@@ -151,6 +192,7 @@ export default TodoList;`
     xpReward: 40,
     tags: ['CSS', 'Styling', 'Typos'],
     rootCause: 'Typo in CSS property name',
+    category: 'Styling',
     files: {
       'styles.css': `.button {
   backgrond-color: blue;
@@ -175,17 +217,47 @@ export default TodoList;`
   border-radius: 4px;
 }`
     },
-    testCriteria: [
+    testCases: [
       'Button has blue background',
       'All styles apply correctly',
       'No CSS errors in dev tools'
     ],
-    learningObjectives: [
-      'Practice careful CSS syntax',
-      'Learn to use dev tools for debugging',
-      'Understand common CSS mistakes'
+    debuggingSteps: [
+      'Open browser DevTools and check Elements tab',
+      'Look for crossed-out CSS properties',
+      'Check Console for CSS syntax errors',
+      'Verify property names are spelled correctly'
+    ],
+    commonMistakes: [
+      'Misspelling CSS property names',
+      'Not using browser DevTools to debug styles',
+      'Ignoring CSS validation warnings'
+    ],
+    productionImpact: 'Styles may not apply correctly, leading to broken UI appearance',
+    preventionTips: [
+      'Use CSS linting tools to catch typos',
+      'Enable CSS validation in your editor',
+      'Regularly check browser DevTools for style issues'
     ]
   }
 ];
+
+// Export comprehensive debugging challenges count
+export const totalDebugChallenges = debugChallenges.length;
+
+// Export challenges by technology
+export const debugChallengesByTech = {
+  React: debugChallenges.filter(challenge => challenge.techStack === 'React'),
+  Angular: debugChallenges.filter(challenge => challenge.techStack === 'Angular'),
+  'Node.js': debugChallenges.filter(challenge => challenge.techStack === 'Node.js'),
+  CSS: debugChallenges.filter(challenge => challenge.techStack === 'CSS')
+};
+
+// Export challenges by difficulty
+export const debugChallengesByDifficulty = {
+  beginner: debugChallenges.filter(challenge => challenge.difficulty === 'beginner'),
+  intermediate: debugChallenges.filter(challenge => challenge.difficulty === 'intermediate'),
+  advanced: debugChallenges.filter(challenge => challenge.difficulty === 'advanced')
+};
 
 export default debugChallenges;
