@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { all43ReactTopicsIndex, topicStats } from '../data/reactTopicsIndex43';
 
 // Types
 export interface LearningPath {
@@ -755,7 +756,7 @@ function createMockLearningPaths(): LearningPath[] {
 
   return [
     {
-      id: 'react-fundamentals',
+      id: 'react-mastery',
       title: '⚛️ React Mastery Path',
       description: '🚀 Master React from zero to hero! Build amazing UIs with interactive challenges, real projects, and gamified learning. Perfect for beginners who want to become React pros!',
       category: 'frontend',
@@ -802,6 +803,27 @@ function createMockSkillsGraph(): SkillLevel[] {
 
 // Helper functions to create module data
 function createReactModules(): Module[] {
+  // Convert all 43 React topics to module format - ALL UNLOCKED
+  return all43ReactTopicsIndex.map((topic, index) => ({
+    id: topic.id,
+    title: topic.title,
+    description: topic.description,
+    type: 'concept' as const,
+    duration: topic.estimatedTime,
+    isLocked: false, // ALL TOPICS UNLOCKED for comprehensive learning
+    isCompleted: false,
+    isInProgress: false,
+    prerequisites: topic.prerequisites,
+    content: {
+      concept: {
+        title: topic.title,
+        content: `${topic.description}\n\nDifficulty: ${topic.difficulty}\nCategory: ${topic.category}\nXP Reward: ${topic.xpReward}`
+      }
+    }
+  }));
+}
+
+function createReactModulesOld(): Module[] {
   return [
     // 🎯 Part 1: React Fundamentals
     {

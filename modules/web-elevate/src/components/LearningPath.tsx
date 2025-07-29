@@ -8,7 +8,7 @@ interface LearningPathProps {
   pathId?: string;
 }
 
-const LearningPath: React.FC<LearningPathProps> = ({ pathId = 'react-fundamentals' }) => {
+const LearningPath: React.FC<LearningPathProps> = ({ pathId = 'react-mastery' }) => {
   const [selectedTopic, setSelectedTopic] = useState<LearningTopic | null>(null);
   const [selectedChallenge, setSelectedChallenge] = useState<LearningChallenge | null>(null);
   const [completedTopics, setCompletedTopics] = useState<Set<string>>(new Set());

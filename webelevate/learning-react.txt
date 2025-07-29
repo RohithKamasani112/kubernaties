@@ -1091,7 +1091,7 @@ Make your UI accessible to all users:
 
 Use semantic HTML: button, label, main, etc.
 
-Add ARIA attributes: aria-label, role
+Add ARIA attributes: ariacan -label, role
 
 Ensure keyboard navigation
 
