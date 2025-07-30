@@ -87,12 +87,12 @@ const ConsoleOutput: React.FC<ConsoleOutputProps> = ({
       </div>
 
       {/* Console Content */}
-      <div 
+      <div
         ref={consoleRef}
         className="flex-1 p-3 bg-gray-900 text-green-400 font-mono text-sm overflow-y-auto"
       >
         {consoleOutput.length === 0 ? (
-          <div className="text-gray-500 italic">
+          <div className="text-gray-400 italic">
             Console output will appear here when you run your code...
           </div>
         ) : (
@@ -103,14 +103,20 @@ const ConsoleOutput: React.FC<ConsoleOutputProps> = ({
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className={`${
+                className={`leading-relaxed ${
                   line.startsWith('❌') ? 'text-red-400' :
                   line.startsWith('✅') ? 'text-green-400' :
                   line.startsWith('⚠️') ? 'text-yellow-400' :
                   line.startsWith('>') ? 'text-blue-400' :
-                  'text-gray-300'
+                  line.includes('Error') || line.includes('error') ? 'text-red-300' :
+                  line.includes('Warning') || line.includes('warning') ? 'text-yellow-300' :
+                  line.includes('Info') || line.includes('info') ? 'text-blue-300' :
+                  'text-gray-100'
                 }`}
               >
+                <span className="text-gray-500 mr-2 select-none">
+                  {String(index + 1).padStart(3, '0')}
+                </span>
                 {line}
               </motion.div>
             ))}

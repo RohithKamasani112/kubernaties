@@ -255,10 +255,10 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}
             readOnly={readOnly}
-            className="absolute inset-0 w-full h-full p-4 text-sm font-mono leading-6 bg-transparent border-none outline-none resize-none text-transparent caret-gray-900"
+            className="absolute inset-0 w-full h-full p-4 text-sm font-mono leading-6 bg-transparent border-none outline-none resize-none text-gray-800 caret-gray-900"
             style={{
               caretColor: '#111827',
-              color: 'transparent'
+              color: '#1f2937'
             }}
             spellCheck={false}
             autoComplete="off"

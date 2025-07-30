@@ -301,7 +301,11 @@ const DebugPlayground: React.FC = () => {
                 scrollBeyondLastLine: false,
                 automaticLayout: true,
                 tabSize: 2,
-                wordWrap: 'on'
+                wordWrap: 'on',
+                fontFamily: 'Monaco, Menlo, "Ubuntu Mono", monospace',
+                renderLineHighlight: 'line',
+                cursorBlinking: 'blink',
+                cursorStyle: 'line'
               }}
             />
           </div>

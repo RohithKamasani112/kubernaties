@@ -290,7 +290,7 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
       vertical: 'auto' as const,
       horizontal: 'auto' as const,
     },
-    theme: 'vs-light',
+    theme: 'vs-dark',
     wordWrap: 'on' as const,
     automaticLayout: true,
     readOnly: false,

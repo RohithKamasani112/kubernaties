@@ -1,5 +1,5 @@
-// Comprehensive React Topics from learning-react.txt
-// This file contains all 43 React topics to be integrated into the learning path
+// Comprehensive React Topics from react-learning-info.txt
+// This file contains all 46 React topics to be integrated into the learning path
 // Each topic includes: explanation, code examples, playground challenges, and mini-projects
 
 export const comprehensiveReactTopics = [
@@ -7,16 +7,52 @@ export const comprehensiveReactTopics = [
     id: 'what-is-react',
     title: 'What is React?',
     description: 'Understanding React\'s declarative approach and Virtual DOM',
-    explanation: `React is a JavaScript library for building user interfaces, focusing on component-based architecture. It uses a Virtual DOM for faster rendering and helps manage dynamic content.
+    explanation: `React is a free and open-source JavaScript library for building user interfaces (UIs). Maintained by Meta (formerly Facebook) and a vast developer community, React helps you build component-based UIs for web and mobile apps.
 
-React is declarative: instead of telling the browser how to update the DOM step-by-step (like in vanilla JS), you tell React what the UI should look like, and it figures out the changes.`,
+While commonly called a "framework," React is technically a library focused on the View (V) in MVC (Model-View-Controller) architecture. It can be extended with libraries for routing, state management, and more.
+
+Key Concepts:
+
+1. Declarative Approach:
+You describe what the UI should look like for a given application state. React takes care of updating the DOM efficiently when that state changes.
+
+Imperative (Vanilla JS): "You manually tell the browser what to do."
+Declarative (React): "You describe what you want, and React handles the DOM updates."
+
+Analogy: Imagine ordering a pizza.
+- Imperative: "Take dough, roll it, add sauce, then cheese, then bake…"
+- Declarative: "Give me a pepperoni pizza." (Let React do the steps.)
+
+2. Virtual DOM (VDOM):
+Problem: Direct DOM manipulation is slow and inefficient.
+Solution: React uses a Virtual DOM—an in-memory representation of the real DOM.
+
+How it Works:
+- On state change, React builds a new Virtual DOM tree.
+- It compares (diffs) this tree with the previous one.
+- It applies only the necessary changes to the real DOM.
+Result: Efficient UI updates without full page reloads.`,
+
+    bestPractices: [
+      'Think in reusable components',
+      'Embrace the declarative paradigm',
+      'Avoid direct DOM manipulation (document.querySelector is a red flag)',
+      'Keep components small and focused'
+    ],
+
+    realWorldUseCases: [
+      '🖥️ Single Page Apps (SPAs): Facebook, Instagram, Airbnb',
+      '📊 Complex Dashboards: Analytics tools, CRM systems',
+      '📱 Mobile Apps: With React Native for iOS and Android'
+    ],
+
     animationScript: `A split screen:
 Left: Vanilla JS → document.getElementById() → DOM → slow UI update
 Right: React → <Component /> → Virtual DOM → diff → fast UI update
 Highlight "Virtual DOM" and "Component" with popups
 Gears rotate as the Virtual DOM syncs with real DOM
 A user clicks a button → React shows the re-render with minimal updates`,
-    scenario: `🧩 You're given vanilla JS code that manipulates the DOM directly. Your task is to convert this imperative approach to React's declarative style using components and state.`,
+
     challenges: [
       {
         id: 'vanilla-to-react',
@@ -26,16 +62,50 @@ A user clicks a button → React shows the re-render with minimal updates`,
         difficulty: 'beginner',
         estimatedTime: '10 min',
         xpReward: 50,
+        instructions: [
+          'Convert the vanilla JavaScript counter to React',
+          'Use useState hook for state management',
+          'Replace DOM manipulation with declarative JSX',
+          'Ensure the component re-renders on state change'
+        ],
+        hints: [
+          'Import React and useState from react',
+          'Create a functional component',
+          'Use useState to manage the counter state',
+          'Use onClick event handler instead of addEventListener'
+        ],
+        testCriteria: [
+          'Component renders without errors',
+          'Counter increments when button is clicked',
+          'Uses React hooks instead of DOM manipulation',
+          'Follows React naming conventions'
+        ],
         code: {
-          initial: `// Vanilla JS Code
-<button onclick="changeText()">Click</button>
-<p id="output"></p>
+          initial: `// Vanilla JS Code - Convert this to React
+// <button onclick="changeText()">Click</button>
+// <p id="output"></p>
 
-<script>
-  function changeText() {
-    document.getElementById('output').innerText = 'Hello!';
-  }
-</script>`,
+// <script>
+//   function changeText() {
+//     document.getElementById('output').innerText = 'Hello!';
+//   }
+// </script>
+
+import React, { useState } from 'react';
+
+function GreetingApp() {
+  // TODO: Add state for message
+
+  // TODO: Add click handler function
+
+  return (
+    <div>
+      {/* TODO: Add button and paragraph */}
+    </div>
+  );
+}
+
+export default GreetingApp;`,
           solution: `import React, { useState } from 'react';
 
 function GreetingApp() {
@@ -53,2107 +123,3999 @@ function GreetingApp() {
   );
 }
 
-export default GreetingApp;`,
-          language: 'javascript'
-        },
-        instructions: [
-          'Convert the vanilla JS code to React using a functional component',
-          'Use useState hook to manage the message state',
-          'Replace onclick with onClick event handler',
-          'Use JSX instead of direct DOM manipulation'
-        ],
-        hints: [
-          'Import useState from React',
-          'Create a state variable for the message',
-          'Use the state setter function in the click handler',
-          'Display the state value in JSX'
-        ],
-        testCriteria: [
-          'Component renders without errors',
-          'Button click updates the displayed message',
-          'Uses React hooks instead of direct DOM manipulation'
-        ]
+export default GreetingApp;`
+        }
       },
       {
-        id: 'greeting-app-challenge',
+        id: 'build-greeting-app',
         title: 'Build a GreetingApp',
-        description: 'Create an interactive greeting application with multiple states',
+        description: 'Create a complete greeting application with multiple interactions',
         type: 'challenge',
         difficulty: 'beginner',
         estimatedTime: '15 min',
-        xpReward: 75,
+        xpReward: 100,
         instructions: [
-          'Display "Hello, welcome to React!" initially',
-          'Add a button that changes the greeting to "You clicked me!"',
-          'Add a reset button to return to the original message',
-          'Style the buttons and text appropriately'
+          'Create a greeting app that shows different messages',
+          'Add buttons for different greetings (Hello, Goodbye, Welcome)',
+          'Display the current greeting in a styled paragraph',
+          'Add a reset button to clear the message'
         ],
         hints: [
-          'Use useState to manage the current greeting',
-          'Create separate functions for each button action',
-          'Consider using conditional rendering or state values',
-          'Add basic CSS classes for styling'
+          'Use multiple event handlers for different greetings',
+          'Consider using conditional rendering for the reset button',
+          'Add some basic styling with className',
+          'Think about the user experience flow'
         ],
         testCriteria: [
-          'Initial greeting displays correctly',
-          'Click button changes the message',
-          'Reset button restores original message',
-          'Components are properly styled'
-        ]
+          'App renders without errors',
+          'All greeting buttons work correctly',
+          'Reset functionality clears the message',
+          'UI is user-friendly and intuitive'
+        ],
+        code: {
+          initial: `import React, { useState } from 'react';
+
+function GreetingApp() {
+  // TODO: Add state for current greeting
+
+  // TODO: Add handler functions for different greetings
+
+  // TODO: Add reset handler
+
+  return (
+    <div className="greeting-app">
+      <h1>Greeting App</h1>
+      {/* TODO: Add greeting buttons */}
+      {/* TODO: Add message display */}
+      {/* TODO: Add reset button (conditional) */}
+    </div>
+  );
+}
+
+export default GreetingApp;`,
+          solution: `import React, { useState } from 'react';
+
+function GreetingApp() {
+  const [greeting, setGreeting] = useState('');
+
+  const handleHello = () => setGreeting('Hello! Nice to meet you! 👋');
+  const handleGoodbye = () => setGreeting('Goodbye! See you later! 👋');
+  const handleWelcome = () => setGreeting('Welcome! We\'re glad you\'re here! 🎉');
+  const handleReset = () => setGreeting('');
+
+  return (
+    <div className="greeting-app" style={{ padding: '20px', textAlign: 'center' }}>
+      <h1>Greeting App</h1>
+
+      <div style={{ margin: '20px 0' }}>
+        <button onClick={handleHello} style={{ margin: '5px', padding: '10px 20px' }}>
+          Say Hello
+        </button>
+        <button onClick={handleGoodbye} style={{ margin: '5px', padding: '10px 20px' }}>
+          Say Goodbye
+        </button>
+        <button onClick={handleWelcome} style={{ margin: '5px', padding: '10px 20px' }}>
+          Say Welcome
+        </button>
+      </div>
+
+      {greeting && (
+        <div>
+          <p style={{
+            fontSize: '18px',
+            color: '#2563eb',
+            margin: '20px 0',
+            padding: '15px',
+            backgroundColor: '#eff6ff',
+            borderRadius: '8px'
+          }}>
+            {greeting}
+          </p>
+          <button
+            onClick={handleReset}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#dc2626',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px'
+            }}
+          >
+            Reset
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default GreetingApp;`
+        }
       }
-    ],
-    learningOutcomes: [
-      'Understand React\'s declarative approach',
-      'Know how it\'s different from imperative DOM manipulation',
-      'Get your first taste of React state and components'
-    ],
-    estimatedTime: '45 min',
-    difficulty: 'beginner',
-    nextTopics: ['jsx-basics']
+    ]
   },
+
   {
     id: 'jsx-basics',
     title: 'JSX – HTML in JavaScript',
     description: 'Learn JSX syntax and how it compiles to JavaScript',
-    explanation: `JSX stands for JavaScript XML. It allows you to write HTML-like syntax inside JavaScript functions. While not required, JSX is the standard for writing React components today.
+    explanation: `JSX (JavaScript XML) is a syntax extension for JavaScript that allows you to write HTML inside JavaScript. React components use JSX to describe UI in a declarative way.
 
-Behind the scenes, JSX compiles into React.createElement() calls.`,
-    animationScript: `JSX is typed like:
-const heading = <h1>Hello World</h1>;
+What is JSX?
+JSX looks like HTML but is actually JavaScript. It gets compiled (transpiled) into React.createElement() calls.
 
-Transition animation:
-JSX transforms into:
-React.createElement('h1', null, 'Hello World');
+Example:
+JSX: <h1>Hello World</h1>
+Compiles to: React.createElement('h1', null, 'Hello World')
 
-Popup: "JSX → JavaScript → DOM"
-Interactive part: Typing JSX updates a live preview box on the side
-Show live DOM rendering`,
-    scenario: `🧩 You're working with broken JSX code that has syntax errors. Your mission is to fix the JSX and learn the rules of writing valid JSX syntax.`,
+Key Rules of JSX:
+1. Return a single parent element (or use React.Fragment)
+2. Close all tags (including self-closing ones like <img />)
+3. Use camelCase for attributes (className instead of class)
+4. Use curly braces {} for JavaScript expressions
+5. Comments use {/* */} syntax
+
+Why JSX?
+- More readable than React.createElement()
+- Familiar HTML-like syntax
+- Better developer experience with syntax highlighting
+- Easier to visualize component structure`,
+
+    bestPractices: [
+      'Always close self-closing tags with />',
+      'Use className instead of class',
+      'Wrap multi-line JSX in parentheses',
+      'Use fragments to avoid unnecessary div wrappers',
+      'Keep JSX expressions simple and readable'
+    ],
+
+    realWorldUseCases: [
+      '🎨 Building UI components with familiar HTML syntax',
+      '🔄 Mixing JavaScript logic with markup',
+      '📱 Creating reusable component templates',
+      '🎯 Conditional rendering based on state'
+    ],
+
     challenges: [
       {
-        id: 'fix-jsx-errors',
+        id: 'fix-jsx-syntax',
         title: 'Fix JSX Syntax Errors',
-        description: 'Identify and fix common JSX syntax issues',
+        description: 'Identify and fix common JSX syntax errors',
         type: 'playground',
         difficulty: 'beginner',
-        estimatedTime: '8 min',
-        xpReward: 40,
-        code: {
-          initial: `// Broken JSX - Fix the errors
-const title = <h1>Hello
-const content = <div>
-  <p>Welcome to JSX
-  <span>Learn React</span>
-</div>`,
-          solution: `// Fixed JSX
-const title = <h1>Hello</h1>;
-const content = (
-  <div>
-    <p>Welcome to JSX</p>
-    <span>Learn React</span>
-  </div>
-);`,
-          language: 'javascript'
-        },
+        estimatedTime: '10 min',
+        xpReward: 50,
         instructions: [
-          'Close all JSX tags properly',
-          'Wrap multiple elements in a parent element or fragment',
-          'Ensure proper JSX syntax throughout'
+          'Fix all JSX syntax errors in the provided code',
+          'Ensure all tags are properly closed',
+          'Use correct attribute names',
+          'Wrap the JSX in a single parent element'
         ],
         hints: [
-          'Every JSX element must be closed',
-          'Use parentheses for multi-line JSX',
-          'Check for missing closing tags',
-          'Consider using React fragments (<> </>) for grouping'
+          'Look for unclosed tags',
+          'Check for class vs className',
+          'Make sure img tags are self-closing',
+          'Wrap multiple elements in a div or Fragment'
         ],
         testCriteria: [
-          'All JSX elements are properly closed',
-          'No syntax errors in the code',
-          'JSX follows React conventions'
-        ]
+          'Code compiles without JSX errors',
+          'All HTML attributes use correct JSX syntax',
+          'All tags are properly closed',
+          'Component renders successfully'
+        ],
+        code: {
+          initial: `import React from 'react';
+
+function BrokenComponent() {
+  const name = "React Developer";
+  const isLoggedIn = true;
+
+  return (
+    // Fix the JSX errors below
+    <h1>Welcome to JSX!</h1>
+    <img src="logo.png" alt="Logo">
+    <p class="greeting">Hello, {name}!</p>
+    <div>
+      {isLoggedIn && <span>You are logged in</span>}
+    </div>
+    <input type="text" placeholder="Enter your name">
+    <!-- This is a comment -->
+  );
+}
+
+export default BrokenComponent;`,
+          solution: `import React from 'react';
+
+function FixedComponent() {
+  const name = "React Developer";
+  const isLoggedIn = true;
+
+  return (
+    <div>
+      <h1>Welcome to JSX!</h1>
+      <img src="logo.png" alt="Logo" />
+      <p className="greeting">Hello, {name}!</p>
+      <div>
+        {isLoggedIn && <span>You are logged in</span>}
+      </div>
+      <input type="text" placeholder="Enter your name" />
+      {/* This is a JSX comment */}
+    </div>
+  );
+}
+
+export default FixedComponent;`
+        }
       },
       {
-        id: 'jsx-card-challenge',
+        id: 'build-jsx-card',
         title: 'Build a JSXCard',
-        description: 'Create a card component using only JSX',
+        description: 'Create a user profile card using JSX with dynamic content',
         type: 'challenge',
         difficulty: 'beginner',
         estimatedTime: '15 min',
-        xpReward: 60,
+        xpReward: 100,
         instructions: [
-          'Render an image element',
-          'Add a heading',
-          'Include a paragraph of text',
-          'Add a button',
-          'Use JSX only — no HTML file'
+          'Create a user profile card component',
+          'Include user avatar, name, title, and bio',
+          'Use JSX expressions for dynamic content',
+          'Add conditional rendering for optional fields',
+          'Style the card with inline styles or className'
         ],
         hints: [
-          'Use JSX syntax for all elements',
-          'Remember to close all tags',
-          'Use className instead of class',
-          'Consider using fragments for grouping'
+          'Use curly braces for JavaScript expressions',
+          'Consider using conditional rendering with &&',
+          'Remember to use className for CSS classes',
+          'You can use template literals in JSX expressions'
         ],
         testCriteria: [
-          'Card contains all required elements',
-          'Valid JSX syntax throughout',
-          'Proper element structure and nesting'
-        ]
+          'Card displays all user information correctly',
+          'Uses JSX expressions for dynamic content',
+          'Implements conditional rendering properly',
+          'Follows JSX syntax rules correctly'
+        ],
+        code: {
+          initial: `import React from 'react';
+
+function UserCard() {
+  const user = {
+    name: "Sarah Johnson",
+    title: "Frontend Developer",
+    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150",
+    bio: "Passionate about creating beautiful user experiences with React",
+    location: "San Francisco, CA",
+    isOnline: true,
+    website: "https://sarahjohnson.dev"
+  };
+
+  return (
+    <div className="user-card">
+      {/* TODO: Build the user card JSX */}
+      {/* Include: avatar, name, title, bio, location, online status */}
+      {/* Use conditional rendering for optional fields */}
+    </div>
+  );
+}
+
+export default UserCard;`,
+          solution: `import React from 'react';
+
+function UserCard() {
+  const user = {
+    name: "Sarah Johnson",
+    title: "Frontend Developer",
+    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150",
+    bio: "Passionate about creating beautiful user experiences with React",
+    location: "San Francisco, CA",
+    isOnline: true,
+    website: "https://sarahjohnson.dev"
+  };
+
+  return (
+    <div className="user-card" style={{
+      maxWidth: '300px',
+      border: '1px solid #e2e8f0',
+      borderRadius: '12px',
+      padding: '20px',
+      backgroundColor: 'white',
+      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+    }}>
+      <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+        <img
+          src={user.avatar}
+          alt={user.name}
+          style={{
+            width: '80px',
+            height: '80px',
+            borderRadius: '50%',
+            objectFit: 'cover'
+          }}
+        />
+        {user.isOnline && (
+          <span style={{
+            display: 'inline-block',
+            width: '12px',
+            height: '12px',
+            backgroundColor: '#10b981',
+            borderRadius: '50%',
+            marginLeft: '8px'
+          }} />
+        )}
+      </div>
+
+      <h2 style={{ margin: '0 0 4px 0', fontSize: '20px', textAlign: 'center' }}>
+        {user.name}
+      </h2>
+
+      <p style={{ margin: '0 0 12px 0', color: '#6b7280', textAlign: 'center' }}>
+        {user.title}
+      </p>
+
+      {user.bio && (
+        <p style={{ margin: '0 0 12px 0', fontSize: '14px', lineHeight: '1.5' }}>
+          {user.bio}
+        </p>
+      )}
+
+      {user.location && (
+        <p style={{ margin: '0 0 12px 0', fontSize: '14px', color: '#6b7280' }}>
+          📍 {user.location}
+        </p>
+      )}
+
+      {user.website && (
+        <a
+          href={user.website}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: 'inline-block',
+            padding: '8px 16px',
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            textDecoration: 'none',
+            borderRadius: '6px',
+            fontSize: '14px'
+          }}
+        >
+          Visit Website
+        </a>
+      )}
+    </div>
+  );
+}
+
+export default UserCard;`
+        }
       }
-    ],
-    learningOutcomes: [
-      'Understand the syntax and rules of JSX',
-      'Know how JSX compiles to JS',
-      'Learn about fragments, nesting, and attributes in JSX'
-    ],
-    estimatedTime: '30 min',
-    difficulty: 'beginner',
-    prerequisites: ['what-is-react'],
-    nextTopics: ['components-basics']
+    ]
   },
+
   {
     id: 'components-basics',
     title: 'Components – The Building Blocks',
     description: 'Learn to create reusable UI components',
-    explanation: `React Components are independent pieces of UI built using functions (or classes). Each component:
-- Accepts props
-- Returns JSX
-- Can be reused throughout the app
+    explanation: `A component is a reusable, self-contained unit of UI. React apps are made by composing components.
 
-React apps = tree of components`,
-    animationScript: `Visual: App = Tree
-Root Component → Header, Sidebar, Footer
-Each component block zooms in:
-function Header() {
-  return <h1>Site Title</h1>;
-}
-Plug-and-play feel like LEGO blocks snapping into layout`,
-    scenario: `🧩 You're given one huge component with repeating markup. Your task is to break it down into smaller, reusable components that follow the DRY principle.`,
+Two Types of Components:
+
+1. Functional Components (Recommended):
+- Written as JavaScript functions
+- Use hooks for state and lifecycle
+- Simpler and more modern approach
+
+2. Class Components (Legacy):
+- Written as ES6 classes
+- Use this.state and lifecycle methods
+- Still supported but not recommended for new code
+
+Component Rules:
+- Component names must start with a capital letter
+- Components must return JSX (or null)
+- Components should be pure (same input = same output)
+- Keep components small and focused on one responsibility
+
+Best Practices:
+- One component per file
+- Use descriptive names
+- Extract reusable logic into custom hooks
+- Compose complex UIs from simple components`,
+
+    bestPractices: [
+      'Start component names with capital letters',
+      'Keep components small and focused',
+      'Use functional components with hooks',
+      'Extract reusable components',
+      'Follow single responsibility principle'
+    ],
+
+    realWorldUseCases: [
+      '🧩 Reusable UI elements (buttons, cards, modals)',
+      '📄 Page layouts and sections',
+      '🔄 Interactive widgets and controls',
+      '📊 Data visualization components'
+    ],
+
     challenges: [
       {
-        id: 'extract-components',
+        id: 'extract-reusable-components',
         title: 'Extract Reusable Components',
-        description: 'Break down repetitive markup into reusable components',
+        description: 'Break down a monolithic component into smaller, reusable pieces',
         type: 'playground',
         difficulty: 'beginner',
-        estimatedTime: '12 min',
-        xpReward: 60,
+        estimatedTime: '15 min',
+        xpReward: 75,
+        instructions: [
+          'Extract the Button component from the monolithic code',
+          'Extract the UserInfo component',
+          'Make components reusable with props',
+          'Compose the main component using the extracted components'
+        ],
+        hints: [
+          'Look for repeated patterns in the JSX',
+          'Identify logical groupings of elements',
+          'Think about what data each component needs',
+          'Use props to make components flexible'
+        ],
+        testCriteria: [
+          'Button component is extracted and reusable',
+          'UserInfo component is extracted properly',
+          'Main component uses the extracted components',
+          'All components follow naming conventions'
+        ],
         code: {
-          initial: `// Repetitive markup - extract into components
-function App() {
-  return (
-    <div>
-      <h2>User A</h2>
-      <p>Email: usera@example.com</p>
-      <button>View Profile</button>
+          initial: `import React from 'react';
 
-      <h2>User B</h2>
-      <p>Email: userb@example.com</p>
-      <button>View Profile</button>
+// Monolithic component - break this down into smaller components
+function UserDashboard() {
+  const user = {
+    name: "Alex Chen",
+    email: "alex@example.com",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150"
+  };
 
-      <h2>User C</h2>
-      <p>Email: userc@example.com</p>
-      <button>View Profile</button>
-    </div>
-  );
-}`,
-          solution: `// Extracted into reusable components
-function UserCard({ name, email }) {
+  const handleEdit = () => alert('Edit clicked');
+  const handleDelete = () => alert('Delete clicked');
+  const handleSave = () => alert('Save clicked');
+
   return (
-    <div>
-      <h2>{name}</h2>
-      <p>Email: {email}</p>
-      <button>View Profile</button>
+    <div style={{ padding: '20px', maxWidth: '400px' }}>
+      <h1>User Dashboard</h1>
+
+      {/* User Info Section - Extract this */}
+      <div style={{
+        border: '1px solid #ccc',
+        padding: '16px',
+        borderRadius: '8px',
+        marginBottom: '16px'
+      }}>
+        <img
+          src={user.avatar}
+          alt={user.name}
+          style={{ width: '50px', height: '50px', borderRadius: '50%' }}
+        />
+        <h3>{user.name}</h3>
+        <p>{user.email}</p>
+      </div>
+
+      {/* Buttons Section - Extract these */}
+      <div>
+        <button
+          onClick={handleEdit}
+          style={{
+            padding: '8px 16px',
+            margin: '4px',
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px'
+          }}
+        >
+          Edit
+        </button>
+
+        <button
+          onClick={handleDelete}
+          style={{
+            padding: '8px 16px',
+            margin: '4px',
+            backgroundColor: '#ef4444',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px'
+          }}
+        >
+          Delete
+        </button>
+
+        <button
+          onClick={handleSave}
+          style={{
+            padding: '8px 16px',
+            margin: '4px',
+            backgroundColor: '#10b981',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px'
+          }}
+        >
+          Save
+        </button>
+      </div>
     </div>
   );
 }
 
-function App() {
+// TODO: Extract Button component here
+
+// TODO: Extract UserInfo component here
+
+export default UserDashboard;`,
+          solution: `import React from 'react';
+
+// Extracted Button component
+function Button({ children, onClick, variant = 'primary' }) {
+  const getButtonStyle = (variant) => {
+    const baseStyle = {
+      padding: '8px 16px',
+      margin: '4px',
+      border: 'none',
+      borderRadius: '4px',
+      color: 'white',
+      cursor: 'pointer'
+    };
+
+    const variants = {
+      primary: { backgroundColor: '#3b82f6' },
+      danger: { backgroundColor: '#ef4444' },
+      success: { backgroundColor: '#10b981' }
+    };
+
+    return { ...baseStyle, ...variants[variant] };
+  };
+
   return (
-    <div>
-      <UserCard name="User A" email="usera@example.com" />
-      <UserCard name="User B" email="userb@example.com" />
-      <UserCard name="User C" email="userc@example.com" />
+    <button onClick={onClick} style={getButtonStyle(variant)}>
+      {children}
+    </button>
+  );
+}
+
+// Extracted UserInfo component
+function UserInfo({ user }) {
+  return (
+    <div style={{
+      border: '1px solid #ccc',
+      padding: '16px',
+      borderRadius: '8px',
+      marginBottom: '16px'
+    }}>
+      <img
+        src={user.avatar}
+        alt={user.name}
+        style={{ width: '50px', height: '50px', borderRadius: '50%' }}
+      />
+      <h3 style={{ margin: '8px 0 4px 0' }}>{user.name}</h3>
+      <p style={{ margin: '0', color: '#666' }}>{user.email}</p>
     </div>
   );
-}`,
-          language: 'javascript'
-        },
-        instructions: [
-          'Create a UserCard component that accepts name and email as props',
-          'Replace the repetitive markup with UserCard components',
-          'Pass the appropriate props to each UserCard instance'
-        ],
-        hints: [
-          'Extract the common structure into a separate function',
-          'Use props to make the component dynamic',
-          'Replace hardcoded values with prop variables',
-          'Use destructuring for cleaner prop access'
-        ],
-        testCriteria: [
-          'UserCard component is properly defined',
-          'All user data is displayed correctly',
-          'No repetitive markup remains',
-          'Props are passed correctly to components'
-        ]
-      },
-      {
-        id: 'layout-components',
-        title: 'Create Layout Components',
-        description: 'Build a complete layout using multiple components',
-        type: 'challenge',
-        difficulty: 'beginner',
-        estimatedTime: '20 min',
-        xpReward: 80,
-        instructions: [
-          'Create a Header component with a title prop',
-          'Create a Content component that displays paragraph text',
-          'Create a Footer component with a year prop',
-          'Compose them into a complete page layout'
-        ],
-        hints: [
-          'Each component should be a separate function',
-          'Use props to make components configurable',
-          'Consider adding basic styling with className',
-          'Think about component composition and hierarchy'
-        ],
-        testCriteria: [
-          'All three components render correctly',
-          'Props are used to customize content',
-          'Components are properly composed in the main App',
-          'Layout looks structured and organized'
-        ]
+}
+
+// Main component using extracted components
+function UserDashboard() {
+  const user = {
+    name: "Alex Chen",
+    email: "alex@example.com",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150"
+  };
+
+  const handleEdit = () => alert('Edit clicked');
+  const handleDelete = () => alert('Delete clicked');
+  const handleSave = () => alert('Save clicked');
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '400px' }}>
+      <h1>User Dashboard</h1>
+
+      <UserInfo user={user} />
+
+      <div>
+        <Button onClick={handleEdit} variant="primary">
+          Edit
+        </Button>
+        <Button onClick={handleDelete} variant="danger">
+          Delete
+        </Button>
+        <Button onClick={handleSave} variant="success">
+          Save
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+export default UserDashboard;`
+        }
       }
-    ],
-    learningOutcomes: [
-      'Build reusable UI using components',
-      'Learn to organize large UIs into modular blocks',
-      'Practice the component tree model'
-    ],
-    estimatedTime: '45 min',
-    difficulty: 'beginner',
-    prerequisites: ['jsx-basics'],
-    nextTopics: ['props-basics']
+    ]
   },
+
   {
     id: 'props-basics',
     title: 'Props – Passing Data',
     description: 'Learn how to pass data between components',
-    explanation: `Props (short for properties) let you send data from parent to child components.
-They're read-only and help you make components dynamic and reusable.`,
-    animationScript: `Parent → child → passing data packets labeled "name", "age"
-Inside the child component, they're unpacked into JSX
-Show reusability:
-<Profile name="Alice" />
-<Profile name="Bob" />`,
-    scenario: `🧩 You have a static ProfileCard component that always shows the same information. Your mission is to make it dynamic by accepting props and displaying different user data.`,
-    challenges: [
-      {
-        id: 'add-props-to-component',
-        title: 'Make Component Dynamic with Props',
-        description: 'Convert a static component to use props',
-        type: 'playground',
-        difficulty: 'beginner',
-        estimatedTime: '10 min',
-        xpReward: 50,
-        code: {
-          initial: `// Static component - make it dynamic
-function ProfileCard() {
-  return (
-    <div>
-      <h1>Hello, ???</h1>
-      <p>Age: ???</p>
-      <p>Location: ???</p>
-    </div>
-  );
-}`,
-          solution: `// Dynamic component with props
-function ProfileCard({ name, age, location }) {
-  return (
-    <div>
-      <h1>Hello, {name}</h1>
-      <p>Age: {age}</p>
-      <p>Location: {location}</p>
-    </div>
-  );
-}
+    explanation: `Props (short for "properties") are a way to pass data from parent to child components in React. They are read-only, and help make components reusable and dynamic.
 
-function App() {
-  return (
-    <div>
-      <ProfileCard name="John" age={25} location="New York" />
-      <ProfileCard name="Sarah" age={30} location="London" />
-    </div>
-  );
-}`,
-          language: 'javascript'
-        },
-        instructions: [
-          'Add props parameter to the ProfileCard function',
-          'Use destructuring to extract name, age, and location',
-          'Replace the ??? placeholders with prop values',
-          'Create multiple ProfileCard instances with different data'
-        ],
-        hints: [
-          'Use curly braces {} to embed JavaScript in JSX',
-          'Destructure props in the function parameter',
-          'Remember that props are read-only',
-          'Test with different prop values'
-        ],
-        testCriteria: [
-          'Component accepts and uses props correctly',
-          'All prop values are displayed in the UI',
-          'Multiple instances show different data',
-          'No hardcoded values remain'
-        ]
-      },
-      {
-        id: 'product-card-challenge',
-        title: 'Create a ProductCard',
-        description: 'Build a product card with conditional rendering',
-        type: 'challenge',
-        difficulty: 'beginner',
-        estimatedTime: '15 min',
-        xpReward: 75,
-        instructions: [
-          'Create a ProductCard that takes title, price, and inStock props',
-          'Display them properly',
-          'Use conditionals for "In Stock" or "Out of Stock"',
-          'Style the card appropriately'
-        ],
-        hints: [
-          'Use conditional rendering with ternary operator',
-          'Style in-stock and out-of-stock differently',
-          'Consider using CSS classes for styling',
-          'Test with both in-stock and out-of-stock products'
-        ],
-        testCriteria: [
-          'Product information displays correctly',
-          'Stock status shows conditionally',
-          'Different styling for stock status',
-          'Props are used effectively'
-        ]
-      }
-    ],
-    learningOutcomes: [
-      'Understand how props work',
-      'Pass and use data inside components',
-      'Practice prop-based customization of UIs'
-    ],
-    estimatedTime: '35 min',
-    difficulty: 'beginner',
-    prerequisites: ['components-basics'],
-    nextTopics: ['usestate-basics']
-  },
-  {
-    id: 'usestate-basics',
-    title: 'useState – Managing State in Components',
-    description: 'Learn to manage component state with the useState hook',
-    explanation: `useState is a React Hook that allows function components to track and update stateful data.
-
-It returns:
-const [state, setState] = useState(initialValue);
-
-State is what makes a component dynamic — e.g., toggling a menu, tracking user input, counting clicks, etc.`,
-    animationScript: `Show a counter on screen
-Button is clicked → value sent into a "state box"
-Updated value pops back into the UI
-setState causes the component to re-render → the new value animates`,
-    scenario: `🧩 You're given a broken counter that doesn't update properly. Your task is to fix the state management and make it interactive.`,
-    challenges: [
-      {
-        id: 'fix-counter-state',
-        title: 'Fix the Counter State',
-        description: 'Fix broken state management in a counter component',
-        type: 'playground',
-        difficulty: 'beginner',
-        estimatedTime: '10 min',
-        xpReward: 50,
-        code: {
-          initial: `// Broken counter - fix the state
-import React, { useState } from 'react';
-
-function Counter() {
-  const [count, setCount] = useState(0);
-
-  function increase() {
-    count++; // This won't work!
-  }
-
-  return (
-    <div>
-      <p>Count: {count}</p>
-      <button onClick={increase}>Increase</button>
-    </div>
-  );
-}`,
-          solution: `// Fixed counter with proper state management
-import React, { useState } from 'react';
-
-function Counter() {
-  const [count, setCount] = useState(0);
-
-  function increase() {
-    setCount(count + 1);
-  }
-
-  function reset() {
-    setCount(0);
-  }
-
-  return (
-    <div>
-      <p>Count: {count}</p>
-      <button onClick={increase}>Increase</button>
-      <button onClick={reset}>Reset</button>
-    </div>
-  );
-}`,
-          language: 'javascript'
-        },
-        instructions: [
-          'Fix the increase function to use setCount properly',
-          'Add a reset button that sets count back to 0',
-          'Ensure the component re-renders when state changes'
-        ],
-        hints: [
-          'Use setCount(count + 1) instead of count++',
-          'State should never be mutated directly',
-          'Create a separate reset function',
-          'Test both buttons to ensure they work'
-        ],
-        testCriteria: [
-          'Counter increases when button is clicked',
-          'Reset button sets count back to 0',
-          'Component re-renders with new state',
-          'No direct state mutation'
-        ]
-      },
-      {
-        id: 'like-button-challenge',
-        title: 'Create a LikeButton',
-        description: 'Build an interactive like button with state',
-        type: 'challenge',
-        difficulty: 'beginner',
-        estimatedTime: '15 min',
-        xpReward: 75,
-        instructions: [
-          'Button shows "👍 Like" initially',
-          'When clicked → text changes to "Liked"',
-          'Button becomes disabled after clicking',
-          'Bonus: Add a counter for likes'
-        ],
-        hints: [
-          'Use useState for liked state',
-          'Use conditional rendering for button text',
-          'Use disabled prop to disable button',
-          'Consider adding a like count state'
-        ],
-        testCriteria: [
-          'Button text changes when clicked',
-          'Button becomes disabled after clicking',
-          'State manages the liked status',
-          'Bonus: Like counter works correctly'
-        ]
-      }
-    ],
-    learningOutcomes: [
-      'Understand how to manage internal state',
-      'Learn how React triggers re-renders',
-      'Use state to drive interactive behavior'
-    ],
-    estimatedTime: '40 min',
-    difficulty: 'beginner',
-    prerequisites: ['props-basics'],
-    nextTopics: ['event-handling']
-  },
-  {
-    id: 'event-handling',
-    title: 'Event Handling',
-    description: 'Learn to handle user interactions in React',
-    explanation: `React handles DOM events using SyntheticEvent, which wraps the native events.
-
-You can handle events using props like:
-onClick, onChange, onSubmit
-
-Event handlers are passed functions:
-<button onClick={handleClick}>Click</button>`,
-    animationScript: `Button is clicked → spark flies to function block
-Function block glows → message displays
-Input field: text typed in → string animates into a state box`,
-    scenario: `🧩 You have a button with broken event handling that runs immediately instead of on click. Your mission is to fix the event handlers.`,
-    challenges: [
-      {
-        id: 'fix-event-handlers',
-        title: 'Fix Event Handler Issues',
-        description: 'Fix common event handling mistakes',
-        type: 'playground',
-        difficulty: 'beginner',
-        estimatedTime: '8 min',
-        xpReward: 40,
-        code: {
-          initial: `// Broken event handler - fix it
-function App() {
-  function showMessage() {
-    alert('Button clicked!');
-  }
-
-  return (
-    <div>
-      <button onClick={showMessage()}>Click Me</button>
-    </div>
-  );
-}`,
-          solution: `// Fixed event handler
-function App() {
-  function showMessage() {
-    alert('Button clicked!');
-  }
-
-  return (
-    <div>
-      <button onClick={showMessage}>Click Me</button>
-      {/* Alternative: <button onClick={() => showMessage()}>Click Me</button> */}
-    </div>
-  );
-}`,
-          language: 'javascript'
-        },
-        instructions: [
-          'Fix the onClick handler so it doesn\'t run immediately',
-          'Ensure the function only runs when button is clicked',
-          'Test both ways to pass event handlers'
-        ],
-        hints: [
-          'Remove the parentheses from showMessage()',
-          'Pass the function reference, not the function call',
-          'Alternative: use arrow function',
-          'Test to ensure alert only shows on click'
-        ],
-        testCriteria: [
-          'Alert only shows when button is clicked',
-          'No immediate function execution',
-          'Event handler is properly attached'
-        ]
-      },
-      {
-        id: 'interactive-form-challenge',
-        title: 'Build an Interactive Form',
-        description: 'Create a form with input handling and submission',
-        type: 'challenge',
-        difficulty: 'beginner',
-        estimatedTime: '20 min',
-        xpReward: 80,
-        instructions: [
-          'Create an input field for name',
-          'Add a submit button that shows alert: "Hello, [name]!"',
-          'Add a clear/reset button',
-          'Handle form submission properly'
-        ],
-        hints: [
-          'Use useState to track input value',
-          'Use onChange to update state',
-          'Use onSubmit or onClick for submission',
-          'Consider preventing default form behavior'
-        ],
-        testCriteria: [
-          'Input updates state on change',
-          'Submit shows personalized alert',
-          'Clear button resets the input',
-          'Form handles submission correctly'
-        ]
-      }
-    ],
-    learningOutcomes: [
-      'Learn how to attach handlers to buttons, inputs, etc.',
-      'Understand event objects and e.preventDefault()',
-      'Handle real-time interactivity'
-    ],
-    estimatedTime: '35 min',
-    difficulty: 'beginner',
-    prerequisites: ['usestate-basics'],
-    nextTopics: ['conditional-rendering']
-  },
-  {
-    id: 'conditional-rendering',
-    title: 'Conditional Rendering',
-    description: 'Learn to render content based on conditions',
-    explanation: `React lets you render content based on conditions using:
-- if...else statements
-- Ternary operator (condition ? A : B)
-- Short-circuiting (condition && JSX)
-
-Used for login/logout views, showing/hiding UI, etc.`,
-    animationScript: `"UserLoggedIn" state toggles
-Component branches to show either:
-- Logged-in UI
-- Login form
-Visual: toggle switch flips and content cross-fades`,
-    scenario: `🧩 You have a component that should show different content based on user login status. Your mission is to implement conditional rendering.`,
-    challenges: [
-      {
-        id: 'toggle-visibility',
-        title: 'Toggle Content Visibility',
-        description: 'Use conditional rendering to show/hide content',
-        type: 'playground',
-        difficulty: 'beginner',
-        estimatedTime: '10 min',
-        xpReward: 50,
-        code: {
-          initial: `// Add conditional rendering
-import React, { useState } from 'react';
-
-function App() {
-  const [isVisible, setIsVisible] = useState(true);
-
-  return (
-    <div>
-      <button onClick={() => setIsVisible(!isVisible)}>
-        Toggle
-      </button>
-      {/* Add conditional rendering here */}
-      <h1>Hello World</h1>
-    </div>
-  );
-}`,
-          solution: `// Conditional rendering implemented
-import React, { useState } from 'react';
-
-function App() {
-  const [isVisible, setIsVisible] = useState(true);
-
-  return (
-    <div>
-      <button onClick={() => setIsVisible(!isVisible)}>
-        {isVisible ? 'Hide' : 'Show'}
-      </button>
-      {isVisible && <h1>Hello World</h1>}
-    </div>
-  );
-}`,
-          language: 'javascript'
-        },
-        instructions: [
-          'Use conditional rendering to show/hide the h1 element',
-          'Update button text based on visibility state',
-          'Use the && operator for conditional rendering'
-        ],
-        hints: [
-          'Use {isVisible && <h1>Hello World</h1>}',
-          'Use ternary operator for button text',
-          'Test the toggle functionality',
-          'Consider using different conditional patterns'
-        ],
-        testCriteria: [
-          'Content shows/hides based on state',
-          'Button text updates appropriately',
-          'Toggle functionality works correctly'
-        ]
-      },
-      {
-        id: 'login-toggle-challenge',
-        title: 'Create a Login Toggle',
-        description: 'Build a login/logout system with conditional rendering',
-        type: 'challenge',
-        difficulty: 'beginner',
-        estimatedTime: '15 min',
-        xpReward: 75,
-        instructions: [
-          'Button toggles between "Login" / "Logout"',
-          'Show either "Welcome, user" or "Please log in"',
-          'Bonus: Change background color based on state'
-        ],
-        hints: [
-          'Use useState for login status',
-          'Use ternary operators for conditional content',
-          'Consider using CSS classes for styling',
-          'Test both logged in and logged out states'
-        ],
-        testCriteria: [
-          'Button text changes based on login state',
-          'Welcome message shows conditionally',
-          'Login state toggles correctly',
-          'Bonus: Background color changes'
-        ]
-      }
-    ],
-    learningOutcomes: [
-      'Understand JSX-based conditionals',
-      'Build dynamic UI flows',
-      'Learn best practices to avoid cluttered logic'
-    ],
-    estimatedTime: '35 min',
-    difficulty: 'beginner',
-    prerequisites: ['event-handling'],
-    nextTopics: ['lists-and-keys']
-  },
-  {
-    id: 'lists-and-keys',
-    title: 'Rendering Lists & Using Keys',
-    description: 'Learn to render dynamic lists with proper keys',
-    explanation: `To render multiple elements from an array, use:
-array.map(item => <Component key={item.id} />)
-
-The key helps React track items for updates, additions, or removal. It must be unique and stable.`,
-    animationScript: `Items in an array → mapped into UI boxes
-Show array changes → React uses "key tags" to efficiently update only what changed`,
-    scenario: `🧩 You have a list component with missing keys causing React warnings. Your mission is to fix the keys and implement dynamic list rendering.`,
-    challenges: [
-      {
-        id: 'fix-list-keys',
-        title: 'Fix Missing Keys Warning',
-        description: 'Add proper keys to list items',
-        type: 'playground',
-        difficulty: 'beginner',
-        estimatedTime: '8 min',
-        xpReward: 40,
-        code: {
-          initial: `// Missing keys - fix the warning
-function UserList() {
-  const users = [
-    { id: 1, name: 'Alice' },
-    { id: 2, name: 'Bob' },
-    { id: 3, name: 'Charlie' }
-  ];
-
-  return (
-    <ul>
-      {users.map(user => <li>{user.name}</li>)}
-    </ul>
-  );
-}`,
-          solution: `// Fixed with proper keys
-function UserList() {
-  const users = [
-    { id: 1, name: 'Alice' },
-    { id: 2, name: 'Bob' },
-    { id: 3, name: 'Charlie' }
-  ];
-
-  // Sort alphabetically
-  const sortedUsers = users.sort((a, b) => a.name.localeCompare(b.name));
-
-  return (
-    <ul>
-      {sortedUsers.map(user => (
-        <li key={user.id}>{user.name}</li>
-      ))}
-    </ul>
-  );
-}`,
-          language: 'javascript'
-        },
-        instructions: [
-          'Add key prop to each li element',
-          'Use user.id as the key value',
-          'Sort the list alphabetically',
-          'Ensure no React warnings'
-        ],
-        hints: [
-          'Add key={user.id} to the li element',
-          'Use array.sort() for alphabetical sorting',
-          'Keys should be unique and stable',
-          'Check console for warnings'
-        ],
-        testCriteria: [
-          'No "missing key" warnings in console',
-          'List items have proper keys',
-          'List is sorted alphabetically',
-          'All users display correctly'
-        ]
-      },
-      {
-        id: 'task-list-challenge',
-        title: 'Create a TaskList',
-        description: 'Build a task list with completion status',
-        type: 'challenge',
-        difficulty: 'beginner',
-        estimatedTime: '20 min',
-        xpReward: 80,
-        instructions: [
-          'Take an array of task objects (id, title, completed)',
-          'Render them in a list',
-          'Completed tasks appear with ✅',
-          'Bonus: Add a "Mark Complete" button'
-        ],
-        hints: [
-          'Use map() to render task items',
-          'Use conditional rendering for checkmarks',
-          'Add keys using task.id',
-          'Consider using buttons for interaction'
-        ],
-        testCriteria: [
-          'All tasks render correctly',
-          'Completed tasks show checkmark',
-          'Proper keys are used',
-          'Bonus: Mark complete functionality works'
-        ]
-      }
-    ],
-    learningOutcomes: [
-      'Understand .map() rendering pattern',
-      'Know the importance of keys for efficient rendering',
-      'Learn to dynamically render components from data'
-    ],
-    estimatedTime: '35 min',
-    difficulty: 'beginner',
-    prerequisites: ['conditional-rendering'],
-    nextTopics: ['forms-controlled-inputs']
-  },
-  {
-    id: 'forms-controlled-inputs',
-    title: 'Forms & Controlled Inputs',
-    description: 'Learn to handle forms with controlled components',
-    explanation: `React uses controlled components, meaning form inputs are linked to state.
+Key Rules:
+1. Props are read-only (immutable)
+2. Data flows down from parent to child
+3. Props can be any JavaScript value (strings, numbers, objects, functions)
+4. Use destructuring for cleaner code
+5. Provide default values when needed
 
 Example:
-const [name, setName] = useState("");
-<input value={name} onChange={(e) => setName(e.target.value)} />
+// Parent component
+<UserCard name="John" age={25} isActive={true} />
 
-This keeps the input value always in sync with React state.`,
-    animationScript: `Input field → characters typed fly into the state box
-State updates → text appears in live preview`,
-    scenario: `🧩 You have an uncontrolled input that doesn't sync with React state. Your mission is to make it controlled and handle form submission.`,
+// Child component
+function UserCard({ name, age, isActive }) {
+  return <div>{name} is {age} years old</div>;
+}
+
+Best Practices:
+- Use descriptive prop names
+- Validate props with PropTypes or TypeScript
+- Provide default values for optional props
+- Keep prop interfaces simple and focused`,
+
+    bestPractices: [
+      'Use descriptive and consistent prop names',
+      'Destructure props for cleaner code',
+      'Provide default values for optional props',
+      'Validate props with PropTypes or TypeScript',
+      'Keep prop interfaces simple and focused'
+    ],
+
+    realWorldUseCases: [
+      '📊 Passing data to chart components',
+      '🎨 Configuring UI component appearance',
+      '🔧 Passing event handlers to child components',
+      '📝 Sharing form data between components'
+    ],
+
     challenges: [
       {
-        id: 'make-input-controlled',
-        title: 'Make Input Controlled',
-        description: 'Convert uncontrolled input to controlled component',
-        type: 'playground',
-        difficulty: 'beginner',
-        estimatedTime: '10 min',
-        xpReward: 50,
-        code: {
-          initial: `// Uncontrolled input - make it controlled
-import React, { useState } from 'react';
-
-function App() {
-  const [name, setName] = useState('');
-
-  return (
-    <div>
-      <input type="text" placeholder="Enter your name" />
-      <p>Hello, {name}!</p>
-    </div>
-  );
-}`,
-          solution: `// Controlled input
-import React, { useState } from 'react';
-
-function App() {
-  const [name, setName] = useState('');
-
-  return (
-    <div>
-      <input
-        type="text"
-        placeholder="Enter your name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <p>Hello, {name}!</p>
-    </div>
-  );
-}`,
-          language: 'javascript'
-        },
-        instructions: [
-          'Add value prop to the input',
-          'Add onChange handler to update state',
-          'Use useState to manage the input value',
-          'Test that typing updates the greeting'
-        ],
-        hints: [
-          'Set value={name} on the input',
-          'Use onChange={(e) => setName(e.target.value)}',
-          'The input value should always match state',
-          'Test by typing in the input'
-        ],
-        testCriteria: [
-          'Input value is controlled by state',
-          'Typing updates the state immediately',
-          'Greeting updates as you type',
-          'Input and state stay in sync'
-        ]
-      },
-      {
-        id: 'feedback-form-challenge',
-        title: 'Create a FeedbackForm',
-        description: 'Build a complete form with multiple controlled inputs',
-        type: 'challenge',
-        difficulty: 'beginner',
-        estimatedTime: '20 min',
-        xpReward: 80,
-        instructions: [
-          'Create inputs for: name, email, message',
-          'Submit button shows the form data in a preview box',
-          'Bonus: Disable button until all fields are filled'
-        ],
-        hints: [
-          'Use separate useState for each field',
-          'Create handleSubmit function',
-          'Use conditional rendering for preview',
-          'Check if all fields have values for button state'
-        ],
-        testCriteria: [
-          'All inputs are controlled',
-          'Form submission shows data preview',
-          'All fields update state correctly',
-          'Bonus: Button disabled when fields empty'
-        ]
-      }
-    ],
-    learningOutcomes: [
-      'Understand controlled vs uncontrolled inputs',
-      'Link input fields to state',
-      'Handle form submission and validation'
-    ],
-    estimatedTime: '40 min',
-    difficulty: 'beginner',
-    prerequisites: ['lists-and-keys'],
-    nextTopics: ['useeffect-basics']
-  },
-  {
-    id: 'useeffect-basics',
-    title: 'useEffect – Side Effects & Lifecycle',
-    description: 'Learn to handle side effects and component lifecycle',
-    explanation: `useEffect() lets you perform side effects (like API calls, subscriptions, timers) in React components.
-
-It's a lifecycle hook replacing componentDidMount, componentDidUpdate, and componentWillUnmount.
-
-Syntax:
-useEffect(() => {
-  // effect
-  return () => {
-    // cleanup
-  }
-}, [dependencies]);`,
-    animationScript: `Timeline:
-Mount (📥 API fetch) → Update (📊 DOM change) → Unmount (🧹 cleanup)
-Hook icon wraps component with behavior
-State change triggers re-run of effect`,
-    scenario: `🧩 You have a component that fetches data but causes infinite re-renders. Your mission is to fix the useEffect dependencies and add proper cleanup.`,
-    challenges: [
-      {
-        id: 'fix-useeffect-dependencies',
-        title: 'Fix useEffect Dependencies',
-        description: 'Fix infinite re-render issue with useEffect',
+        id: 'make-component-dynamic',
+        title: 'Make Component Dynamic with Props',
+        description: 'Transform a static component to accept props and become reusable',
         type: 'playground',
         difficulty: 'beginner',
         estimatedTime: '12 min',
         xpReward: 60,
-        code: {
-          initial: `// Infinite re-render issue - fix it
-import React, { useState, useEffect } from 'react';
-
-function UserProfile() {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    // Simulated API call
-    setTimeout(() => {
-      setUser({ name: 'John Doe', email: 'john@example.com' });
-    }, 1000);
-  }); // Missing dependency array!
-
-  return (
-    <div>
-      {user ? (
-        <div>
-          <h1>{user.name}</h1>
-          <p>{user.email}</p>
-        </div>
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
-  );
-}`,
-          solution: `// Fixed with proper dependencies
-import React, { useState, useEffect } from 'react';
-
-function UserProfile() {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    // Simulated API call
-    const timer = setTimeout(() => {
-      setUser({ name: 'John Doe', email: 'john@example.com' });
-    }, 1000);
-
-    // Cleanup function
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []); // Empty dependency array - run only on mount
-
-  return (
-    <div>
-      {user ? (
-        <div>
-          <h1>{user.name}</h1>
-          <p>{user.email}</p>
-        </div>
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
-  );
-}`,
-          language: 'javascript'
-        },
         instructions: [
-          'Add empty dependency array [] to useEffect',
-          'Add cleanup function to clear the timer',
-          'Ensure effect only runs on component mount',
-          'Test that loading works correctly'
+          'Convert the static ProductCard to accept props',
+          'Add props for title, price, image, and description',
+          'Use destructuring to extract props',
+          'Add default values for optional props'
         ],
         hints: [
-          'Add [] as second parameter to useEffect',
-          'Return cleanup function from useEffect',
-          'Use clearTimeout in cleanup',
-          'Check that component doesn\'t re-render infinitely'
+          'Replace hardcoded values with prop variables',
+          'Use destructuring in function parameters',
+          'Consider which props should be required vs optional',
+          'Test with different prop values'
         ],
         testCriteria: [
-          'No infinite re-renders',
-          'Effect runs only on mount',
-          'Timer is cleaned up properly',
-          'Loading state works correctly'
-        ]
-      },
-      {
-        id: 'user-loader-challenge',
-        title: 'Create a UserLoader',
-        description: 'Build a component that fetches and displays user data',
-        type: 'challenge',
-        difficulty: 'intermediate',
-        estimatedTime: '25 min',
-        xpReward: 100,
-        instructions: [
-          'On mount, fetch users from a simulated API',
-          'Show loading and error states',
-          'Cancel fetch on unmount',
-          'Display users in a list'
+          'Component accepts and uses props correctly',
+          'Uses destructuring for props',
+          'Handles missing props gracefully',
+          'Component is reusable with different data'
         ],
-        hints: [
-          'Use useState for users, loading, and error states',
-          'Use useEffect with empty dependency array',
-          'Simulate API with setTimeout and Promise',
-          'Add cleanup to cancel ongoing requests'
-        ],
-        testCriteria: [
-          'Shows loading state initially',
-          'Fetches and displays user data',
-          'Handles error states appropriately',
-          'Cleans up on unmount'
-        ]
-      }
-    ],
-    learningOutcomes: [
-      'Use useEffect for data fetching, subscriptions, timers',
-      'Manage cleanup to prevent memory leaks',
-      'Control execution with dependencies'
-    ],
-    estimatedTime: '45 min',
-    difficulty: 'intermediate',
-    prerequisites: ['forms-controlled-inputs'],
-    nextTopics: ['useref-basics']
-  },
-  {
-    id: 'useref-basics',
-    title: 'useRef – Direct DOM Access',
-    description: 'Learn to access DOM elements and persist values with useRef',
-    explanation: `useRef creates a mutable reference that persists across re-renders without causing re-renders when changed.
-
-Common uses:
-- Accessing DOM elements directly
-- Storing mutable values that don't trigger re-renders
-- Keeping references to timers or intervals`,
-    animationScript: `Show component re-rendering → useRef value stays constant
-DOM element highlighted → ref.current points to it
-Timer example → ref stores timer ID across renders`,
-    scenario: `🧩 You need to focus an input field when a button is clicked, but useState causes unnecessary re-renders. Your mission is to use useRef for direct DOM access.`,
-    challenges: [
-      {
-        id: 'focus-input-ref',
-        title: 'Focus Input with useRef',
-        description: 'Use useRef to focus an input field on button click',
-        type: 'playground',
-        difficulty: 'intermediate',
-        estimatedTime: '10 min',
-        xpReward: 60,
         code: {
-          initial: `// Add useRef to focus the input
-import React from 'react';
+          initial: `import React from 'react';
 
-function FocusInput() {
-  const handleFocus = () => {
-    // Focus the input here
-  };
-
+// Static component - make this dynamic with props
+function ProductCard() {
   return (
-    <div>
-      <input type="text" placeholder="Click button to focus me" />
-      <button onClick={handleFocus}>Focus Input</button>
-    </div>
-  );
-}`,
-          solution: `// useRef for DOM access
-import React, { useRef } from 'react';
-
-function FocusInput() {
-  const inputRef = useRef(null);
-
-  const handleFocus = () => {
-    inputRef.current.focus();
-  };
-
-  return (
-    <div>
-      <input
-        ref={inputRef}
-        type="text"
-        placeholder="Click button to focus me"
+    <div style={{
+      border: '1px solid #ddd',
+      borderRadius: '8px',
+      padding: '16px',
+      maxWidth: '300px',
+      margin: '16px'
+    }}>
+      <img
+        src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300"
+        alt="Product"
+        style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '4px' }}
       />
-      <button onClick={handleFocus}>Focus Input</button>
-    </div>
-  );
-}`,
-          language: 'javascript'
-        },
-        instructions: [
-          'Import useRef from React',
-          'Create a ref using useRef(null)',
-          'Attach the ref to the input element',
-          'Use ref.current.focus() in the button handler'
-        ],
-        hints: [
-          'useRef returns an object with a current property',
-          'Attach ref using the ref prop',
-          'Access DOM methods via ref.current',
-          'No need to add ref to dependency arrays'
-        ],
-        testCriteria: [
-          'Input gets focused when button is clicked',
-          'No unnecessary re-renders occur',
-          'useRef is used correctly',
-          'DOM element is accessed directly'
-        ]
-      },
-      {
-        id: 'timer-ref-challenge',
-        title: 'Timer with useRef',
-        description: 'Create a timer that can be started, stopped, and reset using useRef',
-        type: 'challenge',
-        difficulty: 'intermediate',
-        estimatedTime: '20 min',
-        xpReward: 90,
-        instructions: [
-          'Create a timer that counts seconds',
-          'Add start, stop, and reset buttons',
-          'Use useRef to store the interval ID',
-          'Prevent memory leaks by clearing intervals'
-        ],
-        hints: [
-          'Use setInterval for the timer',
-          'Store interval ID in useRef',
-          'Clear interval in stop function',
-          'Use useEffect for cleanup on unmount'
-        ],
-        testCriteria: [
-          'Timer counts seconds correctly',
-          'Start/stop buttons work properly',
-          'Reset button resets to 0',
-          'No memory leaks from intervals'
-        ]
-      }
-    ],
-    learningOutcomes: [
-      'Access DOM elements directly without re-renders',
-      'Store mutable values that persist across renders',
-      'Understand when to use useRef vs useState'
-    ],
-    estimatedTime: '40 min',
-    difficulty: 'intermediate',
-    prerequisites: ['useeffect-basics'],
-    nextTopics: ['component-lifecycle']
-  },
-  {
-    id: 'component-lifecycle',
-    title: 'Component Lifecycle with Hooks',
-    description: 'Understand component lifecycle using useEffect patterns',
-    explanation: `React functional components use useEffect to handle lifecycle events:
-
-- Mount: useEffect(() => {}, [])
-- Update: useEffect(() => {})
-- Unmount: useEffect(() => { return () => {} }, [])
-- Specific updates: useEffect(() => {}, [dependency])`,
-    animationScript: `Component timeline: Mount → Update → Update → Unmount
-Each phase shows corresponding useEffect patterns
-Cleanup functions highlighted during unmount`,
-    scenario: `🧩 You have a component that fetches data, subscribes to events, and needs cleanup. Your mission is to implement proper lifecycle management.`,
-    challenges: [
-      {
-        id: 'lifecycle-data-fetcher',
-        title: 'Data Fetcher with Lifecycle',
-        description: 'Create a component that properly handles data fetching lifecycle',
-        type: 'playground',
-        difficulty: 'intermediate',
-        estimatedTime: '15 min',
-        xpReward: 80,
-        code: {
-          initial: `// Add proper lifecycle management
-import React, { useState, useEffect } from 'react';
-
-function UserProfile({ userId }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  // Add lifecycle effects here
-
-  return (
-    <div>
-      {loading ? (
-        <p>Loading...</p>
-      ) : user ? (
-        <div>
-          <h1>{user.name}</h1>
-          <p>{user.email}</p>
-        </div>
-      ) : (
-        <p>No user found</p>
-      )}
-    </div>
-  );
-}`,
-          solution: `// Complete lifecycle management
-import React, { useState, useEffect } from 'react';
-
-function UserProfile({ userId }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    // Mount and userId change effect
-    let cancelled = false;
-
-    const fetchUser = async () => {
-      setLoading(true);
-      try {
-        // Simulated API call
-        const response = await fetch(\`/api/users/\${userId}\`);
-        const userData = await response.json();
-
-        if (!cancelled) {
-          setUser(userData);
-        }
-      } catch (error) {
-        if (!cancelled) {
-          console.error('Failed to fetch user:', error);
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
-    };
-
-    if (userId) {
-      fetchUser();
-    }
-
-    // Cleanup function
-    return () => {
-      cancelled = true;
-    };
-  }, [userId]); // Re-run when userId changes
-
-  return (
-    <div>
-      {loading ? (
-        <p>Loading...</p>
-      ) : user ? (
-        <div>
-          <h1>{user.name}</h1>
-          <p>{user.email}</p>
-        </div>
-      ) : (
-        <p>No user found</p>
-      )}
-    </div>
-  );
-}`,
-          language: 'javascript'
-        },
-        instructions: [
-          'Add useEffect to fetch user data when userId changes',
-          'Implement loading state management',
-          'Add cleanup to prevent state updates on unmounted components',
-          'Handle the case when userId is null/undefined'
-        ],
-        hints: [
-          'Use userId in the dependency array',
-          'Set loading to true before fetching',
-          'Use a cancelled flag for cleanup',
-          'Handle both success and error cases'
-        ],
-        testCriteria: [
-          'Fetches data when userId changes',
-          'Shows loading state during fetch',
-          'Prevents state updates after unmount',
-          'Handles error cases gracefully'
-        ]
-      }
-    ],
-    learningOutcomes: [
-      'Understand component lifecycle phases',
-      'Implement proper cleanup to prevent memory leaks',
-      'Handle data fetching with lifecycle awareness'
-    ],
-    estimatedTime: '45 min',
-    difficulty: 'intermediate',
-    prerequisites: ['useref-basics'],
-    nextTopics: ['custom-hooks']
-  },
-  {
-    id: 'custom-hooks',
-    title: 'Custom Hooks – Reusable Logic',
-    description: 'Learn to create custom hooks for reusable stateful logic',
-    explanation: `Custom hooks are JavaScript functions that:
-- Start with "use" (naming convention)
-- Can call other hooks
-- Allow sharing stateful logic between components
-- Return values that components can use
-
-Example: useCounter, useFetch, useLocalStorage`,
-    animationScript: `Show duplicate logic in multiple components → extract into custom hook → components become cleaner
-Hook icon moves between components sharing the same logic`,
-    scenario: `🧩 You have multiple components with similar counter logic. Your mission is to extract this into a reusable custom hook.`,
-    challenges: [
-      {
-        id: 'create-use-counter',
-        title: 'Create useCounter Hook',
-        description: 'Extract counter logic into a reusable custom hook',
-        type: 'playground',
-        difficulty: 'intermediate',
-        estimatedTime: '15 min',
-        xpReward: 80,
-        code: {
-          initial: `// Extract counter logic into custom hook
-import React, { useState } from 'react';
-
-// Create useCounter custom hook here
-
-function Counter1() {
-  const [count, setCount] = useState(0);
-  const increment = () => setCount(count + 1);
-  const decrement = () => setCount(count - 1);
-  const reset = () => setCount(0);
-
-  return (
-    <div>
-      <h2>Counter 1: {count}</h2>
-      <button onClick={increment}>+</button>
-      <button onClick={decrement}>-</button>
-      <button onClick={reset}>Reset</button>
+      <h3 style={{ margin: '12px 0 8px 0' }}>Wireless Headphones</h3>
+      <p style={{ color: '#666', fontSize: '14px', margin: '0 0 12px 0' }}>
+        High-quality wireless headphones with noise cancellation
+      </p>
+      <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#2563eb' }}>
+        $99.99
+      </div>
+      <button style={{
+        marginTop: '12px',
+        padding: '8px 16px',
+        backgroundColor: '#3b82f6',
+        color: 'white',
+        border: 'none',
+        borderRadius: '4px',
+        cursor: 'pointer'
+      }}>
+        Add to Cart
+      </button>
     </div>
   );
 }
 
-function Counter2() {
-  const [count, setCount] = useState(10);
-  const increment = () => setCount(count + 1);
-  const decrement = () => setCount(count - 1);
-  const reset = () => setCount(10);
-
-  return (
-    <div>
-      <h2>Counter 2: {count}</h2>
-      <button onClick={increment}>+</button>
-      <button onClick={decrement}>-</button>
-      <button onClick={reset}>Reset</button>
-    </div>
-  );
-}`,
-          solution: `// Custom hook implementation
-import React, { useState } from 'react';
-
-function useCounter(initialValue = 0) {
-  const [count, setCount] = useState(initialValue);
-
-  const increment = () => setCount(prev => prev + 1);
-  const decrement = () => setCount(prev => prev - 1);
-  const reset = () => setCount(initialValue);
-
-  return { count, increment, decrement, reset };
-}
-
-function Counter1() {
-  const { count, increment, decrement, reset } = useCounter(0);
-
-  return (
-    <div>
-      <h2>Counter 1: {count}</h2>
-      <button onClick={increment}>+</button>
-      <button onClick={decrement}>-</button>
-      <button onClick={reset}>Reset</button>
-    </div>
-  );
-}
-
-function Counter2() {
-  const { count, increment, decrement, reset } = useCounter(10);
-
-  return (
-    <div>
-      <h2>Counter 2: {count}</h2>
-      <button onClick={increment}>+</button>
-      <button onClick={decrement}>-</button>
-      <button onClick={reset}>Reset</button>
-    </div>
-  );
-}`,
-          language: 'javascript'
-        },
-        instructions: [
-          'Create a useCounter function that accepts initialValue',
-          'Return an object with count, increment, decrement, and reset',
-          'Use the custom hook in both Counter components',
-          'Ensure each counter maintains its own state'
-        ],
-        hints: [
-          'Custom hooks are just functions that use other hooks',
-          'Use functional updates for state setters',
-          'Return an object for easier destructuring',
-          'Each component gets its own hook instance'
-        ],
-        testCriteria: [
-          'useCounter hook is properly implemented',
-          'Both counters work independently',
-          'Code duplication is eliminated',
-          'Hook follows naming convention'
-        ]
-      },
-      {
-        id: 'use-fetch-hook',
-        title: 'Create useFetch Hook',
-        description: 'Build a custom hook for data fetching with loading and error states',
-        type: 'challenge',
-        difficulty: 'intermediate',
-        estimatedTime: '25 min',
-        xpReward: 100,
-        instructions: [
-          'Create useFetch hook that takes a URL',
-          'Return data, loading, and error states',
-          'Handle fetch lifecycle and cleanup',
-          'Use the hook in a component to display user data'
-        ],
-        hints: [
-          'Use useState for data, loading, and error',
-          'Use useEffect for the fetch operation',
-          'Handle cleanup with AbortController',
-          'Consider dependency array for URL changes'
-        ],
-        testCriteria: [
-          'useFetch hook handles all fetch states',
-          'Loading state shows during fetch',
-          'Error state handles fetch failures',
-          'Data displays when fetch succeeds'
-        ]
-      }
-    ],
-    learningOutcomes: [
-      'Create reusable custom hooks',
-      'Share stateful logic between components',
-      'Follow React hooks conventions and best practices'
-    ],
-    estimatedTime: '50 min',
-    difficulty: 'intermediate',
-    prerequisites: ['component-lifecycle'],
-    nextTopics: ['context-api']
-  },
-  {
-    id: 'context-api',
-    title: 'Context API – Global State',
-    description: 'Learn to manage global state with React Context',
-    explanation: `React Context provides a way to share data between components without prop drilling.
-
-Steps:
-1. Create context: createContext()
-2. Provide context: <Context.Provider value={data}>
-3. Consume context: useContext(Context)
-
-Use for: themes, user auth, language settings`,
-    animationScript: `Show prop drilling → components passing props down multiple levels
-Context wraps app → data flows directly to any component that needs it`,
-    scenario: `🧩 You have a theme that needs to be shared across many components. Your mission is to use Context API to avoid prop drilling.`,
-    challenges: [
-      {
-        id: 'theme-context',
-        title: 'Create Theme Context',
-        description: 'Implement a theme system using Context API',
-        type: 'playground',
-        difficulty: 'intermediate',
-        estimatedTime: '20 min',
-        xpReward: 90,
-        code: {
-          initial: `// Create theme context system
-import React, { createContext, useContext, useState } from 'react';
-
-// Create ThemeContext here
+// TODO: Update component to accept props
+// TODO: Use the component with different props
 
 function App() {
   return (
     <div>
-      <Header />
-      <Main />
-      <Footer />
+      <ProductCard />
+      {/* TODO: Add more ProductCard instances with different props */}
     </div>
   );
 }
 
-function Header() {
+export default App;`,
+          solution: `import React from 'react';
+
+// Dynamic component with props
+function ProductCard({
+  title,
+  price,
+  image,
+  description,
+  onAddToCart,
+  currency = '$'
+}) {
   return (
-    <header style={{ padding: '1rem' }}>
-      <h1>My App</h1>
-      <ThemeToggle />
-    </header>
+    <div style={{
+      border: '1px solid #ddd',
+      borderRadius: '8px',
+      padding: '16px',
+      maxWidth: '300px',
+      margin: '16px'
+    }}>
+      <img
+        src={image}
+        alt={title}
+        style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '4px' }}
+      />
+      <h3 style={{ margin: '12px 0 8px 0' }}>{title}</h3>
+      <p style={{ color: '#666', fontSize: '14px', margin: '0 0 12px 0' }}>
+        {description}
+      </p>
+      <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#2563eb' }}>
+        {currency}{price}
+      </div>
+      <button
+        onClick={() => onAddToCart && onAddToCart(title)}
+        style={{
+          marginTop: '12px',
+          padding: '8px 16px',
+          backgroundColor: '#3b82f6',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer'
+        }}
+      >
+        Add to Cart
+      </button>
+    </div>
   );
 }
 
-function Main() {
-  return (
-    <main style={{ padding: '2rem' }}>
-      <p>This is the main content area.</p>
-    </main>
-  );
-}
-
-function Footer() {
-  return (
-    <footer style={{ padding: '1rem' }}>
-      <p>© 2024 My App</p>
-    </footer>
-  );
-}
-
-function ThemeToggle() {
-  return (
-    <button>Toggle Theme</button>
-  );
-}`,
-          solution: `// Complete theme context implementation
-import React, { createContext, useContext, useState } from 'react';
-
-const ThemeContext = createContext();
-
-function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState('light');
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+function App() {
+  const handleAddToCart = (productName) => {
+    alert(\`Added \${productName} to cart!\`);
   };
 
-  const themeStyles = {
-    light: {
-      backgroundColor: '#ffffff',
-      color: '#000000'
-    },
-    dark: {
-      backgroundColor: '#333333',
-      color: '#ffffff'
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+      <ProductCard
+        title="Wireless Headphones"
+        price="99.99"
+        image="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300"
+        description="High-quality wireless headphones with noise cancellation"
+        onAddToCart={handleAddToCart}
+      />
+      <ProductCard
+        title="Smart Watch"
+        price="199.99"
+        image="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300"
+        description="Feature-rich smartwatch with health tracking"
+        onAddToCart={handleAddToCart}
+      />
+      <ProductCard
+        title="Laptop Stand"
+        price="49.99"
+        image="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=300"
+        description="Ergonomic aluminum laptop stand for better posture"
+        onAddToCart={handleAddToCart}
+      />
+    </div>
+  );
+}
+
+export default App;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'usestate-basics',
+    title: 'useState – Managing State in Components',
+    description: 'Learn to manage component state with the useState hook',
+    explanation: `State is data that a component can manage internally. It changes over time and triggers a re-render when updated.
+
+useState Hook:
+The useState hook allows functional components to have state. It returns an array with two elements:
+1. Current state value
+2. Function to update the state
+
+Syntax:
+const [state, setState] = useState(initialValue);
+
+Rules of State:
+1. State is immutable - always create new objects/arrays
+2. State updates are asynchronous
+3. State updates trigger re-renders
+4. Use functional updates for state that depends on previous state
+5. Don't mutate state directly
+
+Example:
+const [count, setCount] = useState(0);
+const increment = () => setCount(count + 1);
+const incrementByAmount = (amount) => setCount(prev => prev + amount);
+
+Best Practices:
+- Initialize state with appropriate default values
+- Use multiple useState calls for unrelated state
+- Use functional updates when new state depends on previous state
+- Keep state minimal and derive other values when possible`,
+
+    bestPractices: [
+      'Initialize state with appropriate default values',
+      'Use multiple useState calls for unrelated state',
+      'Use functional updates when depending on previous state',
+      'Keep state minimal and derive computed values',
+      'Never mutate state directly'
+    ],
+
+    realWorldUseCases: [
+      '🔢 Counters and numeric inputs',
+      '🔄 Toggle switches and checkboxes',
+      '📝 Form inputs and validation',
+      '🎮 Interactive games and animations'
+    ],
+
+    challenges: [
+      {
+        id: 'fix-counter-state',
+        title: 'Fix the Counter State',
+        description: 'Fix common useState mistakes in a counter component',
+        type: 'playground',
+        difficulty: 'beginner',
+        estimatedTime: '10 min',
+        xpReward: 50,
+        instructions: [
+          'Fix the state mutation issues',
+          'Implement proper state updates',
+          'Add functional updates where needed',
+          'Ensure the counter works correctly'
+        ],
+        hints: [
+          'Never mutate state directly',
+          'Use the setter function to update state',
+          'Use functional updates for dependent state changes',
+          'Check for proper useState import'
+        ],
+        testCriteria: [
+          'Counter increments and decrements correctly',
+          'No direct state mutations',
+          'Uses proper useState patterns',
+          'All buttons work as expected'
+        ],
+        code: {
+          initial: `import React, { useState } from 'react';
+
+function BrokenCounter() {
+  let [count, setCount] = useState(0);
+
+  // Fix these broken functions
+  const increment = () => {
+    count++; // This is wrong!
+  };
+
+  const decrement = () => {
+    count = count - 1; // This is wrong!
+  };
+
+  const incrementByFive = () => {
+    setCount(count + 1);
+    setCount(count + 1);
+    setCount(count + 1);
+    setCount(count + 1);
+    setCount(count + 1); // This won't work as expected!
+  };
+
+  const reset = () => {
+    count = 0; // This is wrong!
+  };
+
+  return (
+    <div style={{ padding: '20px', textAlign: 'center' }}>
+      <h2>Counter: {count}</h2>
+      <div>
+        <button onClick={increment}>+1</button>
+        <button onClick={decrement}>-1</button>
+        <button onClick={incrementByFive}>+5</button>
+        <button onClick={reset}>Reset</button>
+      </div>
+    </div>
+  );
+}
+
+export default BrokenCounter;`,
+          solution: `import React, { useState } from 'react';
+
+function FixedCounter() {
+  const [count, setCount] = useState(0);
+
+  // Fixed functions with proper state updates
+  const increment = () => {
+    setCount(count + 1);
+  };
+
+  const decrement = () => {
+    setCount(count - 1);
+  };
+
+  const incrementByFive = () => {
+    setCount(prevCount => prevCount + 5);
+  };
+
+  const reset = () => {
+    setCount(0);
+  };
+
+  return (
+    <div style={{ padding: '20px', textAlign: 'center' }}>
+      <h2>Counter: {count}</h2>
+      <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '16px' }}>
+        <button
+          onClick={increment}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#10b981',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          +1
+        </button>
+        <button
+          onClick={decrement}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#ef4444',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          -1
+        </button>
+        <button
+          onClick={incrementByFive}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          +5
+        </button>
+        <button
+          onClick={reset}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#6b7280',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          Reset
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default FixedCounter;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'event-handling',
+    title: 'Event Handling',
+    description: 'Learn to handle user interactions in React',
+    explanation: `React uses SyntheticEvents, which normalize native DOM events across browsers.
+
+How Events Work in React:
+- React wraps native events in SyntheticEvent objects
+- Event handlers receive the event object as a parameter
+- Use camelCase for event names (onClick, onChange, onSubmit)
+- Event handlers are functions, not strings
+
+Supported Events:
+- Mouse: onClick, onDoubleClick, onMouseOver, onMouseOut
+- Keyboard: onKeyDown, onKeyUp, onKeyPress
+- Form: onChange, onSubmit, onFocus, onBlur
+- Touch: onTouchStart, onTouchMove, onTouchEnd
+
+Best Practices:
+- Use arrow functions or bind methods properly
+- Prevent default behavior when needed
+- Use event delegation for performance
+- Extract event handlers to separate functions for readability`,
+
+    bestPractices: [
+      'Use camelCase for event names',
+      'Extract complex event handlers to separate functions',
+      'Use event.preventDefault() when needed',
+      'Avoid inline arrow functions for performance',
+      'Use event delegation for lists'
+    ],
+
+    realWorldUseCases: [
+      '🖱️ Button clicks and user interactions',
+      '⌨️ Form input handling and validation',
+      '📱 Touch gestures and mobile interactions',
+      '🎮 Game controls and interactive elements'
+    ],
+
+    challenges: [
+      {
+        id: 'fix-event-handlers',
+        title: 'Fix Event Handler Issues',
+        description: 'Fix common event handling mistakes in React',
+        type: 'playground',
+        difficulty: 'beginner',
+        estimatedTime: '12 min',
+        xpReward: 60,
+        instructions: [
+          'Fix the broken event handlers',
+          'Implement proper form submission',
+          'Add keyboard event handling',
+          'Prevent default behaviors where needed'
+        ],
+        hints: [
+          'Use arrow functions or proper binding',
+          'Check event handler syntax',
+          'Use event.preventDefault() for forms',
+          'Make sure event handlers are functions'
+        ],
+        testCriteria: [
+          'All buttons respond to clicks',
+          'Form submission works correctly',
+          'Keyboard events are handled properly',
+          'No console errors from event handlers'
+        ],
+        code: {
+          initial: `import React, { useState } from 'react';
+
+function EventHandlingDemo() {
+  const [message, setMessage] = useState('');
+  const [inputValue, setInputValue] = useState('');
+
+  // Fix these broken event handlers
+  const handleClick = {
+    // This should be a function!
+    setMessage('Button clicked!');
+  };
+
+  const handleSubmit = (event) => {
+    // Missing preventDefault
+    setMessage(\`Form submitted with: \${inputValue}\`);
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      // This will cause form submission
+      setMessage('Enter key pressed!');
+    }
+  };
+
+  const handleChange = (event) => {
+    // This is correct
+    setInputValue(event.target.value);
+  };
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h2>Event Handling Demo</h2>
+
+      <button onClick={handleClick}>
+        Click Me
+      </button>
+
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleChange}
+          onKeyPress={handleKeyPress}
+          placeholder="Type something and press Enter"
+        />
+        <button type="submit">Submit</button>
+      </form>
+
+      <p>Message: {message}</p>
+    </div>
+  );
+}
+
+export default EventHandlingDemo;`,
+          solution: `import React, { useState } from 'react';
+
+function EventHandlingDemo() {
+  const [message, setMessage] = useState('');
+  const [inputValue, setInputValue] = useState('');
+
+  // Fixed event handlers
+  const handleClick = () => {
+    setMessage('Button clicked!');
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault(); // Prevent page reload
+    setMessage(\`Form submitted with: \${inputValue}\`);
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault(); // Prevent form submission
+      setMessage('Enter key pressed!');
+    }
+  };
+
+  const handleChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleReset = () => {
+    setMessage('');
+    setInputValue('');
+  };
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '400px' }}>
+      <h2>Event Handling Demo</h2>
+
+      <div style={{ marginBottom: '16px' }}>
+        <button
+          onClick={handleClick}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            marginRight: '8px'
+          }}
+        >
+          Click Me
+        </button>
+
+        <button
+          onClick={handleReset}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#6b7280',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          Reset
+        </button>
+      </div>
+
+      <form onSubmit={handleSubmit} style={{ marginBottom: '16px' }}>
+        <div style={{ marginBottom: '8px' }}>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={handleChange}
+            onKeyPress={handleKeyPress}
+            placeholder="Type something and press Enter"
+            style={{
+              padding: '8px',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+              width: '100%',
+              marginBottom: '8px'
+            }}
+          />
+        </div>
+        <button
+          type="submit"
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#10b981',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          Submit
+        </button>
+      </form>
+
+      <div style={{
+        padding: '12px',
+        backgroundColor: '#f3f4f6',
+        borderRadius: '4px',
+        minHeight: '40px'
+      }}>
+        <strong>Message:</strong> {message || 'No message yet'}
+      </div>
+    </div>
+  );
+}
+
+export default EventHandlingDemo;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'conditional-rendering',
+    title: 'Conditional Rendering',
+    description: 'Learn to render content based on conditions',
+    explanation: `In React, conditional rendering means showing different content or components based on conditions (like state or props) — just like using if or switch in JavaScript.
+
+Common Patterns:
+
+1. Ternary Operator:
+{condition ? <ComponentA /> : <ComponentB />}
+
+2. Logical AND (&&):
+{condition && <Component />}
+
+3. If/Else Statements:
+if (condition) return <ComponentA />;
+return <ComponentB />;
+
+4. Switch Statements:
+switch(status) {
+  case 'loading': return <Spinner />;
+  case 'error': return <Error />;
+  default: return <Content />;
+}
+
+Best Practices:
+- Keep conditions simple and readable
+- Extract complex logic to variables or functions
+- Use meaningful variable names for conditions
+- Consider using early returns for cleaner code`,
+
+    bestPractices: [
+      'Keep conditional logic simple and readable',
+      'Extract complex conditions to variables',
+      'Use meaningful names for boolean variables',
+      'Consider early returns for cleaner code',
+      'Avoid deeply nested ternary operators'
+    ],
+
+    realWorldUseCases: [
+      '🔐 Showing login/logout states',
+      '📊 Displaying loading spinners',
+      '⚠️ Error message handling',
+      '🎯 Feature flags and A/B testing'
+    ],
+
+    challenges: [
+      {
+        id: 'toggle-content-visibility',
+        title: 'Toggle Content Visibility',
+        description: 'Implement various conditional rendering patterns',
+        type: 'playground',
+        difficulty: 'beginner',
+        estimatedTime: '15 min',
+        xpReward: 70,
+        instructions: [
+          'Implement show/hide functionality for different sections',
+          'Add loading state simulation',
+          'Create error handling with conditional rendering',
+          'Use different conditional rendering patterns'
+        ],
+        hints: [
+          'Use useState for managing visibility states',
+          'Try both ternary operators and logical AND',
+          'Consider using early returns',
+          'Think about user experience during state changes'
+        ],
+        testCriteria: [
+          'All toggle buttons work correctly',
+          'Loading simulation displays properly',
+          'Error states are handled gracefully',
+          'Uses multiple conditional rendering patterns'
+        ],
+        code: {
+          initial: `import React, { useState } from 'react';
+
+function ConditionalRenderingDemo() {
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [userRole, setUserRole] = useState('guest');
+
+  const simulateLoading = () => {
+    setIsLoading(true);
+    setHasError(false);
+    setTimeout(() => {
+      setIsLoading(false);
+      // Randomly show error or success
+      if (Math.random() > 0.7) {
+        setHasError(true);
+      }
+    }, 2000);
+  };
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '500px' }}>
+      <h2>Conditional Rendering Demo</h2>
+
+      {/* TODO: Add conditional rendering for welcome message */}
+
+      {/* TODO: Add loading state with conditional rendering */}
+
+      {/* TODO: Add error handling with conditional rendering */}
+
+      {/* TODO: Add role-based content rendering */}
+
+      <div style={{ marginTop: '20px' }}>
+        <button onClick={() => setShowWelcome(!showWelcome)}>
+          Toggle Welcome
+        </button>
+        <button onClick={simulateLoading}>
+          Simulate API Call
+        </button>
+        <select
+          value={userRole}
+          onChange={(e) => setUserRole(e.target.value)}
+        >
+          <option value="guest">Guest</option>
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+    </div>
+  );
+}
+
+export default ConditionalRenderingDemo;`,
+          solution: `import React, { useState } from 'react';
+
+function ConditionalRenderingDemo() {
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [userRole, setUserRole] = useState('guest');
+
+  const simulateLoading = () => {
+    setIsLoading(true);
+    setHasError(false);
+    setTimeout(() => {
+      setIsLoading(false);
+      // Randomly show error or success
+      if (Math.random() > 0.7) {
+        setHasError(true);
+      }
+    }, 2000);
+  };
+
+  const resetError = () => setHasError(false);
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '500px' }}>
+      <h2>Conditional Rendering Demo</h2>
+
+      {/* Conditional rendering with logical AND */}
+      {showWelcome && (
+        <div style={{
+          padding: '16px',
+          backgroundColor: '#dbeafe',
+          border: '1px solid #3b82f6',
+          borderRadius: '8px',
+          marginBottom: '16px'
+        }}>
+          <h3>Welcome! 👋</h3>
+          <p>This message is conditionally rendered.</p>
+        </div>
+      )}
+
+      {/* Loading state with ternary operator */}
+      <div style={{ marginBottom: '16px' }}>
+        {isLoading ? (
+          <div style={{
+            padding: '16px',
+            backgroundColor: '#fef3c7',
+            border: '1px solid #f59e0b',
+            borderRadius: '8px',
+            textAlign: 'center'
+          }}>
+            <div>🔄 Loading...</div>
+            <div style={{ fontSize: '12px', marginTop: '4px' }}>
+              Please wait while we fetch your data
+            </div>
+          </div>
+        ) : (
+          <div style={{
+            padding: '16px',
+            backgroundColor: '#dcfce7',
+            border: '1px solid #16a34a',
+            borderRadius: '8px'
+          }}>
+            ✅ Ready! Click "Simulate API Call" to test loading.
+          </div>
+        )}
+      </div>
+
+      {/* Error handling with conditional rendering */}
+      {hasError && (
+        <div style={{
+          padding: '16px',
+          backgroundColor: '#fee2e2',
+          border: '1px solid #dc2626',
+          borderRadius: '8px',
+          marginBottom: '16px'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <strong>❌ Error occurred!</strong>
+              <div style={{ fontSize: '14px', marginTop: '4px' }}>
+                Something went wrong. Please try again.
+              </div>
+            </div>
+            <button
+              onClick={resetError}
+              style={{
+                padding: '4px 8px',
+                backgroundColor: '#dc2626',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Role-based content rendering */}
+      <div style={{
+        padding: '16px',
+        backgroundColor: '#f3f4f6',
+        borderRadius: '8px',
+        marginBottom: '16px'
+      }}>
+        <h4>Role-based Content:</h4>
+        {userRole === 'guest' && (
+          <p>👤 Welcome, Guest! Please log in to access more features.</p>
+        )}
+        {userRole === 'user' && (
+          <p>🙋‍♂️ Hello, User! You have access to basic features.</p>
+        )}
+        {userRole === 'admin' && (
+          <p>👑 Welcome, Admin! You have full access to all features.</p>
+        )}
+      </div>
+
+      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        <button
+          onClick={() => setShowWelcome(!showWelcome)}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: showWelcome ? '#dc2626' : '#3b82f6',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          {showWelcome ? 'Hide' : 'Show'} Welcome
+        </button>
+
+        <button
+          onClick={simulateLoading}
+          disabled={isLoading}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: isLoading ? '#6b7280' : '#10b981',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: isLoading ? 'not-allowed' : 'pointer'
+          }}
+        >
+          Simulate API Call
+        </button>
+
+        <select
+          value={userRole}
+          onChange={(e) => setUserRole(e.target.value)}
+          style={{
+            padding: '8px',
+            border: '1px solid #ccc',
+            borderRadius: '4px'
+          }}
+        >
+          <option value="guest">Guest</option>
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+    </div>
+  );
+}
+
+export default ConditionalRenderingDemo;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'lists-and-keys',
+    title: 'Lists and Keys',
+    description: 'Learn to render dynamic lists efficiently with keys',
+    explanation: `Rendering lists is common in React apps. When rendering lists, React needs a way to track which items have changed, been added, or removed.
+
+The map() Method:
+Use JavaScript's map() method to transform arrays into JSX elements.
+
+Example:
+const items = ['apple', 'banana', 'orange'];
+const listItems = items.map(item => <li key={item}>{item}</li>);
+
+Keys in React:
+Keys help React identify which list items have changed. They should be:
+- Unique among siblings
+- Stable (don't change between renders)
+- Predictable (same input = same key)
+
+Good Keys: IDs from your data, stable unique identifiers
+Bad Keys: Array indexes (when list can change), Math.random()
+
+Why Keys Matter:
+- Performance: React can efficiently update only changed items
+- State preservation: Component state is maintained correctly
+- Avoiding bugs: Prevents rendering issues with dynamic lists`,
+
+    bestPractices: [
+      'Always provide keys when rendering lists',
+      'Use stable, unique identifiers as keys',
+      'Avoid using array indexes as keys for dynamic lists',
+      'Extract list items to separate components for better performance',
+      'Keep keys consistent between renders'
+    ],
+
+    realWorldUseCases: [
+      '📋 Todo lists and task management',
+      '🛒 Shopping carts and product catalogs',
+      '💬 Chat messages and comments',
+      '📊 Data tables and dashboards'
+    ],
+
+    challenges: [
+      {
+        id: 'build-dynamic-list',
+        title: 'Build a Dynamic Todo List',
+        description: 'Create a todo list with proper key usage and list operations',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '20 min',
+        xpReward: 100,
+        instructions: [
+          'Create a todo list with add, remove, and toggle functionality',
+          'Use proper keys for list items',
+          'Implement filtering (all, active, completed)',
+          'Add item editing capability'
+        ],
+        hints: [
+          'Use unique IDs for each todo item',
+          'Use the filter method for removing items',
+          'Consider using object spread for updates',
+          'Think about the data structure for todos'
+        ],
+        testCriteria: [
+          'Can add new todos',
+          'Can remove todos',
+          'Can toggle todo completion',
+          'Uses proper keys for list items',
+          'Filtering works correctly'
+        ],
+        code: {
+          initial: `import React, { useState } from 'react';
+
+function TodoList() {
+  const [todos, setTodos] = useState([
+    { id: 1, text: 'Learn React', completed: false },
+    { id: 2, text: 'Build a project', completed: false },
+    { id: 3, text: 'Deploy to production', completed: true }
+  ]);
+  const [inputValue, setInputValue] = useState('');
+  const [filter, setFilter] = useState('all');
+
+  // TODO: Implement addTodo function
+  const addTodo = () => {
+    // Add logic here
+  };
+
+  // TODO: Implement removeTodo function
+  const removeTodo = (id) => {
+    // Add logic here
+  };
+
+  // TODO: Implement toggleTodo function
+  const toggleTodo = (id) => {
+    // Add logic here
+  };
+
+  // TODO: Implement filtering logic
+  const filteredTodos = todos; // Replace with actual filtering
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '500px' }}>
+      <h2>Todo List</h2>
+
+      {/* Add todo form */}
+      <div style={{ marginBottom: '20px' }}>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          placeholder="Add a new todo..."
+          style={{ padding: '8px', marginRight: '8px', width: '300px' }}
+        />
+        <button onClick={addTodo}>Add</button>
+      </div>
+
+      {/* Filter buttons */}
+      <div style={{ marginBottom: '20px' }}>
+        <button onClick={() => setFilter('all')}>All</button>
+        <button onClick={() => setFilter('active')}>Active</button>
+        <button onClick={() => setFilter('completed')}>Completed</button>
+      </div>
+
+      {/* Todo list */}
+      <ul style={{ listStyle: 'none', padding: 0 }}>
+        {/* TODO: Render filteredTodos with proper keys */}
+      </ul>
+    </div>
+  );
+}
+
+export default TodoList;`,
+          solution: `import React, { useState } from 'react';
+
+function TodoList() {
+  const [todos, setTodos] = useState([
+    { id: 1, text: 'Learn React', completed: false },
+    { id: 2, text: 'Build a project', completed: false },
+    { id: 3, text: 'Deploy to production', completed: true }
+  ]);
+  const [inputValue, setInputValue] = useState('');
+  const [filter, setFilter] = useState('all');
+
+  const addTodo = () => {
+    if (inputValue.trim()) {
+      const newTodo = {
+        id: Date.now(), // Simple ID generation
+        text: inputValue.trim(),
+        completed: false
+      };
+      setTodos([...todos, newTodo]);
+      setInputValue('');
+    }
+  };
+
+  const removeTodo = (id) => {
+    setTodos(todos.filter(todo => todo.id !== id));
+  };
+
+  const toggleTodo = (id) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ));
+  };
+
+  const filteredTodos = todos.filter(todo => {
+    if (filter === 'active') return !todo.completed;
+    if (filter === 'completed') return todo.completed;
+    return true; // 'all'
+  });
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      addTodo();
     }
   };
 
   return (
-    <ThemeContext.Provider value={{
-      theme,
-      toggleTheme,
-      styles: themeStyles[theme]
-    }}>
+    <div style={{ padding: '20px', maxWidth: '500px' }}>
+      <h2>Todo List</h2>
+
+      <div style={{ marginBottom: '20px' }}>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyPress={handleKeyPress}
+          placeholder="Add a new todo..."
+          style={{
+            padding: '8px',
+            marginRight: '8px',
+            width: '300px',
+            border: '1px solid #ccc',
+            borderRadius: '4px'
+          }}
+        />
+        <button
+          onClick={addTodo}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          Add
+        </button>
+      </div>
+
+      <div style={{ marginBottom: '20px' }}>
+        {['all', 'active', 'completed'].map(filterType => (
+          <button
+            key={filterType}
+            onClick={() => setFilter(filterType)}
+            style={{
+              padding: '6px 12px',
+              marginRight: '8px',
+              backgroundColor: filter === filterType ? '#3b82f6' : '#f3f4f6',
+              color: filter === filterType ? 'white' : '#374151',
+              border: '1px solid #d1d5db',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            {filterType.charAt(0).toUpperCase() + filterType.slice(1)}
+          </button>
+        ))}
+      </div>
+
+      <ul style={{ listStyle: 'none', padding: 0 }}>
+        {filteredTodos.map(todo => (
+          <li
+            key={todo.id}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: '12px',
+              marginBottom: '8px',
+              backgroundColor: '#f9fafb',
+              border: '1px solid #e5e7eb',
+              borderRadius: '6px'
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={todo.completed}
+              onChange={() => toggleTodo(todo.id)}
+              style={{ marginRight: '12px' }}
+            />
+            <span
+              style={{
+                flex: 1,
+                textDecoration: todo.completed ? 'line-through' : 'none',
+                color: todo.completed ? '#6b7280' : '#111827'
+              }}
+            >
+              {todo.text}
+            </span>
+            <button
+              onClick={() => removeTodo(todo.id)}
+              style={{
+                padding: '4px 8px',
+                backgroundColor: '#ef4444',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '12px'
+              }}
+            >
+              Remove
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      {filteredTodos.length === 0 && (
+        <p style={{ textAlign: 'center', color: '#6b7280', fontStyle: 'italic' }}>
+          No todos found for "{filter}" filter.
+        </p>
+      )}
+    </div>
+  );
+}
+
+export default TodoList;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'forms-and-inputs',
+    title: 'Forms and Controlled Inputs',
+    description: 'Learn to handle forms and user input in React',
+    explanation: `Forms in React work differently than in HTML. React uses "controlled components" where form data is handled by React state.
+
+Controlled vs Uncontrolled Components:
+
+Controlled Components:
+- Form data is handled by React state
+- Input value is controlled by state
+- Changes are handled via onChange events
+- Single source of truth
+
+Uncontrolled Components:
+- Form data is handled by the DOM
+- Use refs to access form values
+- Less React-like, but sometimes useful
+
+Form Handling Best Practices:
+- Use controlled components for most cases
+- Validate input as the user types
+- Provide clear error messages
+- Handle form submission properly
+- Consider using form libraries for complex forms`,
+
+    bestPractices: [
+      'Use controlled components for form inputs',
+      'Validate input in real-time when possible',
+      'Provide clear, helpful error messages',
+      'Handle form submission with preventDefault',
+      'Consider accessibility for form elements'
+    ],
+
+    realWorldUseCases: [
+      '📝 User registration and login forms',
+      '🔍 Search and filter interfaces',
+      '💳 Payment and checkout forms',
+      '📊 Data entry and survey forms'
+    ],
+
+    challenges: [
+      {
+        id: 'build-contact-form',
+        title: 'Build a Contact Form',
+        description: 'Create a contact form with validation and error handling',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '25 min',
+        xpReward: 120,
+        instructions: [
+          'Create a contact form with name, email, and message fields',
+          'Add real-time validation for each field',
+          'Display error messages for invalid inputs',
+          'Handle form submission with success/error states'
+        ],
+        hints: [
+          'Use separate state for each form field',
+          'Create validation functions for each field type',
+          'Use conditional rendering for error messages',
+          'Consider using a loading state during submission'
+        ],
+        testCriteria: [
+          'All form fields are controlled components',
+          'Validation works in real-time',
+          'Error messages display correctly',
+          'Form submission is handled properly',
+          'Success state is shown after submission'
+        ],
+        code: {
+          initial: `import React, { useState } from 'react';
+
+function ContactForm() {
+  // TODO: Add state for form fields
+  // TODO: Add state for validation errors
+  // TODO: Add state for submission status
+
+  // TODO: Add validation functions
+  const validateEmail = (email) => {
+    // Add email validation logic
+  };
+
+  const validateName = (name) => {
+    // Add name validation logic
+  };
+
+  const validateMessage = (message) => {
+    // Add message validation logic
+  };
+
+  // TODO: Add form submission handler
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Add submission logic
+  };
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '500px' }}>
+      <h2>Contact Form</h2>
+
+      <form onSubmit={handleSubmit}>
+        {/* TODO: Add form fields with validation */}
+      </form>
+    </div>
+  );
+}
+
+export default ContactForm;`,
+          solution: `import React, { useState } from 'react';
+
+function ContactForm() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) return 'Email is required';
+    if (!emailRegex.test(email)) return 'Please enter a valid email';
+    return '';
+  };
+
+  const validateName = (name) => {
+    if (!name.trim()) return 'Name is required';
+    if (name.trim().length < 2) return 'Name must be at least 2 characters';
+    return '';
+  };
+
+  const validateMessage = (message) => {
+    if (!message.trim()) return 'Message is required';
+    if (message.trim().length < 10) return 'Message must be at least 10 characters';
+    return '';
+  };
+
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+
+    // Real-time validation
+    let error = '';
+    switch (field) {
+      case 'name':
+        error = validateName(value);
+        break;
+      case 'email':
+        error = validateEmail(value);
+        break;
+      case 'message':
+        error = validateMessage(value);
+        break;
+    }
+
+    setErrors(prev => ({ ...prev, [field]: error }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validate all fields
+    const nameError = validateName(formData.name);
+    const emailError = validateEmail(formData.email);
+    const messageError = validateMessage(formData.message);
+
+    const newErrors = {
+      name: nameError,
+      email: emailError,
+      message: messageError
+    };
+
+    setErrors(newErrors);
+
+    // Check if there are any errors
+    if (nameError || emailError || messageError) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    // Simulate API call
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      setIsSubmitted(true);
+      setFormData({ name: '', email: '', message: '' });
+    } catch (error) {
+      setErrors({ submit: 'Failed to send message. Please try again.' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (isSubmitted) {
+    return (
+      <div style={{ padding: '20px', maxWidth: '500px' }}>
+        <div style={{
+          padding: '20px',
+          backgroundColor: '#dcfce7',
+          border: '1px solid #16a34a',
+          borderRadius: '8px',
+          textAlign: 'center'
+        }}>
+          <h2>✅ Message Sent!</h2>
+          <p>Thank you for your message. We'll get back to you soon.</p>
+          <button
+            onClick={() => setIsSubmitted(false)}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#3b82f6',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            Send Another Message
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '500px' }}>
+      <h2>Contact Form</h2>
+
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: '16px' }}>
+          <label style={{ display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>
+            Name *
+          </label>
+          <input
+            type="text"
+            value={formData.name}
+            onChange={(e) => handleInputChange('name', e.target.value)}
+            style={{
+              width: '100%',
+              padding: '8px',
+              border: \`1px solid \${errors.name ? '#ef4444' : '#ccc'}\`,
+              borderRadius: '4px',
+              fontSize: '14px'
+            }}
+            placeholder="Enter your full name"
+          />
+          {errors.name && (
+            <div style={{ color: '#ef4444', fontSize: '12px', marginTop: '4px' }}>
+              {errors.name}
+            </div>
+          )}
+        </div>
+
+        <div style={{ marginBottom: '16px' }}>
+          <label style={{ display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>
+            Email *
+          </label>
+          <input
+            type="email"
+            value={formData.email}
+            onChange={(e) => handleInputChange('email', e.target.value)}
+            style={{
+              width: '100%',
+              padding: '8px',
+              border: \`1px solid \${errors.email ? '#ef4444' : '#ccc'}\`,
+              borderRadius: '4px',
+              fontSize: '14px'
+            }}
+            placeholder="Enter your email address"
+          />
+          {errors.email && (
+            <div style={{ color: '#ef4444', fontSize: '12px', marginTop: '4px' }}>
+              {errors.email}
+            </div>
+          )}
+        </div>
+
+        <div style={{ marginBottom: '16px' }}>
+          <label style={{ display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>
+            Message *
+          </label>
+          <textarea
+            value={formData.message}
+            onChange={(e) => handleInputChange('message', e.target.value)}
+            rows={4}
+            style={{
+              width: '100%',
+              padding: '8px',
+              border: \`1px solid \${errors.message ? '#ef4444' : '#ccc'}\`,
+              borderRadius: '4px',
+              fontSize: '14px',
+              resize: 'vertical'
+            }}
+            placeholder="Enter your message (minimum 10 characters)"
+          />
+          {errors.message && (
+            <div style={{ color: '#ef4444', fontSize: '12px', marginTop: '4px' }}>
+              {errors.message}
+            </div>
+          )}
+        </div>
+
+        {errors.submit && (
+          <div style={{
+            padding: '12px',
+            backgroundColor: '#fee2e2',
+            border: '1px solid #ef4444',
+            borderRadius: '4px',
+            marginBottom: '16px',
+            color: '#ef4444'
+          }}>
+            {errors.submit}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          style={{
+            width: '100%',
+            padding: '12px',
+            backgroundColor: isSubmitting ? '#6b7280' : '#3b82f6',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            fontSize: '16px',
+            cursor: isSubmitting ? 'not-allowed' : 'pointer'
+          }}
+        >
+          {isSubmitting ? 'Sending...' : 'Send Message'}
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export default ContactForm;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'useeffect-basics',
+    title: 'useEffect – Side Effects and Lifecycle',
+    description: 'Learn to handle side effects and component lifecycle with useEffect',
+    explanation: `useEffect is a React Hook that lets you perform side effects in functional components. It serves the same purpose as componentDidMount, componentDidUpdate, and componentWillUnmount combined.
+
+What are Side Effects?
+Side effects are operations that affect something outside the component:
+- Data fetching (API calls)
+- Setting up subscriptions
+- Manually changing the DOM
+- Timers and intervals
+
+useEffect Syntax:
+useEffect(() => {
+  // Side effect code
+  return () => {
+    // Cleanup code (optional)
+  };
+}, [dependencies]); // Dependency array
+
+Dependency Array:
+- No array: Runs after every render
+- Empty array []: Runs only once (mount/unmount)
+- With dependencies [dep1, dep2]: Runs when dependencies change
+
+Common Patterns:
+1. Component Mount: useEffect(() => {}, [])
+2. Component Update: useEffect(() => {})
+3. Cleanup: useEffect(() => { return () => {} }, [])`,
+
+    bestPractices: [
+      'Always include dependencies in the dependency array',
+      'Use multiple useEffect hooks for different concerns',
+      'Clean up subscriptions and timers to prevent memory leaks',
+      'Use the ESLint plugin for exhaustive-deps',
+      'Keep effects focused on a single responsibility'
+    ],
+
+    realWorldUseCases: [
+      '🌐 Fetching data from APIs',
+      '⏰ Setting up timers and intervals',
+      '📡 WebSocket connections and subscriptions',
+      '📊 Tracking user interactions and analytics'
+    ],
+
+    challenges: [
+      {
+        id: 'data-fetching-with-useeffect',
+        title: 'Data Fetching with useEffect',
+        description: 'Implement data fetching with loading states and error handling',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '20 min',
+        xpReward: 100,
+        instructions: [
+          'Fetch user data from a mock API on component mount',
+          'Implement loading and error states',
+          'Add a refresh functionality',
+          'Handle component cleanup properly'
+        ],
+        hints: [
+          'Use useState for loading, data, and error states',
+          'Use useEffect with empty dependency array for initial fetch',
+          'Consider using async/await or .then() for promises',
+          'Don\'t forget to handle the cleanup'
+        ],
+        testCriteria: [
+          'Data fetches on component mount',
+          'Loading state displays during fetch',
+          'Error handling works correctly',
+          'Refresh functionality works',
+          'No memory leaks or warnings'
+        ],
+        code: {
+          initial: `import React, { useState, useEffect } from 'react';
+
+// Mock API function
+const fetchUserData = async (userId) => {
+  // Simulate network delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  // Simulate random success/failure
+  if (Math.random() > 0.8) {
+    throw new Error('Failed to fetch user data');
+  }
+
+  return {
+    id: userId,
+    name: 'John Doe',
+    email: 'john@example.com',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
+    bio: 'Software developer passionate about React',
+    joinDate: '2023-01-15'
+  };
+};
+
+function UserProfile({ userId = 1 }) {
+  // TODO: Add state for user data, loading, and error
+
+  // TODO: Add useEffect for data fetching
+
+  // TODO: Add refresh function
+
+  // TODO: Add loading state JSX
+
+  // TODO: Add error state JSX
+
+  // TODO: Add user data display JSX
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '400px' }}>
+      <h2>User Profile</h2>
+      {/* TODO: Implement conditional rendering */}
+    </div>
+  );
+}
+
+export default UserProfile;`,
+          solution: `import React, { useState, useEffect } from 'react';
+
+// Mock API function
+const fetchUserData = async (userId) => {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  if (Math.random() > 0.8) {
+    throw new Error('Failed to fetch user data');
+  }
+
+  return {
+    id: userId,
+    name: 'John Doe',
+    email: 'john@example.com',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
+    bio: 'Software developer passionate about React',
+    joinDate: '2023-01-15'
+  };
+};
+
+function UserProfile({ userId = 1 }) {
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await fetchUserData(userId);
+      setUserData(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+
+    // Cleanup function (optional for this example)
+    return () => {
+      // Cancel any ongoing requests if needed
+      console.log('Component cleanup');
+    };
+  }, [userId]); // Re-fetch when userId changes
+
+  const handleRefresh = () => {
+    fetchData();
+  };
+
+  if (loading) {
+    return (
+      <div style={{ padding: '20px', maxWidth: '400px' }}>
+        <h2>User Profile</h2>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '40px',
+          backgroundColor: '#f9fafb',
+          borderRadius: '8px'
+        }}>
+          <div style={{
+            width: '40px',
+            height: '40px',
+            border: '4px solid #e5e7eb',
+            borderTop: '4px solid #3b82f6',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite'
+          }} />
+          <span style={{ marginLeft: '12px' }}>Loading user data...</span>
+        </div>
+        <style>
+          {\`
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          \`}
+        </style>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={{ padding: '20px', maxWidth: '400px' }}>
+        <h2>User Profile</h2>
+        <div style={{
+          padding: '20px',
+          backgroundColor: '#fee2e2',
+          border: '1px solid #ef4444',
+          borderRadius: '8px',
+          textAlign: 'center'
+        }}>
+          <div style={{ fontSize: '48px', marginBottom: '12px' }}>❌</div>
+          <h3 style={{ margin: '0 0 8px 0', color: '#dc2626' }}>Error</h3>
+          <p style={{ margin: '0 0 16px 0', color: '#7f1d1d' }}>{error}</p>
+          <button
+            onClick={handleRefresh}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#ef4444',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '400px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h2>User Profile</h2>
+        <button
+          onClick={handleRefresh}
+          style={{
+            padding: '6px 12px',
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '12px'
+          }}
+        >
+          🔄 Refresh
+        </button>
+      </div>
+
+      <div style={{
+        border: '1px solid #e5e7eb',
+        borderRadius: '12px',
+        padding: '20px',
+        backgroundColor: 'white',
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+      }}>
+        <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+          <img
+            src={userData.avatar}
+            alt={userData.name}
+            style={{
+              width: '80px',
+              height: '80px',
+              borderRadius: '50%',
+              objectFit: 'cover',
+              border: '3px solid #e5e7eb'
+            }}
+          />
+        </div>
+
+        <h3 style={{ margin: '0 0 4px 0', textAlign: 'center', fontSize: '20px' }}>
+          {userData.name}
+        </h3>
+
+        <p style={{ margin: '0 0 16px 0', textAlign: 'center', color: '#6b7280' }}>
+          {userData.email}
+        </p>
+
+        <p style={{ margin: '0 0 16px 0', fontSize: '14px', lineHeight: '1.5' }}>
+          {userData.bio}
+        </p>
+
+        <div style={{
+          padding: '12px',
+          backgroundColor: '#f3f4f6',
+          borderRadius: '6px',
+          fontSize: '12px',
+          color: '#6b7280'
+        }}>
+          <strong>Member since:</strong> {new Date(userData.joinDate).toLocaleDateString()}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default UserProfile;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'component-lifecycle',
+    title: 'Component Lifecycle',
+    description: 'Understanding React component lifecycle phases',
+    explanation: `React components go through different phases during their lifetime: mounting, updating, and unmounting.
+
+Lifecycle Phases:
+
+1. Mounting (Birth):
+- Component is being created and inserted into the DOM
+- useEffect with empty dependency array []
+- Perfect for: Initial data fetching, setting up subscriptions
+
+2. Updating (Growth):
+- Component is being re-rendered due to changes in props or state
+- useEffect with dependencies or no dependency array
+- Perfect for: Responding to prop/state changes, updating DOM
+
+3. Unmounting (Death):
+- Component is being removed from the DOM
+- useEffect cleanup function
+- Perfect for: Cleaning up subscriptions, canceling network requests
+
+useEffect Lifecycle Mapping:
+- componentDidMount: useEffect(() => {}, [])
+- componentDidUpdate: useEffect(() => {})
+- componentWillUnmount: useEffect(() => { return () => {} }, [])
+
+Common Lifecycle Patterns:
+- Data fetching on mount
+- Subscribing to external data sources
+- Cleaning up to prevent memory leaks`,
+
+    bestPractices: [
+      'Clean up subscriptions and timers in useEffect cleanup',
+      'Use appropriate dependency arrays for different lifecycle needs',
+      'Separate concerns into different useEffect hooks',
+      'Handle component unmounting gracefully',
+      'Avoid memory leaks with proper cleanup'
+    ],
+
+    realWorldUseCases: [
+      '🔄 Setting up and cleaning up subscriptions',
+      '⏰ Managing timers and intervals',
+      '📡 WebSocket connection management',
+      '🎯 Event listener setup and cleanup'
+    ],
+
+    challenges: [
+      {
+        id: 'lifecycle-timer-app',
+        title: 'Build a Lifecycle Timer App',
+        description: 'Create a timer app that demonstrates all lifecycle phases',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '18 min',
+        xpReward: 90,
+        instructions: [
+          'Create a timer that counts up every second',
+          'Start the timer when component mounts',
+          'Pause/resume functionality',
+          'Clean up the timer when component unmounts',
+          'Show lifecycle events in a log'
+        ],
+        hints: [
+          'Use setInterval for the timer',
+          'Store interval ID in a ref or state',
+          'Clear interval in cleanup function',
+          'Use multiple useEffect hooks for different concerns'
+        ],
+        testCriteria: [
+          'Timer starts automatically on mount',
+          'Timer updates every second',
+          'Pause/resume functionality works',
+          'Timer cleans up properly on unmount',
+          'Lifecycle events are logged correctly'
+        ],
+        code: {
+          initial: `import React, { useState, useEffect } from 'react';
+
+function LifecycleTimer() {
+  const [seconds, setSeconds] = useState(0);
+  const [isRunning, setIsRunning] = useState(true);
+  const [logs, setLogs] = useState([]);
+
+  // TODO: Add useEffect for component mount
+
+  // TODO: Add useEffect for timer logic
+
+  // TODO: Add useEffect for component unmount cleanup
+
+  // TODO: Add function to add logs
+  const addLog = (message) => {
+    // Add logging logic
+  };
+
+  // TODO: Add pause/resume functionality
+  const toggleTimer = () => {
+    // Add toggle logic
+  };
+
+  const resetTimer = () => {
+    setSeconds(0);
+    addLog('Timer reset');
+  };
+
+  const formatTime = (totalSeconds) => {
+    const minutes = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    return \`\${minutes.toString().padStart(2, '0')}:\${secs.toString().padStart(2, '0')}\`;
+  };
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '400px' }}>
+      <h2>Lifecycle Timer</h2>
+
+      {/* TODO: Add timer display */}
+
+      {/* TODO: Add control buttons */}
+
+      {/* TODO: Add lifecycle logs */}
+    </div>
+  );
+}
+
+export default LifecycleTimer;`,
+          solution: `import React, { useState, useEffect, useRef } from 'react';
+
+function LifecycleTimer() {
+  const [seconds, setSeconds] = useState(0);
+  const [isRunning, setIsRunning] = useState(true);
+  const [logs, setLogs] = useState([]);
+  const intervalRef = useRef(null);
+
+  // Component mount effect
+  useEffect(() => {
+    addLog('🎯 Component mounted');
+
+    return () => {
+      addLog('💀 Component will unmount');
+    };
+  }, []);
+
+  // Timer effect
+  useEffect(() => {
+    if (isRunning) {
+      intervalRef.current = setInterval(() => {
+        setSeconds(prev => prev + 1);
+      }, 1000);
+      addLog('▶️ Timer started');
+    } else {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      addLog('⏸️ Timer paused');
+    }
+
+    // Cleanup function
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [isRunning]);
+
+  // Seconds update effect
+  useEffect(() => {
+    if (seconds > 0) {
+      addLog(\`⏱️ Timer updated: \${formatTime(seconds)}\`);
+    }
+  }, [seconds]);
+
+  const addLog = (message) => {
+    const timestamp = new Date().toLocaleTimeString();
+    setLogs(prev => [...prev, { message, timestamp, id: Date.now() }]);
+  };
+
+  const toggleTimer = () => {
+    setIsRunning(prev => !prev);
+  };
+
+  const resetTimer = () => {
+    setSeconds(0);
+    addLog('🔄 Timer reset');
+  };
+
+  const clearLogs = () => {
+    setLogs([]);
+  };
+
+  const formatTime = (totalSeconds) => {
+    const minutes = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    return \`\${minutes.toString().padStart(2, '0')}:\${secs.toString().padStart(2, '0')}\`;
+  };
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '500px' }}>
+      <h2>Lifecycle Timer</h2>
+
+      <div style={{
+        textAlign: 'center',
+        padding: '30px',
+        backgroundColor: '#f3f4f6',
+        borderRadius: '12px',
+        marginBottom: '20px'
+      }}>
+        <div style={{
+          fontSize: '48px',
+          fontWeight: 'bold',
+          color: '#1f2937',
+          marginBottom: '16px',
+          fontFamily: 'monospace'
+        }}>
+          {formatTime(seconds)}
+        </div>
+
+        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+          <button
+            onClick={toggleTimer}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: isRunning ? '#ef4444' : '#10b981',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '14px'
+            }}
+          >
+            {isRunning ? '⏸️ Pause' : '▶️ Resume'}
+          </button>
+
+          <button
+            onClick={resetTimer}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#6b7280',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '14px'
+            }}
+          >
+            🔄 Reset
+          </button>
+        </div>
+      </div>
+
+      <div style={{
+        border: '1px solid #e5e7eb',
+        borderRadius: '8px',
+        backgroundColor: 'white'
+      }}>
+        <div style={{
+          padding: '12px 16px',
+          borderBottom: '1px solid #e5e7eb',
+          backgroundColor: '#f9fafb',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <h3 style={{ margin: 0, fontSize: '16px' }}>Lifecycle Logs</h3>
+          <button
+            onClick={clearLogs}
+            style={{
+              padding: '4px 8px',
+              backgroundColor: '#ef4444',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '12px'
+            }}
+          >
+            Clear
+          </button>
+        </div>
+
+        <div style={{
+          maxHeight: '200px',
+          overflowY: 'auto',
+          padding: '8px'
+        }}>
+          {logs.length === 0 ? (
+            <p style={{
+              textAlign: 'center',
+              color: '#6b7280',
+              fontStyle: 'italic',
+              margin: '20px 0'
+            }}>
+              No logs yet...
+            </p>
+          ) : (
+            logs.slice(-10).map(log => (
+              <div
+                key={log.id}
+                style={{
+                  padding: '6px 8px',
+                  fontSize: '12px',
+                  borderBottom: '1px solid #f3f4f6',
+                  display: 'flex',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <span>{log.message}</span>
+                <span style={{ color: '#6b7280' }}>{log.timestamp}</span>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default LifecycleTimer;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'custom-hooks',
+    title: 'Custom Hooks',
+    description: 'Learn to create reusable logic with custom hooks',
+    explanation: `Custom Hooks are JavaScript functions that start with "use" and can call other Hooks. They let you extract component logic into reusable functions.
+
+Why Custom Hooks?
+- Share stateful logic between components
+- Keep components clean and focused
+- Create reusable abstractions
+- Follow the DRY (Don't Repeat Yourself) principle
+
+Rules for Custom Hooks:
+1. Must start with "use" (useCounter, useLocalStorage)
+2. Can call other Hooks inside them
+3. Are just JavaScript functions
+4. Each call gets independent state
+
+Common Custom Hook Patterns:
+- Data fetching: useFetch, useApi
+- Local storage: useLocalStorage
+- Form handling: useForm
+- Timers: useTimer, useInterval
+- Window events: useWindowSize, useKeyPress
+
+Example:
+function useCounter(initialValue = 0) {
+  const [count, setCount] = useState(initialValue);
+  const increment = () => setCount(c => c + 1);
+  const decrement = () => setCount(c => c - 1);
+  const reset = () => setCount(initialValue);
+  return { count, increment, decrement, reset };
+}`,
+
+    bestPractices: [
+      'Start custom hook names with "use"',
+      'Return objects for multiple values instead of arrays',
+      'Keep custom hooks focused on a single responsibility',
+      'Document your custom hooks well',
+      'Test custom hooks independently'
+    ],
+
+    realWorldUseCases: [
+      '🔄 Data fetching and caching logic',
+      '💾 Local storage and persistence',
+      '📝 Form validation and handling',
+      '🎮 Game state and animation logic'
+    ],
+
+    challenges: [
+      {
+        id: 'build-custom-hooks',
+        title: 'Build Useful Custom Hooks',
+        description: 'Create custom hooks for common functionality',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '25 min',
+        xpReward: 120,
+        instructions: [
+          'Create a useLocalStorage hook for persistent state',
+          'Create a useToggle hook for boolean state',
+          'Create a useFetch hook for API calls',
+          'Use all custom hooks in a demo component'
+        ],
+        hints: [
+          'useLocalStorage should sync with localStorage',
+          'useToggle should provide toggle, setTrue, setFalse functions',
+          'useFetch should handle loading, data, and error states',
+          'Remember to handle edge cases and cleanup'
+        ],
+        testCriteria: [
+          'useLocalStorage persists data correctly',
+          'useToggle provides all toggle functions',
+          'useFetch handles all states properly',
+          'All hooks follow naming conventions',
+          'Demo component uses all hooks effectively'
+        ],
+        code: {
+          initial: `import React, { useState, useEffect } from 'react';
+
+// TODO: Create useLocalStorage custom hook
+function useLocalStorage(key, initialValue) {
+  // Implement localStorage hook
+}
+
+// TODO: Create useToggle custom hook
+function useToggle(initialValue = false) {
+  // Implement toggle hook
+}
+
+// TODO: Create useFetch custom hook
+function useFetch(url) {
+  // Implement fetch hook
+}
+
+// Demo component using all custom hooks
+function CustomHooksDemo() {
+  // TODO: Use useLocalStorage for user preferences
+  // TODO: Use useToggle for dark mode
+  // TODO: Use useFetch for loading user data
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '600px' }}>
+      <h2>Custom Hooks Demo</h2>
+
+      {/* TODO: Add demo UI */}
+    </div>
+  );
+}
+
+export default CustomHooksDemo;`,
+          solution: `import React, { useState, useEffect } from 'react';
+
+// Custom hook for localStorage
+function useLocalStorage(key, initialValue) {
+  // Get value from localStorage or use initial value
+  const [storedValue, setStoredValue] = useState(() => {
+    try {
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      console.error(\`Error reading localStorage key "\${key}":, error\`);
+      return initialValue;
+    }
+  });
+
+  // Return a wrapped version of useState's setter function that persists the new value to localStorage
+  const setValue = (value) => {
+    try {
+      // Allow value to be a function so we have the same API as useState
+      const valueToStore = value instanceof Function ? value(storedValue) : value;
+      setStoredValue(valueToStore);
+      window.localStorage.setItem(key, JSON.stringify(valueToStore));
+    } catch (error) {
+      console.error(\`Error setting localStorage key "\${key}":, error\`);
+    }
+  };
+
+  return [storedValue, setValue];
+}
+
+// Custom hook for toggle functionality
+function useToggle(initialValue = false) {
+  const [value, setValue] = useState(initialValue);
+
+  const toggle = () => setValue(prev => !prev);
+  const setTrue = () => setValue(true);
+  const setFalse = () => setValue(false);
+
+  return {
+    value,
+    toggle,
+    setTrue,
+    setFalse,
+    setValue
+  };
+}
+
+// Custom hook for data fetching
+function useFetch(url) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!url) return;
+
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Mock data based on URL
+        let mockData;
+        if (url.includes('users')) {
+          mockData = {
+            id: 1,
+            name: 'John Doe',
+            email: 'john@example.com',
+            avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100'
+          };
+        } else {
+          mockData = { message: 'Data fetched successfully' };
+        }
+
+        setData(mockData);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  const refetch = () => {
+    if (url) {
+      setLoading(true);
+      setError(null);
+      // Trigger useEffect by updating a dependency or call fetchData directly
+    }
+  };
+
+  return { data, loading, error, refetch };
+}
+
+// Demo component using all custom hooks
+function CustomHooksDemo() {
+  // Using useLocalStorage for user preferences
+  const [userName, setUserName] = useLocalStorage('userName', '');
+  const [theme, setTheme] = useLocalStorage('theme', 'light');
+
+  // Using useToggle for UI state
+  const darkMode = useToggle(theme === 'dark');
+  const showUserData = useToggle(false);
+
+  // Using useFetch for API data
+  const { data: userData, loading, error, refetch } = useFetch(
+    showUserData.value ? '/api/users/1' : null
+  );
+
+  // Sync theme with darkMode toggle
+  useEffect(() => {
+    setTheme(darkMode.value ? 'dark' : 'light');
+  }, [darkMode.value, setTheme]);
+
+  const containerStyle = {
+    padding: '20px',
+    maxWidth: '600px',
+    backgroundColor: darkMode.value ? '#1f2937' : '#ffffff',
+    color: darkMode.value ? '#f9fafb' : '#111827',
+    borderRadius: '8px',
+    transition: 'all 0.3s ease'
+  };
+
+  const cardStyle = {
+    padding: '16px',
+    margin: '16px 0',
+    backgroundColor: darkMode.value ? '#374151' : '#f3f4f6',
+    borderRadius: '8px',
+    border: \`1px solid \${darkMode.value ? '#4b5563' : '#e5e7eb'}\`
+  };
+
+  return (
+    <div style={containerStyle}>
+      <h2>Custom Hooks Demo</h2>
+
+      {/* useLocalStorage Demo */}
+      <div style={cardStyle}>
+        <h3>📦 useLocalStorage Hook</h3>
+        <div style={{ marginBottom: '12px' }}>
+          <label style={{ display: 'block', marginBottom: '4px' }}>
+            Your Name (persisted in localStorage):
+          </label>
+          <input
+            type="text"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+            placeholder="Enter your name"
+            style={{
+              padding: '8px',
+              borderRadius: '4px',
+              border: '1px solid #ccc',
+              width: '200px'
+            }}
+          />
+        </div>
+        {userName && (
+          <p>Hello, <strong>{userName}</strong>! Your name is saved locally.</p>
+        )}
+      </div>
+
+      {/* useToggle Demo */}
+      <div style={cardStyle}>
+        <h3>🔄 useToggle Hook</h3>
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+          <button
+            onClick={darkMode.toggle}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: darkMode.value ? '#fbbf24' : '#1f2937',
+              color: darkMode.value ? '#000' : '#fff',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            {darkMode.value ? '☀️ Light Mode' : '🌙 Dark Mode'}
+          </button>
+
+          <button
+            onClick={showUserData.toggle}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#3b82f6',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            {showUserData.value ? 'Hide' : 'Show'} User Data
+          </button>
+        </div>
+
+        <p>
+          Dark Mode: <strong>{darkMode.value ? 'ON' : 'OFF'}</strong> |
+          Show User Data: <strong>{showUserData.value ? 'ON' : 'OFF'}</strong>
+        </p>
+      </div>
+
+      {/* useFetch Demo */}
+      {showUserData.value && (
+        <div style={cardStyle}>
+          <h3>🌐 useFetch Hook</h3>
+
+          {loading && (
+            <div style={{ textAlign: 'center', padding: '20px' }}>
+              <div>🔄 Loading user data...</div>
+            </div>
+          )}
+
+          {error && (
+            <div style={{
+              padding: '12px',
+              backgroundColor: '#fee2e2',
+              color: '#dc2626',
+              borderRadius: '4px',
+              marginBottom: '12px'
+            }}>
+              ❌ Error: {error}
+            </div>
+          )}
+
+          {userData && !loading && (
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              padding: '12px',
+              backgroundColor: darkMode.value ? '#065f46' : '#dcfce7',
+              borderRadius: '4px',
+              marginBottom: '12px'
+            }}>
+              <img
+                src={userData.avatar}
+                alt={userData.name}
+                style={{
+                  width: '50px',
+                  height: '50px',
+                  borderRadius: '50%',
+                  objectFit: 'cover'
+                }}
+              />
+              <div>
+                <h4 style={{ margin: '0 0 4px 0' }}>{userData.name}</h4>
+                <p style={{ margin: 0, fontSize: '14px', opacity: 0.8 }}>
+                  {userData.email}
+                </p>
+              </div>
+            </div>
+          )}
+
+          <button
+            onClick={refetch}
+            disabled={loading}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: loading ? '#6b7280' : '#10b981',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              fontSize: '12px'
+            }}
+          >
+            🔄 Refetch Data
+          </button>
+        </div>
+      )}
+
+      <div style={{
+        marginTop: '20px',
+        padding: '12px',
+        backgroundColor: darkMode.value ? '#065f46' : '#dbeafe',
+        borderRadius: '4px',
+        fontSize: '14px'
+      }}>
+        <strong>💡 Custom Hooks in Action:</strong>
+        <ul style={{ margin: '8px 0', paddingLeft: '20px' }}>
+          <li>useLocalStorage: Persisting your name and theme preference</li>
+          <li>useToggle: Managing dark mode and user data visibility</li>
+          <li>useFetch: Loading user data with proper state management</li>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+export default CustomHooksDemo;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'context-api',
+    title: 'Context API – Global State Management',
+    description: 'Learn to share state across components without prop drilling',
+    explanation: `React Context provides a way to pass data through the component tree without having to pass props down manually at every level.
+
+The Problem: Prop Drilling
+When you need to pass data through many levels of components, you end up passing props through components that don't even use them.
+
+The Solution: Context API
+Context creates a "global" state that can be accessed by any component in the tree.
+
+Key Concepts:
+1. createContext(): Creates a context object
+2. Provider: Provides the context value to child components
+3. useContext(): Hook to consume context in functional components
+
+Context Pattern:
+1. Create context with createContext()
+2. Wrap components with Provider
+3. Consume context with useContext()
+
+When to Use Context:
+- Theme data (dark/light mode)
+- User authentication state
+- Language/locale settings
+- Shopping cart data
+- Any data needed by many components
+
+When NOT to Use Context:
+- For component-specific state
+- When props would work fine
+- For performance-critical updates (consider state management libraries)`,
+
+    bestPractices: [
+      'Use Context for truly global state',
+      'Create separate contexts for different concerns',
+      'Provide default values for contexts',
+      'Use custom hooks to consume context',
+      'Consider performance implications of context updates'
+    ],
+
+    realWorldUseCases: [
+      '🎨 Theme and styling preferences',
+      '👤 User authentication and profile data',
+      '🛒 Shopping cart and e-commerce state',
+      '🌍 Language and internationalization'
+    ],
+
+    challenges: [
+      {
+        id: 'build-theme-context',
+        title: 'Build a Theme Context System',
+        description: 'Create a complete theme system using Context API',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '20 min',
+        xpReward: 110,
+        instructions: [
+          'Create a ThemeContext with light/dark themes',
+          'Build a ThemeProvider component',
+          'Create a custom useTheme hook',
+          'Build components that consume the theme context',
+          'Add theme persistence with localStorage'
+        ],
+        hints: [
+          'Define theme objects with colors and styles',
+          'Use useContext to consume the theme',
+          'Combine with useLocalStorage for persistence',
+          'Create a toggle function in the context'
+        ],
+        testCriteria: [
+          'ThemeContext provides theme data correctly',
+          'Theme toggle functionality works',
+          'All components respond to theme changes',
+          'Theme preference persists across page reloads',
+          'Custom useTheme hook works properly'
+        ],
+        code: {
+          initial: `import React, { createContext, useContext, useState } from 'react';
+
+// TODO: Define theme objects
+const themes = {
+  // Define light and dark themes
+};
+
+// TODO: Create ThemeContext
+
+// TODO: Create ThemeProvider component
+
+// TODO: Create custom useTheme hook
+
+// Example components that will use the theme
+function Header() {
+  // TODO: Use theme context
+  return (
+    <header>
+      <h1>My App</h1>
+      <button>Toggle Theme</button>
+    </header>
+  );
+}
+
+function Card({ title, content }) {
+  // TODO: Use theme context
+  return (
+    <div>
+      <h3>{title}</h3>
+      <p>{content}</p>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div>
+      {/* TODO: Wrap with ThemeProvider */}
+      <Header />
+      <main>
+        <Card
+          title="Welcome"
+          content="This is a themed application using React Context API."
+        />
+        <Card
+          title="Features"
+          content="Toggle between light and dark themes seamlessly."
+        />
+      </main>
+    </div>
+  );
+}
+
+export default App;`,
+          solution: `import React, { createContext, useContext, useState, useEffect } from 'react';
+
+// Define theme objects
+const themes = {
+  light: {
+    name: 'light',
+    colors: {
+      primary: '#3b82f6',
+      secondary: '#6b7280',
+      background: '#ffffff',
+      surface: '#f9fafb',
+      text: '#111827',
+      textSecondary: '#6b7280',
+      border: '#e5e7eb'
+    },
+    shadows: {
+      card: '0 1px 3px rgba(0, 0, 0, 0.1)',
+      button: '0 1px 2px rgba(0, 0, 0, 0.05)'
+    }
+  },
+  dark: {
+    name: 'dark',
+    colors: {
+      primary: '#60a5fa',
+      secondary: '#9ca3af',
+      background: '#111827',
+      surface: '#1f2937',
+      text: '#f9fafb',
+      textSecondary: '#d1d5db',
+      border: '#374151'
+    },
+    shadows: {
+      card: '0 1px 3px rgba(0, 0, 0, 0.3)',
+      button: '0 1px 2px rgba(0, 0, 0, 0.2)'
+    }
+  }
+};
+
+// Create ThemeContext
+const ThemeContext = createContext({
+  theme: themes.light,
+  toggleTheme: () => {},
+  themeName: 'light'
+});
+
+// ThemeProvider component
+function ThemeProvider({ children }) {
+  const [themeName, setThemeName] = useState(() => {
+    // Get theme from localStorage or default to light
+    return localStorage.getItem('theme') || 'light';
+  });
+
+  const theme = themes[themeName];
+
+  const toggleTheme = () => {
+    const newTheme = themeName === 'light' ? 'dark' : 'light';
+    setThemeName(newTheme);
+    localStorage.setItem('theme', newTheme);
+  };
+
+  // Apply theme to document body
+  useEffect(() => {
+    document.body.style.backgroundColor = theme.colors.background;
+    document.body.style.color = theme.colors.text;
+    document.body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+  }, [theme]);
+
+  const contextValue = {
+    theme,
+    toggleTheme,
+    themeName
+  };
+
+  return (
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   );
 }
 
+// Custom hook to use theme
 function useTheme() {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useTheme must be used within ThemeProvider');
+    throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
 }
 
+// Header component using theme context
+function Header() {
+  const { theme, toggleTheme, themeName } = useTheme();
+
+  const headerStyle = {
+    padding: '20px',
+    backgroundColor: theme.colors.surface,
+    borderBottom: \`1px solid \${theme.colors.border}\`,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    boxShadow: theme.shadows.card
+  };
+
+  const buttonStyle = {
+    padding: '8px 16px',
+    backgroundColor: theme.colors.primary,
+    color: theme.colors.background,
+    border: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    boxShadow: theme.shadows.button,
+    transition: 'all 0.2s ease'
+  };
+
+  return (
+    <header style={headerStyle}>
+      <h1 style={{ margin: 0, color: theme.colors.text }}>
+        🎨 Theme Context Demo
+      </h1>
+      <button
+        style={buttonStyle}
+        onClick={toggleTheme}
+        onMouseOver={(e) => {
+          e.target.style.opacity = '0.9';
+          e.target.style.transform = 'translateY(-1px)';
+        }}
+        onMouseOut={(e) => {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }}
+      >
+        {themeName === 'light' ? '🌙' : '☀️'}
+        {themeName === 'light' ? ' Dark Mode' : ' Light Mode'}
+      </button>
+    </header>
+  );
+}
+
+// Card component using theme context
+function Card({ title, content, icon }) {
+  const { theme } = useTheme();
+
+  const cardStyle = {
+    padding: '20px',
+    margin: '16px',
+    backgroundColor: theme.colors.surface,
+    border: \`1px solid \${theme.colors.border}\`,
+    borderRadius: '8px',
+    boxShadow: theme.shadows.card,
+    transition: 'all 0.3s ease'
+  };
+
+  const titleStyle = {
+    margin: '0 0 12px 0',
+    color: theme.colors.text,
+    fontSize: '18px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  };
+
+  const contentStyle = {
+    margin: 0,
+    color: theme.colors.textSecondary,
+    lineHeight: '1.6'
+  };
+
+  return (
+    <div
+      style={cardStyle}
+      onMouseOver={(e) => {
+        e.currentTarget.style.transform = 'translateY(-2px)';
+        e.currentTarget.style.boxShadow = theme.name === 'light'
+          ? '0 4px 12px rgba(0, 0, 0, 0.15)'
+          : '0 4px 12px rgba(0, 0, 0, 0.4)';
+      }}
+      onMouseOut={(e) => {
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = theme.shadows.card;
+      }}
+    >
+      <h3 style={titleStyle}>
+        {icon && <span>{icon}</span>}
+        {title}
+      </h3>
+      <p style={contentStyle}>{content}</p>
+    </div>
+  );
+}
+
+// Status component showing theme info
+function ThemeStatus() {
+  const { theme, themeName } = useTheme();
+
+  const statusStyle = {
+    padding: '12px 16px',
+    margin: '16px',
+    backgroundColor: theme.colors.primary,
+    color: theme.colors.background,
+    borderRadius: '6px',
+    textAlign: 'center',
+    fontSize: '14px'
+  };
+
+  return (
+    <div style={statusStyle}>
+      <strong>Current Theme:</strong> {themeName.charAt(0).toUpperCase() + themeName.slice(1)} Mode
+      <br />
+      <small>Background: {theme.colors.background} | Text: {theme.colors.text}</small>
+    </div>
+  );
+}
+
+// Main App component
 function App() {
   return (
     <ThemeProvider>
-      <div>
+      <div style={{ minHeight: '100vh', transition: 'all 0.3s ease' }}>
         <Header />
-        <Main />
-        <Footer />
+
+        <main style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+          <Card
+            icon="🚀"
+            title="Welcome to Context API"
+            content="This application demonstrates the React Context API for theme management. The theme state is shared across all components without prop drilling."
+          />
+
+          <Card
+            icon="🎨"
+            title="Dynamic Theming"
+            content="Toggle between light and dark themes using the button in the header. The theme preference is automatically saved to localStorage."
+          />
+
+          <Card
+            icon="⚡"
+            title="Performance Benefits"
+            content="Context API provides an efficient way to share state across components. Only components that consume the context will re-render when the context value changes."
+          />
+
+          <ThemeStatus />
+
+          <div style={{
+            margin: '20px 16px',
+            padding: '16px',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            borderRadius: '8px',
+            fontSize: '14px'
+          }}>
+            <strong>💡 Context API Benefits:</strong>
+            <ul style={{ margin: '8px 0', paddingLeft: '20px' }}>
+              <li>Eliminates prop drilling</li>
+              <li>Provides global state management</li>
+              <li>Easy to implement and understand</li>
+              <li>Built into React (no external dependencies)</li>
+              <li>Perfect for theme, auth, and settings data</li>
+            </ul>
+          </div>
+        </main>
       </div>
     </ThemeProvider>
   );
 }
 
-function Header() {
-  const { styles } = useTheme();
-
-  return (
-    <header style={{ ...styles, padding: '1rem' }}>
-      <h1>My App</h1>
-      <ThemeToggle />
-    </header>
-  );
-}
-
-function Main() {
-  const { styles } = useTheme();
-
-  return (
-    <main style={{ ...styles, padding: '2rem' }}>
-      <p>This is the main content area.</p>
-    </main>
-  );
-}
-
-function Footer() {
-  const { styles } = useTheme();
-
-  return (
-    <footer style={{ ...styles, padding: '1rem' }}>
-      <p>© 2024 My App</p>
-    </footer>
-  );
-}
-
-function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme();
-
-  return (
-    <button onClick={toggleTheme}>
-      Switch to {theme === 'light' ? 'dark' : 'light'} theme
-    </button>
-  );
-}`,
-          language: 'javascript'
-        },
-        instructions: [
-          'Create ThemeContext using createContext',
-          'Create ThemeProvider component with theme state',
-          'Create useTheme custom hook for consuming context',
-          'Apply theme styles to all components'
-        ],
-        hints: [
-          'Provider should wrap the entire app',
-          'Use useContext to consume the context',
-          'Create a custom hook for better error handling',
-          'Include both theme state and toggle function'
-        ],
-        testCriteria: [
-          'Theme context is properly created',
-          'All components receive theme data',
-          'Theme toggle works across all components',
-          'No prop drilling is used'
-        ]
+export default App;`
+        }
       }
-    ],
-    learningOutcomes: [
-      'Understand when and how to use Context API',
-      'Avoid prop drilling for global state',
-      'Create provider components and custom context hooks'
-    ],
-    estimatedTime: '45 min',
-    difficulty: 'intermediate',
-    prerequisites: ['custom-hooks'],
-    nextTopics: ['performance-optimization']
+    ]
   },
-  {
-    id: 'performance-optimization',
-    title: 'Performance Optimization',
-    description: 'Learn React performance optimization techniques',
-    explanation: `React performance optimization techniques:
 
-1. React.memo() - Prevent unnecessary re-renders
-2. useMemo() - Memoize expensive calculations
-3. useCallback() - Memoize function references
-4. Code splitting with React.lazy()
-5. Profiler for performance monitoring`,
-    animationScript: `Show slow component → apply React.memo → re-renders reduced
-Expensive calculation → useMemo → calculation cached
-Function recreation → useCallback → function reference stable`,
-    scenario: `🧩 You have a slow app with unnecessary re-renders and expensive calculations. Your mission is to optimize it using React performance tools.`,
+  {
+    id: 'useref-basics',
+    title: 'useRef – Accessing DOM Elements',
+    description: 'Learn to access DOM elements and persist values with useRef',
+    explanation: `useRef is a React Hook that returns a mutable ref object whose .current property is initialized to the passed argument. The returned object will persist for the full lifetime of the component.
+
+Common Use Cases:
+1. Accessing DOM elements directly
+2. Storing mutable values that don't trigger re-renders
+3. Keeping references to previous values
+4. Managing focus, text selection, or media playback
+
+Key Differences from useState:
+- Changing a ref doesn't trigger a re-render
+- You can mutate the .current property directly
+- Refs are useful for imperative actions`,
+
+    bestPractices: [
+      '🎯 Use refs for DOM manipulation, not state management',
+      '⚡ Access refs in useEffect or event handlers, not during render',
+      '🔄 Don\'t read or write refs during rendering',
+      '📝 Use refs to store previous values or timers'
+    ],
+
+    realWorldUseCases: [
+      '🎯 Managing focus for accessibility',
+      '📹 Controlling video/audio playback',
+      '📊 Integrating with third-party DOM libraries',
+      '⏱️ Storing timer IDs and intervals'
+    ],
+
     challenges: [
       {
-        id: 'memo-optimization',
-        title: 'Optimize with React.memo',
-        description: 'Use React.memo to prevent unnecessary re-renders',
+        id: 'focus-management',
+        title: 'Focus Management with useRef',
+        description: 'Build a form with automatic focus management using refs',
         type: 'playground',
-        difficulty: 'advanced',
+        difficulty: 'beginner',
         estimatedTime: '15 min',
-        xpReward: 100,
+        xpReward: 75,
         code: {
-          initial: `// Optimize this slow component
-import React, { useState } from 'react';
+          initial: `import React, { useRef } from 'react';
 
-function ExpensiveChild({ name, count }) {
-  console.log('ExpensiveChild rendered for:', name);
+function FocusForm() {
+  // Add refs for input elements
 
-  // Simulate expensive operation
-  const expensiveValue = Array.from({ length: 1000000 }, (_, i) => i).reduce((a, b) => a + b, 0);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Focus on first input after submit
+  };
 
   return (
-    <div>
-      <h3>{name}</h3>
-      <p>Count: {count}</p>
-      <p>Expensive calculation: {expensiveValue}</p>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>Name:</label>
+        <input type="text" />
+      </div>
+      <div>
+        <label>Email:</label>
+        <input type="email" />
+      </div>
+      <button type="submit">Submit</button>
+      <button type="button">Focus Name</button>
+    </form>
   );
 }
 
-function App() {
-  const [count1, setCount1] = useState(0);
-  const [count2, setCount2] = useState(0);
+export default FocusForm;`,
+          solution: `import React, { useRef } from 'react';
+
+function FocusForm() {
+  const nameRef = useRef(null);
+  const emailRef = useRef(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    nameRef.current.focus();
+  };
+
+  const focusName = () => {
+    nameRef.current.focus();
+  };
 
   return (
-    <div>
-      <button onClick={() => setCount1(count1 + 1)}>
-        Increment Count 1: {count1}
-      </button>
-      <button onClick={() => setCount2(count2 + 1)}>
-        Increment Count 2: {count2}
-      </button>
-
-      <ExpensiveChild name="Child 1" count={count1} />
-      <ExpensiveChild name="Child 2" count={count2} />
-    </div>
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>Name:</label>
+        <input ref={nameRef} type="text" />
+      </div>
+      <div>
+        <label>Email:</label>
+        <input ref={emailRef} type="email" />
+      </div>
+      <button type="submit">Submit</button>
+      <button type="button" onClick={focusName}>Focus Name</button>
+    </form>
   );
-}`,
-          solution: `// Optimized with React.memo and useMemo
-import React, { useState, memo, useMemo } from 'react';
+}
 
-const ExpensiveChild = memo(function ExpensiveChild({ name, count }) {
-  console.log('ExpensiveChild rendered for:', name);
-
-  // Memoize expensive calculation
-  const expensiveValue = useMemo(() => {
-    console.log('Calculating expensive value for:', name);
-    return Array.from({ length: 1000000 }, (_, i) => i).reduce((a, b) => a + b, 0);
-  }, []); // Empty dependency array since calculation doesn't depend on props
-
-  return (
-    <div>
-      <h3>{name}</h3>
-      <p>Count: {count}</p>
-      <p>Expensive calculation: {expensiveValue}</p>
-    </div>
-  );
-});
-
-function App() {
-  const [count1, setCount1] = useState(0);
-  const [count2, setCount2] = useState(0);
-
-  return (
-    <div>
-      <button onClick={() => setCount1(count1 + 1)}>
-        Increment Count 1: {count1}
-      </button>
-      <button onClick={() => setCount2(count2 + 1)}>
-        Increment Count 2: {count2}
-      </button>
-
-      <ExpensiveChild name="Child 1" count={count1} />
-      <ExpensiveChild name="Child 2" count={count2} />
-    </div>
-  );
-}`,
-          language: 'javascript'
-        },
-        instructions: [
-          'Wrap ExpensiveChild with React.memo',
-          'Use useMemo for the expensive calculation',
-          'Test that only the relevant child re-renders',
-          'Check console logs to verify optimization'
-        ],
-        hints: [
-          'React.memo prevents re-renders when props haven\'t changed',
-          'useMemo caches expensive calculations',
-          'Check the dependency array for useMemo',
-          'Use React DevTools Profiler to measure performance'
-        ],
-        testCriteria: [
-          'Only the relevant child re-renders when count changes',
-          'Expensive calculation is memoized',
-          'Console logs show reduced renders',
-          'App performance is improved'
-        ]
+export default FocusForm;`
+        }
       },
       {
-        id: 'callback-optimization',
-        title: 'Optimize with useCallback',
-        description: 'Use useCallback to prevent function recreation',
+        id: 'timer-with-useref',
+        title: 'Timer with useRef',
+        description: 'Create a timer that uses useRef to store the interval ID',
         type: 'challenge',
-        difficulty: 'advanced',
-        estimatedTime: '20 min',
-        xpReward: 120,
-        instructions: [
-          'Create a TodoList with add, remove, and toggle functions',
-          'Use useCallback to memoize event handlers',
-          'Use React.memo for TodoItem components',
-          'Verify that only affected items re-render'
-        ],
-        hints: [
-          'useCallback memoizes function references',
-          'Include dependencies in useCallback array',
-          'Combine with React.memo for maximum benefit',
-          'Use functional state updates when possible'
-        ],
-        testCriteria: [
-          'Event handlers are memoized with useCallback',
-          'TodoItem components use React.memo',
-          'Only affected items re-render on changes',
-          'Performance is measurably improved'
-        ]
-      }
-    ],
-    learningOutcomes: [
-      'Identify and fix performance bottlenecks',
-      'Use React.memo, useMemo, and useCallback effectively',
-      'Measure performance improvements with React DevTools'
-    ],
-    estimatedTime: '60 min',
-    difficulty: 'advanced',
-    prerequisites: ['context-api'],
-    nextTopics: ['testing-react']
-  },
-  {
-    id: 'testing-react',
-    title: 'Testing React Components',
-    description: 'Learn to test React components with Jest and React Testing Library',
-    explanation: `React testing focuses on testing behavior, not implementation:
-
-1. Render components in tests
-2. Find elements by accessible queries
-3. Interact with elements (click, type, etc.)
-4. Assert expected behavior
-
-Tools: Jest, React Testing Library, user-event`,
-    animationScript: `Component renders in test → user interactions simulated → assertions verify behavior
-Show test passing/failing with green/red indicators`,
-    scenario: `🧩 You have components without tests that need to be reliable. Your mission is to write comprehensive tests for component behavior.`,
-    challenges: [
-      {
-        id: 'test-counter-component',
-        title: 'Test Counter Component',
-        description: 'Write comprehensive tests for a counter component',
-        type: 'playground',
-        difficulty: 'advanced',
-        estimatedTime: '25 min',
-        xpReward: 120,
-        code: {
-          initial: `// Write tests for this Counter component
-import React, { useState } from 'react';
-
-function Counter({ initialValue = 0 }) {
-  const [count, setCount] = useState(initialValue);
-
-  return (
-    <div>
-      <h2 data-testid="count-display">Count: {count}</h2>
-      <button
-        data-testid="increment-btn"
-        onClick={() => setCount(count + 1)}
-      >
-        Increment
-      </button>
-      <button
-        data-testid="decrement-btn"
-        onClick={() => setCount(count - 1)}
-      >
-        Decrement
-      </button>
-      <button
-        data-testid="reset-btn"
-        onClick={() => setCount(initialValue)}
-      >
-        Reset
-      </button>
-    </div>
-  );
-}
-
-// Write tests here
-import { render, screen, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-
-describe('Counter Component', () => {
-  // Add your tests here
-});`,
-          solution: `// Complete test suite for Counter component
-import React, { useState } from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-
-function Counter({ initialValue = 0 }) {
-  const [count, setCount] = useState(initialValue);
-
-  return (
-    <div>
-      <h2 data-testid="count-display">Count: {count}</h2>
-      <button
-        data-testid="increment-btn"
-        onClick={() => setCount(count + 1)}
-      >
-        Increment
-      </button>
-      <button
-        data-testid="decrement-btn"
-        onClick={() => setCount(count - 1)}
-      >
-        Decrement
-      </button>
-      <button
-        data-testid="reset-btn"
-        onClick={() => setCount(initialValue)}
-      >
-        Reset
-      </button>
-    </div>
-  );
-}
-
-describe('Counter Component', () => {
-  test('renders with initial value', () => {
-    render(<Counter initialValue={5} />);
-    expect(screen.getByTestId('count-display')).toHaveTextContent('Count: 5');
-  });
-
-  test('increments count when increment button is clicked', async () => {
-    const user = userEvent.setup();
-    render(<Counter />);
-
-    const incrementBtn = screen.getByTestId('increment-btn');
-    await user.click(incrementBtn);
-
-    expect(screen.getByTestId('count-display')).toHaveTextContent('Count: 1');
-  });
-
-  test('decrements count when decrement button is clicked', async () => {
-    const user = userEvent.setup();
-    render(<Counter initialValue={5} />);
-
-    const decrementBtn = screen.getByTestId('decrement-btn');
-    await user.click(decrementBtn);
-
-    expect(screen.getByTestId('count-display')).toHaveTextContent('Count: 4');
-  });
-
-  test('resets count to initial value when reset button is clicked', async () => {
-    const user = userEvent.setup();
-    render(<Counter initialValue={10} />);
-
-    // Change the count first
-    await user.click(screen.getByTestId('increment-btn'));
-    expect(screen.getByTestId('count-display')).toHaveTextContent('Count: 11');
-
-    // Then reset
-    await user.click(screen.getByTestId('reset-btn'));
-    expect(screen.getByTestId('count-display')).toHaveTextContent('Count: 10');
-  });
-
-  test('handles multiple interactions correctly', async () => {
-    const user = userEvent.setup();
-    render(<Counter />);
-
-    // Multiple increments
-    await user.click(screen.getByTestId('increment-btn'));
-    await user.click(screen.getByTestId('increment-btn'));
-    expect(screen.getByTestId('count-display')).toHaveTextContent('Count: 2');
-
-    // Decrement
-    await user.click(screen.getByTestId('decrement-btn'));
-    expect(screen.getByTestId('count-display')).toHaveTextContent('Count: 1');
-
-    // Reset
-    await user.click(screen.getByTestId('reset-btn'));
-    expect(screen.getByTestId('count-display')).toHaveTextContent('Count: 0');
-  });
-});`,
-          language: 'javascript'
-        },
-        instructions: [
-          'Test initial rendering with different initial values',
-          'Test increment button functionality',
-          'Test decrement button functionality',
-          'Test reset button functionality',
-          'Test multiple interactions in sequence'
-        ],
-        hints: [
-          'Use data-testid for reliable element selection',
-          'Use userEvent for realistic user interactions',
-          'Test behavior, not implementation details',
-          'Group related tests in describe blocks'
-        ],
-        testCriteria: [
-          'All tests pass and cover main functionality',
-          'Tests use appropriate queries and assertions',
-          'User interactions are properly simulated',
-          'Edge cases are considered'
-        ]
-      }
-    ],
-    learningOutcomes: [
-      'Write effective tests for React components',
-      'Use React Testing Library best practices',
-      'Test user interactions and component behavior'
-    ],
-    estimatedTime: '50 min',
-    difficulty: 'advanced',
-    prerequisites: ['performance-optimization'],
-    nextTopics: ['react-router']
-  },
-  {
-    id: 'react-router',
-    title: 'React Router – Navigation & Routing',
-    description: 'Learn client-side routing with React Router',
-    explanation: `React Router enables navigation between different views in a single-page application:
-
-Key concepts:
-- BrowserRouter: Enables routing
-- Routes & Route: Define route mappings
-- Link & NavLink: Navigation components
-- useNavigate: Programmatic navigation
-- useParams: Access URL parameters`,
-    animationScript: `URL changes → Router matches route → Component renders
-Show navigation between different pages without page refresh`,
-    scenario: `🧩 You need to create a multi-page application with navigation. Your mission is to implement routing with React Router.`,
-    challenges: [
-      {
-        id: 'basic-routing',
-        title: 'Implement Basic Routing',
-        description: 'Create a multi-page app with React Router',
-        type: 'playground',
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         estimatedTime: '20 min',
         xpReward: 100,
         code: {
-          initial: `// Implement routing for this app
-import React from 'react';
-// Import React Router components here
+          initial: `import React, { useState, useRef, useEffect } from 'react';
 
-function App() {
+function Timer() {
+  const [seconds, setSeconds] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+  // Add ref for interval ID
+
+  // Add useEffect for timer logic
+
+  const startTimer = () => {
+    setIsRunning(true);
+  };
+
+  const stopTimer = () => {
+    setIsRunning(false);
+  };
+
+  const resetTimer = () => {
+    setSeconds(0);
+    setIsRunning(false);
+  };
+
   return (
     <div>
-      <nav>
-        {/* Add navigation links here */}
-      </nav>
-
-      <main>
-        {/* Add routes here */}
-      </main>
+      <h2>Timer: {seconds}s</h2>
+      <button onClick={startTimer} disabled={isRunning}>
+        Start
+      </button>
+      <button onClick={stopTimer} disabled={!isRunning}>
+        Stop
+      </button>
+      <button onClick={resetTimer}>Reset</button>
     </div>
   );
 }
+
+export default Timer;`,
+          solution: `import React, { useState, useRef, useEffect } from 'react';
+
+function Timer() {
+  const [seconds, setSeconds] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+  const intervalRef = useRef(null);
+
+  useEffect(() => {
+    if (isRunning) {
+      intervalRef.current = setInterval(() => {
+        setSeconds(prev => prev + 1);
+      }, 1000);
+    } else {
+      clearInterval(intervalRef.current);
+    }
+
+    return () => clearInterval(intervalRef.current);
+  }, [isRunning]);
+
+  const startTimer = () => {
+    setIsRunning(true);
+  };
+
+  const stopTimer = () => {
+    setIsRunning(false);
+  };
+
+  const resetTimer = () => {
+    setSeconds(0);
+    setIsRunning(false);
+  };
+
+  return (
+    <div>
+      <h2>Timer: {seconds}s</h2>
+      <button onClick={startTimer} disabled={isRunning}>
+        Start
+      </button>
+      <button onClick={stopTimer} disabled={!isRunning}>
+        Stop
+      </button>
+      <button onClick={resetTimer}>Reset</button>
+    </div>
+  );
+}
+
+export default Timer;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'usereducer-basics',
+    title: 'useReducer – Complex State Management',
+    description: 'Learn to manage complex state with useReducer hook',
+    explanation: `useReducer is a React Hook that's usually preferable to useState when you have complex state logic that involves multiple sub-values or when the next state depends on the previous one.
+
+How useReducer Works:
+1. Define a reducer function that takes (state, action) and returns new state
+2. Call useReducer with the reducer and initial state
+3. Dispatch actions to update state
+
+When to Use useReducer:
+- Complex state objects with multiple properties
+- State transitions that depend on previous state
+- When you want to optimize performance for components that trigger deep updates`,
+
+    bestPractices: [
+      '🎯 Use for complex state logic, not simple values',
+      '⚡ Keep reducer functions pure (no side effects)',
+      '🔄 Use action types as constants to avoid typos',
+      '📝 Structure actions with type and payload properties'
+    ],
+
+    realWorldUseCases: [
+      '🛒 Shopping cart state management',
+      '📝 Form state with validation',
+      '🎮 Game state management',
+      '📊 Data table filtering and sorting'
+    ],
+
+    challenges: [
+      {
+        id: 'counter-with-usereducer',
+        title: 'Counter with useReducer',
+        description: 'Convert a useState counter to use useReducer',
+        type: 'playground',
+        difficulty: 'beginner',
+        estimatedTime: '15 min',
+        xpReward: 75,
+        code: {
+          initial: `import React, { useReducer } from 'react';
+
+// Define reducer function
+function counterReducer(state, action) {
+  // Handle different action types
+}
+
+function Counter() {
+  // Initialize useReducer
+
+  return (
+    <div>
+      <h2>Count: {/* display count */}</h2>
+      <button>Increment</button>
+      <button>Decrement</button>
+      <button>Reset</button>
+    </div>
+  );
+}
+
+export default Counter;`,
+          solution: `import React, { useReducer } from 'react';
+
+function counterReducer(state, action) {
+  switch (action.type) {
+    case 'INCREMENT':
+      return { count: state.count + 1 };
+    case 'DECREMENT':
+      return { count: state.count - 1 };
+    case 'RESET':
+      return { count: 0 };
+    default:
+      throw new Error(\`Unknown action type: \${action.type}\`);
+  }
+}
+
+function Counter() {
+  const [state, dispatch] = useReducer(counterReducer, { count: 0 });
+
+  return (
+    <div>
+      <h2>Count: {state.count}</h2>
+      <button onClick={() => dispatch({ type: 'INCREMENT' })}>
+        Increment
+      </button>
+      <button onClick={() => dispatch({ type: 'DECREMENT' })}>
+        Decrement
+      </button>
+      <button onClick={() => dispatch({ type: 'RESET' })}>
+        Reset
+      </button>
+    </div>
+  );
+}
+
+export default Counter;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'react-router',
+    title: 'React Router – Client-Side Routing',
+    description: 'Learn to implement navigation and routing in React applications',
+    explanation: `React Router is the standard routing library for React applications. It enables navigation between different components/pages without full page refreshes.
+
+Key Concepts:
+1. BrowserRouter - Provides routing context
+2. Routes & Route - Define route mappings
+3. Link & NavLink - Navigation components
+4. useNavigate - Programmatic navigation
+5. useParams - Access URL parameters
+
+Single Page Application (SPA):
+React Router enables SPAs where the URL changes but the page doesn't reload, providing a smooth user experience.`,
+
+    bestPractices: [
+      '🎯 Use BrowserRouter at the root of your app',
+      '⚡ Use NavLink for navigation with active states',
+      '🔄 Handle 404 pages with catch-all routes',
+      '📝 Use nested routes for complex layouts'
+    ],
+
+    realWorldUseCases: [
+      '🏠 Multi-page websites and web apps',
+      '📱 Dashboard applications with different sections',
+      '🛒 E-commerce sites with product pages',
+      '📊 Admin panels with various views'
+    ],
+
+    challenges: [
+      {
+        id: 'basic-routing-setup',
+        title: 'Basic Routing Setup',
+        description: 'Set up basic routing with multiple pages',
+        type: 'playground',
+        difficulty: 'beginner',
+        estimatedTime: '20 min',
+        xpReward: 100,
+        code: {
+          initial: `import React from 'react';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
 function Home() {
   return <h1>Home Page</h1>;
@@ -2167,59 +4129,3798 @@ function Contact() {
   return <h1>Contact Page</h1>;
 }
 
-function NotFound() {
-  return <h1>404 - Page Not Found</h1>;
-}`,
-          solution: `// Complete routing implementation
-import React from 'react';
-import { BrowserRouter, Routes, Route, Link, NavLink } from 'react-router-dom';
+function App() {
+  return (
+    <BrowserRouter>
+      <nav>
+        {/* Add navigation links */}
+      </nav>
+
+      {/* Add Routes */}
+    </BrowserRouter>
+  );
+}
+
+export default App;`,
+          solution: `import React from 'react';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+
+function Home() {
+  return <h1>Home Page</h1>;
+}
+
+function About() {
+  return <h1>About Page</h1>;
+}
+
+function Contact() {
+  return <h1>Contact Page</h1>;
+}
 
 function App() {
   return (
     <BrowserRouter>
-      <div>
-        <nav style={{ padding: '1rem', borderBottom: '1px solid #ccc' }}>
-          <NavLink
-            to="/"
-            style={({ isActive }) => ({
-              marginRight: '1rem',
-              color: isActive ? 'blue' : 'black',
-              textDecoration: 'none'
-            })}
-          >
-            Home
-          </NavLink>
-          <NavLink
-            to="/about"
-            style={({ isActive }) => ({
-              marginRight: '1rem',
-              color: isActive ? 'blue' : 'black',
-              textDecoration: 'none'
-            })}
-          >
-            About
-          </NavLink>
-          <NavLink
-            to="/contact"
-            style={({ isActive }) => ({
-              color: isActive ? 'blue' : 'black',
-              textDecoration: 'none'
-            })}
-          >
-            Contact
-          </NavLink>
-        </nav>
+      <nav>
+        <Link to="/">Home</Link> |
+        <Link to="/about">About</Link> |
+        <Link to="/contact">Contact</Link>
+      </nav>
 
-        <main style={{ padding: '2rem' }}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
-      </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+      </Routes>
     </BrowserRouter>
+  );
+}
+
+export default App;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'error-boundaries',
+    title: 'Error Boundaries – Handling Errors Gracefully',
+    description: 'Learn to catch and handle errors in React component trees',
+    explanation: `Error boundaries are React components that catch JavaScript errors anywhere in their child component tree, log those errors, and display a fallback UI instead of the component tree that crashed.
+
+How Error Boundaries Work:
+1. Use componentDidCatch() or static getDerivedStateFromError()
+2. Only catch errors in child components, not in themselves
+3. Only catch errors during rendering, lifecycle methods, and constructors
+
+Note: Error boundaries do NOT catch errors in:
+- Event handlers
+- Asynchronous code (setTimeout, promises)
+- Server-side rendering
+- Errors thrown in the error boundary itself`,
+
+    bestPractices: [
+      '🎯 Place error boundaries strategically in your component tree',
+      '⚡ Log errors to error reporting services',
+      '🔄 Provide meaningful fallback UIs',
+      '📝 Don\'t use error boundaries for control flow'
+    ],
+
+    realWorldUseCases: [
+      '🚨 Preventing entire app crashes from component errors',
+      '📊 Graceful degradation of dashboard widgets',
+      '🔌 Handling third-party component failures',
+      '📱 Maintaining app stability in production'
+    ],
+
+    challenges: [
+      {
+        id: 'create-error-boundary',
+        title: 'Create an Error Boundary',
+        description: 'Build an error boundary component with fallback UI',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '25 min',
+        xpReward: 120,
+        code: {
+          initial: `import React from 'react';
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    // Initialize state
+  }
+
+  // Add error boundary methods
+
+  render() {
+    // Render fallback UI or children
+  }
+}
+
+// Component that might throw an error
+function BuggyComponent() {
+  const [shouldThrow, setShouldThrow] = React.useState(false);
+
+  if (shouldThrow) {
+    throw new Error('Something went wrong!');
+  }
+
+  return (
+    <div>
+      <h2>This component works fine</h2>
+      <button onClick={() => setShouldThrow(true)}>
+        Throw Error
+      </button>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div>
+      <h1>Error Boundary Demo</h1>
+      {/* Wrap BuggyComponent with ErrorBoundary */}
+      <BuggyComponent />
+    </div>
+  );
+}
+
+export default App;`,
+          solution: `import React from 'react';
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('Error caught by boundary:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '20px', border: '1px solid red' }}>
+          <h2>Something went wrong!</h2>
+          <p>{this.state.error?.message}</p>
+          <button onClick={() => this.setState({ hasError: false, error: null })}>
+            Try Again
+          </button>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+function BuggyComponent() {
+  const [shouldThrow, setShouldThrow] = React.useState(false);
+
+  if (shouldThrow) {
+    throw new Error('Something went wrong!');
+  }
+
+  return (
+    <div>
+      <h2>This component works fine</h2>
+      <button onClick={() => setShouldThrow(true)}>
+        Throw Error
+      </button>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div>
+      <h1>Error Boundary Demo</h1>
+      <ErrorBoundary>
+        <BuggyComponent />
+      </ErrorBoundary>
+    </div>
+  );
+}
+
+export default App;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'react-memo',
+    title: 'React.memo – Component Memoization',
+    description: 'Learn to optimize component performance with React.memo',
+    explanation: `React.memo is a higher-order component that memoizes the result of a component. If the component renders the same result given the same props, React will skip rendering and reuse the last rendered result.
+
+How React.memo Works:
+1. Wraps a functional component
+2. Performs shallow comparison of props
+3. Skips re-render if props haven't changed
+4. Can accept custom comparison function
+
+When to Use React.memo:
+- Component renders frequently with same props
+- Component is expensive to render
+- Parent component re-renders often
+- Props are primitive values or stable references`,
+
+    bestPractices: [
+      '🎯 Use for expensive components that render frequently',
+      '⚡ Ensure props are stable (avoid inline objects/functions)',
+      '🔄 Use custom comparison for complex props',
+      '📝 Don\'t overuse - measure performance impact'
+    ],
+
+    realWorldUseCases: [
+      '📊 Data visualization components',
+      '📝 Large lists with complex items',
+      '🎮 Game components with frequent updates',
+      '📱 Dashboard widgets that update independently'
+    ],
+
+    challenges: [
+      {
+        id: 'optimize-with-memo',
+        title: 'Optimize with React.memo',
+        description: 'Use React.memo to prevent unnecessary re-renders',
+        type: 'playground',
+        difficulty: 'intermediate',
+        estimatedTime: '20 min',
+        xpReward: 100,
+        code: {
+          initial: `import React, { useState } from 'react';
+
+// Expensive component that should be memoized
+function ExpensiveComponent({ name, count }) {
+  console.log('ExpensiveComponent rendered');
+
+  // Simulate expensive calculation
+  const expensiveValue = React.useMemo(() => {
+    let result = 0;
+    for (let i = 0; i < 1000000; i++) {
+      result += i;
+    }
+    return result;
+  }, [count]);
+
+  return (
+    <div>
+      <h3>Hello {name}!</h3>
+      <p>Count: {count}</p>
+      <p>Expensive calculation: {expensiveValue}</p>
+    </div>
+  );
+}
+
+function App() {
+  const [name, setName] = useState('John');
+  const [count, setCount] = useState(0);
+  const [otherState, setOtherState] = useState(0);
+
+  return (
+    <div>
+      <h1>React.memo Demo</h1>
+
+      <div>
+        <button onClick={() => setName(name === 'John' ? 'Jane' : 'John')}>
+          Toggle Name
+        </button>
+        <button onClick={() => setCount(count + 1)}>
+          Increment Count
+        </button>
+        <button onClick={() => setOtherState(otherState + 1)}>
+          Update Other State: {otherState}
+        </button>
+      </div>
+
+      <ExpensiveComponent name={name} count={count} />
+    </div>
+  );
+}
+
+export default App;`,
+          solution: `import React, { useState } from 'react';
+
+// Memoized expensive component
+const ExpensiveComponent = React.memo(function ExpensiveComponent({ name, count }) {
+  console.log('ExpensiveComponent rendered');
+
+  // Simulate expensive calculation
+  const expensiveValue = React.useMemo(() => {
+    let result = 0;
+    for (let i = 0; i < 1000000; i++) {
+      result += i;
+    }
+    return result;
+  }, [count]);
+
+  return (
+    <div>
+      <h3>Hello {name}!</h3>
+      <p>Count: {count}</p>
+      <p>Expensive calculation: {expensiveValue}</p>
+    </div>
+  );
+});
+
+function App() {
+  const [name, setName] = useState('John');
+  const [count, setCount] = useState(0);
+  const [otherState, setOtherState] = useState(0);
+
+  return (
+    <div>
+      <h1>React.memo Demo</h1>
+
+      <div>
+        <button onClick={() => setName(name === 'John' ? 'Jane' : 'John')}>
+          Toggle Name
+        </button>
+        <button onClick={() => setCount(count + 1)}>
+          Increment Count
+        </button>
+        <button onClick={() => setOtherState(otherState + 1)}>
+          Update Other State: {otherState}
+        </button>
+      </div>
+
+      <ExpensiveComponent name={name} count={count} />
+    </div>
+  );
+}
+
+export default App;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'usememo-usecallback',
+    title: 'useMemo & useCallback – Performance Optimization',
+    description: 'Learn to optimize expensive calculations and function references',
+    explanation: `useMemo and useCallback are React Hooks that help optimize performance by memoizing values and functions.
+
+useMemo:
+- Memoizes the result of expensive calculations
+- Only recalculates when dependencies change
+- Returns a memoized value
+
+useCallback:
+- Memoizes function references
+- Prevents unnecessary re-creation of functions
+- Returns a memoized callback
+
+When to Use:
+- Expensive calculations that don't need to run on every render
+- Passing callbacks to optimized child components
+- Breaking referential equality issues`,
+
+    bestPractices: [
+      '🎯 Use useMemo for expensive calculations',
+      '⚡ Use useCallback for stable function references',
+      '🔄 Include all dependencies in dependency array',
+      '📝 Don\'t overuse - measure performance impact'
+    ],
+
+    realWorldUseCases: [
+      '📊 Complex data transformations and filtering',
+      '🎮 Game calculations and physics',
+      '📱 Real-time data processing',
+      '🔍 Search and sorting algorithms'
+    ],
+
+    challenges: [
+      {
+        id: 'optimize-calculations',
+        title: 'Optimize Expensive Calculations',
+        description: 'Use useMemo and useCallback to optimize performance',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '25 min',
+        xpReward: 120,
+        code: {
+          initial: `import React, { useState, useMemo, useCallback } from 'react';
+
+function ExpensiveList({ items, onItemClick }) {
+  console.log('ExpensiveList rendered');
+
+  return (
+    <ul>
+      {items.map(item => (
+        <li key={item.id} onClick={() => onItemClick(item)}>
+          {item.name} - {item.value}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function App() {
+  const [count, setCount] = useState(0);
+  const [filter, setFilter] = useState('');
+  const [items] = useState([
+    { id: 1, name: 'Item 1', value: 100 },
+    { id: 2, name: 'Item 2', value: 200 },
+    { id: 3, name: 'Item 3', value: 300 },
+    { id: 4, name: 'Another Item', value: 400 },
+  ]);
+
+  // Expensive filtering operation
+  const filteredItems = items.filter(item =>
+    item.name.toLowerCase().includes(filter.toLowerCase())
+  );
+
+  // Function passed to child component
+  const handleItemClick = (item) => {
+    alert(\`Clicked: \${item.name}\`);
+  };
+
+  return (
+    <div>
+      <h1>Performance Optimization Demo</h1>
+
+      <div>
+        <button onClick={() => setCount(count + 1)}>
+          Count: {count}
+        </button>
+
+        <input
+          type="text"
+          placeholder="Filter items..."
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        />
+      </div>
+
+      <ExpensiveList items={filteredItems} onItemClick={handleItemClick} />
+    </div>
+  );
+}
+
+export default App;`,
+          solution: `import React, { useState, useMemo, useCallback } from 'react';
+
+const ExpensiveList = React.memo(function ExpensiveList({ items, onItemClick }) {
+  console.log('ExpensiveList rendered');
+
+  return (
+    <ul>
+      {items.map(item => (
+        <li key={item.id} onClick={() => onItemClick(item)}>
+          {item.name} - {item.value}
+        </li>
+      ))}
+    </ul>
+  );
+});
+
+function App() {
+  const [count, setCount] = useState(0);
+  const [filter, setFilter] = useState('');
+  const [items] = useState([
+    { id: 1, name: 'Item 1', value: 100 },
+    { id: 2, name: 'Item 2', value: 200 },
+    { id: 3, name: 'Item 3', value: 300 },
+    { id: 4, name: 'Another Item', value: 400 },
+  ]);
+
+  // Memoized expensive filtering operation
+  const filteredItems = useMemo(() => {
+    console.log('Filtering items...');
+    return items.filter(item =>
+      item.name.toLowerCase().includes(filter.toLowerCase())
+    );
+  }, [items, filter]);
+
+  // Memoized function to prevent unnecessary re-renders
+  const handleItemClick = useCallback((item) => {
+    alert(\`Clicked: \${item.name}\`);
+  }, []);
+
+  return (
+    <div>
+      <h1>Performance Optimization Demo</h1>
+
+      <div>
+        <button onClick={() => setCount(count + 1)}>
+          Count: {count}
+        </button>
+
+        <input
+          type="text"
+          placeholder="Filter items..."
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        />
+      </div>
+
+      <ExpensiveList items={filteredItems} onItemClick={handleItemClick} />
+    </div>
+  );
+}
+
+export default App;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'higher-order-components',
+    title: 'Higher-Order Components (HOCs)',
+    description: 'Learn to create reusable component logic with HOCs',
+    explanation: `A Higher-Order Component (HOC) is a function that takes a component and returns a new component with additional props or behavior. HOCs are a pattern for reusing component logic.
+
+HOC Pattern:
+\`\`\`javascript
+const withSomething = (WrappedComponent) => {
+  return function WithSomethingComponent(props) {
+    // Add logic here
+    return <WrappedComponent {...props} additionalProp={value} />;
+  };
+};
+\`\`\`
+
+Common Use Cases:
+- Authentication checks
+- Loading states
+- Error handling
+- Data fetching
+- Analytics tracking`,
+
+    bestPractices: [
+      '🎯 Use HOCs for cross-cutting concerns',
+      '⚡ Don\'t mutate the original component',
+      '🔄 Copy static methods to the wrapped component',
+      '📝 Use display names for debugging'
+    ],
+
+    realWorldUseCases: [
+      '🔐 Authentication and authorization wrappers',
+      '📊 Analytics and tracking components',
+      '🎨 Theme and styling providers',
+      '🔄 Data fetching and caching logic'
+    ],
+
+    challenges: [
+      {
+        id: 'create-with-loading-hoc',
+        title: 'Create withLoading HOC',
+        description: 'Build a HOC that adds loading functionality to any component',
+        type: 'challenge',
+        difficulty: 'advanced',
+        estimatedTime: '30 min',
+        xpReward: 150,
+        code: {
+          initial: `import React, { useState, useEffect } from 'react';
+
+// Create a HOC that adds loading functionality
+function withLoading(WrappedComponent) {
+  // Return a new component that handles loading
+}
+
+// Example component to wrap
+function UserProfile({ user }) {
+  return (
+    <div>
+      <h2>{user.name}</h2>
+      <p>Email: {user.email}</p>
+      <p>Role: {user.role}</p>
+    </div>
+  );
+}
+
+// Apply the HOC
+const UserProfileWithLoading = withLoading(UserProfile);
+
+function App() {
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate API call
+    setTimeout(() => {
+      setUser({
+        name: 'John Doe',
+        email: 'john@example.com',
+        role: 'Developer'
+      });
+      setIsLoading(false);
+    }, 2000);
+  }, []);
+
+  return (
+    <div>
+      <h1>HOC Demo</h1>
+      <UserProfileWithLoading
+        user={user}
+        isLoading={isLoading}
+      />
+    </div>
+  );
+}
+
+export default App;`,
+          solution: `import React, { useState, useEffect } from 'react';
+
+function withLoading(WrappedComponent) {
+  return function WithLoadingComponent(props) {
+    const { isLoading, ...otherProps } = props;
+
+    if (isLoading) {
+      return (
+        <div style={{
+          padding: '20px',
+          textAlign: 'center',
+          border: '1px solid #ccc',
+          borderRadius: '4px'
+        }}>
+          <div>Loading...</div>
+          <div style={{ marginTop: '10px' }}>⏳</div>
+        </div>
+      );
+    }
+
+    return <WrappedComponent {...otherProps} />;
+  };
+}
+
+function UserProfile({ user }) {
+  return (
+    <div>
+      <h2>{user.name}</h2>
+      <p>Email: {user.email}</p>
+      <p>Role: {user.role}</p>
+    </div>
+  );
+}
+
+const UserProfileWithLoading = withLoading(UserProfile);
+
+function App() {
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setUser({
+        name: 'John Doe',
+        email: 'john@example.com',
+        role: 'Developer'
+      });
+      setIsLoading(false);
+    }, 2000);
+  }, []);
+
+  return (
+    <div>
+      <h1>HOC Demo</h1>
+      <UserProfileWithLoading
+        user={user}
+        isLoading={isLoading}
+      />
+    </div>
+  );
+}
+
+export default App;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'render-props',
+    title: 'Render Props Pattern',
+    description: 'Learn to share code between components using render props',
+    explanation: `Render Props is a technique for sharing code between React components using a prop whose value is a function. A component with a render prop takes a function that returns a React element and calls it instead of implementing its own render logic.
+
+How Render Props Work:
+1. Component accepts a function as a prop
+2. Component calls this function with data/state
+3. Function returns JSX to render
+4. Enables flexible, reusable logic sharing
+
+Benefits:
+- More flexible than HOCs
+- Explicit data flow
+- Easy to compose
+- No naming collisions`,
+
+    bestPractices: [
+      '🎯 Use for sharing stateful logic between components',
+      '⚡ Name the prop descriptively (render, children, etc.)',
+      '🔄 Consider performance implications',
+      '📝 Provide good TypeScript types'
+    ],
+
+    realWorldUseCases: [
+      '🖱️ Mouse tracking and gesture handling',
+      '📊 Data fetching and state management',
+      '🎨 Animation and transition logic',
+      '📱 Responsive design utilities'
+    ],
+
+    challenges: [
+      {
+        id: 'mouse-tracker-render-prop',
+        title: 'Mouse Tracker with Render Props',
+        description: 'Create a mouse tracker component using render props pattern',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '25 min',
+        xpReward: 120,
+        code: {
+          initial: `import React, { useState, useEffect } from 'react';
+
+// Create a MouseTracker component using render props
+function MouseTracker({ render }) {
+  // Track mouse position
+  // Call render prop with mouse data
+}
+
+// Example usage components
+function MouseDisplay({ x, y }) {
+  return (
+    <div>
+      <h3>Mouse Position</h3>
+      <p>X: {x}, Y: {y}</p>
+    </div>
+  );
+}
+
+function MouseFollower({ x, y }) {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left: x,
+        top: y,
+        width: '20px',
+        height: '20px',
+        backgroundColor: 'red',
+        borderRadius: '50%',
+        pointerEvents: 'none',
+        transform: 'translate(-50%, -50%)'
+      }}
+    />
+  );
+}
+
+function App() {
+  return (
+    <div style={{ height: '100vh', position: 'relative' }}>
+      <h1>Render Props Demo</h1>
+
+      {/* Use MouseTracker with different render functions */}
+      <MouseTracker render={({ x, y }) => (
+        <MouseDisplay x={x} y={y} />
+      )} />
+
+      <MouseTracker render={({ x, y }) => (
+        <MouseFollower x={x} y={y} />
+      )} />
+    </div>
+  );
+}
+
+export default App;`,
+          solution: `import React, { useState, useEffect } from 'react';
+
+function MouseTracker({ render }) {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (event) => {
+      setMousePosition({
+        x: event.clientX,
+        y: event.clientY
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
+  return render(mousePosition);
+}
+
+function MouseDisplay({ x, y }) {
+  return (
+    <div>
+      <h3>Mouse Position</h3>
+      <p>X: {x}, Y: {y}</p>
+    </div>
+  );
+}
+
+function MouseFollower({ x, y }) {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left: x,
+        top: y,
+        width: '20px',
+        height: '20px',
+        backgroundColor: 'red',
+        borderRadius: '50%',
+        pointerEvents: 'none',
+        transform: 'translate(-50%, -50%)'
+      }}
+    />
+  );
+}
+
+function App() {
+  return (
+    <div style={{ height: '100vh', position: 'relative' }}>
+      <h1>Render Props Demo</h1>
+
+      <MouseTracker render={({ x, y }) => (
+        <MouseDisplay x={x} y={y} />
+      )} />
+
+      <MouseTracker render={({ x, y }) => (
+        <MouseFollower x={x} y={y} />
+      )} />
+    </div>
+  );
+}
+
+export default App;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'nextjs-introduction',
+    title: 'Next.js – React Framework for Production',
+    description: 'Learn Next.js for server-side rendering and static site generation',
+    explanation: `Next.js is a React framework that provides infrastructure and simple development experience for server-side rendered applications.
+
+Key Features:
+1. **Server-Side Rendering (SSR)** - Pages are rendered on the server
+2. **Static Site Generation (SSG)** - Pre-build pages at build time
+3. **File-based Routing** - Pages are created based on file structure
+4. **API Routes** - Build API endpoints within your Next.js app
+5. **Automatic Code Splitting** - Only load necessary code
+6. **Built-in CSS Support** - CSS and Sass support out of the box
+
+Benefits:
+- Better SEO and performance
+- Faster initial page loads
+- Automatic optimization
+- Great developer experience`,
+
+    bestPractices: [
+      '🎯 Use SSG for static content, SSR for dynamic content',
+      '⚡ Optimize images with next/image component',
+      '🔄 Use getStaticProps for build-time data fetching',
+      '📝 Implement proper error pages (404, 500)'
+    ],
+
+    realWorldUseCases: [
+      '🌐 E-commerce websites with product catalogs',
+      '📰 Blogs and content management systems',
+      '📊 Marketing websites and landing pages',
+      '🏢 Corporate websites with dynamic content'
+    ],
+
+    challenges: [
+      {
+        id: 'nextjs-basic-setup',
+        title: 'Next.js Basic Setup',
+        description: 'Create a basic Next.js application with multiple pages',
+        type: 'playground',
+        difficulty: 'beginner',
+        estimatedTime: '20 min',
+        xpReward: 100,
+        code: {
+          initial: `// pages/index.js
+import Link from 'next/link';
+
+export default function Home() {
+  return (
+    <div>
+      <h1>Welcome to Next.js!</h1>
+      {/* Add navigation links */}
+    </div>
+  );
+}
+
+// pages/about.js
+export default function About() {
+  return (
+    <div>
+      <h1>About Page</h1>
+      {/* Add content and navigation */}
+    </div>
+  );
+}
+
+// pages/blog/[slug].js - Dynamic route
+export default function BlogPost() {
+  // Get the slug from router
+  return (
+    <div>
+      <h1>Blog Post</h1>
+      {/* Display blog post content */}
+    </div>
+  );
+}`,
+          solution: `// pages/index.js
+import Link from 'next/link';
+
+export default function Home() {
+  return (
+    <div>
+      <h1>Welcome to Next.js!</h1>
+      <nav>
+        <Link href="/about">About</Link> |
+        <Link href="/blog/my-first-post">Blog Post</Link>
+      </nav>
+      <p>This is the home page built with Next.js!</p>
+    </div>
+  );
+}
+
+// pages/about.js
+import Link from 'next/link';
+
+export default function About() {
+  return (
+    <div>
+      <h1>About Page</h1>
+      <nav>
+        <Link href="/">Home</Link>
+      </nav>
+      <p>This is the about page with file-based routing.</p>
+    </div>
+  );
+}
+
+// pages/blog/[slug].js
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+
+export default function BlogPost() {
+  const router = useRouter();
+  const { slug } = router.query;
+
+  return (
+    <div>
+      <h1>Blog Post: {slug}</h1>
+      <nav>
+        <Link href="/">Home</Link>
+      </nav>
+      <p>This is a dynamic route for blog post: {slug}</p>
+    </div>
+  );
+}`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'data-fetching-nextjs',
+    title: 'Data Fetching in Next.js',
+    description: 'Learn different data fetching methods in Next.js',
+    explanation: `Next.js provides several methods for fetching data, each optimized for different use cases:
+
+**getStaticProps** (SSG):
+- Runs at build time
+- Pre-renders page with fetched data
+- Great for content that doesn't change often
+
+**getServerSideProps** (SSR):
+- Runs on each request
+- Server-side rendering with fresh data
+- Use for frequently changing data
+
+**getStaticPaths**:
+- Used with dynamic routes and getStaticProps
+- Defines which paths should be pre-rendered
+
+**Client-side Fetching**:
+- Use useEffect or SWR/React Query
+- For user-specific or real-time data`,
+
+    bestPractices: [
+      '🎯 Use getStaticProps for static content',
+      '⚡ Use getServerSideProps sparingly for dynamic data',
+      '🔄 Implement proper error handling',
+      '📝 Use TypeScript for better data type safety'
+    ],
+
+    realWorldUseCases: [
+      '📰 Blog posts and articles',
+      '🛒 Product catalogs and inventory',
+      '👤 User profiles and dashboards',
+      '📊 Analytics and reporting pages'
+    ],
+
+    challenges: [
+      {
+        id: 'implement-data-fetching',
+        title: 'Implement Data Fetching Methods',
+        description: 'Use different Next.js data fetching methods',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '30 min',
+        xpReward: 150,
+        code: {
+          initial: `// pages/posts/index.js - Static Generation
+export default function Posts({ posts }) {
+  return (
+    <div>
+      <h1>All Posts</h1>
+      {/* Render posts list */}
+    </div>
+  );
+}
+
+// Add getStaticProps to fetch posts at build time
+export async function getStaticProps() {
+  // Fetch posts data
+}
+
+// pages/posts/[id].js - Dynamic Static Generation
+export default function Post({ post }) {
+  return (
+    <div>
+      <h1>{post.title}</h1>
+      {/* Render post content */}
+    </div>
+  );
+}
+
+// Add getStaticPaths and getStaticProps
+export async function getStaticPaths() {
+  // Define which paths to pre-render
+}
+
+export async function getStaticProps({ params }) {
+  // Fetch post data based on params.id
+}
+
+// pages/dashboard.js - Server-side Rendering
+export default function Dashboard({ userData }) {
+  return (
+    <div>
+      <h1>Dashboard</h1>
+      {/* Render user-specific data */}
+    </div>
+  );
+}
+
+// Add getServerSideProps for dynamic data
+export async function getServerSideProps(context) {
+  // Fetch user-specific data on each request
+}`,
+          solution: `// pages/posts/index.js
+export default function Posts({ posts }) {
+  return (
+    <div>
+      <h1>All Posts</h1>
+      <ul>
+        {posts.map(post => (
+          <li key={post.id}>
+            <Link href={\`/posts/\${post.id}\`}>
+              {post.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export async function getStaticProps() {
+  // Simulate API call
+  const posts = [
+    { id: 1, title: 'First Post', content: 'Content 1' },
+    { id: 2, title: 'Second Post', content: 'Content 2' },
+    { id: 3, title: 'Third Post', content: 'Content 3' }
+  ];
+
+  return {
+    props: {
+      posts
+    },
+    revalidate: 60 // Revalidate every 60 seconds
+  };
+}
+
+// pages/posts/[id].js
+export default function Post({ post }) {
+  return (
+    <div>
+      <h1>{post.title}</h1>
+      <p>{post.content}</p>
+    </div>
+  );
+}
+
+export async function getStaticPaths() {
+  const posts = [
+    { id: 1, title: 'First Post', content: 'Content 1' },
+    { id: 2, title: 'Second Post', content: 'Content 2' },
+    { id: 3, title: 'Third Post', content: 'Content 3' }
+  ];
+
+  const paths = posts.map(post => ({
+    params: { id: post.id.toString() }
+  }));
+
+  return {
+    paths,
+    fallback: false
+  };
+}
+
+export async function getStaticProps({ params }) {
+  const posts = [
+    { id: 1, title: 'First Post', content: 'Content 1' },
+    { id: 2, title: 'Second Post', content: 'Content 2' },
+    { id: 3, title: 'Third Post', content: 'Content 3' }
+  ];
+
+  const post = posts.find(p => p.id.toString() === params.id);
+
+  return {
+    props: {
+      post
+    }
+  };
+}
+
+// pages/dashboard.js
+export default function Dashboard({ userData, timestamp }) {
+  return (
+    <div>
+      <h1>Dashboard</h1>
+      <p>Welcome, {userData.name}!</p>
+      <p>Last updated: {timestamp}</p>
+    </div>
+  );
+}
+
+export async function getServerSideProps(context) {
+  // Simulate fetching user-specific data
+  const userData = {
+    name: 'John Doe',
+    email: 'john@example.com'
+  };
+
+  return {
+    props: {
+      userData,
+      timestamp: new Date().toISOString()
+    }
+  };
+}`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'react-testing',
+    title: 'Testing React Components',
+    description: 'Learn to test React components with Jest and React Testing Library',
+    explanation: `Testing is crucial for maintaining reliable React applications. React Testing Library encourages testing components the way users interact with them.
+
+Key Testing Concepts:
+1. **Unit Tests** - Test individual components in isolation
+2. **Integration Tests** - Test component interactions
+3. **User-Centric Testing** - Test behavior, not implementation
+4. **Accessibility Testing** - Ensure components are accessible
+
+React Testing Library Philosophy:
+- Test what users see and do
+- Avoid testing implementation details
+- Use semantic queries (getByRole, getByLabelText)
+- Focus on user interactions`,
+
+    bestPractices: [
+      '🎯 Test user behavior, not implementation details',
+      '⚡ Use semantic queries for better accessibility',
+      '🔄 Mock external dependencies and APIs',
+      '📝 Write descriptive test names and organize tests well'
+    ],
+
+    realWorldUseCases: [
+      '🔍 Form validation and submission testing',
+      '🎮 Interactive component behavior testing',
+      '📊 Data display and filtering testing',
+      '🔐 Authentication flow testing'
+    ],
+
+    challenges: [
+      {
+        id: 'test-react-components',
+        title: 'Test React Components',
+        description: 'Write comprehensive tests for React components',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '35 min',
+        xpReward: 150,
+        code: {
+          initial: `// Counter.js
+import React, { useState } from 'react';
+
+export default function Counter({ initialValue = 0 }) {
+  const [count, setCount] = useState(initialValue);
+
+  return (
+    <div>
+      <h2>Count: {count}</h2>
+      <button onClick={() => setCount(count + 1)}>
+        Increment
+      </button>
+      <button onClick={() => setCount(count - 1)}>
+        Decrement
+      </button>
+      <button onClick={() => setCount(0)}>
+        Reset
+      </button>
+    </div>
+  );
+}
+
+// Counter.test.js
+import { render, screen, fireEvent } from '@testing-library/react';
+import Counter from './Counter';
+
+describe('Counter Component', () => {
+  test('renders with initial value', () => {
+    // Test that component renders with correct initial value
+  });
+
+  test('increments count when increment button is clicked', () => {
+    // Test increment functionality
+  });
+
+  test('decrements count when decrement button is clicked', () => {
+    // Test decrement functionality
+  });
+
+  test('resets count when reset button is clicked', () => {
+    // Test reset functionality
+  });
+});`,
+          solution: `// Counter.js
+import React, { useState } from 'react';
+
+export default function Counter({ initialValue = 0 }) {
+  const [count, setCount] = useState(initialValue);
+
+  return (
+    <div>
+      <h2>Count: {count}</h2>
+      <button onClick={() => setCount(count + 1)}>
+        Increment
+      </button>
+      <button onClick={() => setCount(count - 1)}>
+        Decrement
+      </button>
+      <button onClick={() => setCount(0)}>
+        Reset
+      </button>
+    </div>
+  );
+}
+
+// Counter.test.js
+import { render, screen, fireEvent } from '@testing-library/react';
+import Counter from './Counter';
+
+describe('Counter Component', () => {
+  test('renders with initial value', () => {
+    render(<Counter initialValue={5} />);
+    expect(screen.getByText('Count: 5')).toBeInTheDocument();
+  });
+
+  test('increments count when increment button is clicked', () => {
+    render(<Counter />);
+    const incrementButton = screen.getByText('Increment');
+
+    fireEvent.click(incrementButton);
+    expect(screen.getByText('Count: 1')).toBeInTheDocument();
+
+    fireEvent.click(incrementButton);
+    expect(screen.getByText('Count: 2')).toBeInTheDocument();
+  });
+
+  test('decrements count when decrement button is clicked', () => {
+    render(<Counter initialValue={5} />);
+    const decrementButton = screen.getByText('Decrement');
+
+    fireEvent.click(decrementButton);
+    expect(screen.getByText('Count: 4')).toBeInTheDocument();
+  });
+
+  test('resets count when reset button is clicked', () => {
+    render(<Counter initialValue={10} />);
+    const resetButton = screen.getByText('Reset');
+
+    fireEvent.click(resetButton);
+    expect(screen.getByText('Count: 0')).toBeInTheDocument();
+  });
+});`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'react-typescript',
+    title: 'React with TypeScript',
+    description: 'Learn to use TypeScript with React for better type safety',
+    explanation: `TypeScript adds static type checking to React, helping catch errors early and improving developer experience with better IntelliSense and refactoring support.
+
+Key TypeScript Concepts in React:
+1. **Component Props Types** - Define prop interfaces
+2. **State Types** - Type useState and useReducer
+3. **Event Types** - Type event handlers properly
+4. **Ref Types** - Type useRef correctly
+5. **Generic Components** - Create reusable typed components
+
+Benefits:
+- Catch errors at compile time
+- Better IDE support and autocomplete
+- Improved refactoring capabilities
+- Self-documenting code
+- Better team collaboration`,
+
+    bestPractices: [
+      '🎯 Define interfaces for all props and state',
+      '⚡ Use generic types for reusable components',
+      '🔄 Leverage TypeScript strict mode',
+      '📝 Use proper event types for handlers'
+    ],
+
+    realWorldUseCases: [
+      '🏢 Large-scale enterprise applications',
+      '👥 Team-based development projects',
+      '📚 Component libraries and design systems',
+      '🔧 Complex state management scenarios'
+    ],
+
+    challenges: [
+      {
+        id: 'typescript-react-components',
+        title: 'TypeScript React Components',
+        description: 'Create properly typed React components with TypeScript',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '30 min',
+        xpReward: 140,
+        code: {
+          initial: `// Define proper TypeScript interfaces and types
+
+// User interface
+interface User {
+  // Define user properties
+}
+
+// Props interface for UserCard component
+interface UserCardProps {
+  // Define props
+}
+
+// UserCard component with proper typing
+function UserCard(/* add proper props typing */) {
+  return (
+    <div>
+      {/* Implement component */}
+    </div>
+  );
+}
+
+// Props interface for UserList component
+interface UserListProps {
+  // Define props including event handlers
+}
+
+// UserList component with proper typing
+function UserList(/* add proper props typing */) {
+  return (
+    <div>
+      {/* Implement component */}
+    </div>
+  );
+}
+
+// Main App component
+function App() {
+  // Add proper state typing
+  const [users, setUsers] = useState(/* initial state */);
+  const [selectedUser, setSelectedUser] = useState(/* initial state */);
+
+  // Add proper event handler typing
+  const handleUserSelect = (/* parameters */) => {
+    // Implementation
+  };
+
+  return (
+    <div>
+      <h1>TypeScript React Demo</h1>
+      {/* Use components */}
+    </div>
+  );
+}
+
+export default App;`,
+          solution: `import React, { useState } from 'react';
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: 'admin' | 'user' | 'moderator';
+}
+
+interface UserCardProps {
+  user: User;
+  isSelected: boolean;
+  onSelect: (user: User) => void;
+}
+
+function UserCard({ user, isSelected, onSelect }: UserCardProps) {
+  return (
+    <div
+      style={{
+        border: isSelected ? '2px solid blue' : '1px solid gray',
+        padding: '10px',
+        margin: '5px',
+        cursor: 'pointer'
+      }}
+      onClick={() => onSelect(user)}
+    >
+      <h3>{user.name}</h3>
+      <p>Email: {user.email}</p>
+      <p>Role: {user.role}</p>
+    </div>
+  );
+}
+
+interface UserListProps {
+  users: User[];
+  selectedUser: User | null;
+  onUserSelect: (user: User) => void;
+}
+
+function UserList({ users, selectedUser, onUserSelect }: UserListProps) {
+  return (
+    <div>
+      <h2>Users</h2>
+      {users.map(user => (
+        <UserCard
+          key={user.id}
+          user={user}
+          isSelected={selectedUser?.id === user.id}
+          onSelect={onUserSelect}
+        />
+      ))}
+    </div>
+  );
+}
+
+function App() {
+  const [users] = useState<User[]>([
+    { id: 1, name: 'John Doe', email: 'john@example.com', role: 'admin' },
+    { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'user' },
+    { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'moderator' }
+  ]);
+
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
+  const handleUserSelect = (user: User): void => {
+    setSelectedUser(user);
+  };
+
+  return (
+    <div>
+      <h1>TypeScript React Demo</h1>
+      <UserList
+        users={users}
+        selectedUser={selectedUser}
+        onUserSelect={handleUserSelect}
+      />
+      {selectedUser && (
+        <div>
+          <h2>Selected User</h2>
+          <p>{selectedUser.name} ({selectedUser.role})</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default App;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'code-splitting',
+    title: 'Code Splitting and Lazy Loading',
+    description: 'Learn to optimize bundle size with code splitting and lazy loading',
+    explanation: `Code splitting allows you to split your code into various bundles which can then be loaded on demand or in parallel. This helps reduce the initial bundle size and improves performance.
+
+React provides built-in support for code splitting through:
+1. **React.lazy()** - Dynamically import components
+2. **Suspense** - Handle loading states for lazy components
+3. **Dynamic imports** - Split code at the module level
+
+Benefits:
+- Smaller initial bundle size
+- Faster initial page load
+- Better user experience
+- Efficient resource utilization`,
+
+    bestPractices: [
+      '🎯 Split code at route level for maximum impact',
+      '⚡ Use Suspense with meaningful loading states',
+      '🔄 Preload critical components when possible',
+      '📝 Monitor bundle sizes and loading performance'
+    ],
+
+    realWorldUseCases: [
+      '🌐 Large applications with multiple routes',
+      '📱 Mobile apps with limited bandwidth',
+      '🎮 Feature-rich applications with optional modules',
+      '📊 Dashboard applications with heavy components'
+    ],
+
+    challenges: [
+      {
+        id: 'implement-code-splitting',
+        title: 'Implement Code Splitting',
+        description: 'Add code splitting to a React application with lazy loading',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '25 min',
+        xpReward: 120,
+        code: {
+          initial: `import React, { Suspense } from 'react';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+
+// Convert these to lazy-loaded components
+import Home from './components/Home';
+import About from './components/About';
+import Dashboard from './components/Dashboard';
+import Profile from './components/Profile';
+
+function LoadingSpinner() {
+  return (
+    <div style={{ textAlign: 'center', padding: '20px' }}>
+      <div>Loading...</div>
+      <div style={{ marginTop: '10px' }}>⏳</div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <nav style={{ padding: '20px', borderBottom: '1px solid #ccc' }}>
+        <Link to="/">Home</Link> |
+        <Link to="/about">About</Link> |
+        <Link to="/dashboard">Dashboard</Link> |
+        <Link to="/profile">Profile</Link>
+      </nav>
+
+      {/* Add Suspense wrapper and convert to lazy routes */}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;`,
+          solution: `import React, { Suspense } from 'react';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+
+// Lazy load components
+const Home = React.lazy(() => import('./components/Home'));
+const About = React.lazy(() => import('./components/About'));
+const Dashboard = React.lazy(() => import('./components/Dashboard'));
+const Profile = React.lazy(() => import('./components/Profile'));
+
+function LoadingSpinner() {
+  return (
+    <div style={{ textAlign: 'center', padding: '20px' }}>
+      <div>Loading...</div>
+      <div style={{ marginTop: '10px' }}>⏳</div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <nav style={{ padding: '20px', borderBottom: '1px solid #ccc' }}>
+        <Link to="/">Home</Link> |
+        <Link to="/about">About</Link> |
+        <Link to="/dashboard">Dashboard</Link> |
+        <Link to="/profile">Profile</Link>
+      </nav>
+
+      <Suspense fallback={<LoadingSpinner />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
+  );
+}
+
+export default App;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'portals',
+    title: 'React Portals',
+    description: 'Learn to render components outside the normal DOM hierarchy',
+    explanation: `React Portals provide a way to render children into a DOM node that exists outside the DOM hierarchy of the parent component. This is useful for modals, tooltips, and overlays.
+
+How Portals Work:
+1. **ReactDOM.createPortal()** - Creates a portal
+2. **Target DOM node** - Where the portal content will render
+3. **Event bubbling** - Events still bubble up through React tree
+
+Common Use Cases:
+- Modal dialogs
+- Tooltips and popovers
+- Dropdown menus
+- Notifications and toasts
+- Full-screen overlays`,
+
+    bestPractices: [
+      '🎯 Use portals for UI that needs to break out of container',
+      '⚡ Handle focus management properly in modals',
+      '🔄 Clean up portal containers when unmounting',
+      '📝 Consider accessibility implications'
+    ],
+
+    realWorldUseCases: [
+      '🪟 Modal dialogs and overlays',
+      '💬 Tooltips and help text',
+      '📋 Dropdown menus and select components',
+      '🔔 Notification systems'
+    ],
+
+    challenges: [
+      {
+        id: 'create-modal-portal',
+        title: 'Create Modal with Portal',
+        description: 'Build a modal component using React portals',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '20 min',
+        xpReward: 100,
+        code: {
+          initial: `import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
+
+// Create a Modal component using portals
+function Modal({ isOpen, onClose, children }) {
+  if (!isOpen) return null;
+
+  // Use createPortal to render modal outside component tree
+  return ReactDOM.createPortal(
+    // Modal content goes here
+    null,
+    document.body // or document.getElementById('modal-root')
+  );
+}
+
+function App() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h1>Portal Demo</h1>
+      <p>This content is in the normal React tree.</p>
+
+      <button onClick={() => setIsModalOpen(true)}>
+        Open Modal
+      </button>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      >
+        <h2>Modal Content</h2>
+        <p>This modal is rendered using a portal!</p>
+        <button onClick={() => setIsModalOpen(false)}>
+          Close Modal
+        </button>
+      </Modal>
+    </div>
+  );
+}
+
+export default App;`,
+          solution: `import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
+
+function Modal({ isOpen, onClose, children }) {
+  if (!isOpen) return null;
+
+  return ReactDOM.createPortal(
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 1000
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          backgroundColor: 'white',
+          padding: '20px',
+          borderRadius: '8px',
+          maxWidth: '500px',
+          width: '90%',
+          maxHeight: '80%',
+          overflow: 'auto'
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {children}
+      </div>
+    </div>,
+    document.body
+  );
+}
+
+function App() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Handle escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        setIsModalOpen(false);
+      }
+    };
+
+    if (isModalOpen) {
+      document.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isModalOpen]);
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h1>Portal Demo</h1>
+      <p>This content is in the normal React tree.</p>
+
+      <button onClick={() => setIsModalOpen(true)}>
+        Open Modal
+      </button>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      >
+        <h2>Modal Content</h2>
+        <p>This modal is rendered using a portal!</p>
+        <p>Press Escape or click outside to close.</p>
+        <button onClick={() => setIsModalOpen(false)}>
+          Close Modal
+        </button>
+      </Modal>
+    </div>
+  );
+}
+
+export default App;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'styled-components',
+    title: 'Styled Components – CSS-in-JS',
+    description: 'Learn to style React components with CSS-in-JS using styled-components',
+    explanation: `Styled Components is a CSS-in-JS library that allows you to write CSS directly in your JavaScript files. It creates actual CSS classes and provides dynamic styling based on props.
+
+Key Features:
+1. **Component-based styling** - Styles are scoped to components
+2. **Dynamic styling** - Change styles based on props
+3. **Automatic vendor prefixing** - No need for autoprefixer
+4. **Dead code elimination** - Unused styles are removed
+5. **Theme support** - Global theming system
+
+Benefits:
+- No class name conflicts
+- Dynamic styling capabilities
+- Better developer experience
+- Automatic critical CSS`,
+
+    bestPractices: [
+      '🎯 Use semantic component names for better readability',
+      '⚡ Leverage props for dynamic styling',
+      '🔄 Create reusable styled components',
+      '📝 Use themes for consistent design systems'
+    ],
+
+    realWorldUseCases: [
+      '🎨 Design systems and component libraries',
+      '🌙 Dark/light theme implementations',
+      '📱 Responsive design with breakpoints',
+      '🎮 Interactive UI components'
+    ],
+
+    challenges: [
+      {
+        id: 'create-styled-components',
+        title: 'Create Styled Components',
+        description: 'Build a card component using styled-components with dynamic styling',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '25 min',
+        xpReward: 120,
+        code: {
+          initial: `import React, { useState } from 'react';
+import styled from 'styled-components';
+
+// Create styled components for a card
+const Card = styled.div\`
+  // Add card styles
+\`;
+
+const CardHeader = styled.div\`
+  // Add header styles
+\`;
+
+const CardBody = styled.div\`
+  // Add body styles
+\`;
+
+const Button = styled.button\`
+  // Add button styles with dynamic colors based on props
+\`;
+
+function App() {
+  const [selectedCard, setSelectedCard] = useState(null);
+
+  const cards = [
+    { id: 1, title: 'Card 1', content: 'This is the first card', type: 'primary' },
+    { id: 2, title: 'Card 2', content: 'This is the second card', type: 'secondary' },
+    { id: 3, title: 'Card 3', content: 'This is the third card', type: 'success' }
+  ];
+
+  return (
+    <div>
+      <h1>Styled Components Demo</h1>
+      {cards.map(card => (
+        <Card key={card.id} selected={selectedCard === card.id}>
+          <CardHeader>
+            <h3>{card.title}</h3>
+          </CardHeader>
+          <CardBody>
+            <p>{card.content}</p>
+            <Button
+              variant={card.type}
+              onClick={() => setSelectedCard(card.id)}
+            >
+              Select Card
+            </Button>
+          </CardBody>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+export default App;`,
+          solution: `import React, { useState } from 'react';
+import styled from 'styled-components';
+
+const Card = styled.div\`
+  border: 2px solid \${props => props.selected ? '#007bff' : '#e0e0e0'};
+  border-radius: 8px;
+  margin: 16px 0;
+  padding: 0;
+  background: white;
+  box-shadow: \${props => props.selected ? '0 4px 12px rgba(0,123,255,0.3)' : '0 2px 4px rgba(0,0,0,0.1)'};
+  transition: all 0.3s ease;
+  transform: \${props => props.selected ? 'translateY(-2px)' : 'translateY(0)'};
+
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transform: translateY(-1px);
+  }
+\`;
+
+const CardHeader = styled.div\`
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px;
+  border-radius: 6px 6px 0 0;
+
+  h3 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+\`;
+
+const CardBody = styled.div\`
+  padding: 16px;
+
+  p {
+    margin: 0 0 16px 0;
+    color: #666;
+    line-height: 1.5;
+  }
+\`;
+
+const Button = styled.button\`
+  background: \${props => {
+    switch(props.variant) {
+      case 'primary': return '#007bff';
+      case 'secondary': return '#6c757d';
+      case 'success': return '#28a745';
+      default: return '#007bff';
+    }
+  }};
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+\`;
+
+function App() {
+  const [selectedCard, setSelectedCard] = useState(null);
+
+  const cards = [
+    { id: 1, title: 'Card 1', content: 'This is the first card', type: 'primary' },
+    { id: 2, title: 'Card 2', content: 'This is the second card', type: 'secondary' },
+    { id: 3, title: 'Card 3', content: 'This is the third card', type: 'success' }
+  ];
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+      <h1>Styled Components Demo</h1>
+      {cards.map(card => (
+        <Card key={card.id} selected={selectedCard === card.id}>
+          <CardHeader>
+            <h3>{card.title}</h3>
+          </CardHeader>
+          <CardBody>
+            <p>{card.content}</p>
+            <Button
+              variant={card.type}
+              onClick={() => setSelectedCard(card.id)}
+            >
+              Select Card
+            </Button>
+          </CardBody>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+export default App;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'react-query',
+    title: 'React Query – Server State Management',
+    description: 'Learn to manage server state with React Query (TanStack Query)',
+    explanation: `React Query is a powerful library for fetching, caching, and updating server state in React applications. It provides hooks for data fetching with built-in caching, background updates, and error handling.
+
+Key Features:
+1. **Automatic caching** - Smart caching with stale-while-revalidate
+2. **Background updates** - Keep data fresh automatically
+3. **Optimistic updates** - Update UI before server response
+4. **Error handling** - Built-in error states and retry logic
+5. **Pagination support** - Easy pagination and infinite queries
+
+Benefits:
+- Reduces boilerplate code
+- Better user experience with caching
+- Automatic loading and error states
+- Background synchronization`,
+
+    bestPractices: [
+      '🎯 Use query keys consistently for proper caching',
+      '⚡ Implement optimistic updates for better UX',
+      '🔄 Configure stale time based on data freshness needs',
+      '📝 Handle loading and error states properly'
+    ],
+
+    realWorldUseCases: [
+      '📊 Dashboard applications with real-time data',
+      '🛒 E-commerce product catalogs',
+      '👥 Social media feeds and timelines',
+      '📱 Mobile apps with offline support'
+    ],
+
+    challenges: [
+      {
+        id: 'implement-react-query',
+        title: 'Implement React Query',
+        description: 'Build a data fetching system using React Query',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '30 min',
+        xpReward: 150,
+        code: {
+          initial: `import React from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+
+// Mock API functions
+const fetchUsers = async () => {
+  const response = await fetch('/api/users');
+  if (!response.ok) throw new Error('Failed to fetch users');
+  return response.json();
+};
+
+const createUser = async (userData) => {
+  const response = await fetch('/api/users', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(userData)
+  });
+  if (!response.ok) throw new Error('Failed to create user');
+  return response.json();
+};
+
+function UserList() {
+  // Implement useQuery for fetching users
+  const { data: users, isLoading, error } = useQuery({
+    // Add query configuration
+  });
+
+  if (isLoading) return <div>Loading users...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  return (
+    <div>
+      <h2>Users</h2>
+      <ul>
+        {users?.map(user => (
+          <li key={user.id}>
+            {user.name} - {user.email}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function CreateUserForm() {
+  const queryClient = useQueryClient();
+
+  // Implement useMutation for creating users
+  const createUserMutation = useMutation({
+    // Add mutation configuration
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const userData = {
+      name: formData.get('name'),
+      email: formData.get('email')
+    };
+
+    createUserMutation.mutate(userData);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <h2>Create User</h2>
+      <input name="name" placeholder="Name" required />
+      <input name="email" type="email" placeholder="Email" required />
+      <button type="submit" disabled={createUserMutation.isPending}>
+        {createUserMutation.isPending ? 'Creating...' : 'Create User'}
+      </button>
+      {createUserMutation.error && (
+        <div>Error: {createUserMutation.error.message}</div>
+      )}
+    </form>
+  );
+}
+
+function App() {
+  return (
+    <div>
+      <h1>React Query Demo</h1>
+      <CreateUserForm />
+      <UserList />
+    </div>
+  );
+}
+
+export default App;`,
+          solution: `import React from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+
+// Mock API functions
+const fetchUsers = async () => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  // Mock data
+  return [
+    { id: 1, name: 'John Doe', email: 'john@example.com' },
+    { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
+    { id: 3, name: 'Bob Johnson', email: 'bob@example.com' }
+  ];
+};
+
+const createUser = async (userData) => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+  // Mock creation
+  return {
+    id: Date.now(),
+    ...userData
+  };
+};
+
+function UserList() {
+  const { data: users, isLoading, error } = useQuery({
+    queryKey: ['users'],
+    queryFn: fetchUsers,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: 10 * 60 * 1000, // 10 minutes
+  });
+
+  if (isLoading) return <div>Loading users...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  return (
+    <div>
+      <h2>Users</h2>
+      <ul>
+        {users?.map(user => (
+          <li key={user.id}>
+            {user.name} - {user.email}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function CreateUserForm() {
+  const queryClient = useQueryClient();
+
+  const createUserMutation = useMutation({
+    mutationFn: createUser,
+    onSuccess: (newUser) => {
+      // Invalidate and refetch users query
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+
+      // Or optimistically update the cache
+      queryClient.setQueryData(['users'], (oldUsers) => [
+        ...(oldUsers || []),
+        newUser
+      ]);
+    },
+    onError: (error) => {
+      console.error('Failed to create user:', error);
+    }
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const userData = {
+      name: formData.get('name'),
+      email: formData.get('email')
+    };
+
+    createUserMutation.mutate(userData);
+    e.target.reset();
+  };
+
+  return (
+    <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
+      <h2>Create User</h2>
+      <div style={{ marginBottom: '10px' }}>
+        <input name="name" placeholder="Name" required style={{ marginRight: '10px' }} />
+        <input name="email" type="email" placeholder="Email" required />
+      </div>
+      <button type="submit" disabled={createUserMutation.isPending}>
+        {createUserMutation.isPending ? 'Creating...' : 'Create User'}
+      </button>
+      {createUserMutation.error && (
+        <div style={{ color: 'red', marginTop: '10px' }}>
+          Error: {createUserMutation.error.message}
+        </div>
+      )}
+      {createUserMutation.isSuccess && (
+        <div style={{ color: 'green', marginTop: '10px' }}>
+          User created successfully!
+        </div>
+      )}
+    </form>
+  );
+}
+
+function App() {
+  return (
+    <div style={{ padding: '20px' }}>
+      <h1>React Query Demo</h1>
+      <CreateUserForm />
+      <UserList />
+    </div>
+  );
+}
+
+export default App;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'redux-toolkit',
+    title: 'Redux Toolkit – Modern Redux',
+    description: 'Learn modern Redux with Redux Toolkit for state management',
+    explanation: `Redux Toolkit (RTK) is the official, opinionated, batteries-included toolset for efficient Redux development. It simplifies Redux usage and includes utilities to simplify common use cases.
+
+Key Features:
+1. **configureStore()** - Simplified store setup
+2. **createSlice()** - Reduces boilerplate for actions and reducers
+3. **createAsyncThunk()** - Handles async logic
+4. **RTK Query** - Data fetching and caching solution
+5. **Immer integration** - Write "mutative" logic safely
+
+Benefits:
+- Less boilerplate code
+- Built-in best practices
+- Better developer experience
+- TypeScript support out of the box`,
+
+    bestPractices: [
+      '🎯 Use createSlice for most Redux logic',
+      '⚡ Leverage createAsyncThunk for async operations',
+      '🔄 Structure state by feature, not by type',
+      '📝 Use RTK Query for server state when possible'
+    ],
+
+    realWorldUseCases: [
+      '🏢 Large applications with complex state',
+      '👥 Multi-user applications with shared state',
+      '📊 Applications with heavy data manipulation',
+      '🎮 Games with complex state interactions'
+    ],
+
+    challenges: [
+      {
+        id: 'build-redux-counter',
+        title: 'Build Redux Counter with RTK',
+        description: 'Create a counter application using Redux Toolkit',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '25 min',
+        xpReward: 130,
+        code: {
+          initial: `import React from 'react';
+import { configureStore, createSlice } from '@reduxjs/toolkit';
+import { Provider, useSelector, useDispatch } from 'react-redux';
+
+// Create a counter slice
+const counterSlice = createSlice({
+  name: 'counter',
+  initialState: {
+    value: 0,
+    history: []
+  },
+  reducers: {
+    // Add reducer functions
+    increment: (state) => {
+      // Implement increment logic
+    },
+    decrement: (state) => {
+      // Implement decrement logic
+    },
+    incrementByAmount: (state, action) => {
+      // Implement increment by amount logic
+    },
+    reset: (state) => {
+      // Implement reset logic
+    }
+  }
+});
+
+// Export actions
+export const { increment, decrement, incrementByAmount, reset } = counterSlice.actions;
+
+// Configure store
+const store = configureStore({
+  reducer: {
+    counter: counterSlice.reducer
+  }
+});
+
+function Counter() {
+  const count = useSelector((state) => state.counter.value);
+  const history = useSelector((state) => state.counter.history);
+  const dispatch = useDispatch();
+
+  return (
+    <div>
+      <h2>Count: {count}</h2>
+
+      <div>
+        <button onClick={() => dispatch(increment())}>+</button>
+        <button onClick={() => dispatch(decrement())}>-</button>
+        <button onClick={() => dispatch(incrementByAmount(5))}>+5</button>
+        <button onClick={() => dispatch(reset())}>Reset</button>
+      </div>
+
+      <div>
+        <h3>History:</h3>
+        <ul>
+          {history.map((entry, index) => (
+            <li key={index}>{entry}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <Provider store={store}>
+      <div>
+        <h1>Redux Toolkit Counter</h1>
+        <Counter />
+      </div>
+    </Provider>
+  );
+}
+
+export default App;`,
+          solution: `import React from 'react';
+import { configureStore, createSlice } from '@reduxjs/toolkit';
+import { Provider, useSelector, useDispatch } from 'react-redux';
+
+const counterSlice = createSlice({
+  name: 'counter',
+  initialState: {
+    value: 0,
+    history: []
+  },
+  reducers: {
+    increment: (state) => {
+      state.value += 1;
+      state.history.push(\`Incremented to \${state.value}\`);
+    },
+    decrement: (state) => {
+      state.value -= 1;
+      state.history.push(\`Decremented to \${state.value}\`);
+    },
+    incrementByAmount: (state, action) => {
+      const amount = action.payload;
+      state.value += amount;
+      state.history.push(\`Incremented by \${amount} to \${state.value}\`);
+    },
+    reset: (state) => {
+      state.value = 0;
+      state.history.push('Reset to 0');
+    }
+  }
+});
+
+export const { increment, decrement, incrementByAmount, reset } = counterSlice.actions;
+
+const store = configureStore({
+  reducer: {
+    counter: counterSlice.reducer
+  }
+});
+
+function Counter() {
+  const count = useSelector((state) => state.counter.value);
+  const history = useSelector((state) => state.counter.history);
+  const dispatch = useDispatch();
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h2>Count: {count}</h2>
+
+      <div style={{ marginBottom: '20px' }}>
+        <button
+          onClick={() => dispatch(increment())}
+          style={{ margin: '0 5px', padding: '8px 16px' }}
+        >
+          +1
+        </button>
+        <button
+          onClick={() => dispatch(decrement())}
+          style={{ margin: '0 5px', padding: '8px 16px' }}
+        >
+          -1
+        </button>
+        <button
+          onClick={() => dispatch(incrementByAmount(5))}
+          style={{ margin: '0 5px', padding: '8px 16px' }}
+        >
+          +5
+        </button>
+        <button
+          onClick={() => dispatch(reset())}
+          style={{ margin: '0 5px', padding: '8px 16px' }}
+        >
+          Reset
+        </button>
+      </div>
+
+      <div>
+        <h3>History:</h3>
+        <ul style={{ maxHeight: '200px', overflow: 'auto' }}>
+          {history.slice(-10).map((entry, index) => (
+            <li key={index}>{entry}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <Provider store={store}>
+      <div>
+        <h1>Redux Toolkit Counter</h1>
+        <Counter />
+      </div>
+    </Provider>
+  );
+}
+
+export default App;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'react-suspense',
+    title: 'React Suspense – Declarative Loading',
+    description: 'Learn to handle loading states declaratively with Suspense',
+    explanation: `React Suspense lets you declaratively specify the loading state for a part of the component tree if it's not yet ready to be displayed. It works with lazy loading, data fetching, and other asynchronous operations.
+
+How Suspense Works:
+1. **Suspense boundary** - Wraps components that might suspend
+2. **Fallback UI** - Shows while waiting for suspended components
+3. **Error boundaries** - Handle errors in suspended components
+4. **Concurrent features** - Works with React's concurrent mode
+
+Use Cases:
+- Code splitting with React.lazy()
+- Data fetching with libraries like Relay
+- Image loading and other async resources
+- Progressive enhancement`,
+
+    bestPractices: [
+      '🎯 Place Suspense boundaries at appropriate levels',
+      '⚡ Provide meaningful fallback UIs',
+      '🔄 Combine with Error Boundaries for robust error handling',
+      '📝 Use multiple Suspense boundaries for granular loading'
+    ],
+
+    realWorldUseCases: [
+      '📱 Progressive web apps with lazy loading',
+      '🖼️ Image galleries with lazy loading',
+      '📊 Dashboard components that load independently',
+      '🎮 Game assets and resources loading'
+    ],
+
+    challenges: [
+      {
+        id: 'implement-suspense-loading',
+        title: 'Implement Suspense Loading',
+        description: 'Create a component tree with multiple Suspense boundaries',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '20 min',
+        xpReward: 110,
+        code: {
+          initial: `import React, { Suspense, lazy, useState } from 'react';
+
+// Lazy load components
+const HeavyComponent = lazy(() => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve({
+        default: () => (
+          <div>
+            <h3>Heavy Component Loaded!</h3>
+            <p>This component took time to load.</p>
+          </div>
+        )
+      });
+    }, 2000);
+  });
+});
+
+const AnotherComponent = lazy(() => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve({
+        default: () => (
+          <div>
+            <h3>Another Component</h3>
+            <p>This is another lazy-loaded component.</p>
+          </div>
+        )
+      });
+    }, 1000);
+  });
+});
+
+// Loading components
+function LoadingSpinner() {
+  return (
+    <div style={{ textAlign: 'center', padding: '20px' }}>
+      <div>Loading...</div>
+      <div style={{ marginTop: '10px' }}>⏳</div>
+    </div>
+  );
+}
+
+function QuickLoadingSpinner() {
+  return (
+    <div style={{ textAlign: 'center', padding: '10px' }}>
+      <div>Loading quickly...</div>
+    </div>
+  );
+}
+
+function App() {
+  const [showHeavy, setShowHeavy] = useState(false);
+  const [showAnother, setShowAnother] = useState(false);
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h1>Suspense Demo</h1>
+
+      <div>
+        <button onClick={() => setShowHeavy(!showHeavy)}>
+          {showHeavy ? 'Hide' : 'Load'} Heavy Component
+        </button>
+        <button onClick={() => setShowAnother(!showAnother)}>
+          {showAnother ? 'Hide' : 'Load'} Another Component
+        </button>
+      </div>
+
+      {/* Add Suspense boundaries with appropriate fallbacks */}
+      {showHeavy && (
+        // Wrap HeavyComponent with Suspense
+        <HeavyComponent />
+      )}
+
+      {showAnother && (
+        // Wrap AnotherComponent with Suspense
+        <AnotherComponent />
+      )}
+    </div>
+  );
+}
+
+export default App;`,
+          solution: `import React, { Suspense, lazy, useState } from 'react';
+
+const HeavyComponent = lazy(() => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve({
+        default: () => (
+          <div style={{
+            border: '2px solid #007bff',
+            padding: '20px',
+            margin: '10px 0',
+            borderRadius: '8px'
+          }}>
+            <h3>Heavy Component Loaded!</h3>
+            <p>This component took 2 seconds to load.</p>
+          </div>
+        )
+      });
+    }, 2000);
+  });
+});
+
+const AnotherComponent = lazy(() => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve({
+        default: () => (
+          <div style={{
+            border: '2px solid #28a745',
+            padding: '20px',
+            margin: '10px 0',
+            borderRadius: '8px'
+          }}>
+            <h3>Another Component</h3>
+            <p>This component took 1 second to load.</p>
+          </div>
+        )
+      });
+    }, 1000);
+  });
+});
+
+function LoadingSpinner() {
+  return (
+    <div style={{
+      textAlign: 'center',
+      padding: '20px',
+      border: '2px dashed #ccc',
+      margin: '10px 0',
+      borderRadius: '8px'
+    }}>
+      <div>Loading heavy component...</div>
+      <div style={{ marginTop: '10px' }}>⏳</div>
+    </div>
+  );
+}
+
+function QuickLoadingSpinner() {
+  return (
+    <div style={{
+      textAlign: 'center',
+      padding: '10px',
+      border: '2px dashed #28a745',
+      margin: '10px 0',
+      borderRadius: '8px'
+    }}>
+      <div>Loading quickly...</div>
+      <div style={{ marginTop: '5px' }}>⚡</div>
+    </div>
+  );
+}
+
+function App() {
+  const [showHeavy, setShowHeavy] = useState(false);
+  const [showAnother, setShowAnother] = useState(false);
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h1>Suspense Demo</h1>
+
+      <div style={{ marginBottom: '20px' }}>
+        <button
+          onClick={() => setShowHeavy(!showHeavy)}
+          style={{ margin: '0 10px', padding: '8px 16px' }}
+        >
+          {showHeavy ? 'Hide' : 'Load'} Heavy Component
+        </button>
+        <button
+          onClick={() => setShowAnother(!showAnother)}
+          style={{ margin: '0 10px', padding: '8px 16px' }}
+        >
+          {showAnother ? 'Hide' : 'Load'} Another Component
+        </button>
+      </div>
+
+      {showHeavy && (
+        <Suspense fallback={<LoadingSpinner />}>
+          <HeavyComponent />
+        </Suspense>
+      )}
+
+      {showAnother && (
+        <Suspense fallback={<QuickLoadingSpinner />}>
+          <AnotherComponent />
+        </Suspense>
+      )}
+    </div>
+  );
+}
+
+export default App;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'react-helmet',
+    title: 'React Helmet – Managing Document Head',
+    description: 'Learn to manage document head elements with React Helmet',
+    explanation: `React Helmet is a library that allows you to manage changes to the document head from within your React components. It's essential for SEO, social media sharing, and dynamic page metadata.
+
+Key Features:
+1. **Dynamic title and meta tags** - Change based on component state
+2. **SEO optimization** - Proper meta tags for search engines
+3. **Social media tags** - Open Graph and Twitter Card support
+4. **Server-side rendering** - Works with SSR frameworks
+5. **Nested components** - Child components can override parent head elements
+
+Benefits:
+- Better SEO performance
+- Dynamic social media previews
+- Improved accessibility
+- Professional web app behavior`,
+
+    bestPractices: [
+      '🎯 Set unique titles for each page/route',
+      '⚡ Include relevant meta descriptions',
+      '🔄 Use Open Graph tags for social sharing',
+      '📝 Implement structured data when appropriate'
+    ],
+
+    realWorldUseCases: [
+      '🌐 Multi-page applications with dynamic content',
+      '📰 Blog and content management systems',
+      '🛒 E-commerce product pages',
+      '📱 Progressive web applications'
+    ],
+
+    challenges: [
+      {
+        id: 'implement-react-helmet',
+        title: 'Implement React Helmet',
+        description: 'Add dynamic head management to a React application',
+        type: 'challenge',
+        difficulty: 'beginner',
+        estimatedTime: '15 min',
+        xpReward: 80,
+        code: {
+          initial: `import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+
+function BlogPost({ post }) {
+  return (
+    <article>
+      {/* Add Helmet to manage head elements */}
+
+      <h1>{post.title}</h1>
+      <p className="meta">By {post.author} on {post.date}</p>
+      <div className="content">
+        {post.content}
+      </div>
+    </article>
+  );
+}
+
+function ProductPage({ product }) {
+  return (
+    <div>
+      {/* Add Helmet for product page SEO */}
+
+      <h1>{product.name}</h1>
+      <p>Price: \${product.price}</p>
+      <p>{product.description}</p>
+      <img src={product.image} alt={product.name} />
+    </div>
+  );
+}
+
+function App() {
+  const [currentPage, setCurrentPage] = useState('blog');
+
+  const blogPost = {
+    title: 'Getting Started with React Helmet',
+    author: 'John Doe',
+    date: '2024-01-15',
+    content: 'React Helmet is a powerful tool for managing document head...',
+    image: 'https://example.com/blog-image.jpg'
+  };
+
+  const product = {
+    name: 'Awesome React Course',
+    price: 99.99,
+    description: 'Learn React from beginner to advanced level',
+    image: 'https://example.com/course-image.jpg'
+  };
+
+  return (
+    <div>
+      {/* Add default Helmet for the app */}
+
+      <nav>
+        <button onClick={() => setCurrentPage('blog')}>Blog Post</button>
+        <button onClick={() => setCurrentPage('product')}>Product</button>
+      </nav>
+
+      {currentPage === 'blog' && <BlogPost post={blogPost} />}
+      {currentPage === 'product' && <ProductPage product={product} />}
+    </div>
+  );
+}
+
+export default App;`,
+          solution: `import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+
+function BlogPost({ post }) {
+  return (
+    <article>
+      <Helmet>
+        <title>{post.title} | My Blog</title>
+        <meta name="description" content={post.content.substring(0, 160)} />
+        <meta name="author" content={post.author} />
+
+        {/* Open Graph tags for social media */}
+        <meta property="og:title" content={post.title} />
+        <meta property="og:description" content={post.content.substring(0, 160)} />
+        <meta property="og:image" content={post.image} />
+        <meta property="og:type" content="article" />
+
+        {/* Twitter Card tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:description" content={post.content.substring(0, 160)} />
+        <meta name="twitter:image" content={post.image} />
+
+        {/* Structured data */}
+        <script type="application/ld+json">
+          {\`{
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": "\${post.title}",
+            "author": {
+              "@type": "Person",
+              "name": "\${post.author}"
+            },
+            "datePublished": "\${post.date}"
+          }\`}
+        </script>
+      </Helmet>
+
+      <h1>{post.title}</h1>
+      <p className="meta">By {post.author} on {post.date}</p>
+      <div className="content">
+        {post.content}
+      </div>
+    </article>
+  );
+}
+
+function ProductPage({ product }) {
+  return (
+    <div>
+      <Helmet>
+        <title>{product.name} - \${product.price} | My Store</title>
+        <meta name="description" content={product.description} />
+
+        {/* Open Graph tags for products */}
+        <meta property="og:title" content={product.name} />
+        <meta property="og:description" content={product.description} />
+        <meta property="og:image" content={product.image} />
+        <meta property="og:type" content="product" />
+        <meta property="product:price:amount" content={product.price} />
+        <meta property="product:price:currency" content="USD" />
+
+        {/* Product structured data */}
+        <script type="application/ld+json">
+          {\`{
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": "\${product.name}",
+            "description": "\${product.description}",
+            "image": "\${product.image}",
+            "offers": {
+              "@type": "Offer",
+              "price": "\${product.price}",
+              "priceCurrency": "USD"
+            }
+          }\`}
+        </script>
+      </Helmet>
+
+      <h1>{product.name}</h1>
+      <p>Price: \${product.price}</p>
+      <p>{product.description}</p>
+      <img src={product.image} alt={product.name} style={{ maxWidth: '300px' }} />
+    </div>
+  );
+}
+
+function App() {
+  const [currentPage, setCurrentPage] = useState('blog');
+
+  const blogPost = {
+    title: 'Getting Started with React Helmet',
+    author: 'John Doe',
+    date: '2024-01-15',
+    content: 'React Helmet is a powerful tool for managing document head elements dynamically. It allows you to set titles, meta tags, and other head elements based on your component state.',
+    image: 'https://example.com/blog-image.jpg'
+  };
+
+  const product = {
+    name: 'Awesome React Course',
+    price: 99.99,
+    description: 'Learn React from beginner to advanced level with hands-on projects and real-world examples.',
+    image: 'https://example.com/course-image.jpg'
+  };
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <Helmet>
+        <title>My React App</title>
+        <meta name="description" content="A demo application showcasing React Helmet" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Helmet>
+
+      <nav style={{ marginBottom: '20px' }}>
+        <button
+          onClick={() => setCurrentPage('blog')}
+          style={{ margin: '0 10px', padding: '8px 16px' }}
+        >
+          Blog Post
+        </button>
+        <button
+          onClick={() => setCurrentPage('product')}
+          style={{ margin: '0 10px', padding: '8px 16px' }}
+        >
+          Product
+        </button>
+      </nav>
+
+      {currentPage === 'blog' && <BlogPost post={blogPost} />}
+      {currentPage === 'product' && <ProductPage product={product} />}
+    </div>
+  );
+}
+
+export default App;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'react-spring',
+    title: 'React Spring – Animations',
+    description: 'Learn to create smooth animations with React Spring',
+    explanation: `React Spring is a spring-physics based animation library for React. It provides a more natural way to animate components compared to traditional CSS transitions.
+
+Key Features:
+1. **Spring physics** - Natural, realistic animations
+2. **Hooks-based API** - Modern React patterns
+3. **Performance optimized** - Uses requestAnimationFrame
+4. **Flexible** - Works with any CSS property
+5. **Gesture support** - Integration with touch and mouse events
+
+Animation Types:
+- useSpring - Single spring animation
+- useSprings - Multiple springs
+- useTransition - Enter/exit animations
+- useChain - Sequence animations`,
+
+    bestPractices: [
+      '🎯 Use spring physics for natural motion',
+      '⚡ Optimize performance with native animations',
+      '🔄 Chain animations for complex sequences',
+      '📝 Consider accessibility and reduced motion preferences'
+    ],
+
+    realWorldUseCases: [
+      '🎮 Interactive UI elements and micro-interactions',
+      '📱 Mobile app transitions and gestures',
+      '🎨 Creative websites and portfolios',
+      '📊 Data visualization animations'
+    ],
+
+    challenges: [
+      {
+        id: 'create-spring-animations',
+        title: 'Create Spring Animations',
+        description: 'Build animated components using React Spring',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '25 min',
+        xpReward: 120,
+        code: {
+          initial: `import React, { useState } from 'react';
+import { useSpring, animated, useTransition } from '@react-spring/web';
+
+function AnimatedBox() {
+  const [isToggled, setIsToggled] = useState(false);
+
+  // Create a spring animation for the box
+  const springProps = useSpring({
+    // Add spring configuration
+  });
+
+  return (
+    <div>
+      <h3>Animated Box</h3>
+      <button onClick={() => setIsToggled(!isToggled)}>
+        Toggle Animation
+      </button>
+
+      <animated.div
+        style={{
+          width: 100,
+          height: 100,
+          backgroundColor: 'blue',
+          margin: '20px 0',
+          ...springProps
+        }}
+      />
+    </div>
+  );
+}
+
+function AnimatedList() {
+  const [items, setItems] = useState(['Item 1', 'Item 2', 'Item 3']);
+
+  // Create transition animations for list items
+  const transitions = useTransition(items, {
+    // Add transition configuration
+  });
+
+  const addItem = () => {
+    setItems([...items, \`Item \${items.length + 1}\`]);
+  };
+
+  const removeItem = (index) => {
+    setItems(items.filter((_, i) => i !== index));
+  };
+
+  return (
+    <div>
+      <h3>Animated List</h3>
+      <button onClick={addItem}>Add Item</button>
+
+      <div>
+        {transitions((style, item, t, index) => (
+          <animated.div
+            style={{
+              padding: '10px',
+              margin: '5px 0',
+              backgroundColor: '#f0f0f0',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              ...style
+            }}
+            onClick={() => removeItem(index)}
+          >
+            {item} (click to remove)
+          </animated.div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div style={{ padding: '20px' }}>
+      <h1>React Spring Animations</h1>
+      <AnimatedBox />
+      <AnimatedList />
+    </div>
+  );
+}
+
+export default App;`,
+          solution: `import React, { useState } from 'react';
+import { useSpring, animated, useTransition } from '@react-spring/web';
+
+function AnimatedBox() {
+  const [isToggled, setIsToggled] = useState(false);
+
+  const springProps = useSpring({
+    transform: isToggled ? 'scale(1.5) rotate(45deg)' : 'scale(1) rotate(0deg)',
+    backgroundColor: isToggled ? '#ff6b6b' : '#4ecdc4',
+    borderRadius: isToggled ? '50%' : '10%',
+    config: { tension: 300, friction: 10 }
+  });
+
+  return (
+    <div>
+      <h3>Animated Box</h3>
+      <button onClick={() => setIsToggled(!isToggled)}>
+        Toggle Animation
+      </button>
+
+      <animated.div
+        style={{
+          width: 100,
+          height: 100,
+          margin: '20px 0',
+          cursor: 'pointer',
+          ...springProps
+        }}
+        onClick={() => setIsToggled(!isToggled)}
+      />
+    </div>
+  );
+}
+
+function AnimatedList() {
+  const [items, setItems] = useState(['Item 1', 'Item 2', 'Item 3']);
+
+  const transitions = useTransition(items, {
+    from: { opacity: 0, transform: 'translateX(-100px)' },
+    enter: { opacity: 1, transform: 'translateX(0px)' },
+    leave: { opacity: 0, transform: 'translateX(100px)' },
+    config: { tension: 200, friction: 20 }
+  });
+
+  const addItem = () => {
+    setItems([...items, \`Item \${items.length + 1}\`]);
+  };
+
+  const removeItem = (itemToRemove) => {
+    setItems(items.filter(item => item !== itemToRemove));
+  };
+
+  return (
+    <div>
+      <h3>Animated List</h3>
+      <button onClick={addItem} style={{ marginBottom: '20px' }}>
+        Add Item
+      </button>
+
+      <div>
+        {transitions((style, item) => (
+          <animated.div
+            style={{
+              padding: '10px',
+              margin: '5px 0',
+              backgroundColor: '#f0f0f0',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              border: '1px solid #ddd',
+              ...style
+            }}
+            onClick={() => removeItem(item)}
+          >
+            {item} (click to remove)
+          </animated.div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div style={{ padding: '20px' }}>
+      <h1>React Spring Animations</h1>
+      <AnimatedBox />
+      <AnimatedList />
+    </div>
+  );
+}
+
+export default App;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'react-hook-form',
+    title: 'React Hook Form – Efficient Form Handling',
+    description: 'Learn to build performant forms with React Hook Form',
+    explanation: `React Hook Form is a library that helps you build forms with easy validation and minimal re-renders. It provides a simple API for handling form state, validation, and submission.
+
+Key Features:
+1. **Minimal re-renders** - Only re-renders when necessary
+2. **Built-in validation** - Support for various validation rules
+3. **TypeScript support** - Full TypeScript integration
+4. **Small bundle size** - Lightweight and performant
+5. **Easy integration** - Works with UI libraries and custom components
+
+Benefits:
+- Better performance than controlled components
+- Less boilerplate code
+- Built-in error handling
+- Easy form validation`,
+
+    bestPractices: [
+      '🎯 Use uncontrolled components for better performance',
+      '⚡ Implement proper validation rules',
+      '🔄 Handle form submission and errors gracefully',
+      '📝 Use TypeScript for better form type safety'
+    ],
+
+    realWorldUseCases: [
+      '📝 Registration and login forms',
+      '💳 Payment and checkout forms',
+      '📊 Survey and feedback forms',
+      '🏢 Complex multi-step forms'
+    ],
+
+    challenges: [
+      {
+        id: 'build-registration-form',
+        title: 'Build Registration Form',
+        description: 'Create a registration form with validation using React Hook Form',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '30 min',
+        xpReward: 140,
+        code: {
+          initial: `import React from 'react';
+import { useForm } from 'react-hook-form';
+
+function RegistrationForm() {
+  // Set up React Hook Form
+  const { register, handleSubmit, formState: { errors }, watch } = useForm();
+
+  const onSubmit = (data) => {
+    console.log('Form submitted:', data);
+    alert('Registration successful!');
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <h2>Registration Form</h2>
+
+      {/* Email field with validation */}
+      <div>
+        <label htmlFor="email">Email:</label>
+        <input
+          id="email"
+          type="email"
+          // Add register with validation rules
+        />
+        {/* Display email errors */}
+      </div>
+
+      {/* Password field with validation */}
+      <div>
+        <label htmlFor="password">Password:</label>
+        <input
+          id="password"
+          type="password"
+          // Add register with validation rules
+        />
+        {/* Display password errors */}
+      </div>
+
+      {/* Confirm Password field */}
+      <div>
+        <label htmlFor="confirmPassword">Confirm Password:</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          // Add register with validation rules including password match
+        />
+        {/* Display confirm password errors */}
+      </div>
+
+      {/* Name field */}
+      <div>
+        <label htmlFor="name">Full Name:</label>
+        <input
+          id="name"
+          type="text"
+          // Add register with validation rules
+        />
+        {/* Display name errors */}
+      </div>
+
+      {/* Age field */}
+      <div>
+        <label htmlFor="age">Age:</label>
+        <input
+          id="age"
+          type="number"
+          // Add register with validation rules
+        />
+        {/* Display age errors */}
+      </div>
+
+      <button type="submit">Register</button>
+    </form>
+  );
+}
+
+function App() {
+  return (
+    <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
+      <RegistrationForm />
+    </div>
+  );
+}
+
+export default App;`,
+          solution: `import React from 'react';
+import { useForm } from 'react-hook-form';
+
+function RegistrationForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch
+  } = useForm();
+
+  const password = watch('password');
+
+  const onSubmit = (data) => {
+    console.log('Form submitted:', data);
+    alert('Registration successful!');
+  };
+
+  const formStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '15px'
+  };
+
+  const fieldStyle = {
+    display: 'flex',
+    flexDirection: 'column'
+  };
+
+  const inputStyle = {
+    padding: '8px',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    fontSize: '14px'
+  };
+
+  const errorStyle = {
+    color: 'red',
+    fontSize: '12px',
+    marginTop: '4px'
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
+      <h2>Registration Form</h2>
+
+      <div style={fieldStyle}>
+        <label htmlFor="email">Email:</label>
+        <input
+          id="email"
+          type="email"
+          style={inputStyle}
+          {...register('email', {
+            required: 'Email is required',
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$/i,
+              message: 'Invalid email address'
+            }
+          })}
+        />
+        {errors.email && <span style={errorStyle}>{errors.email.message}</span>}
+      </div>
+
+      <div style={fieldStyle}>
+        <label htmlFor="password">Password:</label>
+        <input
+          id="password"
+          type="password"
+          style={inputStyle}
+          {...register('password', {
+            required: 'Password is required',
+            minLength: {
+              value: 8,
+              message: 'Password must be at least 8 characters'
+            },
+            pattern: {
+              value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)/,
+              message: 'Password must contain uppercase, lowercase, and number'
+            }
+          })}
+        />
+        {errors.password && <span style={errorStyle}>{errors.password.message}</span>}
+      </div>
+
+      <div style={fieldStyle}>
+        <label htmlFor="confirmPassword">Confirm Password:</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          style={inputStyle}
+          {...register('confirmPassword', {
+            required: 'Please confirm your password',
+            validate: value => value === password || 'Passwords do not match'
+          })}
+        />
+        {errors.confirmPassword && <span style={errorStyle}>{errors.confirmPassword.message}</span>}
+      </div>
+
+      <div style={fieldStyle}>
+        <label htmlFor="name">Full Name:</label>
+        <input
+          id="name"
+          type="text"
+          style={inputStyle}
+          {...register('name', {
+            required: 'Name is required',
+            minLength: {
+              value: 2,
+              message: 'Name must be at least 2 characters'
+            }
+          })}
+        />
+        {errors.name && <span style={errorStyle}>{errors.name.message}</span>}
+      </div>
+
+      <div style={fieldStyle}>
+        <label htmlFor="age">Age:</label>
+        <input
+          id="age"
+          type="number"
+          style={inputStyle}
+          {...register('age', {
+            required: 'Age is required',
+            min: {
+              value: 18,
+              message: 'Must be at least 18 years old'
+            },
+            max: {
+              value: 120,
+              message: 'Age must be realistic'
+            }
+          })}
+        />
+        {errors.age && <span style={errorStyle}>{errors.age.message}</span>}
+      </div>
+
+      <button
+        type="submit"
+        style={{
+          padding: '10px',
+          backgroundColor: '#007bff',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer',
+          fontSize: '16px'
+        }}
+      >
+        Register
+      </button>
+    </form>
+  );
+}
+
+function App() {
+  return (
+    <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
+      <RegistrationForm />
+    </div>
+  );
+}
+
+export default App;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'react-router-advanced',
+    title: 'Advanced React Router',
+    description: 'Learn advanced routing concepts including nested routes and route guards',
+    explanation: `Advanced React Router features enable complex navigation patterns in single-page applications. This includes nested routing, route protection, and dynamic route handling.
+
+Advanced Features:
+1. **Nested Routes** - Routes within routes for complex layouts
+2. **Route Guards** - Protect routes based on authentication
+3. **Dynamic Routes** - Routes with parameters and wildcards
+4. **Programmatic Navigation** - Navigate using code
+5. **Route Data Loading** - Load data before rendering routes
+
+Benefits:
+- Better code organization
+- Improved user experience
+- Security through route protection
+- SEO-friendly URLs`,
+
+    bestPractices: [
+      '🎯 Use nested routes for complex layouts',
+      '⚡ Implement route guards for protected content',
+      '🔄 Handle loading states during navigation',
+      '📝 Use proper error boundaries for route errors'
+    ],
+
+    realWorldUseCases: [
+      '🏢 Admin dashboards with nested sections',
+      '🔐 Applications with authentication requirements',
+      '📱 Multi-step forms and wizards',
+      '🛒 E-commerce with product categories'
+    ],
+
+    challenges: [
+      {
+        id: 'build-nested-routes',
+        title: 'Build Nested Routes with Guards',
+        description: 'Create a routing system with nested routes and authentication guards',
+        type: 'challenge',
+        difficulty: 'advanced',
+        estimatedTime: '35 min',
+        xpReward: 160,
+        code: {
+          initial: `import React, { useState, createContext, useContext } from 'react';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  Outlet,
+  Navigate,
+  useNavigate
+} from 'react-router-dom';
+
+// Auth Context
+const AuthContext = createContext();
+
+function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+
+  const login = (username) => {
+    setUser({ username, role: username === 'admin' ? 'admin' : 'user' });
+  };
+
+  const logout = () => {
+    setUser(null);
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+// Protected Route Component
+function ProtectedRoute({ children, requiredRole }) {
+  const { user } = useContext(AuthContext);
+
+  // Implement route protection logic
+
+  return children;
+}
+
+// Layout Components
+function Layout() {
+  const { user, logout } = useContext(AuthContext);
+
+  return (
+    <div>
+      <nav style={{ padding: '20px', borderBottom: '1px solid #ccc' }}>
+        <Link to="/">Home</Link> |
+        <Link to="/about">About</Link> |
+        {user ? (
+          <>
+            <Link to="/dashboard">Dashboard</Link> |
+            {user.role === 'admin' && <Link to="/admin">Admin</Link>}
+            <button onClick={logout}>Logout ({user.username})</button>
+          </>
+        ) : (
+          <Link to="/login">Login</Link>
+        )}
+      </nav>
+      <main style={{ padding: '20px' }}>
+        <Outlet />
+      </main>
+    </div>
+  );
+}
+
+// Page Components
+function Home() {
+  return <h1>Home Page</h1>;
+}
+
+function About() {
+  return <h1>About Page</h1>;
+}
+
+function Login() {
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogin = (username) => {
+    login(username);
+    navigate('/dashboard');
+  };
+
+  return (
+    <div>
+      <h1>Login</h1>
+      <button onClick={() => handleLogin('user')}>Login as User</button>
+      <button onClick={() => handleLogin('admin')}>Login as Admin</button>
+    </div>
+  );
+}
+
+// Dashboard with nested routes
+function Dashboard() {
+  return (
+    <div>
+      <h1>Dashboard</h1>
+      <nav>
+        <Link to="/dashboard/profile">Profile</Link> |
+        <Link to="/dashboard/settings">Settings</Link>
+      </nav>
+      <div style={{ marginTop: '20px' }}>
+        <Outlet />
+      </div>
+    </div>
+  );
+}
+
+function Profile() {
+  const { user } = useContext(AuthContext);
+  return <h2>Profile: {user?.username}</h2>;
+}
+
+function Settings() {
+  return <h2>Settings Page</h2>;
+}
+
+function Admin() {
+  return <h1>Admin Panel</h1>;
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="about" element={<About />} />
+            <Route path="login" element={<Login />} />
+
+            {/* Add protected routes */}
+            <Route
+              path="dashboard"
+              element={
+                // Wrap with ProtectedRoute
+                <Dashboard />
+              }
+            >
+              {/* Add nested routes */}
+            </Route>
+
+            {/* Add admin route with role protection */}
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  );
+}
+
+export default App;`,
+          solution: `import React, { useState, createContext, useContext } from 'react';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  Outlet,
+  Navigate,
+  useNavigate
+} from 'react-router-dom';
+
+const AuthContext = createContext();
+
+function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+
+  const login = (username) => {
+    setUser({ username, role: username === 'admin' ? 'admin' : 'user' });
+  };
+
+  const logout = () => {
+    setUser(null);
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+function ProtectedRoute({ children, requiredRole }) {
+  const { user } = useContext(AuthContext);
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (requiredRole && user.role !== requiredRole) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
+}
+
+function Layout() {
+  const { user, logout } = useContext(AuthContext);
+
+  return (
+    <div>
+      <nav style={{
+        padding: '20px',
+        borderBottom: '1px solid #ccc',
+        backgroundColor: '#f8f9fa'
+      }}>
+        <Link to="/" style={{ marginRight: '10px' }}>Home</Link>
+        <Link to="/about" style={{ marginRight: '10px' }}>About</Link>
+        {user ? (
+          <>
+            <Link to="/dashboard" style={{ marginRight: '10px' }}>Dashboard</Link>
+            {user.role === 'admin' && (
+              <Link to="/admin" style={{ marginRight: '10px' }}>Admin</Link>
+            )}
+            <button onClick={logout} style={{ marginLeft: '10px' }}>
+              Logout ({user.username})
+            </button>
+          </>
+        ) : (
+          <Link to="/login">Login</Link>
+        )}
+      </nav>
+      <main style={{ padding: '20px' }}>
+        <Outlet />
+      </main>
+    </div>
   );
 }
 
@@ -2227,7 +7928,7 @@ function Home() {
   return (
     <div>
       <h1>Home Page</h1>
-      <p>Welcome to our website!</p>
+      <p>Welcome to our application!</p>
     </div>
   );
 }
@@ -2236,392 +7937,887 @@ function About() {
   return (
     <div>
       <h1>About Page</h1>
-      <p>Learn more about our company.</p>
+      <p>This is a demo of advanced React Router features.</p>
     </div>
   );
 }
 
-function Contact() {
+function Login() {
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogin = (username) => {
+    login(username);
+    navigate('/dashboard');
+  };
+
   return (
     <div>
-      <h1>Contact Page</h1>
-      <p>Get in touch with us!</p>
+      <h1>Login</h1>
+      <div style={{ marginTop: '20px' }}>
+        <button
+          onClick={() => handleLogin('user')}
+          style={{ margin: '0 10px', padding: '8px 16px' }}
+        >
+          Login as User
+        </button>
+        <button
+          onClick={() => handleLogin('admin')}
+          style={{ margin: '0 10px', padding: '8px 16px' }}
+        >
+          Login as Admin
+        </button>
+      </div>
     </div>
   );
 }
 
-function NotFound() {
+function Dashboard() {
   return (
     <div>
-      <h1>404 - Page Not Found</h1>
-      <p>The page you're looking for doesn't exist.</p>
-      <Link to="/">Go back to Home</Link>
+      <h1>Dashboard</h1>
+      <nav style={{
+        padding: '10px',
+        backgroundColor: '#e9ecef',
+        borderRadius: '4px',
+        marginBottom: '20px'
+      }}>
+        <Link to="/dashboard/profile" style={{ marginRight: '10px' }}>Profile</Link>
+        <Link to="/dashboard/settings">Settings</Link>
+      </nav>
+      <div>
+        <Outlet />
+      </div>
     </div>
   );
-}`,
-          language: 'javascript'
-        },
-        instructions: [
-          'Wrap the app with BrowserRouter',
-          'Create navigation with NavLink components',
-          'Set up Routes and Route components',
-          'Add a catch-all route for 404 pages',
-          'Style active navigation links'
-        ],
-        hints: [
-          'BrowserRouter should wrap the entire app',
-          'Use NavLink for navigation with active states',
-          'Routes component contains all Route definitions',
-          'Use path="*" for catch-all routes'
-        ],
-        testCriteria: [
-          'Navigation works between all pages',
-          'Active navigation links are highlighted',
-          '404 page shows for invalid routes',
-          'URL updates correctly on navigation'
-        ]
-      },
-      {
-        id: 'dynamic-routing',
-        title: 'Dynamic Routes with Parameters',
-        description: 'Implement dynamic routes with URL parameters',
-        type: 'challenge',
-        difficulty: 'advanced',
-        estimatedTime: '25 min',
-        xpReward: 120,
-        instructions: [
-          'Create a user profile route: /users/:id',
-          'Use useParams to access the user ID',
-          'Implement programmatic navigation with useNavigate',
-          'Add nested routes for user details'
-        ],
-        hints: [
-          'Use :id syntax for dynamic route parameters',
-          'useParams hook returns an object with parameters',
-          'useNavigate returns a function for navigation',
-          'Nested routes can be defined within parent routes'
-        ],
-        testCriteria: [
-          'Dynamic routes work with different user IDs',
-          'useParams correctly extracts URL parameters',
-          'Programmatic navigation functions properly',
-          'Nested routes render correctly'
-        ]
+}
+
+function Profile() {
+  const { user } = useContext(AuthContext);
+  return (
+    <div>
+      <h2>Profile</h2>
+      <p>Username: {user?.username}</p>
+      <p>Role: {user?.role}</p>
+    </div>
+  );
+}
+
+function Settings() {
+  return (
+    <div>
+      <h2>Settings</h2>
+      <p>Configure your application settings here.</p>
+    </div>
+  );
+}
+
+function Admin() {
+  return (
+    <div>
+      <h1>Admin Panel</h1>
+      <p>Admin-only content goes here.</p>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="about" element={<About />} />
+            <Route path="login" element={<Login />} />
+
+            <Route
+              path="dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<Navigate to="profile" replace />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="settings" element={<Settings />} />
+            </Route>
+
+            <Route
+              path="admin"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <Admin />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  );
+}
+
+export default App;`
+        }
       }
-    ],
-    learningOutcomes: [
-      'Implement client-side routing in React applications',
-      'Handle dynamic routes and URL parameters',
-      'Create navigation with active states and programmatic routing'
-    ],
-    estimatedTime: '60 min',
-    difficulty: 'advanced',
-    prerequisites: ['testing-react'],
-    nextTopics: ['state-management']
+    ]
   },
-  {
-    id: 'state-management',
-    title: 'Advanced State Management',
-    description: 'Learn advanced state management patterns and libraries',
-    explanation: `Advanced state management solutions for complex applications:
 
-1. useReducer for complex state logic
-2. Zustand for simple global state
-3. Redux Toolkit for enterprise applications
-4. State management patterns and best practices`,
-    animationScript: `Show complex state updates → useReducer manages state transitions
-Multiple components → global state store → synchronized updates`,
-    scenario: `🧩 You have a complex application with intricate state logic. Your mission is to implement proper state management using useReducer and global state solutions.`,
+  {
+    id: 'performance-optimization',
+    title: 'React Performance Optimization',
+    description: 'Learn advanced techniques to optimize React application performance',
+    explanation: `Performance optimization in React involves various techniques to make your applications faster and more responsive. Understanding when and how to optimize is crucial for building scalable applications.
+
+Key Optimization Techniques:
+1. **Profiling** - Use React DevTools Profiler to identify bottlenecks
+2. **Bundle Analysis** - Analyze and optimize bundle size
+3. **Lazy Loading** - Load components and resources on demand
+4. **Memoization** - Prevent unnecessary re-renders and calculations
+5. **Virtual Scrolling** - Handle large lists efficiently
+
+Performance Metrics:
+- First Contentful Paint (FCP)
+- Largest Contentful Paint (LCP)
+- Time to Interactive (TTI)
+- Bundle size and loading time`,
+
+    bestPractices: [
+      '🎯 Profile before optimizing - measure actual performance issues',
+      '⚡ Use React.memo, useMemo, and useCallback strategically',
+      '🔄 Implement virtual scrolling for large datasets',
+      '📝 Optimize images and assets for web delivery'
+    ],
+
+    realWorldUseCases: [
+      '📊 Data-heavy dashboards and analytics',
+      '📱 Mobile applications with limited resources',
+      '🎮 Real-time applications and games',
+      '🛒 E-commerce sites with large product catalogs'
+    ],
+
     challenges: [
       {
-        id: 'use-reducer-todo',
-        title: 'Todo App with useReducer',
-        description: 'Build a todo application using useReducer for state management',
-        type: 'playground',
+        id: 'optimize-large-list',
+        title: 'Optimize Large List Performance',
+        description: 'Implement virtual scrolling and optimization for a large list',
+        type: 'challenge',
         difficulty: 'advanced',
+        estimatedTime: '40 min',
+        xpReward: 180,
+        code: {
+          initial: `import React, { useState, useMemo, useCallback } from 'react';
+
+// Generate large dataset
+const generateLargeDataset = (size) => {
+  return Array.from({ length: size }, (_, index) => ({
+    id: index,
+    name: \`Item \${index + 1}\`,
+    description: \`Description for item \${index + 1}\`,
+    value: Math.floor(Math.random() * 1000),
+    category: ['A', 'B', 'C'][index % 3]
+  }));
+};
+
+// Unoptimized list item component
+function ListItem({ item, onSelect, isSelected }) {
+  console.log(\`Rendering item \${item.id}\`);
+
+  return (
+    <div
+      style={{
+        padding: '10px',
+        border: '1px solid #ccc',
+        margin: '2px 0',
+        backgroundColor: isSelected ? '#e3f2fd' : 'white',
+        cursor: 'pointer'
+      }}
+      onClick={() => onSelect(item.id)}
+    >
+      <h4>{item.name}</h4>
+      <p>{item.description}</p>
+      <p>Value: {item.value} | Category: {item.category}</p>
+    </div>
+  );
+}
+
+function App() {
+  const [selectedItems, setSelectedItems] = useState(new Set());
+  const [filter, setFilter] = useState('');
+  const [sortBy, setSortBy] = useState('name');
+
+  // Generate large dataset (this will cause performance issues)
+  const data = generateLargeDataset(10000);
+
+  // Unoptimized filtering and sorting
+  const filteredAndSortedData = data
+    .filter(item => item.name.toLowerCase().includes(filter.toLowerCase()))
+    .sort((a, b) => {
+      if (sortBy === 'name') return a.name.localeCompare(b.name);
+      if (sortBy === 'value') return b.value - a.value;
+      return 0;
+    });
+
+  const handleSelect = (itemId) => {
+    const newSelected = new Set(selectedItems);
+    if (newSelected.has(itemId)) {
+      newSelected.delete(itemId);
+    } else {
+      newSelected.add(itemId);
+    }
+    setSelectedItems(newSelected);
+  };
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h1>Large List Performance Demo</h1>
+
+      <div style={{ marginBottom: '20px' }}>
+        <input
+          type="text"
+          placeholder="Filter items..."
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          style={{ marginRight: '10px', padding: '5px' }}
+        />
+
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          style={{ padding: '5px' }}
+        >
+          <option value="name">Sort by Name</option>
+          <option value="value">Sort by Value</option>
+        </select>
+
+        <p>Showing {filteredAndSortedData.length} items | Selected: {selectedItems.size}</p>
+      </div>
+
+      {/* This will render all items at once - performance issue! */}
+      <div style={{ height: '400px', overflow: 'auto', border: '1px solid #ccc' }}>
+        {filteredAndSortedData.map(item => (
+          <ListItem
+            key={item.id}
+            item={item}
+            onSelect={handleSelect}
+            isSelected={selectedItems.has(item.id)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default App;`,
+          solution: `import React, { useState, useMemo, useCallback, memo } from 'react';
+
+const generateLargeDataset = (size) => {
+  return Array.from({ length: size }, (_, index) => ({
+    id: index,
+    name: \`Item \${index + 1}\`,
+    description: \`Description for item \${index + 1}\`,
+    value: Math.floor(Math.random() * 1000),
+    category: ['A', 'B', 'C'][index % 3]
+  }));
+};
+
+// Optimized list item component with React.memo
+const ListItem = memo(function ListItem({ item, onSelect, isSelected }) {
+  return (
+    <div
+      style={{
+        padding: '10px',
+        border: '1px solid #ccc',
+        margin: '2px 0',
+        backgroundColor: isSelected ? '#e3f2fd' : 'white',
+        cursor: 'pointer'
+      }}
+      onClick={() => onSelect(item.id)}
+    >
+      <h4>{item.name}</h4>
+      <p>{item.description}</p>
+      <p>Value: {item.value} | Category: {item.category}</p>
+    </div>
+  );
+});
+
+// Virtual scrolling component
+function VirtualizedList({ items, itemHeight = 80, containerHeight = 400, onSelect, selectedItems }) {
+  const [scrollTop, setScrollTop] = useState(0);
+
+  const visibleStart = Math.floor(scrollTop / itemHeight);
+  const visibleEnd = Math.min(
+    visibleStart + Math.ceil(containerHeight / itemHeight) + 1,
+    items.length
+  );
+
+  const visibleItems = items.slice(visibleStart, visibleEnd);
+  const totalHeight = items.length * itemHeight;
+  const offsetY = visibleStart * itemHeight;
+
+  return (
+    <div
+      style={{
+        height: containerHeight,
+        overflow: 'auto',
+        border: '1px solid #ccc'
+      }}
+      onScroll={(e) => setScrollTop(e.target.scrollTop)}
+    >
+      <div style={{ height: totalHeight, position: 'relative' }}>
+        <div style={{ transform: \`translateY(\${offsetY}px)\` }}>
+          {visibleItems.map(item => (
+            <ListItem
+              key={item.id}
+              item={item}
+              onSelect={onSelect}
+              isSelected={selectedItems.has(item.id)}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [selectedItems, setSelectedItems] = useState(new Set());
+  const [filter, setFilter] = useState('');
+  const [sortBy, setSortBy] = useState('name');
+
+  // Memoize the large dataset generation
+  const data = useMemo(() => generateLargeDataset(10000), []);
+
+  // Memoize expensive filtering and sorting operations
+  const filteredAndSortedData = useMemo(() => {
+    return data
+      .filter(item => item.name.toLowerCase().includes(filter.toLowerCase()))
+      .sort((a, b) => {
+        if (sortBy === 'name') return a.name.localeCompare(b.name);
+        if (sortBy === 'value') return b.value - a.value;
+        return 0;
+      });
+  }, [data, filter, sortBy]);
+
+  // Memoize the select handler to prevent unnecessary re-renders
+  const handleSelect = useCallback((itemId) => {
+    setSelectedItems(prev => {
+      const newSelected = new Set(prev);
+      if (newSelected.has(itemId)) {
+        newSelected.delete(itemId);
+      } else {
+        newSelected.add(itemId);
+      }
+      return newSelected;
+    });
+  }, []);
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h1>Optimized Large List Performance</h1>
+
+      <div style={{ marginBottom: '20px' }}>
+        <input
+          type="text"
+          placeholder="Filter items..."
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          style={{ marginRight: '10px', padding: '5px' }}
+        />
+
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          style={{ padding: '5px' }}
+        >
+          <option value="name">Sort by Name</option>
+          <option value="value">Sort by Value</option>
+        </select>
+
+        <p>Showing {filteredAndSortedData.length} items | Selected: {selectedItems.size}</p>
+      </div>
+
+      {/* Virtualized list for better performance */}
+      <VirtualizedList
+        items={filteredAndSortedData}
+        onSelect={handleSelect}
+        selectedItems={selectedItems}
+      />
+    </div>
+  );
+}
+
+export default App;`
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'accessibility',
+    title: 'React Accessibility (a11y)',
+    description: 'Learn to build accessible React applications for all users',
+    explanation: `Accessibility (a11y) ensures that your React applications can be used by people with disabilities. This includes proper semantic HTML, keyboard navigation, screen reader support, and ARIA attributes.
+
+Key Accessibility Principles:
+1. **Semantic HTML** - Use proper HTML elements for their intended purpose
+2. **Keyboard Navigation** - Ensure all interactive elements are keyboard accessible
+3. **Screen Reader Support** - Provide proper labels and descriptions
+4. **Color and Contrast** - Ensure sufficient color contrast ratios
+5. **Focus Management** - Handle focus properly in dynamic content
+
+ARIA Attributes:
+- aria-label, aria-labelledby
+- aria-describedby
+- aria-expanded, aria-hidden
+- role attributes`,
+
+    bestPractices: [
+      '🎯 Use semantic HTML elements whenever possible',
+      '⚡ Implement proper focus management',
+      '🔄 Test with screen readers and keyboard navigation',
+      '📝 Provide alternative text for images and icons'
+    ],
+
+    realWorldUseCases: [
+      '🏢 Government and public sector websites',
+      '🏥 Healthcare and medical applications',
+      '🎓 Educational platforms and e-learning',
+      '🛒 E-commerce sites serving diverse users'
+    ],
+
+    challenges: [
+      {
+        id: 'build-accessible-form',
+        title: 'Build Accessible Form',
+        description: 'Create a fully accessible form with proper ARIA attributes and keyboard navigation',
+        type: 'challenge',
+        difficulty: 'intermediate',
         estimatedTime: '30 min',
         xpReward: 140,
         code: {
-          initial: `// Implement todo app with useReducer
-import React, { useReducer, useState } from 'react';
+          initial: `import React, { useState, useRef } from 'react';
 
-// Define initial state and reducer here
+function AccessibleForm() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    newsletter: false,
+    country: ''
+  });
 
-function TodoApp() {
-  // Use useReducer here
-  const [inputValue, setInputValue] = useState('');
+  const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
-  return (
-    <div>
-      <h1>Todo App</h1>
-      <div>
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Add a new todo"
-        />
-        <button>Add Todo</button>
-      </div>
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-      <div>
-        {/* Render todos here */}
-      </div>
-    </div>
-  );
-}`,
-          solution: `// Complete useReducer todo implementation
-import React, { useReducer, useState } from 'react';
+    // Basic validation
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    if (!formData.password) newErrors.password = 'Password is required';
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
 
-const initialState = {
-  todos: [],
-  filter: 'all' // all, active, completed
-};
+    setErrors(newErrors);
 
-function todoReducer(state, action) {
-  switch (action.type) {
-    case 'ADD_TODO':
-      return {
-        ...state,
-        todos: [
-          ...state.todos,
-          {
-            id: Date.now(),
-            text: action.payload,
-            completed: false
-          }
-        ]
-      };
-
-    case 'TOGGLE_TODO':
-      return {
-        ...state,
-        todos: state.todos.map(todo =>
-          todo.id === action.payload
-            ? { ...todo, completed: !todo.completed }
-            : todo
-        )
-      };
-
-    case 'DELETE_TODO':
-      return {
-        ...state,
-        todos: state.todos.filter(todo => todo.id !== action.payload)
-      };
-
-    case 'SET_FILTER':
-      return {
-        ...state,
-        filter: action.payload
-      };
-
-    case 'CLEAR_COMPLETED':
-      return {
-        ...state,
-        todos: state.todos.filter(todo => !todo.completed)
-      };
-
-    default:
-      return state;
-  }
-}
-
-function TodoApp() {
-  const [state, dispatch] = useReducer(todoReducer, initialState);
-  const [inputValue, setInputValue] = useState('');
-
-  const addTodo = () => {
-    if (inputValue.trim()) {
-      dispatch({ type: 'ADD_TODO', payload: inputValue.trim() });
-      setInputValue('');
+    if (Object.keys(newErrors).length === 0) {
+      alert('Form submitted successfully!');
     }
   };
 
-  const filteredTodos = state.todos.filter(todo => {
-    if (state.filter === 'active') return !todo.completed;
-    if (state.filter === 'completed') return todo.completed;
-    return true;
-  });
+  const handleChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
 
   return (
     <div>
-      <h1>Todo App</h1>
-      <div>
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && addTodo()}
-          placeholder="Add a new todo"
-        />
-        <button onClick={addTodo}>Add Todo</button>
-      </div>
+      <h1>Accessible Registration Form</h1>
 
-      <div>
-        <button
-          onClick={() => dispatch({ type: 'SET_FILTER', payload: 'all' })}
-          style={{ fontWeight: state.filter === 'all' ? 'bold' : 'normal' }}
-        >
-          All
-        </button>
-        <button
-          onClick={() => dispatch({ type: 'SET_FILTER', payload: 'active' })}
-          style={{ fontWeight: state.filter === 'active' ? 'bold' : 'normal' }}
-        >
-          Active
-        </button>
-        <button
-          onClick={() => dispatch({ type: 'SET_FILTER', payload: 'completed' })}
-          style={{ fontWeight: state.filter === 'completed' ? 'bold' : 'normal' }}
-        >
-          Completed
-        </button>
-        <button onClick={() => dispatch({ type: 'CLEAR_COMPLETED' })}>
-          Clear Completed
-        </button>
-      </div>
+      {/* Add proper form structure with accessibility features */}
+      <form onSubmit={handleSubmit}>
 
-      <ul>
-        {filteredTodos.map(todo => (
-          <li key={todo.id}>
-            <input
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => dispatch({ type: 'TOGGLE_TODO', payload: todo.id })}
-            />
-            <span style={{
-              textDecoration: todo.completed ? 'line-through' : 'none',
-              marginLeft: '8px',
-              marginRight: '8px'
-            }}>
-              {todo.text}
-            </span>
-            <button onClick={() => dispatch({ type: 'DELETE_TODO', payload: todo.id })}>
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
+        {/* Name field - add proper labels and error handling */}
+        <div>
+          <label>Name:</label>
+          <input
+            type="text"
+            value={formData.name}
+            onChange={(e) => handleChange('name', e.target.value)}
+          />
+          {errors.name && <span>{errors.name}</span>}
+        </div>
 
-      <p>
-        {state.todos.filter(t => !t.completed).length} items left
-      </p>
+        {/* Email field - add accessibility attributes */}
+        <div>
+          <label>Email:</label>
+          <input
+            type="email"
+            value={formData.email}
+            onChange={(e) => handleChange('email', e.target.value)}
+          />
+          {errors.email && <span>{errors.email}</span>}
+        </div>
+
+        {/* Password field with show/hide toggle */}
+        <div>
+          <label>Password:</label>
+          <input
+            type={showPassword ? 'text' : 'password'}
+            value={formData.password}
+            onChange={(e) => handleChange('password', e.target.value)}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? 'Hide' : 'Show'}
+          </button>
+          {errors.password && <span>{errors.password}</span>}
+        </div>
+
+        {/* Confirm password field */}
+        <div>
+          <label>Confirm Password:</label>
+          <input
+            type="password"
+            value={formData.confirmPassword}
+            onChange={(e) => handleChange('confirmPassword', e.target.value)}
+          />
+          {errors.confirmPassword && <span>{errors.confirmPassword}</span>}
+        </div>
+
+        {/* Newsletter checkbox */}
+        <div>
+          <input
+            type="checkbox"
+            checked={formData.newsletter}
+            onChange={(e) => handleChange('newsletter', e.target.checked)}
+          />
+          <label>Subscribe to newsletter</label>
+        </div>
+
+        {/* Country select */}
+        <div>
+          <label>Country:</label>
+          <select
+            value={formData.country}
+            onChange={(e) => handleChange('country', e.target.value)}
+          >
+            <option value="">Select a country</option>
+            <option value="us">United States</option>
+            <option value="ca">Canada</option>
+            <option value="uk">United Kingdom</option>
+            <option value="au">Australia</option>
+          </select>
+        </div>
+
+        <button type="submit">Register</button>
+      </form>
     </div>
   );
-}`,
-          language: 'javascript'
-        },
-        instructions: [
-          'Define initial state with todos array and filter',
-          'Create todoReducer with actions for add, toggle, delete, filter',
-          'Use useReducer to manage complex state',
-          'Implement filtering and clearing completed todos'
-        ],
-        hints: [
-          'useReducer is better for complex state logic',
-          'Actions should have type and payload properties',
-          'Use spread operator for immutable updates',
-          'Filter todos based on current filter state'
-        ],
-        testCriteria: [
-          'All CRUD operations work correctly',
-          'Filtering shows appropriate todos',
-          'State updates are immutable',
-          'Complex state logic is well organized'
-        ]
-      }
-    ],
-    learningOutcomes: [
-      'Use useReducer for complex state management',
-      'Understand when to choose different state management solutions',
-      'Implement scalable state architecture patterns'
-    ],
-    estimatedTime: '70 min',
-    difficulty: 'advanced',
-    prerequisites: ['react-router'],
-    nextTopics: ['deployment']
-  },
-  {
-    id: 'deployment',
-    title: 'Deployment & Production',
-    description: 'Learn to deploy React applications to production',
-    explanation: `Deploying React applications involves:
+}
 
-1. Build optimization (npm run build)
-2. Static hosting (Netlify, Vercel, GitHub Pages)
-3. Environment variables and configuration
-4. Performance optimization for production
-5. CI/CD pipelines for automated deployment`,
-    animationScript: `Development code → build process → optimized bundle → deployment platform → live website
-Show build artifacts and deployment pipeline`,
-    scenario: `🧩 You have a completed React application that needs to go live. Your mission is to deploy it to production with proper optimization.`,
-    challenges: [
-      {
-        id: 'production-build',
-        title: 'Prepare for Production',
-        description: 'Optimize and prepare a React app for production deployment',
-        type: 'challenge',
-        difficulty: 'advanced',
-        estimatedTime: '30 min',
-        xpReward: 150,
-        instructions: [
-          'Create a production build of your React app',
-          'Analyze bundle size and optimize if needed',
-          'Set up environment variables for different environments',
-          'Configure deployment settings for a hosting platform',
-          'Test the production build locally'
-        ],
-        hints: [
-          'Use npm run build to create production build',
-          'Check build folder for optimized files',
-          'Use .env files for environment variables',
-          'Test production build with serve package'
-        ],
-        testCriteria: [
-          'Production build creates optimized bundle',
-          'Environment variables work correctly',
-          'App runs properly in production mode',
-          'Bundle size is optimized'
-        ]
-      },
-      {
-        id: 'deploy-to-vercel',
-        title: 'Deploy to Vercel',
-        description: 'Deploy your React application to Vercel',
-        type: 'challenge',
-        difficulty: 'advanced',
-        estimatedTime: '20 min',
-        xpReward: 120,
-        instructions: [
-          'Connect your GitHub repository to Vercel',
-          'Configure build settings and environment variables',
-          'Deploy the application',
-          'Set up custom domain (optional)',
-          'Configure automatic deployments on git push'
-        ],
-        hints: [
-          'Vercel automatically detects React projects',
-          'Environment variables can be set in Vercel dashboard',
-          'Preview deployments are created for pull requests',
-          'Custom domains can be added in project settings'
-        ],
-        testCriteria: [
-          'Application is successfully deployed',
-          'Environment variables work in production',
-          'Automatic deployments trigger on code changes',
-          'Application is accessible via public URL'
-        ]
+function App() {
+  return (
+    <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto' }}>
+      <AccessibleForm />
+    </div>
+  );
+}
+
+export default App;`,
+          solution: `import React, { useState, useRef, useId } from 'react';
+
+function AccessibleForm() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    newsletter: false,
+    country: ''
+  });
+
+  const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Generate unique IDs for form fields
+  const nameId = useId();
+  const emailId = useId();
+  const passwordId = useId();
+  const confirmPasswordId = useId();
+  const newsletterId = useId();
+  const countryId = useId();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    if (!formData.password) newErrors.password = 'Password is required';
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      alert('Form submitted successfully!');
+    }
+  };
+
+  const handleChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
+
+  const fieldStyle = {
+    marginBottom: '20px',
+    display: 'flex',
+    flexDirection: 'column'
+  };
+
+  const labelStyle = {
+    marginBottom: '5px',
+    fontWeight: 'bold'
+  };
+
+  const inputStyle = {
+    padding: '8px',
+    border: '2px solid #ccc',
+    borderRadius: '4px',
+    fontSize: '16px'
+  };
+
+  const errorStyle = {
+    color: '#d32f2f',
+    fontSize: '14px',
+    marginTop: '5px'
+  };
+
+  return (
+    <div>
+      <h1>Accessible Registration Form</h1>
+
+      <form onSubmit={handleSubmit} noValidate>
+
+        {/* Name field with proper accessibility */}
+        <div style={fieldStyle}>
+          <label htmlFor={nameId} style={labelStyle}>
+            Name: <span aria-label="required">*</span>
+          </label>
+          <input
+            id={nameId}
+            type="text"
+            value={formData.name}
+            onChange={(e) => handleChange('name', e.target.value)}
+            style={{
+              ...inputStyle,
+              borderColor: errors.name ? '#d32f2f' : '#ccc'
+            }}
+            aria-invalid={!!errors.name}
+            aria-describedby={errors.name ? \`\${nameId}-error\` : undefined}
+            required
+          />
+          {errors.name && (
+            <span
+              id={\`\${nameId}-error\`}
+              style={errorStyle}
+              role="alert"
+              aria-live="polite"
+            >
+              {errors.name}
+            </span>
+          )}
+        </div>
+
+        {/* Email field */}
+        <div style={fieldStyle}>
+          <label htmlFor={emailId} style={labelStyle}>
+            Email: <span aria-label="required">*</span>
+          </label>
+          <input
+            id={emailId}
+            type="email"
+            value={formData.email}
+            onChange={(e) => handleChange('email', e.target.value)}
+            style={{
+              ...inputStyle,
+              borderColor: errors.email ? '#d32f2f' : '#ccc'
+            }}
+            aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? \`\${emailId}-error\` : undefined}
+            required
+          />
+          {errors.email && (
+            <span
+              id={\`\${emailId}-error\`}
+              style={errorStyle}
+              role="alert"
+              aria-live="polite"
+            >
+              {errors.email}
+            </span>
+          )}
+        </div>
+
+        {/* Password field with show/hide toggle */}
+        <div style={fieldStyle}>
+          <label htmlFor={passwordId} style={labelStyle}>
+            Password: <span aria-label="required">*</span>
+          </label>
+          <div style={{ position: 'relative' }}>
+            <input
+              id={passwordId}
+              type={showPassword ? 'text' : 'password'}
+              value={formData.password}
+              onChange={(e) => handleChange('password', e.target.value)}
+              style={{
+                ...inputStyle,
+                borderColor: errors.password ? '#d32f2f' : '#ccc',
+                paddingRight: '80px'
+              }}
+              aria-invalid={!!errors.password}
+              aria-describedby={errors.password ? \`\${passwordId}-error\` : undefined}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: 'absolute',
+                right: '8px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                color: '#007bff'
+              }}
+              aria-label={\`\${showPassword ? 'Hide' : 'Show'} password\`}
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+          </div>
+          {errors.password && (
+            <span
+              id={\`\${passwordId}-error\`}
+              style={errorStyle}
+              role="alert"
+              aria-live="polite"
+            >
+              {errors.password}
+            </span>
+          )}
+        </div>
+
+        {/* Confirm password field */}
+        <div style={fieldStyle}>
+          <label htmlFor={confirmPasswordId} style={labelStyle}>
+            Confirm Password: <span aria-label="required">*</span>
+          </label>
+          <input
+            id={confirmPasswordId}
+            type="password"
+            value={formData.confirmPassword}
+            onChange={(e) => handleChange('confirmPassword', e.target.value)}
+            style={{
+              ...inputStyle,
+              borderColor: errors.confirmPassword ? '#d32f2f' : '#ccc'
+            }}
+            aria-invalid={!!errors.confirmPassword}
+            aria-describedby={errors.confirmPassword ? \`\${confirmPasswordId}-error\` : undefined}
+            required
+          />
+          {errors.confirmPassword && (
+            <span
+              id={\`\${confirmPasswordId}-error\`}
+              style={errorStyle}
+              role="alert"
+              aria-live="polite"
+            >
+              {errors.confirmPassword}
+            </span>
+          )}
+        </div>
+
+        {/* Newsletter checkbox */}
+        <div style={{ ...fieldStyle, flexDirection: 'row', alignItems: 'center' }}>
+          <input
+            id={newsletterId}
+            type="checkbox"
+            checked={formData.newsletter}
+            onChange={(e) => handleChange('newsletter', e.target.checked)}
+            style={{ marginRight: '8px' }}
+          />
+          <label htmlFor={newsletterId}>
+            Subscribe to newsletter (optional)
+          </label>
+        </div>
+
+        {/* Country select */}
+        <div style={fieldStyle}>
+          <label htmlFor={countryId} style={labelStyle}>
+            Country:
+          </label>
+          <select
+            id={countryId}
+            value={formData.country}
+            onChange={(e) => handleChange('country', e.target.value)}
+            style={inputStyle}
+          >
+            <option value="">Select a country</option>
+            <option value="us">United States</option>
+            <option value="ca">Canada</option>
+            <option value="uk">United Kingdom</option>
+            <option value="au">Australia</option>
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          style={{
+            padding: '12px 24px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            fontSize: '16px',
+            cursor: 'pointer'
+          }}
+        >
+          Register
+        </button>
+      </form>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto' }}>
+      <AccessibleForm />
+    </div>
+  );
+}
+
+export default App;`
+        }
       }
-    ],
-    learningOutcomes: [
-      'Deploy React applications to production',
-      'Optimize applications for production performance',
-      'Set up CI/CD pipelines for automated deployment',
-      'Configure environment variables and production settings'
-    ],
-    estimatedTime: '60 min',
-    difficulty: 'advanced',
-    prerequisites: ['state-management'],
-    nextTopics: []
+    ]
   }
 ];
