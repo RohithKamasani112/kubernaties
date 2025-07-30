@@ -39,7 +39,7 @@ const BlueprintDashboardWrapper: React.FC = () => {
   const navigate = useNavigate();
 
   const handleBlueprintSelect = (blueprintId: string) => {
-    navigate(`/blueprints/${blueprintId}`);
+    navigate(`/web-elevate/blueprints/${blueprintId}`);
   };
 
   return <BlueprintDashboard onBlueprintSelect={handleBlueprintSelect} />;
