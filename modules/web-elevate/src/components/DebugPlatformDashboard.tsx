@@ -36,13 +36,15 @@ const DebugPlatformDashboard: React.FC<DebugPlatformDashboardProps> = ({
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all');
   const [activeTab, setActiveTab] = useState<'challenges' | 'categories' | 'progress'>('challenges');
 
-  // Use existing challenges and categories
+  // Use existing challenges and categories (deduplicated)
   const allChallenges = [
     ...reactDebugChallenges,
     ...angularDebugChallenges,
     ...nodeDebugChallenges,
     ...debugChallenges
-  ];
+  ].filter((challenge, index, array) =>
+    array.findIndex(c => c.id === challenge.id) === index
+  );
 
   // Filter challenges based on search and filters
   const filteredChallenges = allChallenges.filter(challenge => {

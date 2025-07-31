@@ -23,6 +23,7 @@ const CloudArchitectureApp: React.FC = () => {
             {/* Feature Pages */}
             <Route path="ai-generator" element={<AIGeneratorPage />} />
             <Route path="studio" element={<LearningStudioPage />} />
+            <Route path="studio/:scenarioId" element={<LearningStudioPage />} />
             <Route path="builder" element={<CanvasBuilderPage />} />
             <Route path="scenarios" element={<ScenariosPage />} />
 

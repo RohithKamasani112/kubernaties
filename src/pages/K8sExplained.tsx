@@ -138,7 +138,29 @@ const K8sExplained: React.FC = () => {
     setPan({ x: 50, y: 20 });
     setActiveFlow(null);
     setIsPlaying(false);
+    console.log('View reset to default');
   };
+
+  // Keyboard shortcuts for zoom
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === '=' || e.key === '+') {
+          e.preventDefault();
+          setZoom(prev => Math.min(prev + 0.1, 1.5));
+        } else if (e.key === '-') {
+          e.preventDefault();
+          setZoom(prev => Math.max(prev - 0.1, 0.4));
+        } else if (e.key === '0') {
+          e.preventDefault();
+          resetView();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Layer Groups for proper visual organization
   const layerGroups: LayerGroup[] = [
@@ -684,19 +706,30 @@ const K8sExplained: React.FC = () => {
                 </button>
                 <div className="w-px h-6 bg-gray-300 mx-2"></div>
                 <button
-                  onClick={() => setZoom(Math.min(zoom + 0.1, 1.5))}
+                  onClick={() => {
+                    const newZoom = Math.min(zoom + 0.1, 1.5);
+                    setZoom(newZoom);
+                    console.log('Zoom In clicked, new zoom:', newZoom);
+                  }}
                   className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-                  title="Zoom In"
+                  title={`Zoom In (${Math.round(zoom * 100)}%)`}
                 >
                   <ZoomIn className="w-4 h-4" />
                 </button>
                 <button
-                  onClick={() => setZoom(Math.max(zoom - 0.1, 0.4))}
+                  onClick={() => {
+                    const newZoom = Math.max(zoom - 0.1, 0.4);
+                    setZoom(newZoom);
+                    console.log('Zoom Out clicked, new zoom:', newZoom);
+                  }}
                   className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-                  title="Zoom Out"
+                  title={`Zoom Out (${Math.round(zoom * 100)}%)`}
                 >
                   <ZoomOut className="w-4 h-4" />
                 </button>
+                <div className="px-3 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium">
+                  {Math.round(zoom * 100)}%
+                </div>
                 <button
                   onClick={resetView}
                   className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
@@ -747,6 +780,13 @@ const K8sExplained: React.FC = () => {
       <div
         ref={containerRef}
         className={`relative w-full ${isFullscreen ? 'h-screen' : 'min-h-[600px]'} overflow-auto bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30`}
+        onWheel={(e) => {
+          if (e.ctrlKey || e.metaKey) {
+            e.preventDefault();
+            const delta = e.deltaY > 0 ? -0.05 : 0.05;
+            setZoom(prev => Math.max(0.4, Math.min(1.5, prev + delta)));
+          }
+        }}
       >
         <div
           className="relative transition-transform duration-300 ease-out"

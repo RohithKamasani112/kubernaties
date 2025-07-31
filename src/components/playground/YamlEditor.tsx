@@ -287,8 +287,14 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
     lineNumbers: 'on' as const,
     roundedSelection: false,
     scrollbar: {
-      vertical: 'auto' as const,
-      horizontal: 'auto' as const,
+      vertical: 'visible' as const,
+      horizontal: 'visible' as const,
+      verticalScrollbarSize: 12,
+      horizontalScrollbarSize: 12,
+      useShadows: false,
+      verticalHasArrows: true,
+      horizontalHasArrows: true,
+      alwaysConsumeMouseWheel: false
     },
     theme: 'vs-dark',
     wordWrap: 'on' as const,
@@ -297,6 +303,8 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
     folding: true,
     foldingStrategy: 'indentation' as const,
     showFoldingControls: 'always' as const,
+    mouseWheelZoom: false,
+    smoothScrolling: true
   };
 
   if (!isVisible) {
@@ -328,7 +336,7 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
   return (
     <motion.div
       className={`bg-white border-t border-slate-200 flex flex-col relative ${
-        isExpanded ? 'fixed inset-0 z-50' : ''
+        isExpanded ? 'fixed inset-0 z-50 bg-white shadow-2xl' : ''
       }`}
       style={{ height: isExpanded ? '100vh' : `${currentHeight}px` }}
       initial={{ y: 100, opacity: 0 }}
@@ -359,6 +367,7 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
           <div className="min-w-0">
             <h3 className="text-xs sm:text-sm font-bold text-slate-900 truncate">
               {isManualEdit ? '✏️ Custom YAML Manifest' : '🚀 Generated YAML Manifest'}
+              {isExpanded && ' (Expanded View)'}
             </h3>
             <p className="text-xs text-slate-600 hidden sm:block">
               {isManualEdit ? 'Manually edited - click Apply to visualize' : 'Live-generated from your architecture'}
@@ -424,7 +433,15 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
             <EyeOff className="w-3 h-3 sm:w-4 sm:h-4" />
           </button>
           <button
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={() => {
+              setIsExpanded(!isExpanded);
+              // Prevent body scroll when expanded
+              if (!isExpanded) {
+                document.body.style.overflow = 'hidden';
+              } else {
+                document.body.style.overflow = 'auto';
+              }
+            }}
             className="p-1.5 sm:p-2 text-slate-600 hover:text-slate-900 hover:bg-white rounded-lg transition-colors touch-manipulation"
             title={isExpanded ? "Minimize" : "Expand"}
           >

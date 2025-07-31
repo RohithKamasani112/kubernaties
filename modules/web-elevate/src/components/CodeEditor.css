@@ -1,0 +1,104 @@
+/* Monaco Editor Custom Styling - COMPLETELY Remove ALL Red Error Bars */
+
+/* AGGRESSIVE: Hide ALL possible red error backgrounds and bars */
+.monaco-editor-container .monaco-editor .view-overlays .cdr,
+.monaco-editor-container .monaco-editor .view-overlays .squiggly-error,
+.monaco-editor-container .monaco-editor .view-overlays .squiggly-d-error,
+.monaco-editor-container .monaco-editor .view-overlays .cdr.squiggly-error,
+.monaco-editor-container .monaco-editor .margin-view-overlays .cldr.squiggly-error,
+.monaco-editor-container .monaco-editor .decorationsOverviewRuler .squiggly-error,
+.monaco-editor-container .monaco-editor .margin .squiggly-error,
+.monaco-editor-container .monaco-editor .view-line.squiggly-error,
+.monaco-editor-container .monaco-editor .scrollbar .slider .error {
+  display: none !important;
+  background: none !important;
+  background-color: transparent !important;
+}
+
+/* Hide ALL error decorations */
+.monaco-editor-container .monaco-editor .view-overlays .cdr[class*="error"],
+.monaco-editor-container .monaco-editor .view-overlays [class*="squiggly-error"],
+.monaco-editor-container .monaco-editor .view-overlays [class*="error-decoration"],
+.monaco-editor-container .monaco-editor .margin-view-overlays [class*="error"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Remove red backgrounds from ANY line */
+.monaco-editor-container .monaco-editor .view-line[class*="error"],
+.monaco-editor-container .monaco-editor .view-lines [class*="error"],
+.monaco-editor-container .monaco-editor .view-overlays [style*="background-color: rgb(255"],
+.monaco-editor-container .monaco-editor .view-overlays [style*="background: rgb(255"] {
+  background: none !important;
+  background-color: transparent !important;
+}
+
+/* Hide overview ruler completely to prevent red bars */
+.monaco-editor-container .monaco-editor .decorationsOverviewRuler,
+.monaco-editor-container .monaco-editor .overview-ruler {
+  display: none !important;
+}
+
+/* Hide minimap error indicators */
+.monaco-editor-container .monaco-editor .minimap [class*="error"],
+.monaco-editor-container .monaco-editor .minimap .squiggly-error {
+  display: none !important;
+}
+
+/* Remove ALL red coloring */
+.monaco-editor-container .monaco-editor [style*="background-color: red"],
+.monaco-editor-container .monaco-editor [style*="background: red"],
+.monaco-editor-container .monaco-editor [style*="background-color: #ff"],
+.monaco-editor-container .monaco-editor [style*="background-color: rgb(255, 0, 0)"],
+.monaco-editor-container .monaco-editor [style*="background-color: rgba(255, 0, 0"] {
+  background: none !important;
+  background-color: transparent !important;
+}
+
+/* Subtle current line highlighting */
+.monaco-editor-container .monaco-editor .current-line {
+  background: rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Better selection highlighting */
+.monaco-editor-container .monaco-editor .selected-text {
+  background: rgba(59, 130, 246, 0.15) !important;
+}
+
+/* Make warnings very subtle */
+.monaco-editor-container .monaco-editor .view-overlays .cdr.squiggly-warning {
+  border-bottom: 1px dotted #f59e0b !important;
+  background: none !important;
+  background-color: transparent !important;
+}
+
+/* NUCLEAR OPTION: Override ANY possible red backgrounds */
+.monaco-editor-container .monaco-editor *[style*="background"],
+.monaco-editor-container .monaco-editor *[class*="error"],
+.monaco-editor-container .monaco-editor *[class*="squiggly"],
+.monaco-editor-container .monaco-editor .view-overlays > div,
+.monaco-editor-container .monaco-editor .margin-view-overlays > div {
+  background: none !important;
+  background-color: transparent !important;
+}
+
+/* Target specific red color variations */
+.monaco-editor-container .monaco-editor *[style*="background-color: #ff"],
+.monaco-editor-container .monaco-editor *[style*="background: #ff"],
+.monaco-editor-container .monaco-editor *[style*="background-color: rgb(255"],
+.monaco-editor-container .monaco-editor *[style*="background-color: rgba(255"],
+.monaco-editor-container .monaco-editor *[style*="background-color: hsl(0"],
+.monaco-editor-container .monaco-editor *[style*="background-color: red"] {
+  background: none !important;
+  background-color: transparent !important;
+}
+
+/* Force transparent backgrounds on ALL overlay elements */
+.monaco-editor-container .monaco-editor .view-overlays,
+.monaco-editor-container .monaco-editor .view-overlays *,
+.monaco-editor-container .monaco-editor .margin-view-overlays,
+.monaco-editor-container .monaco-editor .margin-view-overlays * {
+  background: transparent !important;
+  background-color: transparent !important;
+}

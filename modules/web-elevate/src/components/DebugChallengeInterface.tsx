@@ -55,16 +55,19 @@ const DebugChallengeInterface: React.FC<DebugChallengeInterfaceProps> = ({
     explorer: 20,
     editor: 50,
     problem: 30,
-    console: 25
+    console: 25  // Restored to 25% for better visibility
   });
 
   // Panel visibility states
   const [showExplorer, setShowExplorer] = useState(true);
   const [showProblem, setShowProblem] = useState(true);
-  const [showConsole, setShowConsole] = useState(true);
+  const [showConsole, setShowConsole] = useState(false);  // Hidden by default
+  const [isConsoleExpanded, setIsConsoleExpanded] = useState(false);
 
   // File modification tracking
   const [modifiedFiles, setModifiedFiles] = useState<Set<string>>(new Set());
+
+  const [previewContent, setPreviewContent] = useState<string>('');
 
   useEffect(() => {
     // Track file modifications
@@ -77,27 +80,157 @@ const DebugChallengeInterface: React.FC<DebugChallengeInterfaceProps> = ({
     setModifiedFiles(modified);
   }, [userCode, challenge.files]);
 
+
+
+  // Generate live preview
+  useEffect(() => {
+    const generatePreview = () => {
+      if (challenge.category === 'react') {
+        // Generate React preview
+        const jsCode = userCode['App.js'] || userCode['index.js'] || '';
+        const cssCode = userCode['App.css'] || userCode['styles.css'] || '';
+
+        const previewHTML = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Preview</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .preview-container {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    ${cssCode}
+  </style>
+</head>
+<body>
+  <div class="preview-container">
+    <div id="root">
+      <div class="App">
+        <h2>Live Preview</h2>
+        <p>This is a simulated preview of your React component.</p>
+        <div class="code-preview">
+          <pre style="background: #f8f9fa; padding: 15px; border-radius: 4px; overflow-x: auto;">
+            <code>${jsCode.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code>
+          </pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    console.log('Preview loaded with code:', ${JSON.stringify(jsCode.substring(0, 100) + '...')});
+  </script>
+</body>
+</html>`;
+        setPreviewContent(previewHTML);
+      } else {
+        // Generate HTML/JS preview
+        const htmlCode = userCode['index.html'] || '';
+        const jsCode = userCode['script.js'] || userCode['main.js'] || '';
+        const cssCode = userCode['style.css'] || userCode['styles.css'] || '';
+
+        let preview = htmlCode;
+        if (cssCode) {
+          preview = preview.replace('</head>', `<style>${cssCode}</style></head>`);
+        }
+        if (jsCode) {
+          preview = preview.replace('</body>', `<script>${jsCode}</script></body>`);
+        }
+
+        setPreviewContent(preview || '<html><body><h2>No preview available</h2><p>Add some HTML code to see the preview.</p></body></html>');
+      }
+    };
+
+    generatePreview();
+  }, [userCode, challenge.category]);
+
   const handleCodeChange = (filename: string, code: string) => {
     setUserCode(prev => ({
       ...prev,
       [filename]: code
     }));
+
+    // Auto-open console if there are syntax errors
+    const hasErrors = code.includes('Error') ||
+                     code.includes('undefined') ||
+                     (code.match(/\{/g) || []).length !== (code.match(/\}/g) || []).length ||
+                     (code.match(/\(/g) || []).length !== (code.match(/\)/g) || []).length;
+
+    if (hasErrors && !showConsole) {
+      // Delay to avoid opening console on every keystroke
+      setTimeout(() => {
+        const stillHasErrors = userCode[filename] && (
+          userCode[filename].includes('Error') ||
+          (userCode[filename].match(/\{/g) || []).length !== (userCode[filename].match(/\}/g) || []).length
+        );
+
+        if (stillHasErrors) {
+          setShowConsole(true);
+          setPanelSizes(prev => ({
+            ...prev,
+            console: Math.max(prev.console, 30)
+          }));
+        }
+      }, 2000); // Wait 2 seconds before auto-opening
+    }
   };
 
   const handleRunTests = async () => {
     setIsRunning(true);
-    setConsoleOutput(prev => [...prev, '> Starting execution...']);
+    setConsoleOutput(['> Starting execution...']);  // Clear previous output
     setConsoleTab('console');
 
+    // Always show and expand console when running tests
+    setShowConsole(true);
+    setIsConsoleExpanded(true);
+    setPanelSizes(prev => ({
+      ...prev,
+      console: Math.max(prev.console, 35)  // Expand to at least 35%
+    }));
+
     try {
-      // Simulate test execution
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setConsoleOutput(prev => [...prev, '> Checking for bugs...']);
+      // Simulate code execution and capture console output
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      setConsoleOutput(prev => [...prev, '> Executing code...']);
+      await new Promise(resolve => setTimeout(resolve, 400));
+
+      // Simulate detecting console.log statements in user code
+      const hasConsoleLogs = Object.values(userCode).some(code =>
+        code.includes('console.log') || code.includes('console.error') || code.includes('console.warn')
+      );
+
+      if (hasConsoleLogs) {
+        setConsoleOutput(prev => [...prev, '> Console output detected']);
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        // Simulate actual console output
+        setConsoleOutput(prev => [...prev,
+          '📝 Hello from your code!',
+          '🔍 Debug: Variable value = 42',
+          '⚠️ Warning: This is a test warning'
+        ]);
+
+        // Auto-expand more for console output
+        setPanelSizes(prev => ({
+          ...prev,
+          console: Math.max(prev.console, 40)
+        }));
+      }
+
+      setConsoleOutput(prev => [...prev, '> Running tests...']);
       await new Promise(resolve => setTimeout(resolve, 500));
-      
-      setConsoleOutput(prev => [...prev, '> Code analysis complete']);
-      
+
       // Mock test results based on challenge criteria
       const testCases = challenge.testCases || challenge.testCriteria || [];
       const mockResults = testCases.map((testCase, index) => ({
@@ -106,12 +239,12 @@ const DebugChallengeInterface: React.FC<DebugChallengeInterfaceProps> = ({
         passed: Math.random() > 0.3, // Random for demo
         message: Math.random() > 0.3 ? 'Test passed successfully' : 'Test failed - check implementation'
       }));
-      
+
       setTestResults(mockResults);
-      
+
       const passedTests = mockResults.filter(r => r.passed).length;
       const totalTests = mockResults.length;
-      
+
       if (passedTests === totalTests) {
         setConsoleOutput(prev => [...prev, `✅ All tests passed! (${passedTests}/${totalTests})`]);
         if (onComplete) {
@@ -119,10 +252,24 @@ const DebugChallengeInterface: React.FC<DebugChallengeInterfaceProps> = ({
         }
       } else {
         setConsoleOutput(prev => [...prev, `❌ ${passedTests}/${totalTests} tests passed`]);
+        setConsoleOutput(prev => [...prev, '💡 Check the errors above and try fixing them']);
+
+        // Auto-expand console more for test failures
+        setPanelSizes(prev => ({
+          ...prev,
+          console: Math.max(prev.console, 45)  // Expand to 45% for test failures
+        }));
       }
-      
+
     } catch (error) {
-      setConsoleOutput(prev => [...prev, `❌ Error: ${error}`]);
+      setConsoleOutput(prev => [...prev, `❌ Runtime Error: ${error}`]);
+      setConsoleOutput(prev => [...prev, '🔧 Fix the error and try again']);
+
+      // Auto-expand console for runtime errors
+      setPanelSizes(prev => ({
+        ...prev,
+        console: Math.max(prev.console, 45)
+      }));
     } finally {
       setIsRunning(false);
     }
@@ -134,6 +281,12 @@ const DebugChallengeInterface: React.FC<DebugChallengeInterfaceProps> = ({
     setTestResults([]);
     setHintsRevealed(0);
     setSolutionUnlocked(false);
+    setShowConsole(false);  // Hide console on reset
+  };
+
+  const clearConsole = () => {
+    setConsoleOutput([]);
+    setTestResults([]);
   };
 
   const revealHint = () => {
@@ -211,9 +364,10 @@ const DebugChallengeInterface: React.FC<DebugChallengeInterfaceProps> = ({
           {showExplorer && (
             <motion.div
               initial={{ width: 0 }}
-              animate={{ width: `${panelSizes.explorer}%` }}
+              animate={{ width: showExplorer ? `${panelSizes.explorer}%` : '0%' }}
               exit={{ width: 0 }}
-              className="bg-white border-r border-gray-200 flex flex-col"
+              className="bg-white border-r border-gray-200 flex flex-col min-w-0"
+              style={{ flexShrink: 0 }}
             >
               <FileExplorer
                 files={Object.keys(challenge.files)}
@@ -226,15 +380,24 @@ const DebugChallengeInterface: React.FC<DebugChallengeInterfaceProps> = ({
         </AnimatePresence>
 
         {/* Center Panel - Code Editor */}
-        <div 
-          className="flex-1 flex flex-col"
-          style={{ width: showExplorer && showProblem ? `${panelSizes.editor}%` : 'auto' }}
+        <div
+          className="flex-1 flex flex-col min-w-0 overflow-hidden"
+          style={{
+            width: showExplorer && showProblem
+              ? `${100 - panelSizes.explorer - panelSizes.problem}%`
+              : showExplorer
+                ? `${100 - panelSizes.explorer}%`
+                : showProblem
+                  ? `${100 - panelSizes.problem}%`
+                  : '100%'
+          }}
         >
           <CodeEditor
             filename={selectedFile}
             code={userCode[selectedFile] || ''}
             onChange={(code) => handleCodeChange(selectedFile, code)}
             language={selectedFile.endsWith('.tsx') || selectedFile.endsWith('.jsx') ? 'typescript' : 'javascript'}
+            isConsoleOpen={showConsole}
           />
         </div>
 
@@ -243,9 +406,10 @@ const DebugChallengeInterface: React.FC<DebugChallengeInterfaceProps> = ({
           {showProblem && (
             <motion.div
               initial={{ width: 0 }}
-              animate={{ width: `${panelSizes.problem}%` }}
+              animate={{ width: showProblem ? `${panelSizes.problem}%` : '0%' }}
               exit={{ width: 0 }}
-              className="bg-white border-l border-gray-200 flex flex-col"
+              className="bg-white border-l border-gray-200 flex flex-col min-w-0"
+              style={{ flexShrink: 0 }}
             >
               <ProblemPanel
                 challenge={challenge}
@@ -269,14 +433,46 @@ const DebugChallengeInterface: React.FC<DebugChallengeInterfaceProps> = ({
             initial={{ height: 0 }}
             animate={{ height: `${panelSizes.console}%` }}
             exit={{ height: 0 }}
-            className="bg-white border-t border-gray-200"
+            className="bg-white border-t border-gray-200 relative"
           >
+            {/* Resize Handle */}
+            <div
+              className="absolute top-0 left-0 right-0 h-1 bg-gray-200 hover:bg-blue-400 cursor-row-resize transition-colors"
+              onMouseDown={(e) => {
+                e.preventDefault();
+                const startY = e.clientY;
+                const startHeight = panelSizes.console;
+
+                const handleMouseMove = (e: MouseEvent) => {
+                  const deltaY = startY - e.clientY;
+                  const containerHeight = window.innerHeight;
+                  const newHeight = Math.max(15, Math.min(60, startHeight + (deltaY / containerHeight) * 100));
+
+                  setPanelSizes(prev => ({
+                    ...prev,
+                    console: newHeight
+                  }));
+                };
+
+                const handleMouseUp = () => {
+                  document.removeEventListener('mousemove', handleMouseMove);
+                  document.removeEventListener('mouseup', handleMouseUp);
+                };
+
+                document.addEventListener('mousemove', handleMouseMove);
+                document.addEventListener('mouseup', handleMouseUp);
+              }}
+              title="Drag to resize console"
+            />
+
             <ConsoleOutput
               activeTab={consoleTab}
               onTabChange={setConsoleTab}
               consoleOutput={consoleOutput}
               testResults={testResults}
               challenge={challenge}
+              previewContent={previewContent}
+              onClearConsole={clearConsole}
             />
           </motion.div>
         )}
@@ -301,8 +497,12 @@ const DebugChallengeInterface: React.FC<DebugChallengeInterfaceProps> = ({
           </button>
           <button
             onClick={() => setShowConsole(!showConsole)}
-            className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
-            title="Toggle Console"
+            className={`p-2 rounded transition-colors ${
+              showConsole
+                ? 'text-blue-600 bg-blue-100 hover:bg-blue-200'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+            }`}
+            title={showConsole ? "Hide Console" : "Show Console"}
           >
             <Terminal className="w-4 h-4" />
           </button>

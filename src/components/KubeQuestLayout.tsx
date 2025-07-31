@@ -30,6 +30,15 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
   // Mobile menu state
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
+  // Scroll to top when location changes
+  React.useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }, [location.pathname]);
+
   // Determine which module we're in
   const isCloudArchitecture = location.pathname.startsWith('/cloud-architecture');
 

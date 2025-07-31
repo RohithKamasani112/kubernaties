@@ -22,6 +22,8 @@ interface ConsoleOutputProps {
   consoleOutput: string[];
   testResults: any[];
   challenge: DebugChallenge;
+  previewContent?: string;
+  onClearConsole?: () => void;
 }
 
 const ConsoleOutput: React.FC<ConsoleOutputProps> = ({
@@ -29,7 +31,9 @@ const ConsoleOutput: React.FC<ConsoleOutputProps> = ({
   onTabChange,
   consoleOutput,
   testResults,
-  challenge
+  challenge,
+  previewContent,
+  onClearConsole
 }) => {
   const consoleRef = useRef<HTMLDivElement>(null);
 
@@ -48,7 +52,9 @@ const ConsoleOutput: React.FC<ConsoleOutputProps> = ({
   ] as const;
 
   const clearConsole = () => {
-    // This would be handled by parent component
+    if (onClearConsole) {
+      onClearConsole();
+    }
   };
 
   const copyConsoleOutput = async () => {
@@ -89,11 +95,21 @@ const ConsoleOutput: React.FC<ConsoleOutputProps> = ({
       {/* Console Content */}
       <div
         ref={consoleRef}
-        className="flex-1 p-3 bg-gray-900 text-green-400 font-mono text-sm overflow-y-auto"
+        className="flex-1 p-4 bg-gray-900 text-green-400 overflow-y-auto"
+        style={{
+          fontFamily: '"JetBrains Mono", "Fira Code", "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+          fontSize: '13px',
+          lineHeight: '1.6',
+          fontWeight: '400'
+        }}
       >
         {consoleOutput.length === 0 ? (
-          <div className="text-gray-400 italic">
-            Console output will appear here when you run your code...
+          <div className="text-gray-500 italic flex items-center justify-center h-full">
+            <div className="text-center">
+              <Terminal className="w-8 h-8 mx-auto mb-2 opacity-50" />
+              <p>Console output will appear here when you run your code...</p>
+              <p className="text-xs mt-1 text-gray-600">Press Ctrl+Enter to run code quickly</p>
+            </div>
           </div>
         ) : (
           <div className="space-y-1">
@@ -102,22 +118,24 @@ const ConsoleOutput: React.FC<ConsoleOutputProps> = ({
                 key={index}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className={`leading-relaxed ${
-                  line.startsWith('❌') ? 'text-red-400' :
-                  line.startsWith('✅') ? 'text-green-400' :
-                  line.startsWith('⚠️') ? 'text-yellow-400' :
-                  line.startsWith('>') ? 'text-blue-400' :
-                  line.includes('Error') || line.includes('error') ? 'text-red-300' :
-                  line.includes('Warning') || line.includes('warning') ? 'text-yellow-300' :
-                  line.includes('Info') || line.includes('info') ? 'text-blue-300' :
-                  'text-gray-100'
+                transition={{ delay: index * 0.03 }}
+                className={`leading-relaxed flex items-start ${
+                  line.startsWith('❌') || line.includes('Error') || line.includes('error') ? 'text-red-400 font-medium' :
+                  line.startsWith('✅') ? 'text-green-400 font-medium' :
+                  line.startsWith('⚠️') || line.includes('Warning') || line.includes('warning') ? 'text-yellow-400 font-medium' :
+                  line.startsWith('>') ? 'text-blue-400 font-medium' :
+                  line.includes('Info') || line.includes('info') ? 'text-cyan-400' :
+                  line.includes('TypeError') || line.includes('ReferenceError') || line.includes('SyntaxError') ? 'text-red-300 font-medium' :
+                  line.includes('at ') && line.includes(':') ? 'text-gray-400 text-xs' : // Stack trace
+                  'text-gray-200'
                 }`}
               >
-                <span className="text-gray-500 mr-2 select-none">
+                <span className="text-gray-600 mr-3 select-none text-xs font-mono" style={{ minWidth: '32px' }}>
                   {String(index + 1).padStart(3, '0')}
                 </span>
-                {line}
+                <span className="flex-1 whitespace-pre-wrap break-words">
+                  {line}
+                </span>
               </motion.div>
             ))}
           </div>
@@ -224,15 +242,28 @@ const ConsoleOutput: React.FC<ConsoleOutputProps> = ({
 
       {/* Preview Content */}
       <div className="flex-1 bg-white">
-        <div className="h-full flex items-center justify-center text-gray-500">
-          <div className="text-center">
-            <Monitor className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-            <p className="text-sm">Live preview will appear here</p>
-            <p className="text-xs text-gray-400 mt-1">
-              Run your code to see the output
-            </p>
+        {previewContent ? (
+          <iframe
+            srcDoc={previewContent}
+            className="w-full h-full border-none"
+            title="Live Preview"
+            sandbox="allow-scripts allow-same-origin allow-forms"
+            style={{
+              backgroundColor: 'white',
+              border: 'none'
+            }}
+          />
+        ) : (
+          <div className="h-full flex items-center justify-center text-gray-500">
+            <div className="text-center">
+              <Monitor className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+              <p className="text-sm">Live preview will appear here</p>
+              <p className="text-xs text-gray-400 mt-1">
+                Start coding to see live preview
+              </p>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

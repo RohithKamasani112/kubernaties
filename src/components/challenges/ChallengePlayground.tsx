@@ -1141,14 +1141,27 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
           issues = ['✅ Changes detected - verify the solution matches the expected fix'];
         } else {
           if (!hasValidYaml) {
-            issues.push('YAML structure appears invalid - check syntax and required fields');
+            issues.push('❌ YAML syntax error detected - check indentation, colons, and quotes');
+            issues.push('💡 Tip: Use proper YAML formatting with consistent spacing');
           }
           if (!hasChanges) {
-            issues.push('No changes detected from the original broken configuration');
+            issues.push('❌ No modifications detected from the original broken configuration');
+            issues.push('💡 Hint: Look for the specific issue mentioned in the problem description');
           } else if (!hasSignificantChanges) {
-            issues.push('Changes are too minor - make more substantial fixes to resolve the issue');
+            issues.push('❌ Changes are too minor to resolve the core issue');
+            issues.push('💡 Focus on the main problem: ' + challenge.problem);
           }
-          message = 'Please make meaningful changes to fix the configuration issue.';
+
+          // Add specific guidance based on challenge type
+          if (challenge.id.includes('service')) {
+            issues.push('🔍 Check: Service selector, port configuration, and target ports');
+          } else if (challenge.id.includes('ingress')) {
+            issues.push('🔍 Check: Ingress rules, host configuration, and backend services');
+          } else if (challenge.id.includes('deployment')) {
+            issues.push('🔍 Check: Container image, resource limits, and environment variables');
+          }
+
+          message = `The solution isn't quite right yet. Review the specific issues below and the problem description: "${challenge.problem}"`;
         }
     }
 
@@ -1329,7 +1342,22 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
                   )}
                 </button>
                 <button
-                  onClick={() => setShowSolution(!showSolution)}
+                  onClick={() => {
+                    setShowSolution(!showSolution);
+                    // Scroll to solution after a brief delay to allow animation
+                    if (!showSolution) {
+                      setTimeout(() => {
+                        const solutionElement = document.getElementById('solution-section');
+                        if (solutionElement) {
+                          solutionElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start',
+                            inline: 'nearest'
+                          });
+                        }
+                      }, 300);
+                    }
+                  }}
                   className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                 >
                   {showSolution ? (
@@ -1447,11 +1475,29 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
               </p>
               
               {validationResult.issues.length > 0 && (
-                <div className="space-y-1">
+                <div className="space-y-2 mt-3">
+                  <h5 className="text-sm font-semibold text-red-800">Specific Issues to Fix:</h5>
                   {validationResult.issues.map((issue, index) => (
-                    <div key={index} className="flex items-start space-x-2 text-sm text-red-600">
-                      <div className="w-1 h-1 bg-red-600 rounded-full mt-2 flex-shrink-0"></div>
-                      <span>{issue}</span>
+                    <div key={index} className={`flex items-start space-x-3 p-3 rounded-lg text-sm ${
+                      issue.startsWith('❌') ? 'bg-red-100 border border-red-200' :
+                      issue.startsWith('💡') ? 'bg-blue-100 border border-blue-200' :
+                      issue.startsWith('🔍') ? 'bg-yellow-100 border border-yellow-200' :
+                      'bg-gray-100 border border-gray-200'
+                    }`}>
+                      <div className="flex-shrink-0 mt-0.5">
+                        {issue.startsWith('❌') ? '❌' :
+                         issue.startsWith('💡') ? '💡' :
+                         issue.startsWith('🔍') ? '🔍' :
+                         '•'}
+                      </div>
+                      <span className={
+                        issue.startsWith('❌') ? 'text-red-700' :
+                        issue.startsWith('💡') ? 'text-blue-700' :
+                        issue.startsWith('🔍') ? 'text-yellow-700' :
+                        'text-gray-700'
+                      }>
+                        {issue.replace(/^[❌💡🔍]\s*/, '')}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -1472,22 +1518,31 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
       {/* Solution Display */}
       {showSolution && (
         <motion.div
-          className="border-t bg-blue-50 border-blue-200"
+          id="solution-section"
+          className="border-t bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 shadow-lg"
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="p-4">
-            <div className="flex items-start space-x-3">
-              <Eye className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-              <div className="flex-1">
-                <h4 className="text-sm font-medium mb-2 text-blue-900">
-                  💡 Solution Explanation
-                </h4>
-                <p className="text-sm mb-3 text-blue-700">
-                  {challenge.solution}
-                </p>
+          <div className="p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-blue-200 p-6">
+              <div className="flex items-start space-x-4">
+                <div className="p-3 bg-blue-100 rounded-full">
+                  <Eye className="w-6 h-6 text-blue-600" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-lg font-bold mb-3 text-blue-900 flex items-center">
+                    💡 Solution Explanation
+                    <span className="ml-2 px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">
+                      Complete Solution
+                    </span>
+                  </h4>
+                  <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4 rounded-r-lg">
+                    <p className="text-sm text-blue-800 font-medium leading-relaxed">
+                      {challenge.solution}
+                    </p>
+                  </div>
 
                 <div className="bg-white rounded-lg p-3 border border-blue-200">
                   <h5 className="text-xs font-medium text-blue-800 mb-2">Key Learning Points:</h5>
@@ -1916,6 +1971,7 @@ ${challenge.brokenYaml}`;
                   <span className="text-xs text-blue-600">
                     Try to understand the changes before applying
                   </span>
+                </div>
                 </div>
               </div>
             </div>

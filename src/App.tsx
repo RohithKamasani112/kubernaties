@@ -34,6 +34,9 @@ import KubeQuestLayout from './components/KubeQuestLayout';
 import CollaboratorsButton from './components/CollaboratorsButton';
 import PerformanceOptimizer from './components/PerformanceOptimizer';
 
+// Styles
+import './styles/scroll.css';
+
 function App() {
   return (
     <Router>

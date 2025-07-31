@@ -874,6 +874,7 @@ export const useWebElevateStore = create<WebElevateStore>()(
 function createMockLearningPaths(): LearningPath[] {
   const reactModules = createReactModules();
   const angularModules = createAngularModules();
+  const vueModules = createVueModules();
 
   return [
     {
@@ -905,6 +906,21 @@ function createMockLearningPaths(): LearningPath[] {
       color: 'from-red-500 to-pink-500',
       technologies: ['Angular', 'TypeScript', 'RxJS', 'Components', 'Services', 'Routing'],
       modules: angularModules,
+    },
+    {
+      id: 'vue-essentials',
+      title: '💚 Vue.js Essentials',
+      description: '🚀 Learn Vue.js, the progressive JavaScript framework! Master the composition API, reactive data, and build modern web applications with ease!',
+      category: 'frontend',
+      difficulty: 'beginner',
+      duration: '30 hours',
+      progress: 0,
+      isStarted: false,
+      isCompleted: false,
+      icon: 'triangle',
+      color: 'from-green-500 to-emerald-500',
+      technologies: ['Vue.js', 'Composition API', 'Vuex', 'Vue Router', 'Single File Components'],
+      modules: vueModules,
     },
   ];
 }
@@ -2080,6 +2096,273 @@ export class BookCardComponent {
 }`,
               explanation: 'Excellent! You created a book component with interpolation for displaying data and event binding for the toggle functionality! 📚'
             }
+          ]
+        }
+      }
+    }
+  ];
+}
+
+function createVueModules(): Module[] {
+  return [
+    // 🎯 Part 1: Vue.js Fundamentals
+    {
+      id: 'vue-intro',
+      title: '💚 Welcome to Vue.js',
+      description: 'Discover Vue.js - the progressive JavaScript framework that makes building UIs a joy!',
+      type: 'concept',
+      duration: '30 min',
+      isLocked: false,
+      isCompleted: false,
+      isInProgress: false,
+      prerequisites: [],
+      content: {
+        concept: {
+          title: 'Vue.js - The Progressive Framework! 🚀',
+          content: `
+# What is Vue.js? 🤔
+
+Vue.js is like having a **gentle giant** for building web applications! 💚
+
+## Why Vue.js is Amazing 🌟
+
+- **Progressive**: Start small, scale up! 📈
+- **Approachable**: Easy to learn, powerful to use! 🎯
+- **Versatile**: From simple widgets to complex SPAs! 🔄
+- **Performant**: Fast and lightweight! ⚡
+
+## Vue.js Philosophy 💭
+
+Vue.js believes in **incremental adoption** - you can use as little or as much as you need!
+
+\`\`\`javascript
+// Simple Vue component
+const { createApp } = Vue;
+
+createApp({
+  data() {
+    return {
+      message: 'Hello Vue.js! 💚'
+    }
+  }
+}).mount('#app');
+\`\`\`
+
+## What You'll Learn 🎓
+
+- **Reactive Data**: Data that updates the UI automatically! 🔄
+- **Components**: Reusable UI building blocks! 🧩
+- **Directives**: Special HTML attributes with superpowers! ⚡
+- **Composition API**: Modern way to organize component logic! 🏗️
+          `,
+          codeExample: `<!-- Vue.js Template -->
+<div id="app">
+  <h1>{{ message }}</h1>
+  <button @click="updateMessage">Click me! 🎉</button>
+</div>
+
+<script>
+const { createApp } = Vue;
+
+createApp({
+  data() {
+    return {
+      message: 'Hello Vue.js! 💚'
+    }
+  },
+  methods: {
+    updateMessage() {
+      this.message = 'Vue.js is awesome! 🚀';
+    }
+  }
+}).mount('#app');
+</script>`,
+          tasks: [
+            'Understand Vue.js philosophy and benefits',
+            'Learn about reactive data and templates',
+            'Explore the Vue.js ecosystem'
+          ]
+        }
+      }
+    },
+    {
+      id: 'vue-template-syntax',
+      title: '📝 Vue Template Syntax',
+      description: 'Master Vue.js template syntax, directives, and data binding!',
+      type: 'code',
+      duration: '45 min',
+      isLocked: false,
+      isCompleted: false,
+      isInProgress: false,
+      prerequisites: ['vue-intro'],
+      content: {
+        code: {
+          title: 'Vue Template Magic! ✨',
+          description: 'Learn how to create dynamic templates with Vue.js directives and interpolation!',
+          initialCode: `<!-- Vue Template Playground -->
+<div id="app">
+  <h1>{{ title }}</h1>
+
+  <!-- Text interpolation -->
+  <p>{{ message }}</p>
+
+  <!-- Attribute binding -->
+  <img v-bind:src="imageUrl" v-bind:alt="imageAlt">
+
+  <!-- Event handling -->
+  <button v-on:click="handleClick">{{ buttonText }}</button>
+
+  <!-- Conditional rendering -->
+  <p v-if="showMessage">This message is conditionally shown!</p>
+
+  <!-- List rendering -->
+  <ul>
+    <li v-for="item in items" :key="item.id">
+      {{ item.name }}
+    </li>
+  </ul>
+</div>
+
+<script>
+const { createApp } = Vue;
+
+createApp({
+  data() {
+    return {
+      title: 'Vue Template Syntax Demo',
+      message: 'Hello from Vue.js!',
+      imageUrl: 'https://vuejs.org/images/logo.png',
+      imageAlt: 'Vue.js Logo',
+      buttonText: 'Click me!',
+      showMessage: true,
+      items: [
+        { id: 1, name: 'Learn Vue.js' },
+        { id: 2, name: 'Build awesome apps' },
+        { id: 3, name: 'Have fun coding!' }
+      ]
+    }
+  },
+  methods: {
+    handleClick() {
+      this.message = 'Button clicked! 🎉';
+      this.showMessage = !this.showMessage;
+    }
+  }
+}).mount('#app');
+</script>`,
+          solution: `<!-- Complete Vue Template Solution -->
+<div id="app">
+  <h1>{{ title }}</h1>
+
+  <!-- Text interpolation with computed property -->
+  <p>{{ formattedMessage }}</p>
+
+  <!-- Attribute binding with shorthand -->
+  <img :src="imageUrl" :alt="imageAlt" class="logo">
+
+  <!-- Event handling with shorthand -->
+  <button @click="handleClick" :class="buttonClass">
+    {{ buttonText }}
+  </button>
+
+  <!-- Conditional rendering -->
+  <transition name="fade">
+    <p v-if="showMessage" class="message">
+      This message appears with animation! ✨
+    </p>
+  </transition>
+
+  <!-- List rendering with index -->
+  <ul>
+    <li v-for="(item, index) in items" :key="item.id"
+        :class="{ completed: item.completed }">
+      {{ index + 1 }}. {{ item.name }}
+      <button @click="toggleItem(item)" class="toggle-btn">
+        {{ item.completed ? '✅' : '⭕' }}
+      </button>
+    </li>
+  </ul>
+
+  <!-- Form input with v-model -->
+  <div class="form-section">
+    <input v-model="newItemName" @keyup.enter="addItem"
+           placeholder="Add new item...">
+    <button @click="addItem">Add Item</button>
+  </div>
+</div>
+
+<script>
+const { createApp } = Vue;
+
+createApp({
+  data() {
+    return {
+      title: 'Vue Template Syntax Demo',
+      message: 'Hello from Vue.js!',
+      imageUrl: 'https://vuejs.org/images/logo.png',
+      imageAlt: 'Vue.js Logo',
+      buttonText: 'Click me!',
+      showMessage: true,
+      newItemName: '',
+      items: [
+        { id: 1, name: 'Learn Vue.js', completed: false },
+        { id: 2, name: 'Build awesome apps', completed: false },
+        { id: 3, name: 'Have fun coding!', completed: true }
+      ]
+    }
+  },
+  computed: {
+    formattedMessage() {
+      return this.message.toUpperCase() + ' 🚀';
+    },
+    buttonClass() {
+      return {
+        'btn-primary': true,
+        'btn-active': this.showMessage
+      };
+    }
+  },
+  methods: {
+    handleClick() {
+      this.message = 'Button clicked! 🎉';
+      this.showMessage = !this.showMessage;
+    },
+    toggleItem(item) {
+      item.completed = !item.completed;
+    },
+    addItem() {
+      if (this.newItemName.trim()) {
+        this.items.push({
+          id: Date.now(),
+          name: this.newItemName,
+          completed: false
+        });
+        this.newItemName = '';
+      }
+    }
+  }
+}).mount('#app');
+</script>
+
+<style>
+.logo { width: 50px; height: 50px; }
+.message { color: green; font-weight: bold; }
+.completed { text-decoration: line-through; opacity: 0.6; }
+.btn-primary { background: #42b883; color: white; padding: 8px 16px; border: none; border-radius: 4px; }
+.btn-active { background: #369870; }
+.toggle-btn { margin-left: 10px; padding: 2px 8px; }
+.form-section { margin-top: 20px; }
+.fade-enter-active, .fade-leave-active { transition: opacity 0.5s; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
+</style>`,
+          language: 'html',
+          tasks: [
+            'Practice text interpolation with {{ }}',
+            'Use v-bind for attribute binding',
+            'Handle events with v-on',
+            'Implement conditional rendering with v-if',
+            'Create lists with v-for',
+            'Add form input with v-model'
           ]
         }
       }

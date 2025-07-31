@@ -40,6 +40,94 @@ const ProblemPanel: React.FC<ProblemPanelProps> = ({
   onUnlockSolution,
   testResults
 }) => {
+  const getSyntaxHighlightedSolution = (code: string) => {
+    let highlightedCode = code;
+
+    // React hooks - bright cyan
+    highlightedCode = highlightedCode.replace(
+      /\b(useState|useEffect|useContext|useReducer|useMemo|useCallback|useRef|useImperativeHandle|useLayoutEffect|useDebugValue)\b/g,
+      '<span style="color: #22d3ee; font-weight: 700;">$1</span>'
+    );
+
+    // Keywords - soft purple
+    highlightedCode = highlightedCode.replace(
+      /\b(const|let|var|function|return|if|else|for|while|import|export|from|default|class|extends|interface|type|async|await|try|catch|finally|throw|new|this|super|static|public|private|protected)\b/g,
+      '<span style="color: #c084fc; font-weight: 600;">$1</span>'
+    );
+
+    // JSX tags - soft blue
+    highlightedCode = highlightedCode.replace(
+      /<\/?([a-zA-Z][a-zA-Z0-9]*)\b[^>]*>/g,
+      '<span style="color: #93c5fd; font-weight: 500;">$&</span>'
+    );
+
+    // Strings - soft green
+    highlightedCode = highlightedCode.replace(
+      /(["'`])((?:\\.|(?!\1)[^\\])*?)\1/g,
+      '<span style="color: #86efac; font-weight: 500;">$1$2$1</span>'
+    );
+
+    // Numbers - soft orange
+    highlightedCode = highlightedCode.replace(
+      /\b\d+\.?\d*\b/g,
+      '<span style="color: #fdba74; font-weight: 500;">$&</span>'
+    );
+
+    // Comments - muted but readable
+    highlightedCode = highlightedCode.replace(
+      /\/\/.*$/gm,
+      '<span style="color: #9ca3af; font-style: italic;">$&</span>' // Light gray
+    );
+
+    // Multi-line comments
+    highlightedCode = highlightedCode.replace(
+      /\/\*[\s\S]*?\*\//g,
+      '<span style="color: #9ca3af; font-style: italic;">$&</span>'
+    );
+
+    // JSX tags - bright purple
+    highlightedCode = highlightedCode.replace(
+      /<\/?[a-zA-Z][a-zA-Z0-9]*(?:\s[^>]*)?\/?>/g,
+      '<span style="color: #c084fc; font-weight: 500;">$&</span>' // Light purple
+    );
+
+    // Function names - bright yellow
+    highlightedCode = highlightedCode.replace(
+      /\b([a-zA-Z_$][a-zA-Z0-9_$]*)\s*(?=\()/g,
+      '<span style="color: #fbbf24; font-weight: 600;">$1</span>' // Light yellow
+    );
+
+    // Properties and methods - cyan
+    highlightedCode = highlightedCode.replace(
+      /\.([a-zA-Z_$][a-zA-Z0-9_$]*)/g,
+      '.<span style="color: #67e8f9; font-weight: 500;">$1</span>' // Light cyan
+    );
+
+    // Boolean values - bright red
+    highlightedCode = highlightedCode.replace(
+      /\b(true|false|null|undefined)\b/g,
+      '<span style="color: #fca5a5; font-weight: 600;">$1</span>' // Light red
+    );
+
+    // FIXED/BUG comments - highlight in special colors
+    highlightedCode = highlightedCode.replace(
+      /(\/\/\s*FIXED:.*$)/gm,
+      '<span style="color: #34d399; font-weight: 600; background: rgba(52, 211, 153, 0.15); padding: 2px 6px; border-radius: 4px; border-left: 3px solid #34d399;">$1</span>'
+    );
+
+    highlightedCode = highlightedCode.replace(
+      /(\/\/\s*BUG:.*$)/gm,
+      '<span style="color: #f87171; font-weight: 600; background: rgba(248, 113, 113, 0.15); padding: 2px 6px; border-radius: 4px; border-left: 3px solid #f87171;">$1</span>'
+    );
+
+    // TODO comments - highlight in blue
+    highlightedCode = highlightedCode.replace(
+      /(\/\/\s*TODO:.*$)/gm,
+      '<span style="color: #60a5fa; font-weight: 600; background: rgba(96, 165, 250, 0.15); padding: 2px 6px; border-radius: 4px; border-left: 3px solid #60a5fa;">$1</span>'
+    );
+
+    return highlightedCode;
+  };
   const tabs = [
     { id: 'problem', label: 'Problem', icon: FileText },
     { id: 'criteria', label: 'Criteria', icon: CheckCircle },
@@ -354,8 +442,17 @@ const ProblemPanel: React.FC<ProblemPanelProps> = ({
                   </div>
                 </div>
                 <div className="bg-gray-900 text-gray-100 p-4 overflow-x-auto">
-                  <pre className="text-sm">
-                    <code className="language-javascript">{code}</code>
+                  <pre className="text-sm leading-relaxed" style={{
+                    fontFamily: '"JetBrains Mono", "Fira Code", "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+                    fontSize: '13px',
+                    lineHeight: '1.6'
+                  }}>
+                    <code
+                      className="language-javascript"
+                      dangerouslySetInnerHTML={{
+                        __html: getSyntaxHighlightedSolution(code)
+                      }}
+                    />
                   </pre>
                 </div>
               </motion.div>

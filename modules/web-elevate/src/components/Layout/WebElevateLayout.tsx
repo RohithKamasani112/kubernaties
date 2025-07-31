@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useScrollToTop } from '../../hooks/useScrollToTop';
 import {
   Home,
   BookOpen,
@@ -25,6 +26,9 @@ interface WebElevateLayoutProps {
 const WebElevateLayout: React.FC<WebElevateLayoutProps> = ({ children }) => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+
+  // Scroll to top when location changes
+  useScrollToTop('smooth');
 
   const navigation = [
     { name: 'Dashboard', href: '/web-elevate/dashboard', icon: Home },

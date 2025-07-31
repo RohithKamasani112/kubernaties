@@ -231,11 +231,11 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
     : [];
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col min-w-0">
       {/* Header */}
-      <div className="p-3 border-b border-gray-200">
-        <h3 className="text-sm font-medium text-gray-900 mb-2">Explorer</h3>
-        
+      <div className="p-3 border-b border-gray-200 flex-shrink-0">
+        <h3 className="text-sm font-medium text-gray-900 mb-2 truncate">Explorer</h3>
+
         {/* Search */}
         <div className="relative">
           <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-3 h-3 text-gray-400" />
@@ -250,7 +250,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
       </div>
 
       {/* File Tree */}
-      <div className="flex-1 overflow-y-auto p-2">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden p-2 min-h-0">
         {searchQuery ? (
           // Show flat list when searching
           <div className="space-y-1">
