@@ -7354,217 +7354,542 @@ export default App;`
     ]
   },
 
+  // Advanced React Router
   {
-    id: 'react-hook-form',
-    title: 'React Hook Form – Efficient Form Handling',
-    description: 'Learn to build performant forms with React Hook Form',
-    explanation: `React Hook Form is a library that helps you build forms with easy validation and minimal re-renders. It provides a simple API for handling form state, validation, and submission.
+    id: 'react-router-advanced',
+    title: 'Advanced React Router',
+    description: 'Learn advanced routing concepts including nested routes and route guards',
+    explanation: `Advanced React Router features enable complex navigation patterns in single-page applications. This includes nested routing, route protection, and dynamic route handling.
 
-Key Features:
-1. **Minimal re-renders** - Only re-renders when necessary
-2. **Built-in validation** - Support for various validation rules
-3. **TypeScript support** - Full TypeScript integration
-4. **Small bundle size** - Lightweight and performant
-5. **Easy integration** - Works with UI libraries and custom components
+Advanced Features:
+1. **Nested Routes** - Routes within routes for complex layouts
+2. **Route Guards** - Protect routes based on authentication
+3. **Dynamic Routes** - Routes with parameters and query strings
+4. **Programmatic Navigation** - Navigate using code instead of links
 
-Benefits:
-- Better performance than controlled components
-- Less boilerplate code
-- Built-in error handling
-- Easy form validation`,
-
-    bestPractices: [
-      '🎯 Use uncontrolled components for better performance',
-      '⚡ Implement proper validation rules',
-      '🔄 Handle form submission and errors gracefully',
-      '📝 Use TypeScript for better form type safety'
-    ],
-
-    realWorldUseCases: [
-      '📝 Registration and login forms',
-      '💳 Payment and checkout forms',
-      '📊 Survey and feedback forms',
-      '🏢 Complex multi-step forms'
-    ],
+Common patterns include dashboard layouts with sidebar navigation, protected admin areas, and multi-step forms with route-based steps.`,
+    animationScript: 'Show nested route structure with protected routes and dynamic navigation',
+    scenario: '🛣️ Build a complex routing system with nested routes, authentication guards, and dynamic navigation.',
 
     challenges: [
       {
-        id: 'build-registration-form',
-        title: 'Build Registration Form',
-        description: 'Create a registration form with validation using React Hook Form',
-        type: 'challenge',
-        difficulty: 'intermediate',
+        id: 'nested-routes-dashboard',
+        title: 'Build Nested Routes Dashboard',
+        description: 'Create a dashboard with nested routes for different sections',
+        type: 'playground',
+        difficulty: 'advanced',
         estimatedTime: '30 min',
         xpReward: 140,
         code: {
           initial: `import React from 'react';
-import { useForm } from 'react-hook-form';
+import { BrowserRouter, Routes, Route, Link, Outlet, useNavigate } from 'react-router-dom';
 
-function RegistrationForm() {
-  // Set up React Hook Form
-  const { register, handleSubmit, formState: { errors }, watch } = useForm();
-
-  const onSubmit = (data) => {
-    console.log('Form submitted:', data);
-    alert('Registration successful!');
-  };
-
+// Dashboard Layout Component
+function DashboardLayout() {
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <h2>Registration Form</h2>
+    <div style={{ display: 'flex', minHeight: '100vh' }}>
+      {/* Sidebar */}
+      <nav style={{ width: '200px', backgroundColor: '#f8f9fa', padding: '20px' }}>
+        <h3>Dashboard</h3>
+        <ul style={{ listStyle: 'none', padding: 0 }}>
+          <li style={{ marginBottom: '10px' }}>
+            <Link to="/dashboard" style={{ textDecoration: 'none', color: '#007bff' }}>
+              Overview
+            </Link>
+          </li>
+          <li style={{ marginBottom: '10px' }}>
+            {/* TODO: Add link to users section */}
+          </li>
+          <li style={{ marginBottom: '10px' }}>
+            {/* TODO: Add link to settings section */}
+          </li>
+        </ul>
+      </nav>
 
-      {/* Email field with validation */}
-      <div>
-        <label htmlFor="email">Email:</label>
-        <input
-          id="email"
-          type="email"
-          // Add register with validation rules
-        />
-        {/* Display email errors */}
-      </div>
+      {/* Main Content */}
+      <main style={{ flex: 1, padding: '20px' }}>
+        {/* TODO: Add Outlet for nested routes */}
+      </main>
+    </div>
+  );
+}
 
-      {/* Password field with validation */}
-      <div>
-        <label htmlFor="password">Password:</label>
-        <input
-          id="password"
-          type="password"
-          // Add register with validation rules
-        />
-        {/* Display password errors */}
-      </div>
+// Dashboard Overview Component
+function Overview() {
+  return (
+    <div>
+      <h2>Dashboard Overview</h2>
+      <p>Welcome to your dashboard!</p>
+    </div>
+  );
+}
 
-      {/* Confirm Password field */}
-      <div>
-        <label htmlFor="confirmPassword">Confirm Password:</label>
-        <input
-          id="confirmPassword"
-          type="password"
-          // Add register with validation rules including password match
-        />
-        {/* Display confirm password errors */}
-      </div>
+// Users Section Component
+function Users() {
+  return (
+    <div>
+      <h2>Users Management</h2>
+      <p>Manage your users here.</p>
+    </div>
+  );
+}
 
-      {/* Name field */}
-      <div>
-        <label htmlFor="name">Full Name:</label>
-        <input
-          id="name"
-          type="text"
-          // Add register with validation rules
-        />
-        {/* Display name errors */}
-      </div>
-
-      {/* Age field */}
-      <div>
-        <label htmlFor="age">Age:</label>
-        <input
-          id="age"
-          type="number"
-          // Add register with validation rules
-        />
-        {/* Display age errors */}
-      </div>
-
-      <button type="submit">Register</button>
-    </form>
+// Settings Section Component
+function Settings() {
+  return (
+    <div>
+      <h2>Settings</h2>
+      <p>Configure your application settings.</p>
+    </div>
   );
 }
 
 function App() {
   return (
-    <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
-      <RegistrationForm />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        {/* TODO: Set up nested routes structure */}
+        <Route path="/" element={<div>Home Page</div>} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
 export default App;`,
           solution: `import React from 'react';
-import { useForm } from 'react-hook-form';
+import { BrowserRouter, Routes, Route, Link, Outlet, useNavigate } from 'react-router-dom';
 
-function RegistrationForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch
-  } = useForm();
+// Dashboard Layout Component
+function DashboardLayout() {
+  return (
+    <div style={{ display: 'flex', minHeight: '100vh' }}>
+      {/* Sidebar */}
+      <nav style={{ width: '200px', backgroundColor: '#f8f9fa', padding: '20px' }}>
+        <h3>Dashboard</h3>
+        <ul style={{ listStyle: 'none', padding: 0 }}>
+          <li style={{ marginBottom: '10px' }}>
+            <Link to="/dashboard" style={{ textDecoration: 'none', color: '#007bff' }}>
+              Overview
+            </Link>
+          </li>
+          <li style={{ marginBottom: '10px' }}>
+            <Link to="/dashboard/users" style={{ textDecoration: 'none', color: '#007bff' }}>
+              Users
+            </Link>
+          </li>
+          <li style={{ marginBottom: '10px' }}>
+            <Link to="/dashboard/settings" style={{ textDecoration: 'none', color: '#007bff' }}>
+              Settings
+            </Link>
+          </li>
+        </ul>
+      </nav>
 
-  const password = watch('password');
+      {/* Main Content */}
+      <main style={{ flex: 1, padding: '20px' }}>
+        <Outlet />
+      </main>
+    </div>
+  );
+}
 
-  const onSubmit = (data) => {
-    console.log('Form submitted:', data);
-    alert('Registration successful!');
+// Dashboard Overview Component
+function Overview() {
+  return (
+    <div>
+      <h2>Dashboard Overview</h2>
+      <p>Welcome to your dashboard!</p>
+    </div>
+  );
+}
+
+// Users Section Component
+function Users() {
+  return (
+    <div>
+      <h2>Users Management</h2>
+      <p>Manage your users here.</p>
+    </div>
+  );
+}
+
+// Settings Section Component
+function Settings() {
+  return (
+    <div>
+      <h2>Settings</h2>
+      <p>Configure your application settings.</p>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<div>Home Page - <Link to="/dashboard">Go to Dashboard</Link></div>} />
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<Overview />} />
+          <Route path="users" element={<Users />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;`
+        },
+        hints: [
+          'Use nested Route components with the parent route containing an Outlet',
+          'The parent route should render the layout component',
+          'Child routes are defined inside the parent Route component',
+          'Use the index prop for the default child route'
+        ]
+      }
+    ],
+    estimatedTime: '75 min',
+    difficulty: 'advanced',
+    prerequisites: ['react-router', 'custom-hooks'],
+    nextTopics: ['accessibility'],
+    category: 'advanced'
+  },
+
+  // React Accessibility (a11y)
+  {
+    id: 'accessibility',
+    title: 'React Accessibility (a11y)',
+    description: 'Learn to build accessible React applications for all users',
+    explanation: `Accessibility (a11y) ensures your React applications can be used by everyone, including people with disabilities. Learn to implement proper ARIA attributes, keyboard navigation, and screen reader support.
+
+🔹 **Why Accessibility Matters:**
+- **Inclusive Design**: Make your app usable by everyone
+- **Legal Compliance**: Meet accessibility standards and regulations
+- **Better UX**: Improved usability benefits all users
+- **SEO Benefits**: Better semantic HTML improves search rankings
+
+🔸 **Key Accessibility Features:**
+- **ARIA Attributes**: Provide context for screen readers
+- **Keyboard Navigation**: Full functionality without a mouse
+- **Focus Management**: Proper focus indicators and flow
+- **Semantic HTML**: Use appropriate HTML elements
+
+🧠 **Analogy:** Think of accessibility like building ramps alongside stairs - it provides alternative ways for everyone to access the same content and functionality.`,
+    animationScript: 'Show screen reader navigation and keyboard-only interaction with React components',
+    scenario: '♿ Build fully accessible React components with proper ARIA attributes and keyboard navigation.',
+    challenges: [
+      {
+        id: 'accessible-form-component',
+        title: 'Build Accessible Form Component',
+        description: 'Create a form with proper accessibility features including ARIA labels and keyboard navigation',
+        type: 'challenge',
+        difficulty: 'advanced',
+        estimatedTime: '35 min',
+        xpReward: 160,
+        code: {
+          initial: `import React, { useState, useRef } from 'react';
+
+function AccessibleForm() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [errors, setErrors] = useState({});
+  const nameInputRef = useRef(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Simple validation
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    if (!formData.message.trim()) newErrors.message = 'Message is required';
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      alert('Form submitted successfully!');
+    }
   };
 
-  const formStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '15px'
-  };
-
-  const fieldStyle = {
-    display: 'flex',
-    flexDirection: 'column'
-  };
-
-  const inputStyle = {
-    padding: '8px',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    fontSize: '14px'
-  };
-
-  const errorStyle = {
-    color: 'red',
-    fontSize: '12px',
-    marginTop: '4px'
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
-      <h2>Registration Form</h2>
+    <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto' }}>
+      <h1>Contact Form</h1>
 
-      <div style={fieldStyle}>
-        <label htmlFor="email">Email:</label>
-        <input
-          id="email"
-          type="email"
-          style={inputStyle}
-          {...register('email', {
-            required: 'Email is required',
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$/i,
-              message: 'Invalid email address'
-            }
-          })}
-        />
-        {errors.email && <span style={errorStyle}>{errors.email.message}</span>}
-      </div>
+      <form onSubmit={handleSubmit}>
+        {/* TODO: Add proper accessibility features */}
+        <div style={{ marginBottom: '20px' }}>
+          <label>Name:</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            style={{
+              width: '100%',
+              padding: '8px',
+              marginTop: '5px',
+              border: errors.name ? '2px solid red' : '1px solid #ccc'
+            }}
+          />
+          {errors.name && (
+            <div style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>
+              {errors.name}
+            </div>
+          )}
+        </div>
 
-      <div style={fieldStyle}>
-        <label htmlFor="password">Password:</label>
-        <input
-          id="password"
-          type="password"
-          style={inputStyle}
-          {...register('password', {
-            required: 'Password is required',
-            minLength: {
-              value: 8,
-              message: 'Password must be at least 8 characters'
-            },
-            pattern: {
-              value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)/,
-              message: 'Password must contain uppercase, lowercase, and number'
-            }
-          })}
-        />
-        {errors.password && <span style={errorStyle}>{errors.password.message}</span>}
-      </div>
+        <div style={{ marginBottom: '20px' }}>
+          <label>Email:</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            style={{
+              width: '100%',
+              padding: '8px',
+              marginTop: '5px',
+              border: errors.email ? '2px solid red' : '1px solid #ccc'
+            }}
+          />
+          {errors.email && (
+            <div style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>
+              {errors.email}
+            </div>
+          )}
+        </div>
+
+        <div style={{ marginBottom: '20px' }}>
+          <label>Message:</label>
+          <textarea
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            rows="4"
+            style={{
+              width: '100%',
+              padding: '8px',
+              marginTop: '5px',
+              border: errors.message ? '2px solid red' : '1px solid #ccc'
+            }}
+          />
+          {errors.message && (
+            <div style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>
+              {errors.message}
+            </div>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          style={{
+            backgroundColor: '#007bff',
+            color: 'white',
+            padding: '10px 20px',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export default AccessibleForm;`,
+          solution: `import React, { useState, useRef } from 'react';
+
+function AccessibleForm() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [errors, setErrors] = useState({});
+  const nameInputRef = useRef(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Simple validation
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    if (!formData.message.trim()) newErrors.message = 'Message is required';
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      alert('Form submitted successfully!');
+    } else {
+      // Focus first error field for better accessibility
+      if (newErrors.name) nameInputRef.current?.focus();
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto' }}>
+      <h1>Contact Form</h1>
+
+      <form onSubmit={handleSubmit} noValidate>
+        <div style={{ marginBottom: '20px' }}>
+          <label htmlFor="name">Name: *</label>
+          <input
+            id="name"
+            ref={nameInputRef}
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            aria-required="true"
+            aria-invalid={errors.name ? 'true' : 'false'}
+            aria-describedby={errors.name ? 'name-error' : undefined}
+            style={{
+              width: '100%',
+              padding: '8px',
+              marginTop: '5px',
+              border: errors.name ? '2px solid red' : '1px solid #ccc'
+            }}
+          />
+          {errors.name && (
+            <div
+              id="name-error"
+              role="alert"
+              aria-live="polite"
+              style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}
+            >
+              {errors.name}
+            </div>
+          )}
+        </div>
+
+        <div style={{ marginBottom: '20px' }}>
+          <label htmlFor="email">Email: *</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            aria-required="true"
+            aria-invalid={errors.email ? 'true' : 'false'}
+            aria-describedby={errors.email ? 'email-error' : undefined}
+            style={{
+              width: '100%',
+              padding: '8px',
+              marginTop: '5px',
+              border: errors.email ? '2px solid red' : '1px solid #ccc'
+            }}
+          />
+          {errors.email && (
+            <div
+              id="email-error"
+              role="alert"
+              aria-live="polite"
+              style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}
+            >
+              {errors.email}
+            </div>
+          )}
+        </div>
+
+        <div style={{ marginBottom: '20px' }}>
+          <label htmlFor="message">Message: *</label>
+          <textarea
+            id="message"
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            rows="4"
+            required
+            aria-required="true"
+            aria-invalid={errors.message ? 'true' : 'false'}
+            aria-describedby={errors.message ? 'message-error' : undefined}
+            style={{
+              width: '100%',
+              padding: '8px',
+              marginTop: '5px',
+              border: errors.message ? '2px solid red' : '1px solid #ccc'
+            }}
+          />
+          {errors.message && (
+            <div
+              id="message-error"
+              role="alert"
+              aria-live="polite"
+              style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}
+            >
+              {errors.message}
+            </div>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          style={{
+            backgroundColor: '#007bff',
+            color: 'white',
+            padding: '10px 20px',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+          onFocus={(e) => e.target.style.outline = '2px solid #0056b3'}
+          onBlur={(e) => e.target.style.outline = 'none'}
+        >
+          Submit Form
+        </button>
+      </form>
+
+      <p style={{ marginTop: '20px', fontSize: '14px', color: '#666' }}>
+        * Required fields
+      </p>
+    </div>
+  );
+}
+
+export default AccessibleForm;`
+        },
+        hints: [
+          'Use htmlFor attribute on labels to associate them with inputs',
+          'Add aria-required, aria-invalid, and aria-describedby attributes',
+          'Use role="alert" and aria-live="polite" for error messages',
+          'Implement focus management to help users navigate errors',
+          'Add proper focus indicators for keyboard navigation'
+        ]
+      }
+    ],
+    estimatedTime: '55 min',
+    difficulty: 'advanced',
+    prerequisites: ['forms-and-inputs', 'useref-basics'],
+    nextTopics: ['react-testing'],
+    category: 'advanced'
+  },
 
       <div style={fieldStyle}>
         <label htmlFor="confirmPassword">Confirm Password:</label>
@@ -8819,5 +9144,3782 @@ export default App;`
         }
       }
     ]
+  },
+          solution: `import React, { useState, useMemo } from 'react';
+
+// Expensive Fibonacci calculation
+const calculateFibonacci = (n) => {
+  console.log('Calculating Fibonacci for:', n);
+  if (n <= 1) return n;
+  return calculateFibonacci(n - 1) + calculateFibonacci(n - 2);
+};
+
+function FibonacciCalculator() {
+  const [number, setNumber] = useState(5);
+  const [count, setCount] = useState(0);
+
+  // Optimized with useMemo - only recalculates when number changes
+  const fibResult = useMemo(() => {
+    return calculateFibonacci(number);
+  }, [number]);
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h2>Fibonacci Calculator</h2>
+      <div>
+        <label>
+          Number:
+          <input
+            type="number"
+            value={number}
+            onChange={(e) => setNumber(parseInt(e.target.value) || 0)}
+            min="0"
+            max="35"
+          />
+        </label>
+      </div>
+      <div>
+        <p>Fibonacci({number}) = {fibResult}</p>
+      </div>
+      <div>
+        <button onClick={() => setCount(count + 1)}>
+          Counter: {count}
+        </button>
+      </div>
+      <p>✅ Optimized! Calculation only runs when number changes!</p>
+    </div>
+  );
+}
+
+export default FibonacciCalculator;`
+        },
+        hints: [
+          'Use useMemo to cache the expensive Fibonacci calculation',
+          'The dependency array should only include the number that changes',
+          'Check the console to see when calculations actually run',
+          'The counter button should not trigger recalculation'
+        ]
+      },
+      {
+        id: 'react-memo-optimization',
+        title: 'React.memo Child Component Optimization',
+        description: 'Compare memoized vs non-memoized child components to see performance differences',
+        type: 'challenge',
+        difficulty: 'intermediate',
+        estimatedTime: '30 min',
+        xpReward: 150,
+        code: {
+          initial: `import React, { useState } from 'react';
+
+// Child component WITHOUT React.memo
+const RegularChild = ({ name }) => {
+  console.log('RegularChild rendered for:', name);
+  return (
+    <div style={{ padding: '10px', border: '1px solid red', margin: '5px' }}>
+      <h3>Regular Child</h3>
+      <p>Name: {name}</p>
+    </div>
+  );
+};
+
+// Child component WITH React.memo - TODO: Implement this
+const MemoizedChild = ({ name }) => {
+  console.log('MemoizedChild rendered for:', name);
+  return (
+    <div style={{ padding: '10px', border: '1px solid green', margin: '5px' }}>
+      <h3>Memoized Child</h3>
+      <p>Name: {name}</p>
+    </div>
+  );
+};
+
+function ParentComponent() {
+  const [count, setCount] = useState(0);
+  const [name] = useState('Alice');
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h2>React.memo Performance Test</h2>
+      <button onClick={() => setCount(count + 1)}>
+        Count: {count}
+      </button>
+
+      <RegularChild name={name} />
+      <MemoizedChild name={name} />
+
+      <p>Check console: Regular child re-renders on every count change, memoized child doesn't!</p>
+    </div>
+  );
+}
+
+export default ParentComponent;`,
+          solution: `import React, { useState } from 'react';
+
+// Child component WITHOUT React.memo
+const RegularChild = ({ name }) => {
+  console.log('RegularChild rendered for:', name);
+  return (
+    <div style={{ padding: '10px', border: '1px solid red', margin: '5px' }}>
+      <h3>Regular Child</h3>
+      <p>Name: {name}</p>
+    </div>
+  );
+};
+
+// Child component WITH React.memo - optimized!
+const MemoizedChild = React.memo(({ name }) => {
+  console.log('MemoizedChild rendered for:', name);
+  return (
+    <div style={{ padding: '10px', border: '1px solid green', margin: '5px' }}>
+      <h3>Memoized Child</h3>
+      <p>Name: {name}</p>
+    </div>
+  );
+});
+
+function ParentComponent() {
+  const [count, setCount] = useState(0);
+  const [name] = useState('Alice');
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h2>React.memo Performance Test</h2>
+      <button onClick={() => setCount(count + 1)}>
+        Count: {count}
+      </button>
+
+      <RegularChild name={name} />
+      <MemoizedChild name={name} />
+
+      <p>✅ Check console: Regular child re-renders on every count change, memoized child doesn't!</p>
+    </div>
+  );
+}
+
+export default ParentComponent;`
+        },
+        hints: [
+          'Wrap the MemoizedChild component with React.memo()',
+          'React.memo prevents re-renders when props haven\'t changed',
+          'Check the console to see the difference in render frequency',
+          'The memoized child should only render once since name never changes'
+        ]
+      }
+    ],
+    estimatedTime: '60 min',
+    difficulty: 'intermediate',
+    prerequisites: ['usememo-usecallback', 'react-memo'],
+    nextTopics: ['accessibility'],
+    category: 'intermediate'
+  },
+
+  // React Hook Form
+  {
+    id: 'react-hook-form',
+    title: 'React Hook Form – Efficient Form Handling',
+    description: 'Learn to build performant forms with React Hook Form',
+    explanation: `React Hook Form is a library that helps you build forms with easy validation and great performance. Unlike traditional controlled components, it minimizes re-renders and provides a simple API for form handling.
+
+🔹 **Why React Hook Form?**
+- **Better Performance**: Minimal re-renders compared to controlled components
+- **Less Code**: Simpler syntax with built-in validation
+- **Better UX**: Easy error handling and form state management
+- **TypeScript Support**: Excellent type safety out of the box
+
+🔸 **Key Features:**
+- **useForm Hook**: Main hook for form management
+- **register**: Register input fields with validation
+- **handleSubmit**: Handle form submission with validation
+- **formState**: Access form state (errors, isValid, etc.)
+
+🧠 **Analogy:** Think of React Hook Form as a smart assistant that watches your form inputs and only bothers you when something important happens, rather than constantly checking every keystroke.`,
+    animationScript: 'Show form with traditional controlled inputs vs React Hook Form - highlight performance differences',
+    scenario: '📝 Build efficient, validated forms using React Hook Form with minimal re-renders and excellent user experience.',
+    challenges: [
+      {
+        id: 'basic-registration-form',
+        title: 'Build Registration Form with Validation',
+        description: 'Create a registration form using React Hook Form with validation rules',
+        type: 'playground',
+        difficulty: 'intermediate',
+        estimatedTime: '25 min',
+        xpReward: 130,
+        code: {
+          initial: `import React from 'react';
+import { useForm } from 'react-hook-form';
+
+function RegistrationForm() {
+  // TODO: Set up useForm hook
+  // const { register, handleSubmit, formState: { errors } } = useForm();
+
+  const onSubmit = (data) => {
+    console.log('Form Data:', data);
+    alert('Registration successful! Check console for data.');
+  };
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
+      <h2>Registration Form</h2>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {/* TODO: Add form fields with validation */}
+        <div style={{ marginBottom: '15px' }}>
+          <label>Email:</label>
+          <input
+            type="email"
+            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+            // TODO: Add register with validation
+          />
+          {/* TODO: Show email errors */}
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label>Password:</label>
+          <input
+            type="password"
+            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+            // TODO: Add register with validation
+          />
+          {/* TODO: Show password errors */}
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label>Confirm Password:</label>
+          <input
+            type="password"
+            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+            // TODO: Add register with validation
+          />
+          {/* TODO: Show confirm password errors */}
+        </div>
+
+        <button
+          type="submit"
+          style={{
+            width: '100%',
+            padding: '10px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          Register
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export default RegistrationForm;`,
+          solution: `import React from 'react';
+import { useForm } from 'react-hook-form';
+
+function RegistrationForm() {
+  const { register, handleSubmit, formState: { errors }, watch } = useForm();
+
+  const onSubmit = (data) => {
+    console.log('Form Data:', data);
+    alert('Registration successful! Check console for data.');
+  };
+
+  const password = watch('password');
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
+      <h2>Registration Form</h2>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div style={{ marginBottom: '15px' }}>
+          <label>Email:</label>
+          <input
+            type="email"
+            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+            {...register('email', {
+              required: 'Email is required',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Invalid email address'
+              }
+            })}
+          />
+          {errors.email && (
+            <p style={{ color: 'red', fontSize: '14px', margin: '5px 0' }}>
+              {errors.email.message}
+            </p>
+          )}
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label>Password:</label>
+          <input
+            type="password"
+            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+            {...register('password', {
+              required: 'Password is required',
+              minLength: {
+                value: 6,
+                message: 'Password must be at least 6 characters'
+              }
+            })}
+          />
+          {errors.password && (
+            <p style={{ color: 'red', fontSize: '14px', margin: '5px 0' }}>
+              {errors.password.message}
+            </p>
+          )}
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label>Confirm Password:</label>
+          <input
+            type="password"
+            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+            {...register('confirmPassword', {
+              required: 'Please confirm your password',
+              validate: value => value === password || 'Passwords do not match'
+            })}
+          />
+          {errors.confirmPassword && (
+            <p style={{ color: 'red', fontSize: '14px', margin: '5px 0' }}>
+              {errors.confirmPassword.message}
+            </p>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          style={{
+            width: '100%',
+            padding: '10px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          Register
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export default RegistrationForm;`
+        },
+        hints: [
+          'Use the useForm hook to get register, handleSubmit, and formState',
+          'Use the register function with validation rules for each input',
+          'Access errors from formState.errors to display validation messages',
+          'Use watch() to get the password value for confirmation validation'
+        ]
+      }
+    ],
+    estimatedTime: '50 min',
+    difficulty: 'intermediate',
+    prerequisites: ['forms-and-inputs', 'custom-hooks'],
+    nextTopics: ['react-router-advanced'],
+    category: 'intermediate'
+  },
+
+  // Advanced React Router
+  {
+    id: 'react-router-advanced',
+    title: 'Advanced React Router',
+    description: 'Learn advanced routing concepts including nested routes and route guards',
+    explanation: `Advanced React Router techniques help you build complex navigation systems with nested routes, route protection, and dynamic routing patterns. Master these concepts to create professional single-page applications.
+
+🔹 **Advanced Concepts:**
+- **Nested Routes**: Routes within routes for complex layouts
+- **Route Guards**: Protect routes based on authentication or permissions
+- **Dynamic Routes**: Routes with parameters and query strings
+- **Programmatic Navigation**: Navigate using code instead of links
+
+🔸 **Key Features:**
+- **Outlet**: Render child routes in nested routing
+- **useNavigate**: Programmatically navigate between routes
+- **useParams**: Access route parameters
+- **useLocation**: Get current location information
+
+🧠 **Analogy:** Think of advanced routing like a building with multiple floors and security checkpoints - you need proper access to reach certain areas, and some areas contain sub-areas within them.`,
+    animationScript: 'Show nested route structure with protected routes and dynamic navigation',
+    scenario: '🛣️ Build a complex routing system with nested routes, authentication guards, and dynamic navigation.',
+    challenges: [
+      {
+        id: 'nested-routes-dashboard',
+        title: 'Build Nested Routes Dashboard',
+        description: 'Create a dashboard with nested routes for different sections',
+        type: 'playground',
+        difficulty: 'advanced',
+        estimatedTime: '30 min',
+        xpReward: 140,
+        code: {
+          initial: `import React from 'react';
+import { BrowserRouter, Routes, Route, Link, Outlet, useNavigate } from 'react-router-dom';
+
+// Dashboard Layout Component
+function DashboardLayout() {
+  return (
+    <div style={{ display: 'flex', minHeight: '100vh' }}>
+      {/* Sidebar */}
+      <nav style={{ width: '200px', backgroundColor: '#f8f9fa', padding: '20px' }}>
+        <h3>Dashboard</h3>
+        <ul style={{ listStyle: 'none', padding: 0 }}>
+          <li style={{ marginBottom: '10px' }}>
+            <Link to="/dashboard" style={{ textDecoration: 'none', color: '#007bff' }}>
+              Overview
+            </Link>
+          </li>
+          <li style={{ marginBottom: '10px' }}>
+            {/* TODO: Add link to users section */}
+          </li>
+          <li style={{ marginBottom: '10px' }}>
+            {/* TODO: Add link to settings section */}
+          </li>
+        </ul>
+      </nav>
+
+      {/* Main Content */}
+      <main style={{ flex: 1, padding: '20px' }}>
+        {/* TODO: Add Outlet for nested routes */}
+      </main>
+    </div>
+  );
+}
+
+// Dashboard Overview Component
+function Overview() {
+  return (
+    <div>
+      <h2>Dashboard Overview</h2>
+      <p>Welcome to your dashboard!</p>
+    </div>
+  );
+}
+
+// Users Section Component
+function Users() {
+  return (
+    <div>
+      <h2>Users Management</h2>
+      <p>Manage your users here.</p>
+    </div>
+  );
+}
+
+// Settings Section Component
+function Settings() {
+  return (
+    <div>
+      <h2>Settings</h2>
+      <p>Configure your application settings.</p>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* TODO: Set up nested routes structure */}
+        <Route path="/" element={<div>Home Page</div>} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;`,
+          solution: `import React from 'react';
+import { BrowserRouter, Routes, Route, Link, Outlet, useNavigate } from 'react-router-dom';
+
+// Dashboard Layout Component
+function DashboardLayout() {
+  return (
+    <div style={{ display: 'flex', minHeight: '100vh' }}>
+      {/* Sidebar */}
+      <nav style={{ width: '200px', backgroundColor: '#f8f9fa', padding: '20px' }}>
+        <h3>Dashboard</h3>
+        <ul style={{ listStyle: 'none', padding: 0 }}>
+          <li style={{ marginBottom: '10px' }}>
+            <Link to="/dashboard" style={{ textDecoration: 'none', color: '#007bff' }}>
+              Overview
+            </Link>
+          </li>
+          <li style={{ marginBottom: '10px' }}>
+            <Link to="/dashboard/users" style={{ textDecoration: 'none', color: '#007bff' }}>
+              Users
+            </Link>
+          </li>
+          <li style={{ marginBottom: '10px' }}>
+            <Link to="/dashboard/settings" style={{ textDecoration: 'none', color: '#007bff' }}>
+              Settings
+            </Link>
+          </li>
+        </ul>
+      </nav>
+
+      {/* Main Content */}
+      <main style={{ flex: 1, padding: '20px' }}>
+        <Outlet />
+      </main>
+    </div>
+  );
+}
+
+// Dashboard Overview Component
+function Overview() {
+  return (
+    <div>
+      <h2>Dashboard Overview</h2>
+      <p>Welcome to your dashboard!</p>
+    </div>
+  );
+}
+
+// Users Section Component
+function Users() {
+  return (
+    <div>
+      <h2>Users Management</h2>
+      <p>Manage your users here.</p>
+    </div>
+  );
+}
+
+// Settings Section Component
+function Settings() {
+  return (
+    <div>
+      <h2>Settings</h2>
+      <p>Configure your application settings.</p>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<div>Home Page - <Link to="/dashboard">Go to Dashboard</Link></div>} />
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<Overview />} />
+          <Route path="users" element={<Users />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;`
+        },
+        hints: [
+          'Use nested Route components with the parent route containing an Outlet',
+          'The parent route should render the layout component',
+          'Child routes are defined inside the parent Route component',
+          'Use the index prop for the default child route'
+        ]
+      }
+    ],
+    estimatedTime: '75 min',
+    difficulty: 'advanced',
+    prerequisites: ['react-router', 'custom-hooks'],
+    nextTopics: ['accessibility'],
+    category: 'advanced'
+  },
+
+  // React Accessibility
+  {
+    id: 'accessibility',
+    title: 'React Accessibility (a11y)',
+    description: 'Learn to build accessible React applications for all users',
+    explanation: `Accessibility (a11y) ensures your React applications can be used by everyone, including people with disabilities. Learn to implement proper ARIA attributes, keyboard navigation, and screen reader support.
+
+🔹 **Why Accessibility Matters:**
+- **Inclusive Design**: Make your app usable by everyone
+- **Legal Compliance**: Meet accessibility standards and regulations
+- **Better UX**: Improved usability benefits all users
+- **SEO Benefits**: Better semantic HTML improves search rankings
+
+🔸 **Key Accessibility Features:**
+- **ARIA Attributes**: Provide context for screen readers
+- **Keyboard Navigation**: Full functionality without a mouse
+- **Focus Management**: Proper focus indicators and flow
+- **Semantic HTML**: Use appropriate HTML elements
+
+🧠 **Analogy:** Think of accessibility like building ramps alongside stairs - it provides alternative ways for everyone to access the same content and functionality.`,
+    animationScript: 'Show screen reader navigation and keyboard-only interaction with React components',
+    scenario: '♿ Build fully accessible React components with proper ARIA attributes and keyboard navigation.',
+    challenges: [
+      {
+        id: 'accessible-form-component',
+        title: 'Build Accessible Form Component',
+        description: 'Create a form with proper accessibility features including ARIA labels and keyboard navigation',
+        type: 'challenge',
+        difficulty: 'advanced',
+        estimatedTime: '35 min',
+        xpReward: 160,
+        code: {
+          initial: `import React, { useState } from 'react';
+
+function AccessibleForm() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [errors, setErrors] = useState({});
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Simple validation
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    if (!formData.message.trim()) newErrors.message = 'Message is required';
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      alert('Form submitted successfully!');
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto' }}>
+      <h1>Contact Form</h1>
+
+      <form onSubmit={handleSubmit}>
+        {/* TODO: Add proper accessibility features */}
+        <div style={{ marginBottom: '20px' }}>
+          <label>Name:</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            style={{
+              width: '100%',
+              padding: '8px',
+              marginTop: '5px',
+              border: errors.name ? '2px solid red' : '1px solid #ccc'
+            }}
+          />
+          {errors.name && (
+            <div style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>
+              {errors.name}
+            </div>
+          )}
+        </div>
+
+        <div style={{ marginBottom: '20px' }}>
+          <label>Email:</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            style={{
+              width: '100%',
+              padding: '8px',
+              marginTop: '5px',
+              border: errors.email ? '2px solid red' : '1px solid #ccc'
+            }}
+          />
+          {errors.email && (
+            <div style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>
+              {errors.email}
+            </div>
+          )}
+        </div>
+
+        <div style={{ marginBottom: '20px' }}>
+          <label>Message:</label>
+          <textarea
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            rows="4"
+            style={{
+              width: '100%',
+              padding: '8px',
+              marginTop: '5px',
+              border: errors.message ? '2px solid red' : '1px solid #ccc'
+            }}
+          />
+          {errors.message && (
+            <div style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>
+              {errors.message}
+            </div>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          style={{
+            backgroundColor: '#007bff',
+            color: 'white',
+            padding: '10px 20px',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export default AccessibleForm;`,
+          solution: `import React, { useState, useRef } from 'react';
+
+function AccessibleForm() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [errors, setErrors] = useState({});
+  const nameInputRef = useRef(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Simple validation
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    if (!formData.message.trim()) newErrors.message = 'Message is required';
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      alert('Form submitted successfully!');
+    } else {
+      // Focus first error field for better accessibility
+      if (newErrors.name) nameInputRef.current?.focus();
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto' }}>
+      <h1>Contact Form</h1>
+
+      <form onSubmit={handleSubmit} noValidate>
+        <div style={{ marginBottom: '20px' }}>
+          <label htmlFor="name">Name: *</label>
+          <input
+            id="name"
+            ref={nameInputRef}
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            aria-required="true"
+            aria-invalid={errors.name ? 'true' : 'false'}
+            aria-describedby={errors.name ? 'name-error' : undefined}
+            style={{
+              width: '100%',
+              padding: '8px',
+              marginTop: '5px',
+              border: errors.name ? '2px solid red' : '1px solid #ccc'
+            }}
+          />
+          {errors.name && (
+            <div
+              id="name-error"
+              role="alert"
+              aria-live="polite"
+              style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}
+            >
+              {errors.name}
+            </div>
+          )}
+        </div>
+
+        <div style={{ marginBottom: '20px' }}>
+          <label htmlFor="email">Email: *</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            aria-required="true"
+            aria-invalid={errors.email ? 'true' : 'false'}
+            aria-describedby={errors.email ? 'email-error' : undefined}
+            style={{
+              width: '100%',
+              padding: '8px',
+              marginTop: '5px',
+              border: errors.email ? '2px solid red' : '1px solid #ccc'
+            }}
+          />
+          {errors.email && (
+            <div
+              id="email-error"
+              role="alert"
+              aria-live="polite"
+              style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}
+            >
+              {errors.email}
+            </div>
+          )}
+        </div>
+
+        <div style={{ marginBottom: '20px' }}>
+          <label htmlFor="message">Message: *</label>
+          <textarea
+            id="message"
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            rows="4"
+            required
+            aria-required="true"
+            aria-invalid={errors.message ? 'true' : 'false'}
+            aria-describedby={errors.message ? 'message-error' : undefined}
+            style={{
+              width: '100%',
+              padding: '8px',
+              marginTop: '5px',
+              border: errors.message ? '2px solid red' : '1px solid #ccc'
+            }}
+          />
+          {errors.message && (
+            <div
+              id="message-error"
+              role="alert"
+              aria-live="polite"
+              style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}
+            >
+              {errors.message}
+            </div>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          style={{
+            backgroundColor: '#007bff',
+            color: 'white',
+            padding: '10px 20px',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+          onFocus={(e) => e.target.style.outline = '2px solid #0056b3'}
+          onBlur={(e) => e.target.style.outline = 'none'}
+        >
+          Submit Form
+        </button>
+      </form>
+
+      <p style={{ marginTop: '20px', fontSize: '14px', color: '#666' }}>
+        * Required fields
+      </p>
+    </div>
+  );
+}
+
+export default AccessibleForm;`
+        },
+        hints: [
+          'Use htmlFor attribute on labels to associate them with inputs',
+          'Add aria-required, aria-invalid, and aria-describedby attributes',
+          'Use role="alert" and aria-live="polite" for error messages',
+          'Implement focus management to help users navigate errors',
+          'Add proper focus indicators for keyboard navigation'
+        ]
+      }
+    ],
+    estimatedTime: '55 min',
+    difficulty: 'advanced',
+    prerequisites: ['forms-and-inputs', 'useref-basics'],
+    nextTopics: ['react-testing'],
+    category: 'advanced'
+  },
+
+  // Zustand State Management
+  {
+    id: 'zustand-state',
+    title: 'Zustand - Lightweight State Management',
+    description: 'Advanced state management with Zustand including middleware and persistence',
+    explanation: `Zustand is a small, fast, and scalable state management solution for React. It provides a simple API without boilerplate code, making it perfect for projects that need global state without the complexity of Redux.
+
+🔹 **Why Zustand?**
+- **Minimal Boilerplate**: No providers, actions, or reducers required
+- **TypeScript First**: Excellent TypeScript support out of the box
+- **Small Bundle Size**: Only 2.9kb gzipped
+- **Middleware Support**: Persist, devtools, and custom middleware
+
+🔸 **Advanced Features:**
+- **Persistence**: Save state to localStorage automatically
+- **DevTools**: Debug with Redux DevTools extension
+- **Middleware**: Extend functionality with custom middleware
+- **Subscriptions**: Fine-grained reactivity and performance
+
+🧠 **Analogy:** Think of Zustand as a lightweight backpack for your state - it carries what you need without the bulk of a full suitcase (Redux), and comes with useful pockets (middleware) for extra functionality.`,
+    animationScript: 'Show advanced Zustand features including persistence and middleware',
+    scenario: '🎒 Build advanced state management with Zustand using middleware, persistence, and TypeScript.',
+    challenges: [
+      {
+        id: 'zustand-advanced-store',
+        title: 'Build Advanced Store with Middleware',
+        description: 'Create a Zustand store with persistence and devtools middleware',
+        type: 'playground',
+        difficulty: 'advanced',
+        estimatedTime: '25 min',
+        xpReward: 140,
+        code: {
+          initial: `import React from 'react';
+import { create } from 'zustand';
+import { persist, devtools } from 'zustand/middleware';
+
+// TODO: Define TypeScript types
+// type BearState = {
+//   bears: number
+//   increase: () => void
+//   reset: () => void
+// }
+
+// TODO: Create store with middleware
+// export const useBearStore = create<BearState>()(
+//   devtools(
+//     persist(
+//       (set) => ({
+//         bears: 0,
+//         increase: () => set((state) => ({ bears: state.bears + 1 })),
+//         reset: () => set({ bears: 0 }),
+//       }),
+//       {
+//         name: 'bear-storage',
+//       }
+//     )
+//   )
+// )
+
+function BearCounter() {
+  // TODO: Use the store
+  // const { bears, increase, reset } = useBearStore();
+
+  return (
+    <div style={{ padding: '20px', textAlign: 'center' }}>
+      <h2>🐻 Bear Counter with Persistence</h2>
+      <div style={{ fontSize: '2rem', margin: '20px 0' }}>
+        Bears: {/* TODO: Display bears count */}
+      </div>
+      <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+        <button
+          onClick={() => {/* TODO: Call increase */}}
+          style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px' }}
+        >
+          Add Bear 🐻
+        </button>
+        <button
+          onClick={() => {/* TODO: Call reset */}}
+          style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px' }}
+        >
+          Reset
+        </button>
+      </div>
+      <p style={{ marginTop: '20px', color: '#666', fontSize: '14px' }}>
+        💾 State persists across page reloads!<br/>
+        🔧 Open Redux DevTools to see state changes
+      </p>
+    </div>
+  );
+}
+
+export default BearCounter;`,
+          solution: `import React from 'react';
+import { create } from 'zustand';
+import { persist, devtools } from 'zustand/middleware';
+
+type BearState = {
+  bears: number
+  increase: () => void
+  reset: () => void
+}
+
+export const useBearStore = create<BearState>()(
+  devtools(
+    persist(
+      (set) => ({
+        bears: 0,
+        increase: () => set((state) => ({ bears: state.bears + 1 })),
+        reset: () => set({ bears: 0 }),
+      }),
+      {
+        name: 'bear-storage',
+      }
+    )
+  )
+)
+
+function BearCounter() {
+  const { bears, increase, reset } = useBearStore();
+
+  return (
+    <div style={{ padding: '20px', textAlign: 'center' }}>
+      <h2>🐻 Bear Counter with Persistence</h2>
+      <div style={{ fontSize: '2rem', margin: '20px 0' }}>
+        Bears: {bears}
+      </div>
+      <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+        <button
+          onClick={increase}
+          style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px' }}
+        >
+          Add Bear 🐻
+        </button>
+        <button
+          onClick={reset}
+          style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px' }}
+        >
+          Reset
+        </button>
+      </div>
+      <p style={{ marginTop: '20px', color: '#666', fontSize: '14px' }}>
+        ✅ State persists across page reloads!<br/>
+        🔧 Open Redux DevTools to see state changes<br/>
+        💾 Check localStorage for 'bear-storage' key
+      </p>
+    </div>
+  );
+}
+
+export default BearCounter;`
+        },
+        hints: [
+          'Use zustand\'s create() to define your global store',
+          'persist middleware saves your state in localStorage',
+          'devtools helps with debugging using Redux DevTools',
+          'Keep functions pure inside the store; avoid side effects directly'
+        ]
+      },
+      {
+        id: 'zustand-theme-switcher',
+        title: 'Building a Persistent Theme Switcher',
+        description: 'Create a theme toggle component using Zustand with persistent state',
+        type: 'challenge',
+        difficulty: 'advanced',
+        estimatedTime: '30 min',
+        xpReward: 160,
+        code: {
+          initial: `import React from 'react';
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+// TODO: Define Theme type and ThemeStore interface
+// type Theme = 'light' | 'dark'
+// type ThemeStore = {
+//   theme: Theme
+//   toggleTheme: () => void
+// }
+
+// TODO: Create theme store with persistence
+// export const useThemeStore = create<ThemeStore>()(
+//   persist(
+//     (set, get) => ({
+//       theme: 'light',
+//       toggleTheme: () =>
+//         set({ theme: get().theme === 'light' ? 'dark' : 'light' }),
+//     }),
+//     {
+//       name: 'theme-storage',
+//     }
+//   )
+// )
+
+function ThemeToggle() {
+  // TODO: Use the theme store
+  // const { theme, toggleTheme } = useThemeStore();
+
+  return (
+    <div style={{
+      padding: '40px',
+      textAlign: 'center',
+      backgroundColor: 'white', // TODO: Make this dynamic based on theme
+      color: 'black', // TODO: Make this dynamic based on theme
+      minHeight: '100vh',
+      transition: 'all 0.3s ease'
+    }}>
+      <h1>🎨 Theme Switcher</h1>
+      <p>Current theme: {/* TODO: Display current theme */}</p>
+
+      <button
+        onClick={() => {/* TODO: Call toggleTheme */}}
+        style={{
+          padding: '12px 24px',
+          fontSize: '16px',
+          backgroundColor: '#007bff',
+          color: 'white',
+          border: 'none',
+          borderRadius: '8px',
+          cursor: 'pointer',
+          marginTop: '20px'
+        }}
+      >
+        Toggle Theme
+      </button>
+
+      <div style={{ marginTop: '40px', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
+        <h3>Theme Features:</h3>
+        <ul style={{ textAlign: 'left', maxWidth: '300px', margin: '0 auto' }}>
+          <li>✅ Persistent across reloads</li>
+          <li>✅ Smooth transitions</li>
+          <li>✅ TypeScript support</li>
+          <li>✅ Minimal bundle size</li>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+export default ThemeToggle;`,
+          solution: `import React from 'react';
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+type Theme = 'light' | 'dark'
+
+type ThemeStore = {
+  theme: Theme
+  toggleTheme: () => void
+}
+
+export const useThemeStore = create<ThemeStore>()(
+  persist(
+    (set, get) => ({
+      theme: 'light',
+      toggleTheme: () =>
+        set({ theme: get().theme === 'light' ? 'dark' : 'light' }),
+    }),
+    {
+      name: 'theme-storage',
+    }
+  )
+)
+
+function ThemeToggle() {
+  const { theme, toggleTheme } = useThemeStore();
+
+  const themeStyles = {
+    light: {
+      backgroundColor: '#ffffff',
+      color: '#333333',
+      border: '1px solid #e0e0e0'
+    },
+    dark: {
+      backgroundColor: '#1a1a1a',
+      color: '#ffffff',
+      border: '1px solid #404040'
+    }
+  };
+
+  return (
+    <div style={{
+      padding: '40px',
+      textAlign: 'center',
+      backgroundColor: themeStyles[theme].backgroundColor,
+      color: themeStyles[theme].color,
+      minHeight: '100vh',
+      transition: 'all 0.3s ease'
+    }}>
+      <h1>🎨 Theme Switcher</h1>
+      <p>Current theme: <strong>{theme}</strong> {theme === 'light' ? '☀️' : '🌙'}</p>
+
+      <button
+        onClick={toggleTheme}
+        style={{
+          padding: '12px 24px',
+          fontSize: '16px',
+          backgroundColor: theme === 'light' ? '#007bff' : '#ffc107',
+          color: theme === 'light' ? 'white' : 'black',
+          border: 'none',
+          borderRadius: '8px',
+          cursor: 'pointer',
+          marginTop: '20px',
+          transition: 'all 0.3s ease'
+        }}
+      >
+        Switch to {theme === 'light' ? 'Dark' : 'Light'} Theme
+      </button>
+
+      <div style={{
+        marginTop: '40px',
+        padding: '20px',
+        border: themeStyles[theme].border,
+        borderRadius: '8px',
+        backgroundColor: theme === 'light' ? '#f8f9fa' : '#2d2d2d'
+      }}>
+        <h3>✅ Theme Features:</h3>
+        <ul style={{ textAlign: 'left', maxWidth: '300px', margin: '0 auto' }}>
+          <li>💾 Persistent across reloads</li>
+          <li>🎨 Smooth transitions</li>
+          <li>📝 TypeScript support</li>
+          <li>📦 Minimal bundle size</li>
+          <li>🔄 Instant state updates</li>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+export default ThemeToggle;`
+        },
+        hints: [
+          'Use persist() to keep the theme across reloads',
+          'Store the theme as a string type (\'light\' | \'dark\')',
+          'Use get() inside the store to read the current value before updating',
+          'Call toggleTheme from your UI component to switch themes'
+        ]
+      }
+    ],
+    estimatedTime: '55 min',
+    difficulty: 'advanced',
+    prerequisites: ['usestate-basics', 'custom-hooks'],
+    nextTopics: ['jotai-recoil'],
+    category: 'advanced'
+  },
+
+  // Jotai & Recoil - Atomic State Management
+  {
+    id: 'jotai-recoil',
+    title: 'Jotai & Recoil - Atomic State Management',
+    description: 'Atomic state management patterns',
+    explanation: `Atomic state management breaks down global state into small, independent atoms that can be composed together. Jotai and Recoil are libraries that implement this pattern, providing fine-grained reactivity and better performance.
+
+🔹 **Atomic State Concept:**
+- **Atoms**: Small pieces of state that can be read and written
+- **Selectors**: Derived state based on atoms or other selectors
+- **Bottom-up**: Build complex state from simple atoms
+- **Fine-grained Updates**: Only components using specific atoms re-render
+
+🔸 **Benefits:**
+- **Better Performance**: Minimal re-renders
+- **Composable**: Combine atoms to create complex state
+- **Testable**: Easy to test individual atoms
+- **TypeScript Friendly**: Excellent type inference
+
+🧠 **Analogy:** Think of atoms like LEGO blocks - each piece is simple and independent, but you can combine them to build complex structures.`,
+    animationScript: 'Show atomic state updates affecting only specific components',
+    scenario: '⚛️ Build atomic state management using Jotai for fine-grained reactivity and performance.',
+    challenges: [
+      {
+        id: 'jotai-todo-atoms',
+        title: 'Build Todo App with Jotai Atoms',
+        description: 'Create a todo application using Jotai atoms for state management',
+        type: 'challenge',
+        difficulty: 'advanced',
+        estimatedTime: '30 min',
+        xpReward: 150,
+        code: {
+          initial: `import React from 'react';
+import { atom, useAtom } from 'jotai';
+
+// TODO: Create atoms for todo state
+// const todosAtom = atom([]);
+// const filterAtom = atom('all'); // 'all', 'active', 'completed'
+
+function TodoApp() {
+  // TODO: Use atoms
+  // const [todos, setTodos] = useAtom(todosAtom);
+  // const [filter, setFilter] = useAtom(filterAtom);
+
+  const addTodo = (text) => {
+    // TODO: Add new todo
+  };
+
+  const toggleTodo = (id) => {
+    // TODO: Toggle todo completion
+  };
+
+  const deleteTodo = (id) => {
+    // TODO: Delete todo
+  };
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto' }}>
+      <h1>Jotai Todo App</h1>
+
+      <TodoInput onAdd={addTodo} />
+      <TodoFilters />
+      <TodoList />
+    </div>
+  );
+}
+
+function TodoInput({ onAdd }) {
+  const [text, setText] = React.useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (text.trim()) {
+      onAdd(text.trim());
+      setText('');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
+      <input
+        type="text"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="Add a todo..."
+        style={{ padding: '8px', marginRight: '10px', width: '300px' }}
+      />
+      <button type="submit" style={{ padding: '8px 16px' }}>
+        Add
+      </button>
+    </form>
+  );
+}
+
+function TodoFilters() {
+  // TODO: Implement filter buttons
+  return (
+    <div style={{ marginBottom: '20px' }}>
+      <button>All</button>
+      <button>Active</button>
+      <button>Completed</button>
+    </div>
+  );
+}
+
+function TodoList() {
+  // TODO: Display filtered todos
+  return (
+    <div>
+      <p>Todo list will appear here...</p>
+    </div>
+  );
+}
+
+export default TodoApp;`,
+          solution: `import React from 'react';
+import { atom, useAtom } from 'jotai';
+
+// Create atoms for todo state
+const todosAtom = atom([]);
+const filterAtom = atom('all'); // 'all', 'active', 'completed'
+
+// Derived atom for filtered todos
+const filteredTodosAtom = atom((get) => {
+  const todos = get(todosAtom);
+  const filter = get(filterAtom);
+
+  switch (filter) {
+    case 'active':
+      return todos.filter(todo => !todo.completed);
+    case 'completed':
+      return todos.filter(todo => todo.completed);
+    default:
+      return todos;
+  }
+});
+
+function TodoApp() {
+  const [todos, setTodos] = useAtom(todosAtom);
+
+  const addTodo = (text) => {
+    const newTodo = {
+      id: Date.now(),
+      text,
+      completed: false
+    };
+    setTodos(prev => [...prev, newTodo]);
+  };
+
+  const toggleTodo = (id) => {
+    setTodos(prev =>
+      prev.map(todo =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  };
+
+  const deleteTodo = (id) => {
+    setTodos(prev => prev.filter(todo => todo.id !== id));
+  };
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto' }}>
+      <h1>Jotai Todo App</h1>
+
+      <TodoInput onAdd={addTodo} />
+      <TodoFilters />
+      <TodoList onToggle={toggleTodo} onDelete={deleteTodo} />
+    </div>
+  );
+}
+
+function TodoInput({ onAdd }) {
+  const [text, setText] = React.useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (text.trim()) {
+      onAdd(text.trim());
+      setText('');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
+      <input
+        type="text"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="Add a todo..."
+        style={{ padding: '8px', marginRight: '10px', width: '300px' }}
+      />
+      <button type="submit" style={{ padding: '8px 16px' }}>
+        Add
+      </button>
+    </form>
+  );
+}
+
+function TodoFilters() {
+  const [filter, setFilter] = useAtom(filterAtom);
+
+  return (
+    <div style={{ marginBottom: '20px' }}>
+      {['all', 'active', 'completed'].map(f => (
+        <button
+          key={f}
+          onClick={() => setFilter(f)}
+          style={{
+            padding: '8px 16px',
+            marginRight: '10px',
+            backgroundColor: filter === f ? '#007bff' : '#f8f9fa',
+            color: filter === f ? 'white' : 'black',
+            border: '1px solid #ccc',
+            borderRadius: '4px'
+          }}
+        >
+          {f.charAt(0).toUpperCase() + f.slice(1)}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function TodoList({ onToggle, onDelete }) {
+  const [filteredTodos] = useAtom(filteredTodosAtom);
+
+  if (filteredTodos.length === 0) {
+    return <p>No todos found!</p>;
+  }
+
+  return (
+    <div>
+      {filteredTodos.map(todo => (
+        <div
+          key={todo.id}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            padding: '10px',
+            border: '1px solid #eee',
+            marginBottom: '5px',
+            borderRadius: '4px'
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={todo.completed}
+            onChange={() => onToggle(todo.id)}
+            style={{ marginRight: '10px' }}
+          />
+          <span
+            style={{
+              flex: 1,
+              textDecoration: todo.completed ? 'line-through' : 'none',
+              color: todo.completed ? '#666' : 'black'
+            }}
+          >
+            {todo.text}
+          </span>
+          <button
+            onClick={() => onDelete(todo.id)}
+            style={{
+              padding: '4px 8px',
+              backgroundColor: '#dc3545',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px'
+            }}
+          >
+            Delete
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default TodoApp;`
+        },
+        hints: [
+          'Create separate atoms for todos and filter state',
+          'Use derived atoms to compute filtered todos',
+          'Use useAtom hook to read and write atom values',
+          'Atoms automatically trigger re-renders when their values change'
+        ]
+      },
+      {
+        id: 'recoil-counter-selector',
+        title: 'Build Recoil Counter with Selectors',
+        description: 'Create a counter app using Recoil atoms and selectors for derived state',
+        type: 'challenge',
+        difficulty: 'advanced',
+        estimatedTime: '35 min',
+        xpReward: 170,
+        code: {
+          initial: `import React from 'react';
+import { RecoilRoot, atom, selector, useRecoilState, useRecoilValue } from 'recoil';
+
+// TODO: Create count atom
+// const countAtom = atom({
+//   key: 'countAtom',
+//   default: 0,
+// });
+
+// TODO: Create selector for double count
+// const doubleCountSelector = selector({
+//   key: 'doubleCountSelector',
+//   get: ({ get }) => get(countAtom) * 2,
+// });
+
+function Counter() {
+  // TODO: Use Recoil hooks
+  // const [count, setCount] = useRecoilState(countAtom);
+  // const doubleCount = useRecoilValue(doubleCountSelector);
+
+  return (
+    <div style={{ padding: '20px', textAlign: 'center' }}>
+      <h2>Recoil Counter with Selectors</h2>
+
+      <div style={{ margin: '20px 0' }}>
+        <div style={{ fontSize: '1.5rem', marginBottom: '10px' }}>
+          Count: {/* TODO: Display count */}
+        </div>
+        <div style={{ fontSize: '1.2rem', color: '#666' }}>
+          Double: {/* TODO: Display double count */}
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+        <button
+          onClick={() => {/* TODO: Decrement count */}}
+          style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px' }}
+        >
+          -1
+        </button>
+        <button
+          onClick={() => {/* TODO: Reset count */}}
+          style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: '4px' }}
+        >
+          Reset
+        </button>
+        <button
+          onClick={() => {/* TODO: Increment count */}}
+          style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px' }}
+        >
+          +1
+        </button>
+      </div>
+
+      <div style={{ marginTop: '30px', padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+        <h3>🔬 Recoil Features:</h3>
+        <ul style={{ textAlign: 'left', maxWidth: '300px', margin: '0 auto' }}>
+          <li>⚛️ Atomic state management</li>
+          <li>🔄 Derived state with selectors</li>
+          <li>🎯 Fine-grained reactivity</li>
+          <li>🔧 DevTools integration</li>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    // TODO: Wrap with RecoilRoot
+    <div>
+      <Counter />
+    </div>
+  );
+}
+
+export default App;`,
+          solution: `import React from 'react';
+import { RecoilRoot, atom, selector, useRecoilState, useRecoilValue } from 'recoil';
+
+// Create count atom
+const countAtom = atom({
+  key: 'countAtom',
+  default: 0,
+});
+
+// Create selector for double count
+const doubleCountSelector = selector({
+  key: 'doubleCountSelector',
+  get: ({ get }) => get(countAtom) * 2,
+});
+
+// Create selector for count status
+const countStatusSelector = selector({
+  key: 'countStatusSelector',
+  get: ({ get }) => {
+    const count = get(countAtom);
+    if (count === 0) return 'Zero';
+    if (count > 0) return 'Positive';
+    return 'Negative';
+  },
+});
+
+function Counter() {
+  const [count, setCount] = useRecoilState(countAtom);
+  const doubleCount = useRecoilValue(doubleCountSelector);
+  const countStatus = useRecoilValue(countStatusSelector);
+
+  return (
+    <div style={{ padding: '20px', textAlign: 'center' }}>
+      <h2>Recoil Counter with Selectors</h2>
+
+      <div style={{ margin: '20px 0' }}>
+        <div style={{ fontSize: '1.5rem', marginBottom: '10px' }}>
+          Count: {count}
+        </div>
+        <div style={{ fontSize: '1.2rem', color: '#666', marginBottom: '10px' }}>
+          Double: {doubleCount}
+        </div>
+        <div style={{ fontSize: '1rem', color: '#007bff' }}>
+          Status: {countStatus}
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+        <button
+          onClick={() => setCount(count - 1)}
+          style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px' }}
+        >
+          -1
+        </button>
+        <button
+          onClick={() => setCount(0)}
+          style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: '4px' }}
+        >
+          Reset
+        </button>
+        <button
+          onClick={() => setCount(count + 1)}
+          style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px' }}
+        >
+          +1
+        </button>
+      </div>
+
+      <div style={{ marginTop: '30px', padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+        <h3>✅ Recoil Features Demonstrated:</h3>
+        <ul style={{ textAlign: 'left', maxWidth: '300px', margin: '0 auto' }}>
+          <li>⚛️ <strong>Atoms:</strong> Global state pieces (countAtom)</li>
+          <li>🔄 <strong>Selectors:</strong> Derived state (doubleCount, status)</li>
+          <li>🎯 <strong>Reactivity:</strong> Auto-updates when atoms change</li>
+          <li>🔧 <strong>Hooks:</strong> useRecoilState, useRecoilValue</li>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <RecoilRoot>
+      <Counter />
+    </RecoilRoot>
+  );
+}
+
+export default App;`
+        },
+        hints: [
+          'Recoil atoms need a unique key and default value',
+          'Selectors derive state from atoms using the get function',
+          'useRecoilState works like useState but for atoms',
+          'Wrap your app with RecoilRoot to enable Recoil functionality'
+        ]
+      }
+    ],
+    estimatedTime: '60 min',
+    difficulty: 'advanced',
+    prerequisites: ['zustand-state', 'context-api'],
+    nextTopics: ['gatsby-ssg'],
+    category: 'advanced'
+  },
+
+  // Gatsby SSG
+  {
+    id: 'gatsby-ssg',
+    title: 'Gatsby - Static Site Generation',
+    description: 'Build static sites with Gatsby',
+    explanation: `Gatsby is a React-based framework for building fast, static websites and applications. It combines the power of React with GraphQL and generates optimized static files for incredible performance.
+
+🔹 **Why Gatsby?**
+- **Blazing Fast**: Pre-built static files served from CDN
+- **SEO Optimized**: Server-side rendering for better search rankings
+- **Rich Ecosystem**: Thousands of plugins for any functionality
+- **GraphQL Data Layer**: Unified data access from any source
+
+🔸 **Key Features:**
+- **Static Generation**: Build-time rendering for maximum performance
+- **Image Optimization**: Automatic image processing and lazy loading
+- **Code Splitting**: Automatic bundle optimization
+- **Progressive Web App**: Built-in PWA capabilities
+
+🧠 **Analogy:** Think of Gatsby as a master chef who prepares all the meals (pages) in advance, so when customers (users) arrive, everything is ready to serve instantly.`,
+    animationScript: 'Show build process generating static files and deployment to CDN',
+    scenario: '🚀 Build a lightning-fast static website using Gatsby with GraphQL data layer.',
+    challenges: [
+      {
+        id: 'gatsby-node-pages',
+        title: 'Generate Pages with gatsby-node.js',
+        description: 'Use createPages API to dynamically generate static pages from data',
+        type: 'playground',
+        difficulty: 'advanced',
+        estimatedTime: '35 min',
+        xpReward: 150,
+        code: {
+          initial: `// gatsby-node.js - TODO: Complete the createPages function
+const path = require('path');
+
+exports.createPages = async ({ graphql, actions }) => {
+  const { createPage } = actions;
+
+  // TODO: Query for all markdown files
+  // const result = await graphql(\`
+  //   query {
+  //     allMarkdownRemark {
+  //       edges {
+  //         node {
+  //           fields {
+  //             slug
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // \`);
+
+  // TODO: Create pages for each markdown file
+  // result.data.allMarkdownRemark.edges.forEach(({ node }) => {
+  //   createPage({
+  //     path: node.fields.slug,
+  //     component: path.resolve('./src/templates/blog-post.js'),
+  //     context: {
+  //       slug: node.fields.slug,
+  //     },
+  //   });
+  // });
+};
+
+// TODO: Create slug field for each markdown file
+// exports.onCreateNode = ({ node, actions, getNode }) => {
+//   const { createNodeField } = actions;
+//
+//   if (node.internal.type === 'MarkdownRemark') {
+//     const value = createFilePath({ node, getNode });
+//     createNodeField({
+//       name: 'slug',
+//       node,
+//       value,
+//     });
+//   }
+// };
+
+// Blog post template (src/templates/blog-post.js)
+import React from 'react';
+import { graphql, Link } from 'gatsby';
+
+const BlogPostTemplate = ({ data }) => {
+  const post = data.markdownRemark;
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+      <Link to="/" style={{ color: '#007bff', textDecoration: 'none' }}>
+        ← Back to Home
+      </Link>
+
+      <article style={{ marginTop: '20px' }}>
+        <h1>{post.frontmatter.title}</h1>
+        <p style={{ color: '#666', marginBottom: '20px' }}>
+          Published on {post.frontmatter.date}
+        </p>
+        <div dangerouslySetInnerHTML={{ __html: post.html }} />
+      </article>
+    </div>
+  );
+};
+
+// TODO: Add GraphQL query for blog post template
+// export const query = graphql\`
+//   query($slug: String!) {
+//     markdownRemark(fields: { slug: { eq: $slug } }) {
+//       html
+//       frontmatter {
+//         title
+//         date(formatString: "MMMM DD, YYYY")
+//       }
+//     }
+//   }
+// \`;
+
+export default BlogPostTemplate;`,
+          solution: `// gatsby-node.js - Complete implementation
+const path = require('path');
+const { createFilePath } = require('gatsby-source-filesystem');
+
+exports.createPages = async ({ graphql, actions }) => {
+  const { createPage } = actions;
+
+  // Query for all markdown files
+  const result = await graphql(\`
+    query {
+      allMarkdownRemark {
+        edges {
+          node {
+            fields {
+              slug
+            }
+          }
+        }
+      }
+    }
+  \`);
+
+  // Create pages for each markdown file
+  result.data.allMarkdownRemark.edges.forEach(({ node }) => {
+    createPage({
+      path: node.fields.slug,
+      component: path.resolve('./src/templates/blog-post.js'),
+      context: {
+        slug: node.fields.slug,
+      },
+    });
+  });
+};
+
+// Create slug field for each markdown file
+exports.onCreateNode = ({ node, actions, getNode }) => {
+  const { createNodeField } = actions;
+
+  if (node.internal.type === 'MarkdownRemark') {
+    const value = createFilePath({ node, getNode });
+    createNodeField({
+      name: 'slug',
+      node,
+      value,
+    });
+  }
+};
+
+// Blog post template (src/templates/blog-post.js)
+import React from 'react';
+import { graphql, Link } from 'gatsby';
+
+const BlogPostTemplate = ({ data }) => {
+  const post = data.markdownRemark;
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+      <Link to="/" style={{ color: '#007bff', textDecoration: 'none' }}>
+        ← Back to Home
+      </Link>
+
+      <article style={{ marginTop: '20px' }}>
+        <h1>{post.frontmatter.title}</h1>
+        <p style={{ color: '#666', marginBottom: '20px' }}>
+          Published on {post.frontmatter.date}
+        </p>
+        <div dangerouslySetInnerHTML={{ __html: post.html }} />
+      </article>
+
+      <div style={{ marginTop: '40px', padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+        <h3>✅ Gatsby Features Demonstrated:</h3>
+        <ul>
+          <li>🔄 Dynamic page generation from markdown</li>
+          <li>📊 GraphQL data layer integration</li>
+          <li>🚀 Static site generation at build time</li>
+          <li>🔗 Automatic slug creation and routing</li>
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+// GraphQL query for blog post template
+export const query = graphql\`
+  query($slug: String!) {
+    markdownRemark(fields: { slug: { eq: $slug } }) {
+      html
+      frontmatter {
+        title
+        date(formatString: "MMMM DD, YYYY")
+      }
+    }
+  }
+\`;
+
+export default BlogPostTemplate;`
+        },
+        hints: [
+          'Use createPages API in gatsby-node.js to generate pages programmatically',
+          'createFilePath generates URL-friendly slugs from file paths',
+          'onCreateNode runs for every node created during build',
+          'Pass context data to page templates via the context object'
+        ]
+      },
+      {
+        id: 'gatsby-plugin-integration',
+        title: 'Integrate Gatsby Plugins for Enhanced Functionality',
+        description: 'Add image optimization and SEO plugins to a Gatsby site',
+        type: 'challenge',
+        difficulty: 'advanced',
+        estimatedTime: '40 min',
+        xpReward: 180,
+        code: {
+          initial: `// gatsby-config.js - TODO: Configure plugins
+module.exports = {
+  siteMetadata: {
+    title: 'My Gatsby Site',
+    description: 'A blazing fast static site built with Gatsby',
+    author: '@yourname',
+  },
+  plugins: [
+    // TODO: Add gatsby-plugin-react-helmet for SEO
+    // TODO: Add gatsby-plugin-image for optimized images
+    // TODO: Add gatsby-source-filesystem for local files
+    // TODO: Add gatsby-transformer-remark for markdown
+  ],
+};
+
+// src/components/seo.js - TODO: Create SEO component
+import React from 'react';
+import { Helmet } from 'react-helmet';
+import { useStaticQuery, graphql } from 'gatsby';
+
+const SEO = ({ description, title, children }) => {
+  // TODO: Query site metadata
+  // const { site } = useStaticQuery(
+  //   graphql\`
+  //     query {
+  //       site {
+  //         siteMetadata {
+  //           title
+  //           description
+  //           author
+  //         }
+  //       }
+  //     }
+  //   \`
+  // );
+
+  // TODO: Set up meta tags
+  return (
+    <Helmet>
+      <title>TODO: Set page title</title>
+      <meta name="description" content="TODO: Set description" />
+      <meta name="author" content="TODO: Set author" />
+    </Helmet>
+  );
+};
+
+export default SEO;
+
+// src/pages/index.js - TODO: Use SEO and optimized images
+import React from 'react';
+import { StaticImage } from 'gatsby-plugin-image';
+import SEO from '../components/seo';
+
+const IndexPage = () => {
+  return (
+    <div style={{ padding: '40px', textAlign: 'center' }}>
+      {/* TODO: Add SEO component */}
+
+      <h1>Welcome to My Gatsby Site</h1>
+
+      {/* TODO: Add optimized image */}
+      <div style={{ margin: '40px 0' }}>
+        <p>Hero image will appear here</p>
+      </div>
+
+      <p>This site demonstrates Gatsby's powerful plugin ecosystem.</p>
+    </div>
+  );
+};
+
+export default IndexPage;`,
+          solution: `// gatsby-config.js - Complete plugin configuration
+module.exports = {
+  siteMetadata: {
+    title: 'My Gatsby Site',
+    description: 'A blazing fast static site built with Gatsby',
+    author: '@yourname',
+  },
+  plugins: [
+    'gatsby-plugin-react-helmet',
+    'gatsby-plugin-image',
+    'gatsby-plugin-sharp',
+    'gatsby-transformer-sharp',
+    {
+      resolve: 'gatsby-source-filesystem',
+      options: {
+        name: 'images',
+        path: './src/images/',
+      },
+    },
+    {
+      resolve: 'gatsby-transformer-remark',
+      options: {
+        plugins: [
+          {
+            resolve: 'gatsby-remark-images',
+            options: {
+              maxWidth: 800,
+            },
+          },
+        ],
+      },
+    },
+  ],
+};
+
+// src/components/seo.js - Complete SEO component
+import React from 'react';
+import { Helmet } from 'react-helmet';
+import { useStaticQuery, graphql } from 'gatsby';
+
+const SEO = ({ description, title, children }) => {
+  const { site } = useStaticQuery(
+    graphql\`
+      query {
+        site {
+          siteMetadata {
+            title
+            description
+            author
+          }
+        }
+      }
+    \`
+  );
+
+  const metaDescription = description || site.siteMetadata.description;
+  const defaultTitle = site.siteMetadata?.title;
+
+  return (
+    <Helmet
+      htmlAttributes={{
+        lang: 'en',
+      }}
+      title={title}
+      titleTemplate={defaultTitle ? \`%s | \${defaultTitle}\` : null}
+      meta={[
+        {
+          name: 'description',
+          content: metaDescription,
+        },
+        {
+          property: 'og:title',
+          content: title,
+        },
+        {
+          property: 'og:description',
+          content: metaDescription,
+        },
+        {
+          property: 'og:type',
+          content: 'website',
+        },
+        {
+          name: 'twitter:card',
+          content: 'summary',
+        },
+        {
+          name: 'twitter:creator',
+          content: site.siteMetadata?.author || '',
+        },
+        {
+          name: 'twitter:title',
+          content: title,
+        },
+        {
+          name: 'twitter:description',
+          content: metaDescription,
+        },
+      ]}
+    >
+      {children}
+    </Helmet>
+  );
+};
+
+export default SEO;
+
+// src/pages/index.js - Complete page with SEO and images
+import React from 'react';
+import { StaticImage } from 'gatsby-plugin-image';
+import SEO from '../components/seo';
+
+const IndexPage = () => {
+  return (
+    <div style={{ padding: '40px', textAlign: 'center' }}>
+      <SEO title="Home" description="Welcome to my Gatsby site with optimized images and SEO" />
+
+      <h1>Welcome to My Gatsby Site</h1>
+
+      <div style={{ margin: '40px 0' }}>
+        <StaticImage
+          src="../images/hero.jpg"
+          alt="Hero image"
+          placeholder="blurred"
+          layout="fixed"
+          width={600}
+          height={400}
+        />
+      </div>
+
+      <div style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'left' }}>
+        <h2>✅ Gatsby Features Implemented:</h2>
+        <ul>
+          <li>🔍 <strong>SEO Optimization:</strong> Meta tags, Open Graph, Twitter Cards</li>
+          <li>🖼️ <strong>Image Optimization:</strong> WebP conversion, lazy loading, responsive images</li>
+          <li>📊 <strong>GraphQL Integration:</strong> Static queries for site metadata</li>
+          <li>🚀 <strong>Performance:</strong> Automatic code splitting and prefetching</li>
+          <li>📝 <strong>Markdown Support:</strong> Transform markdown files to pages</li>
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export default IndexPage;`
+        },
+        hints: [
+          'Configure plugins in gatsby-config.js to extend Gatsby functionality',
+          'Use useStaticQuery to fetch data at build time in components',
+          'gatsby-plugin-image provides optimized images with lazy loading',
+          'React Helmet manages document head for SEO optimization'
+        ]
+      }
+    ],
+    estimatedTime: '65 min',
+    difficulty: 'advanced',
+    prerequisites: ['nextjs-introduction', 'graphql-react'],
+    nextTopics: ['react-native-basics'],
+    category: 'advanced'
+  },
+
+  // GraphQL with React
+  {
+    id: 'graphql-react',
+    title: 'GraphQL with React',
+    description: 'Integrate GraphQL APIs with React applications',
+    explanation: `GraphQL is a query language and runtime for APIs that allows clients to request exactly the data they need. When combined with React, it provides a powerful and efficient way to manage data fetching and state.
+
+🔹 **Why GraphQL with React?**
+- **Precise Data Fetching**: Request only the data you need
+- **Single Endpoint**: One URL for all your data needs
+- **Type Safety**: Strong typing with automatic code generation
+- **Real-time Updates**: Built-in subscription support
+
+🔸 **Key Tools:**
+- **Apollo Client**: Popular GraphQL client for React
+- **urql**: Lightweight alternative to Apollo
+- **GraphQL Code Generator**: Generate TypeScript types
+- **GraphQL Playground**: Interactive query explorer
+
+🧠 **Analogy:** Think of GraphQL like ordering at a restaurant where you can customize exactly what you want on your plate, rather than choosing from fixed combo meals (REST APIs).`,
+    animationScript: 'Show GraphQL query fetching specific data vs REST multiple endpoints',
+    scenario: '🔍 Build efficient data-driven React apps using GraphQL for precise data fetching.',
+    challenges: [
+      {
+        id: 'apollo-client-setup',
+        title: 'Setup Apollo Client with React',
+        description: 'Configure Apollo Client and create components that fetch data with GraphQL',
+        type: 'playground',
+        difficulty: 'advanced',
+        estimatedTime: '35 min',
+        xpReward: 160,
+        code: {
+          initial: `import React from 'react';
+import { ApolloClient, InMemoryCache, ApolloProvider, useQuery, gql } from '@apollo/client';
+
+// TODO: Configure Apollo Client
+// const client = new ApolloClient({
+//   uri: 'https://api.spacex.land/graphql/',
+//   cache: new InMemoryCache()
+// });
+
+// TODO: Define GraphQL query
+// const GET_LAUNCHES = gql\`
+//   query GetLaunches($limit: Int) {
+//     launches(limit: $limit) {
+//       id
+//       mission_name
+//       launch_date_local
+//       launch_success
+//       rocket {
+//         rocket_name
+//       }
+//     }
+//   }
+// \`;
+
+function LaunchList() {
+  // TODO: Use useQuery hook to fetch data
+  // const { loading, error, data } = useQuery(GET_LAUNCHES, {
+  //   variables: { limit: 10 }
+  // });
+
+  // Placeholder data for demo
+  const loading = false;
+  const error = null;
+  const data = {
+    launches: [
+      {
+        id: '1',
+        mission_name: 'Demo Mission',
+        launch_date_local: '2023-01-01',
+        launch_success: true,
+        rocket: { rocket_name: 'Falcon 9' }
+      }
+    ]
+  };
+
+  if (loading) return <p>Loading launches...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h2>SpaceX Launches</h2>
+      <div>
+        {data.launches.map(launch => (
+          <div
+            key={launch.id}
+            style={{
+              border: '1px solid #ddd',
+              borderRadius: '8px',
+              padding: '16px',
+              margin: '10px 0',
+              backgroundColor: launch.launch_success ? '#f0f8f0' : '#fff0f0'
+            }}
+          >
+            <h3>{launch.mission_name}</h3>
+            <p><strong>Rocket:</strong> {launch.rocket.rocket_name}</p>
+            <p><strong>Date:</strong> {new Date(launch.launch_date_local).toLocaleDateString()}</p>
+            <p><strong>Status:</strong>
+              <span style={{
+                color: launch.launch_success ? 'green' : 'red',
+                fontWeight: 'bold'
+              }}>
+                {launch.launch_success ? ' ✅ Success' : ' ❌ Failed'}
+              </span>
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    // TODO: Wrap with ApolloProvider
+    // <ApolloProvider client={client}>
+      <div>
+        <h1>GraphQL with React Demo</h1>
+        <LaunchList />
+      </div>
+    // </ApolloProvider>
+  );
+}
+
+export default App;`,
+          solution: `import React from 'react';
+import { ApolloClient, InMemoryCache, ApolloProvider, useQuery, gql } from '@apollo/client';
+
+// Configure Apollo Client
+const client = new ApolloClient({
+  uri: 'https://api.spacex.land/graphql/',
+  cache: new InMemoryCache()
+});
+
+// Define GraphQL query
+const GET_LAUNCHES = gql\`
+  query GetLaunches($limit: Int) {
+    launches(limit: $limit) {
+      id
+      mission_name
+      launch_date_local
+      launch_success
+      rocket {
+        rocket_name
+      }
+    }
+  }
+\`;
+
+function LaunchList() {
+  const { loading, error, data } = useQuery(GET_LAUNCHES, {
+    variables: { limit: 10 }
+  });
+
+  if (loading) return <p>Loading launches...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h2>SpaceX Launches</h2>
+      <div>
+        {data.launches.map(launch => (
+          <div
+            key={launch.id}
+            style={{
+              border: '1px solid #ddd',
+              borderRadius: '8px',
+              padding: '16px',
+              margin: '10px 0',
+              backgroundColor: launch.launch_success ? '#f0f8f0' : '#fff0f0'
+            }}
+          >
+            <h3>{launch.mission_name}</h3>
+            <p><strong>Rocket:</strong> {launch.rocket.rocket_name}</p>
+            <p><strong>Date:</strong> {new Date(launch.launch_date_local).toLocaleDateString()}</p>
+            <p><strong>Status:</strong>
+              <span style={{
+                color: launch.launch_success ? 'green' : 'red',
+                fontWeight: 'bold'
+              }}>
+                {launch.launch_success ? ' ✅ Success' : ' ❌ Failed'}
+              </span>
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <ApolloProvider client={client}>
+      <div>
+        <h1>GraphQL with React Demo</h1>
+        <LaunchList />
+        <p style={{ padding: '20px', color: '#666', fontSize: '14px' }}>
+          ✅ Data fetched from SpaceX GraphQL API using Apollo Client
+        </p>
+      </div>
+    </ApolloProvider>
+  );
+}
+
+export default App;`
+        },
+        hints: [
+          'Create ApolloClient instance with GraphQL endpoint URI',
+          'Wrap your app with ApolloProvider and pass the client',
+          'Use gql template literal to define GraphQL queries',
+          'Use useQuery hook to fetch data and handle loading/error states'
+        ]
+      }
+    ],
+    estimatedTime: '70 min',
+    difficulty: 'advanced',
+    prerequisites: ['custom-hooks', 'react-query'],
+    nextTopics: ['gatsby-ssg'],
+    category: 'advanced'
+  },
+
+  // React Native Basics
+  {
+    id: 'react-native-basics',
+    title: 'React Native Basics',
+    description: 'Build mobile apps with React Native',
+    explanation: `React Native allows you to build native mobile applications using React. Write once in JavaScript and deploy to both iOS and Android platforms with native performance and look-and-feel.
+
+🔹 **Why React Native?**
+- **Cross-Platform**: One codebase for iOS and Android
+- **Native Performance**: Compiles to native components
+- **Hot Reloading**: Instant feedback during development
+- **Large Ecosystem**: Extensive library and community support
+
+🔸 **Key Differences from React Web:**
+- **Native Components**: View, Text, ScrollView instead of div, p, etc.
+- **Styling**: StyleSheet API instead of CSS
+- **Navigation**: React Navigation for screen transitions
+- **Platform APIs**: Access to camera, GPS, notifications, etc.
+
+🧠 **Analogy:** Think of React Native as a translator that takes your React knowledge and converts it into native mobile language that iOS and Android understand.`,
+    animationScript: 'Show React code transforming into native iOS and Android components',
+    scenario: '📱 Build cross-platform mobile applications using React Native with native performance.',
+    challenges: [
+      {
+        id: 'react-native-todo-app',
+        title: 'Build Mobile Todo App',
+        description: 'Create a mobile todo application using React Native components',
+        type: 'challenge',
+        difficulty: 'advanced',
+        estimatedTime: '45 min',
+        xpReward: 180,
+        code: {
+          initial: `import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+  Alert
+} from 'react-native';
+
+const TodoApp = () => {
+  const [todos, setTodos] = useState([]);
+  const [inputText, setInputText] = useState('');
+
+  const addTodo = () => {
+    // TODO: Add new todo item
+    if (inputText.trim()) {
+      // Add logic here
+      setInputText('');
+    }
+  };
+
+  const toggleTodo = (id) => {
+    // TODO: Toggle todo completion status
+  };
+
+  const deleteTodo = (id) => {
+    // TODO: Delete todo item
+    Alert.alert(
+      'Delete Todo',
+      'Are you sure you want to delete this item?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: () => {
+          // Add delete logic here
+        }}
+      ]
+    );
+  };
+
+  const renderTodoItem = ({ item }) => (
+    <View style={styles.todoItem}>
+      <TouchableOpacity
+        style={styles.todoText}
+        onPress={() => toggleTodo(item.id)}
+      >
+        <Text style={[
+          styles.todoTextContent,
+          item.completed && styles.completedText
+        ]}>
+          {item.text}
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={() => deleteTodo(item.id)}
+      >
+        <Text style={styles.deleteButtonText}>Delete</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>React Native Todo</Text>
+
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Add a new todo..."
+          value={inputText}
+          onChangeText={setInputText}
+          onSubmitEditing={addTodo}
+        />
+        <TouchableOpacity style={styles.addButton} onPress={addTodo}>
+          <Text style={styles.addButtonText}>Add</Text>
+        </TouchableOpacity>
+      </View>
+
+      <FlatList
+        data={todos}
+        renderItem={renderTodoItem}
+        keyExtractor={(item) => item.id.toString()}
+        style={styles.todoList}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>No todos yet. Add one above!</Text>
+        }
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    paddingTop: 50,
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 30,
+    color: '#333',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    marginBottom: 20,
+  },
+  textInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    backgroundColor: 'white',
+    marginRight: 10,
+  },
+  addButton: {
+    backgroundColor: '#007bff',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+    justifyContent: 'center',
+  },
+  addButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  todoList: {
+    flex: 1,
+  },
+  todoItem: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    padding: 15,
+    marginVertical: 5,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  todoText: {
+    flex: 1,
+  },
+  todoTextContent: {
+    fontSize: 16,
+    color: '#333',
+  },
+  completedText: {
+    textDecorationLine: 'line-through',
+    color: '#999',
+  },
+  deleteButton: {
+    backgroundColor: '#dc3545',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 6,
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#999',
+    fontSize: 16,
+    marginTop: 50,
+  },
+});
+
+export default TodoApp;`,
+          solution: `import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+  Alert
+} from 'react-native';
+
+const TodoApp = () => {
+  const [todos, setTodos] = useState([]);
+  const [inputText, setInputText] = useState('');
+
+  const addTodo = () => {
+    if (inputText.trim()) {
+      const newTodo = {
+        id: Date.now(),
+        text: inputText.trim(),
+        completed: false
+      };
+      setTodos(prevTodos => [...prevTodos, newTodo]);
+      setInputText('');
+    }
+  };
+
+  const toggleTodo = (id) => {
+    setTodos(prevTodos =>
+      prevTodos.map(todo =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  };
+
+  const deleteTodo = (id) => {
+    Alert.alert(
+      'Delete Todo',
+      'Are you sure you want to delete this item?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: () => {
+          setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
+        }}
+      ]
+    );
+  };
+
+  const renderTodoItem = ({ item }) => (
+    <View style={styles.todoItem}>
+      <TouchableOpacity
+        style={styles.todoText}
+        onPress={() => toggleTodo(item.id)}
+      >
+        <Text style={[
+          styles.todoTextContent,
+          item.completed && styles.completedText
+        ]}>
+          {item.completed ? '✅ ' : '⭕ '}{item.text}
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={() => deleteTodo(item.id)}
+      >
+        <Text style={styles.deleteButtonText}>Delete</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>React Native Todo</Text>
+
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Add a new todo..."
+          value={inputText}
+          onChangeText={setInputText}
+          onSubmitEditing={addTodo}
+        />
+        <TouchableOpacity style={styles.addButton} onPress={addTodo}>
+          <Text style={styles.addButtonText}>Add</Text>
+        </TouchableOpacity>
+      </View>
+
+      <FlatList
+        data={todos}
+        renderItem={renderTodoItem}
+        keyExtractor={(item) => item.id.toString()}
+        style={styles.todoList}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>No todos yet. Add one above!</Text>
+        }
+      />
+
+      <View style={styles.stats}>
+        <Text style={styles.statsText}>
+          Total: {todos.length} | Completed: {todos.filter(t => t.completed).length}
+        </Text>
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    paddingTop: 50,
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 30,
+    color: '#333',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    marginBottom: 20,
+  },
+  textInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    backgroundColor: 'white',
+    marginRight: 10,
+  },
+  addButton: {
+    backgroundColor: '#007bff',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+    justifyContent: 'center',
+  },
+  addButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  todoList: {
+    flex: 1,
+  },
+  todoItem: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    padding: 15,
+    marginVertical: 5,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  todoText: {
+    flex: 1,
+  },
+  todoTextContent: {
+    fontSize: 16,
+    color: '#333',
+  },
+  completedText: {
+    textDecorationLine: 'line-through',
+    color: '#999',
+  },
+  deleteButton: {
+    backgroundColor: '#dc3545',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 6,
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#999',
+    fontSize: 16,
+    marginTop: 50,
+  },
+  stats: {
+    padding: 15,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  statsText: {
+    textAlign: 'center',
+    color: '#666',
+    fontSize: 14,
+  },
+});
+
+export default TodoApp;`
+        },
+        hints: [
+          'Use View instead of div, Text instead of p, TouchableOpacity instead of button',
+          'Create StyleSheet objects for styling instead of CSS',
+          'Use FlatList for efficient rendering of large lists',
+          'Handle user interactions with onPress instead of onClick'
+        ]
+      },
+      {
+        id: 'react-navigation-stack',
+        title: 'Build Navigation with React Navigation',
+        description: 'Create a multi-screen app using React Navigation stack navigator',
+        type: 'challenge',
+        difficulty: 'advanced',
+        estimatedTime: '40 min',
+        xpReward: 190,
+        code: {
+          initial: `import React from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+// TODO: Create Stack Navigator
+// const Stack = createNativeStackNavigator();
+
+// Home Screen Component
+function HomeScreen({ navigation }) {
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        <Text style={styles.title}>🏠 Home Screen</Text>
+        <Text style={styles.subtitle}>Welcome to React Navigation!</Text>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {/* TODO: Navigate to Profile */}}
+        >
+          <Text style={styles.buttonText}>Go to Profile</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.button, styles.secondaryButton]}
+          onPress={() => {/* TODO: Navigate to Settings */}}
+        >
+          <Text style={[styles.buttonText, styles.secondaryButtonText]}>Go to Settings</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+}
+
+// Profile Screen Component
+function ProfileScreen({ navigation }) {
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        <Text style={styles.title}>👤 Profile Screen</Text>
+        <Text style={styles.subtitle}>User profile information</Text>
+
+        <View style={styles.profileInfo}>
+          <Text style={styles.profileText}>Name: John Doe</Text>
+          <Text style={styles.profileText}>Email: john@example.com</Text>
+          <Text style={styles.profileText}>Member since: 2024</Text>
+        </View>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {/* TODO: Go back to Home */}}
+        >
+          <Text style={styles.buttonText}>Back to Home</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+}
+
+// Settings Screen Component
+function SettingsScreen({ navigation }) {
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        <Text style={styles.title}>⚙️ Settings Screen</Text>
+        <Text style={styles.subtitle}>App configuration</Text>
+
+        <View style={styles.settingsList}>
+          <Text style={styles.settingItem}>🔔 Notifications: On</Text>
+          <Text style={styles.settingItem}>🌙 Dark Mode: Off</Text>
+          <Text style={styles.settingItem}>🔒 Privacy: Enabled</Text>
+        </View>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {/* TODO: Go back */}}
+        >
+          <Text style={styles.buttonText}>Go Back</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+}
+
+// Main App Component
+export default function App() {
+  return (
+    // TODO: Set up NavigationContainer and Stack Navigator
+    <View style={styles.container}>
+      <Text>Navigation setup needed</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 40,
+    textAlign: 'center',
+  },
+  button: {
+    backgroundColor: '#007bff',
+    paddingHorizontal: 30,
+    paddingVertical: 15,
+    borderRadius: 8,
+    marginVertical: 10,
+    minWidth: 200,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  secondaryButton: {
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: '#007bff',
+  },
+  secondaryButtonText: {
+    color: '#007bff',
+  },
+  profileInfo: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    marginBottom: 30,
+    width: '100%',
+  },
+  profileText: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 10,
+  },
+  settingsList: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    marginBottom: 30,
+    width: '100%',
+  },
+  settingItem: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 15,
+    paddingVertical: 5,
+  },
+});`,
+          solution: `import React from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+// Create Stack Navigator
+const Stack = createNativeStackNavigator();
+
+// Home Screen Component
+function HomeScreen({ navigation }) {
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        <Text style={styles.title}>🏠 Home Screen</Text>
+        <Text style={styles.subtitle}>Welcome to React Navigation!</Text>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('Profile')}
+        >
+          <Text style={styles.buttonText}>Go to Profile</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.button, styles.secondaryButton]}
+          onPress={() => navigation.navigate('Settings')}
+        >
+          <Text style={[styles.buttonText, styles.secondaryButtonText]}>Go to Settings</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+}
+
+// Profile Screen Component
+function ProfileScreen({ navigation }) {
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        <Text style={styles.title}>👤 Profile Screen</Text>
+        <Text style={styles.subtitle}>User profile information</Text>
+
+        <View style={styles.profileInfo}>
+          <Text style={styles.profileText}>Name: John Doe</Text>
+          <Text style={styles.profileText}>Email: john@example.com</Text>
+          <Text style={styles.profileText}>Member since: 2024</Text>
+        </View>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.buttonText}>Back to Home</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+}
+
+// Settings Screen Component
+function SettingsScreen({ navigation }) {
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        <Text style={styles.title}>⚙️ Settings Screen</Text>
+        <Text style={styles.subtitle}>App configuration</Text>
+
+        <View style={styles.settingsList}>
+          <Text style={styles.settingItem}>🔔 Notifications: On</Text>
+          <Text style={styles.settingItem}>🌙 Dark Mode: Off</Text>
+          <Text style={styles.settingItem}>🔒 Privacy: Enabled</Text>
+        </View>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.buttonText}>Go Back</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+}
+
+// Main App Component
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: '#007bff',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+      >
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: 'Home' }}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{ title: 'User Profile' }}
+        />
+        <Stack.Screen
+          name="Settings"
+          component={SettingsScreen}
+          options={{ title: 'App Settings' }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 40,
+    textAlign: 'center',
+  },
+  button: {
+    backgroundColor: '#007bff',
+    paddingHorizontal: 30,
+    paddingVertical: 15,
+    borderRadius: 8,
+    marginVertical: 10,
+    minWidth: 200,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  secondaryButton: {
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: '#007bff',
+  },
+  secondaryButtonText: {
+    color: '#007bff',
+  },
+  profileInfo: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    marginBottom: 30,
+    width: '100%',
+  },
+  profileText: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 10,
+  },
+  settingsList: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    marginBottom: 30,
+    width: '100%',
+  },
+  settingItem: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 15,
+    paddingVertical: 5,
+  },
+});`
+        },
+        hints: [
+          'Wrap your app with NavigationContainer to enable navigation',
+          'Use createNativeStackNavigator to create a stack navigator',
+          'Define screens using Stack.Screen components',
+          'Use navigation.navigate() to go to specific screens and navigation.goBack() to return'
+        ]
+      }
+    ],
+    estimatedTime: '80 min',
+    difficulty: 'advanced',
+    prerequisites: ['components-basics', 'usestate-basics', 'lists-and-keys'],
+    nextTopics: ['micro-frontends'],
+    category: 'advanced'
+  },
+
+  // Micro-frontends with React
+  {
+    id: 'micro-frontends',
+    title: 'Micro-frontends with React',
+    description: 'Build scalable applications with micro-frontend architecture',
+    explanation: `Micro-frontends extend the microservices concept to frontend development. Break large applications into smaller, independent pieces that can be developed, deployed, and maintained by different teams.
+
+🔹 **Why Micro-frontends?**
+- **Team Independence**: Different teams can work on different parts
+- **Technology Diversity**: Mix different frameworks and versions
+- **Independent Deployment**: Deploy parts of the app separately
+- **Scalable Development**: Scale teams and codebases independently
+
+🔸 **Implementation Approaches:**
+- **Module Federation**: Webpack 5 feature for sharing modules
+- **Single-SPA**: Framework for orchestrating micro-frontends
+- **Web Components**: Standard-based approach
+- **Server-Side Composition**: Compose at the server level
+
+🧠 **Analogy:** Think of micro-frontends like a shopping mall - each store (micro-frontend) is independent, but they all work together to create a unified experience for customers.`,
+    animationScript: 'Show multiple React apps being composed into a single application',
+    scenario: '🏗️ Build scalable micro-frontend architecture using Module Federation and React.',
+    challenges: [
+      {
+        id: 'module-federation-setup',
+        title: 'Setup Module Federation',
+        description: 'Create a host application that consumes remote micro-frontends',
+        type: 'challenge',
+        difficulty: 'advanced',
+        estimatedTime: '50 min',
+        xpReward: 200,
+        code: {
+          initial: `// Host Application (Shell)
+import React, { Suspense } from 'react';
+
+// TODO: Import remote components using Module Federation
+// const RemoteHeader = React.lazy(() => import('headerApp/Header'));
+// const RemoteFooter = React.lazy(() => import('footerApp/Footer'));
+// const RemoteUserProfile = React.lazy(() => import('userApp/UserProfile'));
+
+function App() {
+  const [currentUser, setCurrentUser] = React.useState({
+    name: 'John Doe',
+    email: 'john@example.com',
+    avatar: '👤'
+  });
+
+  return (
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* TODO: Use remote header component */}
+      <header style={{ backgroundColor: '#007bff', color: 'white', padding: '1rem' }}>
+        <h1>Micro-frontend Demo (Local Header)</h1>
+      </header>
+
+      <main style={{ flex: 1, padding: '2rem' }}>
+        <h2>Welcome to Micro-frontends</h2>
+        <p>This demonstrates a host application consuming remote micro-frontends.</p>
+
+        <div style={{ marginTop: '2rem' }}>
+          {/* TODO: Use remote user profile component */}
+          <div style={{
+            border: '1px solid #ddd',
+            borderRadius: '8px',
+            padding: '1rem',
+            backgroundColor: '#f8f9fa'
+          }}>
+            <h3>User Profile (Local Component)</h3>
+            <p><strong>Name:</strong> {currentUser.name}</p>
+            <p><strong>Email:</strong> {currentUser.email}</p>
+            <p><strong>Avatar:</strong> {currentUser.avatar}</p>
+          </div>
+        </div>
+
+        <div style={{ marginTop: '2rem' }}>
+          <h3>Micro-frontend Benefits:</h3>
+          <ul>
+            <li>✅ Independent development and deployment</li>
+            <li>✅ Technology diversity (different React versions, frameworks)</li>
+            <li>✅ Team autonomy and scalability</li>
+            <li>✅ Fault isolation (one app failure doesn't break others)</li>
+          </ul>
+        </div>
+      </main>
+
+      {/* TODO: Use remote footer component */}
+      <footer style={{ backgroundColor: '#6c757d', color: 'white', padding: '1rem', textAlign: 'center' }}>
+        <p>© 2024 Micro-frontend Demo (Local Footer)</p>
+      </footer>
+    </div>
+  );
+}
+
+export default App;
+
+// Webpack Configuration for Module Federation (webpack.config.js)
+/*
+const ModuleFederationPlugin = require('@module-federation/webpack');
+
+module.exports = {
+  mode: 'development',
+  devServer: {
+    port: 3000,
+  },
+  plugins: [
+    new ModuleFederationPlugin({
+      name: 'host',
+      remotes: {
+        headerApp: 'headerApp@http://localhost:3001/remoteEntry.js',
+        footerApp: 'footerApp@http://localhost:3002/remoteEntry.js',
+        userApp: 'userApp@http://localhost:3003/remoteEntry.js',
+      },
+    }),
+  ],
+};
+*/`,
+          solution: `// Host Application (Shell)
+import React, { Suspense } from 'react';
+
+// Import remote components using Module Federation
+const RemoteHeader = React.lazy(() => import('headerApp/Header'));
+const RemoteFooter = React.lazy(() => import('footerApp/Footer'));
+const RemoteUserProfile = React.lazy(() => import('userApp/UserProfile'));
+
+// Fallback components for when remotes are unavailable
+const HeaderFallback = () => (
+  <header style={{ backgroundColor: '#007bff', color: 'white', padding: '1rem' }}>
+    <h1>🏠 Host Application (Fallback Header)</h1>
+  </header>
+);
+
+const FooterFallback = () => (
+  <footer style={{ backgroundColor: '#6c757d', color: 'white', padding: '1rem', textAlign: 'center' }}>
+    <p>© 2024 Host Application (Fallback Footer)</p>
+  </footer>
+);
+
+const UserProfileFallback = ({ user }) => (
+  <div style={{
+    border: '1px solid #ddd',
+    borderRadius: '8px',
+    padding: '1rem',
+    backgroundColor: '#f8f9fa'
+  }}>
+    <h3>👤 User Profile (Fallback)</h3>
+    <p><strong>Name:</strong> {user.name}</p>
+    <p><strong>Email:</strong> {user.email}</p>
+    <p><strong>Status:</strong> Remote component unavailable</p>
+  </div>
+);
+
+function App() {
+  const [currentUser, setCurrentUser] = React.useState({
+    name: 'John Doe',
+    email: 'john@example.com',
+    avatar: '👤',
+    role: 'Developer'
+  });
+
+  return (
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Remote Header with Fallback */}
+      <Suspense fallback={<HeaderFallback />}>
+        <RemoteHeader
+          title="Micro-frontend Architecture Demo"
+          user={currentUser}
+        />
+      </Suspense>
+
+      <main style={{ flex: 1, padding: '2rem' }}>
+        <h2>🏗️ Welcome to Micro-frontends</h2>
+        <p>This demonstrates a host application consuming remote micro-frontends using Module Federation.</p>
+
+        <div style={{ marginTop: '2rem' }}>
+          {/* Remote User Profile with Fallback */}
+          <Suspense fallback={<UserProfileFallback user={currentUser} />}>
+            <RemoteUserProfile
+              user={currentUser}
+              onUserUpdate={setCurrentUser}
+            />
+          </Suspense>
+        </div>
+
+        <div style={{ marginTop: '2rem', padding: '1rem', backgroundColor: '#e7f3ff', borderRadius: '8px' }}>
+          <h3>🎯 Micro-frontend Architecture:</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+            <div style={{ padding: '1rem', backgroundColor: 'white', borderRadius: '6px' }}>
+              <h4>🏠 Host App (Port 3000)</h4>
+              <p>Orchestrates and composes remote apps</p>
+            </div>
+            <div style={{ padding: '1rem', backgroundColor: 'white', borderRadius: '6px' }}>
+              <h4>📋 Header App (Port 3001)</h4>
+              <p>Navigation and branding</p>
+            </div>
+            <div style={{ padding: '1rem', backgroundColor: 'white', borderRadius: '6px' }}>
+              <h4>👤 User App (Port 3003)</h4>
+              <p>User management features</p>
+            </div>
+            <div style={{ padding: '1rem', backgroundColor: 'white', borderRadius: '6px' }}>
+              <h4>🦶 Footer App (Port 3002)</h4>
+              <p>Footer content and links</p>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ marginTop: '2rem' }}>
+          <h3>✅ Benefits Demonstrated:</h3>
+          <ul style={{ lineHeight: '1.6' }}>
+            <li><strong>Independent Deployment:</strong> Each micro-frontend can be deployed separately</li>
+            <li><strong>Technology Diversity:</strong> Different teams can use different React versions</li>
+            <li><strong>Fault Tolerance:</strong> Fallback components when remotes are unavailable</li>
+            <li><strong>Team Autonomy:</strong> Teams can develop and maintain their own micro-frontends</li>
+            <li><strong>Shared State:</strong> Data can be passed between micro-frontends</li>
+          </ul>
+        </div>
+      </main>
+
+      {/* Remote Footer with Fallback */}
+      <Suspense fallback={<FooterFallback />}>
+        <RemoteFooter />
+      </Suspense>
+    </div>
+  );
+}
+
+export default App;
+
+/*
+Complete Webpack Configuration for Module Federation:
+
+// webpack.config.js (Host Application)
+const ModuleFederationPlugin = require('@module-federation/webpack');
+
+module.exports = {
+  mode: 'development',
+  devServer: {
+    port: 3000,
+    historyApiFallback: true,
+  },
+  plugins: [
+    new ModuleFederationPlugin({
+      name: 'host',
+      remotes: {
+        headerApp: 'headerApp@http://localhost:3001/remoteEntry.js',
+        footerApp: 'footerApp@http://localhost:3002/remoteEntry.js',
+        userApp: 'userApp@http://localhost:3003/remoteEntry.js',
+      },
+      shared: {
+        react: { singleton: true },
+        'react-dom': { singleton: true },
+      },
+    }),
+  ],
+};
+
+// Remote applications would have similar configs but expose components instead of consuming them
+*/`
+        },
+        hints: [
+          'Use React.lazy() to dynamically import remote components',
+          'Wrap remote components with Suspense for loading states',
+          'Provide fallback components for when remotes are unavailable',
+          'Configure Module Federation in webpack.config.js with remotes and shared dependencies'
+        ]
+      },
+      {
+        id: 'micro-frontend-dashboard',
+        title: 'Build Micro-Frontend Dashboard with Multiple Remotes',
+        description: 'Create a dashboard that loads multiple independent micro-frontend widgets',
+        type: 'challenge',
+        difficulty: 'advanced',
+        estimatedTime: '60 min',
+        xpReward: 220,
+        code: {
+          initial: `// Host App - Dashboard Container
+import React, { Suspense } from 'react';
+
+// TODO: Import remote components
+// const UserWidget = React.lazy(() => import('userApp/UserWidget'));
+// const NotificationWidget = React.lazy(() => import('notificationApp/NotificationWidget'));
+// const StatsWidget = React.lazy(() => import('statsApp/StatsWidget'));
+
+// Fallback components for when remotes are unavailable
+const WidgetFallback = ({ title }) => (
+  <div style={{
+    border: '2px dashed #ccc',
+    borderRadius: '8px',
+    padding: '20px',
+    textAlign: 'center',
+    backgroundColor: '#f8f9fa'
+  }}>
+    <h3>⚠️ {title} Unavailable</h3>
+    <p>Remote micro-frontend could not be loaded</p>
+  </div>
+);
+
+function Dashboard() {
+  return (
+    <div style={{ padding: '20px', backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
+      <header style={{ marginBottom: '30px', textAlign: 'center' }}>
+        <h1 style={{ color: '#333', marginBottom: '10px' }}>🏗️ Micro-Frontend Dashboard</h1>
+        <p style={{ color: '#666' }}>Composed from independent micro-frontends</p>
+      </header>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: '20px',
+        maxWidth: '1200px',
+        margin: '0 auto'
+      }}>
+        {/* User Widget */}
+        <div style={{ backgroundColor: 'white', borderRadius: '8px', padding: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+          <h2 style={{ marginBottom: '15px', color: '#333' }}>👤 User Information</h2>
+          {/* TODO: Add Suspense wrapper with UserWidget */}
+          <WidgetFallback title="User Widget" />
+        </div>
+
+        {/* Notifications Widget */}
+        <div style={{ backgroundColor: 'white', borderRadius: '8px', padding: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+          <h2 style={{ marginBottom: '15px', color: '#333' }}>🔔 Notifications</h2>
+          {/* TODO: Add Suspense wrapper with NotificationWidget */}
+          <WidgetFallback title="Notification Widget" />
+        </div>
+
+        {/* Stats Widget */}
+        <div style={{ backgroundColor: 'white', borderRadius: '8px', padding: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+          <h2 style={{ marginBottom: '15px', color: '#333' }}>📊 Statistics</h2>
+          {/* TODO: Add Suspense wrapper with StatsWidget */}
+          <WidgetFallback title="Stats Widget" />
+        </div>
+      </div>
+
+      <footer style={{ marginTop: '40px', textAlign: 'center', color: '#666' }}>
+        <h3>🎯 Micro-Frontend Benefits:</h3>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '30px', marginTop: '20px', flexWrap: 'wrap' }}>
+          <div>✅ Independent Development</div>
+          <div>✅ Technology Diversity</div>
+          <div>✅ Fault Isolation</div>
+          <div>✅ Team Autonomy</div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+export default Dashboard;
+
+/*
+TODO: Webpack Configuration for Host App
+
+const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+
+module.exports = {
+  mode: 'development',
+  devServer: {
+    port: 3000,
+  },
+  plugins: [
+    new ModuleFederationPlugin({
+      name: 'dashboard',
+      remotes: {
+        userApp: 'userApp@http://localhost:3001/remoteEntry.js',
+        notificationApp: 'notificationApp@http://localhost:3002/remoteEntry.js',
+        statsApp: 'statsApp@http://localhost:3003/remoteEntry.js',
+      },
+      shared: {
+        react: { singleton: true },
+        'react-dom': { singleton: true },
+      },
+    }),
+  ],
+};
+*/`,
+          solution: `// Host App - Dashboard Container
+import React, { Suspense } from 'react';
+
+// Import remote components
+const UserWidget = React.lazy(() => import('userApp/UserWidget'));
+const NotificationWidget = React.lazy(() => import('notificationApp/NotificationWidget'));
+const StatsWidget = React.lazy(() => import('statsApp/StatsWidget'));
+
+// Fallback components for when remotes are unavailable
+const WidgetFallback = ({ title }) => (
+  <div style={{
+    border: '2px dashed #ccc',
+    borderRadius: '8px',
+    padding: '20px',
+    textAlign: 'center',
+    backgroundColor: '#f8f9fa'
+  }}>
+    <h3>⚠️ {title} Unavailable</h3>
+    <p>Remote micro-frontend could not be loaded</p>
+  </div>
+);
+
+const LoadingWidget = ({ title }) => (
+  <div style={{
+    border: '1px solid #ddd',
+    borderRadius: '8px',
+    padding: '20px',
+    textAlign: 'center',
+    backgroundColor: '#fff'
+  }}>
+    <div style={{ fontSize: '24px', marginBottom: '10px' }}>⏳</div>
+    <p>Loading {title}...</p>
+  </div>
+);
+
+function Dashboard() {
+  return (
+    <div style={{ padding: '20px', backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
+      <header style={{ marginBottom: '30px', textAlign: 'center' }}>
+        <h1 style={{ color: '#333', marginBottom: '10px' }}>🏗️ Micro-Frontend Dashboard</h1>
+        <p style={{ color: '#666' }}>Composed from independent micro-frontends</p>
+      </header>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: '20px',
+        maxWidth: '1200px',
+        margin: '0 auto'
+      }}>
+        {/* User Widget */}
+        <div style={{ backgroundColor: 'white', borderRadius: '8px', padding: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+          <h2 style={{ marginBottom: '15px', color: '#333' }}>👤 User Information</h2>
+          <Suspense fallback={<LoadingWidget title="User Widget" />}>
+            <UserWidget />
+          </Suspense>
+        </div>
+
+        {/* Notifications Widget */}
+        <div style={{ backgroundColor: 'white', borderRadius: '8px', padding: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+          <h2 style={{ marginBottom: '15px', color: '#333' }}>🔔 Notifications</h2>
+          <Suspense fallback={<LoadingWidget title="Notification Widget" />}>
+            <NotificationWidget />
+          </Suspense>
+        </div>
+
+        {/* Stats Widget */}
+        <div style={{ backgroundColor: 'white', borderRadius: '8px', padding: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+          <h2 style={{ marginBottom: '15px', color: '#333' }}>📊 Statistics</h2>
+          <Suspense fallback={<LoadingWidget title="Stats Widget" />}>
+            <StatsWidget />
+          </Suspense>
+        </div>
+      </div>
+
+      <footer style={{ marginTop: '40px', textAlign: 'center', color: '#666' }}>
+        <h3>✅ Micro-Frontend Architecture Demonstrated:</h3>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '20px',
+          marginTop: '20px',
+          maxWidth: '800px',
+          margin: '20px auto 0'
+        }}>
+          <div style={{ padding: '15px', backgroundColor: 'white', borderRadius: '6px' }}>
+            <strong>🏠 Host App (Port 3000)</strong><br/>
+            Orchestrates and composes widgets
+          </div>
+          <div style={{ padding: '15px', backgroundColor: 'white', borderRadius: '6px' }}>
+            <strong>👤 User App (Port 3001)</strong><br/>
+            Independent user management
+          </div>
+          <div style={{ padding: '15px', backgroundColor: 'white', borderRadius: '6px' }}>
+            <strong>🔔 Notification App (Port 3002)</strong><br/>
+            Standalone notification system
+          </div>
+          <div style={{ padding: '15px', backgroundColor: 'white', borderRadius: '6px' }}>
+            <strong>📊 Stats App (Port 3003)</strong><br/>
+            Independent analytics widget
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+export default Dashboard;
+
+/*
+Complete Webpack Configuration for Host App:
+
+const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+
+module.exports = {
+  mode: 'development',
+  devServer: {
+    port: 3000,
+    historyApiFallback: true,
+  },
+  plugins: [
+    new ModuleFederationPlugin({
+      name: 'dashboard',
+      remotes: {
+        userApp: 'userApp@http://localhost:3001/remoteEntry.js',
+        notificationApp: 'notificationApp@http://localhost:3002/remoteEntry.js',
+        statsApp: 'statsApp@http://localhost:3003/remoteEntry.js',
+      },
+      shared: {
+        react: { singleton: true, eager: true },
+        'react-dom': { singleton: true, eager: true },
+      },
+    }),
+  ],
+};
+
+// Example Remote App (userApp/webpack.config.js):
+module.exports = {
+  mode: 'development',
+  devServer: {
+    port: 3001,
+  },
+  plugins: [
+    new ModuleFederationPlugin({
+      name: 'userApp',
+      filename: 'remoteEntry.js',
+      exposes: {
+        './UserWidget': './src/UserWidget',
+      },
+      shared: {
+        react: { singleton: true },
+        'react-dom': { singleton: true },
+      },
+    }),
+  ],
+};
+*/`
+        },
+        hints: [
+          'Each remote app must expose its components via the exposes configuration',
+          'Use different ports for each micro-frontend (3000, 3001, 3002, 3003)',
+          'Share React dependencies to avoid version conflicts',
+          'Implement proper error boundaries and fallback components for resilience'
+        ]
+      }
+    ],
+    estimatedTime: '90 min',
+    difficulty: 'advanced',
+    prerequisites: ['code-splitting', 'react-suspense', 'custom-hooks'],
+    nextTopics: [],
+    category: 'advanced'
   }
 ];

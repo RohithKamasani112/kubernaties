@@ -125,38 +125,6 @@ resource "aws_internet_gateway" "main" {
             </div>
           </div>
 
-          {/* Enhanced Features Overview */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12"
-          >
-            {[
-              { icon: Cloud, title: 'Multi-Cloud Support', desc: 'AWS, Azure, GCP', color: 'blue', gradient: 'from-blue-500 to-cyan-500' },
-              { icon: DollarSign, title: 'Cost Estimation', desc: 'Real-time pricing', color: 'green', gradient: 'from-green-500 to-emerald-500' },
-              { icon: Code, title: 'Code Generation', desc: 'Terraform, CloudFormation', color: 'purple', gradient: 'from-purple-500 to-violet-500' },
-              { icon: Shield, title: 'Security First', desc: 'Best practices built-in', color: 'orange', gradient: 'from-orange-500 to-red-500' },
-              { icon: Award, title: 'Expert Insights', desc: 'Pro recommendations', color: 'yellow', gradient: 'from-yellow-500 to-amber-500' }
-            ].map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 + index * 0.1 }}
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="group bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                <div className={`w-12 h-12 bg-gradient-to-r ${feature.gradient} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <feature.icon className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="font-bold text-slate-900 mb-2 text-lg">{feature.title}</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">{feature.desc}</p>
-                <div className="mt-3 h-1 bg-gradient-to-r from-transparent via-slate-200 to-transparent group-hover:via-slate-400 transition-colors duration-300"></div>
-              </motion.div>
-            ))}
-          </motion.div>
-
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Enhanced Input Section */}
             <motion.div
@@ -334,54 +302,6 @@ Be as detailed as you like - the more context, the better the result!"
               transition={{ delay: 0.7 }}
               className="space-y-6"
             >
-              <div className="bg-gradient-to-br from-white/90 to-slate-50/90 backdrop-blur-sm rounded-3xl border border-white/50 shadow-2xl p-8">
-                <div className="flex items-center space-x-3 mb-6">
-                  <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
-                    <CheckCircle className="w-5 h-5 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-900">AI Superpowers</h3>
-                </div>
-
-                <div className="space-y-5">
-                  {[
-                    { icon: Cloud, title: 'Multi-Cloud Mastery', desc: 'AWS, Azure, GCP expertise', color: 'from-blue-500 to-cyan-500' },
-                    { icon: DollarSign, title: 'Smart Cost Analysis', desc: 'Real-time pricing & optimization', color: 'from-green-500 to-emerald-500' },
-                    { icon: Code, title: 'Code Generation', desc: 'Terraform, CloudFormation, CDK', color: 'from-purple-500 to-violet-500' },
-                    { icon: Shield, title: 'Security by Design', desc: 'Built-in best practices', color: 'from-orange-500 to-red-500' },
-                    { icon: Award, title: 'Expert Insights', desc: 'Pro tips & recommendations', color: 'from-yellow-500 to-amber-500' }
-                  ].map((capability, index) => (
-                    <motion.div
-                      key={capability.title}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.8 + index * 0.1 }}
-                      className="group flex items-start space-x-4 p-4 rounded-2xl hover:bg-white/50 transition-all duration-300"
-                    >
-                      <div className={`w-8 h-8 bg-gradient-to-r ${capability.color} rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                        <capability.icon className="w-4 h-4 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-bold text-slate-900 mb-1">{capability.title}</h4>
-                        <p className="text-sm text-slate-600 leading-relaxed">{capability.desc}</p>
-                      </div>
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-
-                <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border border-purple-200">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Sparkles className="w-4 h-4 text-purple-600" />
-                    <span className="text-sm font-bold text-purple-900">Pro Tip</span>
-                  </div>
-                  <p className="text-xs text-purple-800 leading-relaxed">
-                    The more detailed your description, the better our AI can tailor the architecture to your specific needs!
-                  </p>
-                </div>
-              </div>
-
               <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-200 p-6">
                 <h3 className="text-lg font-bold text-slate-900 mb-2">Pro Tip</h3>
                 <p className="text-sm text-slate-700">

@@ -247,66 +247,7 @@ const LearningPaths: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Featured Path */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="mb-12"
-      >
-        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-8 text-white relative overflow-hidden">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full -translate-y-32 translate-x-32" />
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-white rounded-full translate-y-24 -translate-x-24" />
-          </div>
-          
-          <div className="relative">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-                <Zap className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <span className="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium">
-                  Featured Path
-                </span>
-              </div>
-            </div>
-            
-            <h2 className="text-2xl sm:text-3xl font-bold mb-3">
-              The Full-Stack Blueprint
-            </h2>
-            <p className="text-indigo-100 text-lg mb-6 max-w-2xl">
-              Build a complete Kanban board application from React frontend to Node.js backend,
-              including authentication, real-time updates, and deployment to the cloud.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                to="/web-elevate/paths/fullstack-project"
-                className="inline-flex items-center space-x-2 bg-white text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-indigo-50 transition-colors"
-              >
-                <Play className="w-5 h-5" />
-                <span>Start Building</span>
-              </Link>
-              <div className="flex items-center space-x-6 text-indigo-100">
-                <div className="flex items-center space-x-1">
-                  <Clock className="w-4 h-4" />
-                  <span className="text-sm">50+ Hours</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <Users className="w-4 h-4" />
-                  <span className="text-sm">1.2K Students</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <Star className="w-4 h-4 fill-current" />
-                  <span className="text-sm">4.9</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </motion.div>
+
 
       {/* Learning Paths Grid */}
       <motion.div
@@ -323,26 +264,70 @@ const LearningPaths: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredPaths.map((path, index) => {
             const PathIcon = getPathIcon(path.category);
-            
+            const isReact = path.id === 'react-mastery';
+            const isComingSoon = !isReact;
+
             return (
               <motion.div
                 key={path.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + index * 0.1 }}
-                className="group bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-indigo-200 transition-all duration-300 transform hover:-translate-y-1 overflow-hidden"
+                className={`group bg-white rounded-xl shadow-sm border border-gray-100 transition-all duration-300 transform overflow-hidden ${
+                  isReact
+                    ? 'hover:shadow-lg hover:border-indigo-200 hover:-translate-y-1 cursor-pointer'
+                    : 'opacity-75 cursor-not-allowed'
+                }`}
               >
-                <div className="p-6">
+                <div className="p-6 relative">
+                  {/* Coming Soon Badge */}
+                  {isComingSoon && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.5 + index * 0.1 }}
+                      className="absolute top-4 right-4 z-10"
+                    >
+                      <motion.span
+                        animate={{
+                          scale: [1, 1.05, 1],
+                          rotate: [0, 1, -1, 0]
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          repeatType: "reverse"
+                        }}
+                        className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg"
+                      >
+                        🚀 Coming Soon
+                      </motion.span>
+                    </motion.div>
+                  )}
+
                   {/* Header */}
                   <div className="flex items-start justify-between mb-4">
-                    <div className={`w-12 h-12 bg-gradient-to-r ${path.color} rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200`}>
+                    <motion.div
+                      className={`w-12 h-12 bg-gradient-to-r ${path.color} rounded-lg flex items-center justify-center transition-transform duration-200 ${
+                        isReact ? 'group-hover:scale-110' : ''
+                      }`}
+                      animate={isComingSoon ? {
+                        scale: [1, 1.1, 1],
+                        rotate: [0, 5, -5, 0]
+                      } : {}}
+                      transition={isComingSoon ? {
+                        duration: 3,
+                        repeat: Infinity,
+                        repeatType: "reverse"
+                      } : {}}
+                    >
                       <PathIcon className="w-6 h-6 text-white" />
-                    </div>
+                    </motion.div>
                     <div className="flex flex-col items-end space-y-2">
                       <span className={`px-2 py-1 text-xs font-medium rounded-full ${getDifficultyColor(path.difficulty)}`}>
                         {path.difficulty}
                       </span>
-                      {path.isStarted && (
+                      {path.isStarted && isReact && (
                         <span className="text-xs text-green-600 font-medium">In Progress</span>
                       )}
                     </div>
@@ -414,33 +399,52 @@ const LearningPaths: React.FC = () => {
                   </div>
 
                   {/* Action Button */}
-                  <Link
-                    to={`/web-elevate/paths/${path.id}`}
-                    onClick={() => {
-                      if (!path.isStarted) {
-                        handleStartPath(path.id);
-                        awardPoints(25, `Started ${path.title} learning path`);
-                      }
-                    }}
-                    className={`w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
-                      path.isStarted
-                        ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
-                        : 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-xl'
-                    }`}
-                  >
-                    {path.isStarted ? (
-                      <>
-                        <BookOpen className="w-4 h-4" />
-                        <span>Continue Path</span>
-                      </>
-                    ) : (
-                      <>
-                        <Play className="w-4 h-4" />
-                        <span>Start Path (+25 XP)</span>
-                      </>
-                    )}
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
-                  </Link>
+                  {isReact ? (
+                    <Link
+                      to={`/web-elevate/paths/${path.id}`}
+                      onClick={() => {
+                        if (!path.isStarted) {
+                          handleStartPath(path.id);
+                          awardPoints(25, `Started ${path.title} learning path`);
+                        }
+                      }}
+                      className={`w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
+                        path.isStarted
+                          ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
+                          : 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-xl'
+                      }`}
+                    >
+                      {path.isStarted ? (
+                        <>
+                          <BookOpen className="w-4 h-4" />
+                          <span>Continue Path</span>
+                        </>
+                      ) : (
+                        <>
+                          <Play className="w-4 h-4" />
+                          <span>Start Path (+25 XP)</span>
+                        </>
+                      )}
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
+                    </Link>
+                  ) : (
+                    <motion.div
+                      animate={{
+                        scale: [1, 1.02, 1],
+                        opacity: [0.7, 0.9, 0.7]
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        repeatType: "reverse"
+                      }}
+                      className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-lg font-medium bg-gradient-to-r from-gray-400 to-gray-500 text-white cursor-not-allowed"
+                    >
+                      <Crown className="w-4 h-4" />
+                      <span>Coming Soon</span>
+                      <Sparkles className="w-4 h-4 animate-pulse" />
+                    </motion.div>
+                  )}
                 </div>
               </motion.div>
             );

@@ -100,7 +100,7 @@ const ScenariosPage: React.FC<ScenariosPageProps> = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-slate-900 mb-2">Architecture Scenarios</h1>
               <p className="text-slate-600">
@@ -108,9 +108,23 @@ const ScenariosPage: React.FC<ScenariosPageProps> = () => {
                 interactive coding, and live visualization.
               </p>
             </div>
-            <div className="text-right">
-              <div className="text-2xl font-bold text-blue-600">{filteredScenarios.length}</div>
-              <div className="text-sm text-slate-500">scenarios available</div>
+            <div className="mt-4 md:mt-0 flex flex-wrap gap-4">
+              <div className="text-center px-4 py-2 bg-white rounded-lg shadow-sm">
+                <div className="text-2xl font-bold text-blue-600">{filteredScenarios.length}</div>
+                <div className="text-sm text-slate-500">Total</div>
+              </div>
+              <div className="text-center px-4 py-2 bg-white rounded-lg shadow-sm">
+                <div className="text-2xl font-bold text-green-600">{cloudScenarios.filter(s => s.level === 'beginner').length}</div>
+                <div className="text-sm text-slate-500">Beginner</div>
+              </div>
+              <div className="text-center px-4 py-2 bg-white rounded-lg shadow-sm">
+                <div className="text-2xl font-bold text-yellow-600">{cloudScenarios.filter(s => s.level === 'intermediate').length}</div>
+                <div className="text-sm text-slate-500">Intermediate</div>
+              </div>
+              <div className="text-center px-4 py-2 bg-white rounded-lg shadow-sm">
+                <div className="text-2xl font-bold text-red-600">{cloudScenarios.filter(s => s.level === 'expert').length}</div>
+                <div className="text-sm text-slate-500">Expert</div>
+              </div>
             </div>
           </div>
         </div>
@@ -178,7 +192,70 @@ const ScenariosPage: React.FC<ScenariosPageProps> = () => {
           </p>
         </div>
 
-        {/* Scenarios Grid */}
+        {/* Featured Scenarios */}
+        {searchTerm === '' && selectedDifficulty === 'all' && selectedCategory === 'all' && selectedProvider === 'all' && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-slate-900 mb-4">🌟 Featured Scenarios</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              {cloudScenarios
+                .filter(s => ['aws-static-website', 'azure-serverless-api', 'aws-multi-region-active-active'].includes(s.id))
+                .map((scenario, index) => {
+                  const Icon = getCategoryIcon(scenario.category);
+                  return (
+                    <motion.div
+                      key={scenario.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      className="group bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-lg hover:border-blue-300 transition-all duration-300 cursor-pointer relative overflow-hidden"
+                    >
+                      {/* Featured Badge */}
+                      <div className="absolute top-4 right-4">
+                        <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                          FEATURED
+                        </div>
+                      </div>
+
+                      {/* Header */}
+                      <div className="flex items-start justify-between mb-4">
+                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${getProviderColor(scenario.provider)} flex items-center justify-center`}>
+                          <Icon className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="flex flex-col items-end space-y-1">
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getDifficultyColor(scenario.level)}`}>
+                            {scenario.level.charAt(0).toUpperCase() + scenario.level.slice(1)}
+                          </span>
+                          <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-md">
+                            {scenario.provider.toUpperCase()}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
+                        {scenario.title}
+                      </h3>
+                      <p className="text-slate-600 text-sm mb-4 line-clamp-2">
+                        {scenario.description}
+                      </p>
+
+                      {/* Action Button */}
+                      <Link
+                        to={`/cloud-architecture/studio/${scenario.id}`}
+                        className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-2 px-4 rounded-lg font-medium hover:from-blue-600 hover:to-indigo-600 transition-all duration-200 flex items-center justify-center space-x-2 text-sm"
+                      >
+                        <Play className="w-4 h-4" />
+                        <span>Start Learning</span>
+                      </Link>
+                    </motion.div>
+                  );
+                })}
+            </div>
+          </div>
+        )}
+
+        {/* All Scenarios */}
+        <h2 className="text-2xl font-bold text-slate-900 mb-6">All Scenarios</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredScenarios.map((scenario, index) => {
             const Icon = getCategoryIcon(scenario.category);

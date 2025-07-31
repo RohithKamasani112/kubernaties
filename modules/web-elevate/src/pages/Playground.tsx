@@ -1422,8 +1422,13 @@ const Playground: React.FC = () => {
   };
 
   const generateMockRepoFiles = (repo: GitHubRepo): FileNode[] => {
-    // Generate mock file structure based on repository type and specific project
+    console.log(`Generating files for repo: ${repo.id}, category: ${repo.category}`);
+
+    // Generate complete file structure based on repository type and specific project
     switch (repo.id) {
+      case 'react-todo-app':
+        return generateReactTodoApp(repo);
+
       case 'react-50-projects':
         return [
           {
@@ -1516,118 +1521,58 @@ const Playground: React.FC = () => {
           }
         ];
 
+      case 'react-weather-app':
+        return generateReactWeatherApp(repo);
+
+      case 'express-blog-api':
+        return generateExpressBlogApi(repo);
+
       case 'react-85-projects':
-        return [
-          {
-            name: 'src',
-            type: 'folder',
-            isOpen: true,
-            children: [
-              {
-                name: 'components',
-                type: 'folder',
-                isOpen: true,
-                children: [
-                  {
-                    name: 'MovieSearch.js',
-                    type: 'file',
-                    content: `import React from 'react';\nimport './MovieSearch.css';\n\n// TODO: Implement movie search functionality\nfunction MovieSearch() {\n  // Add state for movies, searchTerm, and loading\n  \n  // Add search function\n  const searchMovies = async (query) => {\n    // TODO: Implement API fetch\n    // Example: const response = await fetch(\`https://www.omdbapi.com/?s=\${query}&apikey=YOUR_KEY\`);\n  };\n  \n  // Add handle search function\n  const handleSearch = (e) => {\n    e.preventDefault();\n    // TODO: Call searchMovies with search term\n  };\n\n  return (\n    <div className="movie-search">\n      <h2>Movie Search</h2>\n      <form onSubmit={handleSearch}>\n        <input \n          type="text"\n          placeholder="Search for movies..."\n          // TODO: Add value and onChange\n        />\n        <button type="submit">Search</button>\n      </form>\n      \n      <div className="movies-grid">\n        {/* TODO: Map through movies and display them */}\n        <p>Search results will appear here</p>\n      </div>\n    </div>\n  );\n}\n\nexport default MovieSearch;`
-                  },
-                  {
-                    name: 'PaginatedList.js',
-                    type: 'file',
-                    content: `import React from 'react';\nimport './PaginatedList.css';\n\n// Sample data for demonstration\nconst sampleItems = Array.from({ length: 50 }, (_, i) => \`Item \${i + 1}\`);\n\nfunction PaginatedList() {\n  // TODO: Add state for currentPage\n  const itemsPerPage = 10;\n  \n  // TODO: Calculate items to display\n  const startIndex = 0; // Calculate based on currentPage\n  const endIndex = itemsPerPage; // Calculate based on currentPage\n  const currentItems = sampleItems.slice(startIndex, endIndex);\n  \n  // TODO: Calculate total pages\n  const totalPages = Math.ceil(sampleItems.length / itemsPerPage);\n  \n  // TODO: Add pagination functions\n  const goToPage = (page) => {\n    // Implement page navigation\n  };\n  \n  const nextPage = () => {\n    // Implement next page\n  };\n  \n  const prevPage = () => {\n    // Implement previous page\n  };\n\n  return (\n    <div className="paginated-list">\n      <h2>Paginated List</h2>\n      \n      <div className="items-list">\n        {currentItems.map((item, index) => (\n          <div key={index} className="list-item">\n            {item}\n          </div>\n        ))}\n      </div>\n      \n      <div className="pagination">\n        {/* TODO: Add pagination controls */}\n        <button onClick={prevPage}>Previous</button>\n        <span>Page 1 of {totalPages}</span>\n        <button onClick={nextPage}>Next</button>\n      </div>\n    </div>\n  );\n}\n\nexport default PaginatedList;`
-                  }
-                ]
-              }
-            ]
-          }
-        ];
+        return generateReact85Projects(repo);
 
       case 'angular-beginner-starter':
-        return [
-          {
-            name: 'src',
-            type: 'folder',
-            isOpen: true,
-            children: [
-              {
-                name: 'app',
-                type: 'folder',
-                isOpen: true,
-                children: [
-                  {
-                    name: 'app.component.ts',
-                    type: 'file',
-                    content: `import { Component } from '@angular/core';\n\n@Component({\n  selector: 'app-root',\n  templateUrl: './app.component.html',\n  styleUrls: ['./app.component.css']\n})\nexport class AppComponent {\n  title = 'angular-beginner-starter';\n}`
-                  },
-                  {
-                    name: 'app.component.html',
-                    type: 'file',
-                    content: `<div class="container">\n  <h1>Welcome to {{title}}!</h1>\n  \n  <!-- TODO: Add navigation links here -->\n  <nav>\n    <a routerLink="/">Home</a>\n    <!-- Add more navigation links -->\n  </nav>\n  \n  <router-outlet></router-outlet>\n</div>`
-                  },
-                  {
-                    name: 'app-routing.module.ts',
-                    type: 'file',
-                    content: `import { NgModule } from '@angular/core';\nimport { RouterModule, Routes } from '@angular/router';\n\n// TODO: Import your components here\n\nconst routes: Routes = [\n  // TODO: Add your routes here\n  // Example: { path: 'profile', component: ProfileComponent }\n];\n\n@NgModule({\n  imports: [RouterModule.forRoot(routes)],\n  exports: [RouterModule]\n})\nexport class AppRoutingModule { }`
-                  },
-                  {
-                    name: 'form',
-                    type: 'folder',
-                    isOpen: false,
-                    children: [
-                      {
-                        name: 'form.component.ts',
-                        type: 'file',
-                        content: `import { Component } from '@angular/core';\n\n@Component({\n  selector: 'app-form',\n  templateUrl: './form.component.html',\n  styleUrls: ['./form.component.css']\n})\nexport class FormComponent {\n  // TODO: Add properties for two-way binding\n  // Example: public username: string = '';\n}`
-                      },
-                      {
-                        name: 'form.component.html',
-                        type: 'file',
-                        content: `<div class="form-container">\n  <h2>Form with Two-Way Binding</h2>\n  \n  <form>\n    <div class="form-group">\n      <label for="username">Username:</label>\n      <!-- TODO: Add ngModel for two-way binding -->\n      <input type="text" id="username" placeholder="Enter username">\n    </div>\n    \n    <!-- TODO: Display the bound value -->\n    <p>You typed: </p>\n  </form>\n</div>`
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ];
+        return generateAngularBeginnerStarter(repo);
+
+      case 'angular-tic-tac-toe':
+        return generateAngularTicTacToe(repo);
 
       case 'nodejs-10-projects':
-      case 'nodejs':
-        return [
-          {
-            name: 'routes',
-            type: 'folder',
-            isOpen: true,
-            children: [
-              {
-                name: 'todos.js',
-                type: 'file',
-                content: `const express = require('express');\nconst router = express.Router();\n\n// In-memory storage for demo (use database in production)\nlet todos = [\n  { id: 1, title: 'Learn Node.js', completed: false },\n  { id: 2, title: 'Build REST API', completed: true }\n];\n\n// TODO: Implement GET /todos endpoint\nrouter.get('/', (req, res) => {\n  // TODO: Add query filtering for completed status\n  // Example: ?completed=true should filter completed todos\n  \n  res.json(todos);\n});\n\n// TODO: Implement POST /todos endpoint\nrouter.post('/', (req, res) => {\n  // TODO: Add input validation\n  // TODO: Create new todo with auto-generated ID\n  // TODO: Add to todos array\n  // TODO: Return created todo\n  \n  res.status(501).json({ error: 'Not implemented yet' });\n});\n\n// TODO: Implement PUT /todos/:id endpoint\nrouter.put('/:id', (req, res) => {\n  // TODO: Find todo by ID\n  // TODO: Update todo properties\n  // TODO: Return updated todo\n  \n  res.status(501).json({ error: 'Not implemented yet' });\n});\n\n// TODO: Implement DELETE /todos/:id endpoint\nrouter.delete('/:id', (req, res) => {\n  // TODO: Find and remove todo by ID\n  // TODO: Return success message\n  \n  res.status(501).json({ error: 'Not implemented yet' });\n});\n\nmodule.exports = router;`
-              }
-            ]
-          },
-          {
-            name: 'server.js',
-            type: 'file',
-            content: `const express = require('express');\nconst app = express();\n\n// TODO: Configure middleware\n// Add express.json() middleware for parsing JSON bodies\n\n// TODO: Import and use routes\nconst todosRouter = require('./routes/todos');\n// app.use('/api/todos', todosRouter);\n\n// Basic route\napp.get('/', (req, res) => {\n  res.json({ \n    message: 'Welcome to the Todos API!',\n    endpoints: {\n      'GET /api/todos': 'Get all todos',\n      'POST /api/todos': 'Create a new todo',\n      'PUT /api/todos/:id': 'Update a todo',\n      'DELETE /api/todos/:id': 'Delete a todo'\n    }\n  });\n});\n\nconst PORT = process.env.PORT || 3000;\napp.listen(PORT, () => {\n  console.log(\`🚀 Server running on port \${PORT}\`);\n  console.log(\`📝 API available at http://localhost:\${PORT}/api/todos\`);\n});`
-          },
-          {
-            name: 'package.json',
-            type: 'file',
-            content: `{\n  "name": "nodejs-todos-api",\n  "version": "1.0.0",\n  "description": "A simple REST API for managing todos",\n  "main": "server.js",\n  "scripts": {\n    "start": "node server.js",\n    "dev": "nodemon server.js",\n    "test": "echo \\"Error: no test specified\\" && exit 1"\n  },\n  "dependencies": {\n    "express": "^4.18.2"\n  },\n  "devDependencies": {\n    "nodemon": "^2.0.22"\n  },\n  "keywords": ["nodejs", "express", "rest-api", "todos"],\n  "author": "Web Elevate Student",\n  "license": "MIT"\n}`
-          },
-          {
-            name: 'README.md',
-            type: 'file',
-            content: `# Node.js Todos REST API\n\nA simple REST API for managing todos built with Express.js.\n\n## Getting Started\n\n1. Install dependencies:\n   \`\`\`bash\n   npm install\n   \`\`\`\n\n2. Start the development server:\n   \`\`\`bash\n   npm run dev\n   \`\`\`\n\n3. Test the API endpoints:\n   - GET http://localhost:3000/api/todos\n   - POST http://localhost:3000/api/todos\n   - PUT http://localhost:3000/api/todos/:id\n   - DELETE http://localhost:3000/api/todos/:id\n\n## User Stories\n\n### 1. Build REST API with CRUD for Todos Resource\n- [ ] Set up Express server and routes\n- [ ] Implement GET and POST endpoints\n- [ ] Add PUT and DELETE endpoints\n\n### 2. Add Query Filtering (completed=true)\n- [ ] Add query parameter parsing\n- [ ] Filter todos based on completed status\n\n### 3. Add Basic Input Validation\n- [ ] Install and configure express-validator\n- [ ] Add validation rules for todo creation\n\n## API Endpoints\n\n| Method | Endpoint | Description |\n|--------|----------|-------------|\n| GET | /api/todos | Get all todos |\n| GET | /api/todos?completed=true | Get completed todos |\n| POST | /api/todos | Create a new todo |\n| PUT | /api/todos/:id | Update a todo |\n| DELETE | /api/todos/:id | Delete a todo |\n\n## Example Todo Object\n\n\`\`\`json\n{\n  "id": 1,\n  "title": "Learn Node.js",\n  "completed": false\n}\n\`\`\``
-          }
-        ];
+        return generateNodeJs10Projects(repo);
+
+      case 'node-realworld-api':
+        return generateNodeRealworldApi(repo);
+
+      case 'vue-beginner-projects':
+        return generateVueProjectFiles(repo, { mainComponent: 'App', components: ['Counter', 'TodoList', 'Calculator'], features: ['Reactive data', 'Event handling', 'Computed properties'] });
+
+      case 'html-css-js-projects':
+        return generateHtmlCssJsProjectFiles(repo, { projects: ['Calculator', 'Todo List', 'Weather App', 'Quiz App'], features: ['DOM manipulation', 'Local storage', 'API calls', 'Responsive design'] });
+
+      case 'fullstack-mern':
+        return generateFullstackProjectFiles(repo, { frontend: 'React', backend: 'Node.js + Express', database: 'MongoDB', features: ['Authentication', 'CRUD operations', 'API integration'] });
+
+      case 'angular-todo-app':
+        return generateAngularProjectFiles(repo, { mainComponent: 'AppComponent', components: ['TodoListComponent', 'TodoItemComponent'], features: ['Two-way binding', 'Services', 'Routing'] });
+
+      case 'nodejs-express-api':
+        return generateNodeJsProjectFiles(repo, { type: 'Express API', features: ['Express server', 'REST endpoints', 'Middleware', 'Error handling'] });
+
+      case 'react-portfolio':
+        return generateReactProjectFiles(repo, { mainComponent: 'App', components: ['Header', 'About', 'Projects', 'Contact'], features: ['Responsive design', 'Smooth scrolling', 'Contact form'] });
+
+      case 'vue-todo-app':
+        return generateVueProjectFiles(repo, { mainComponent: 'App', components: ['TodoList', 'TodoItem', 'AddTodo'], features: ['Vue 3 Composition API', 'Local storage', 'Filtering'] });
+
+      case 'angular-weather-app':
+        return generateAngularProjectFiles(repo, { mainComponent: 'WeatherComponent', components: ['SearchComponent', 'WeatherDisplayComponent'], features: ['HTTP client', 'Services', 'Reactive forms'] });
+
+      case 'nodejs-chat-app':
+        return generateNodeJsProjectFiles(repo, { type: 'Chat App', features: ['Socket.io', 'Real-time messaging', 'User authentication', 'Room management'] });
 
       default:
-        return [];
+        console.warn(`No specific generator found for repo: ${repo.id}, using generic generator`);
+        // Generate files based on repository category
+        return generateGenericProjectFiles(repo);
     }
   };
 
@@ -3231,6 +3176,774 @@ const FileTree: React.FC<FileTreeProps> = ({
       })}
     </div>
   );
+};
+
+// Helper function to generate generic project files based on category
+const generateGenericProjectFiles = (repo: GitHubRepo): FileNode[] => {
+  switch (repo.category) {
+    case 'react':
+      return generateReactProjectFiles(repo, {
+        mainComponent: 'App',
+        components: ['Counter', 'TodoList', 'UserProfile'],
+        features: ['State management', 'Event handling', 'Component composition']
+      });
+
+    case 'nodejs':
+      return generateNodeJsProjectFiles(repo, {
+        type: 'API',
+        features: ['Express server', 'REST endpoints', 'Middleware', 'Error handling']
+      });
+
+    case 'angular':
+      return generateAngularProjectFiles(repo, {
+        mainComponent: 'AppComponent',
+        components: ['HomeComponent', 'AboutComponent'],
+        features: ['Two-way binding', 'Services', 'Routing']
+      });
+
+    case 'vue':
+      return generateVueProjectFiles(repo, {
+        mainComponent: 'App',
+        components: ['Counter', 'TodoList', 'UserCard'],
+        features: ['Reactive data', 'Event handling', 'Computed properties']
+      });
+
+    case 'html-css-js':
+      return generateHtmlCssJsProjectFiles(repo, {
+        projects: ['Calculator', 'Todo List', 'Weather App'],
+        features: ['DOM manipulation', 'Local storage', 'API calls']
+      });
+
+    case 'fullstack':
+      return generateFullstackProjectFiles(repo, {
+        frontend: 'React',
+        backend: 'Node.js + Express',
+        database: 'MongoDB',
+        features: ['Authentication', 'CRUD operations', 'API integration']
+      });
+
+    default:
+      return generateBasicProjectFiles(repo);
+  }
+};
+
+const generateReactProjectFiles = (repo: GitHubRepo, config: any): FileNode[] => {
+  return [
+    {
+      name: 'src',
+      type: 'folder',
+      isOpen: true,
+      children: [
+        {
+          name: 'components',
+          type: 'folder',
+          isOpen: true,
+          children: config.components.map((componentName: string) => ({
+            name: `${componentName}.js`,
+            type: 'file',
+            content: generateReactComponent(componentName, repo)
+          }))
+        },
+        {
+          name: 'App.js',
+          type: 'file',
+          content: generateReactApp(repo, config.components)
+        },
+        {
+          name: 'App.css',
+          type: 'file',
+          content: generateReactCSS(repo)
+        },
+        {
+          name: 'index.js',
+          type: 'file',
+          content: `import React from 'react';\nimport ReactDOM from 'react-dom/client';\nimport App from './App';\n\nconst root = ReactDOM.createRoot(document.getElementById('root'));\nroot.render(<App />);`
+        }
+      ]
+    },
+    {
+      name: 'public',
+      type: 'folder',
+      isOpen: false,
+      children: [
+        {
+          name: 'index.html',
+          type: 'file',
+          content: `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="utf-8" />\n  <meta name="viewport" content="width=device-width, initial-scale=1" />\n  <title>${repo.name}</title>\n</head>\n<body>\n  <div id="root"></div>\n</body>\n</html>`
+        }
+      ]
+    },
+    {
+      name: 'package.json',
+      type: 'file',
+      content: generatePackageJson(repo, 'react')
+    },
+    {
+      name: 'README.md',
+      type: 'file',
+      content: generateReadme(repo)
+    }
+  ];
+};
+
+const generateNodeJsProjectFiles = (repo: GitHubRepo, config: any): FileNode[] => {
+  return [
+    {
+      name: 'routes',
+      type: 'folder',
+      isOpen: true,
+      children: [
+        {
+          name: 'index.js',
+          type: 'file',
+          content: generateExpressRoute('index', repo)
+        },
+        {
+          name: 'api.js',
+          type: 'file',
+          content: generateExpressRoute('api', repo)
+        }
+      ]
+    },
+    {
+      name: 'server.js',
+      type: 'file',
+      content: generateExpressServer(repo)
+    },
+    {
+      name: 'package.json',
+      type: 'file',
+      content: generatePackageJson(repo, 'nodejs')
+    },
+    {
+      name: 'README.md',
+      type: 'file',
+      content: generateReadme(repo)
+    }
+  ];
+};
+
+const generateAngularProjectFiles = (repo: GitHubRepo, config: any): FileNode[] => {
+  return [
+    {
+      name: 'src',
+      type: 'folder',
+      isOpen: true,
+      children: [
+        {
+          name: 'app',
+          type: 'folder',
+          isOpen: true,
+          children: [
+            {
+              name: 'app.component.ts',
+              type: 'file',
+              content: generateAngularComponent('App', repo)
+            },
+            {
+              name: 'app.component.html',
+              type: 'file',
+              content: generateAngularTemplate('App', repo)
+            },
+            {
+              name: 'app.component.css',
+              type: 'file',
+              content: generateAngularCSS(repo)
+            },
+            {
+              name: 'app.module.ts',
+              type: 'file',
+              content: generateAngularModule(repo)
+            }
+          ]
+        }
+      ]
+    },
+    {
+      name: 'package.json',
+      type: 'file',
+      content: generatePackageJson(repo, 'angular')
+    },
+    {
+      name: 'README.md',
+      type: 'file',
+      content: generateReadme(repo)
+    }
+  ];
+};
+
+const generateVueProjectFiles = (repo: GitHubRepo, config: any): FileNode[] => {
+  return [
+    {
+      name: 'src',
+      type: 'folder',
+      isOpen: true,
+      children: [
+        {
+          name: 'components',
+          type: 'folder',
+          isOpen: true,
+          children: config.components.map((componentName: string) => ({
+            name: `${componentName}.vue`,
+            type: 'file',
+            content: generateVueComponent(componentName, repo)
+          }))
+        },
+        {
+          name: 'App.vue',
+          type: 'file',
+          content: generateVueApp(repo, config.components)
+        },
+        {
+          name: 'main.js',
+          type: 'file',
+          content: `import { createApp } from 'vue'\nimport App from './App.vue'\n\ncreateApp(App).mount('#app')`
+        }
+      ]
+    },
+    {
+      name: 'package.json',
+      type: 'file',
+      content: generatePackageJson(repo, 'vue')
+    },
+    {
+      name: 'README.md',
+      type: 'file',
+      content: generateReadme(repo)
+    }
+  ];
+};
+
+const generateHtmlCssJsProjectFiles = (repo: GitHubRepo, config: any): FileNode[] => {
+  return [
+    {
+      name: 'index.html',
+      type: 'file',
+      content: generateHtmlFile(repo)
+    },
+    {
+      name: 'style.css',
+      type: 'file',
+      content: generateCssFile(repo)
+    },
+    {
+      name: 'script.js',
+      type: 'file',
+      content: generateJsFile(repo)
+    },
+    {
+      name: 'README.md',
+      type: 'file',
+      content: generateReadme(repo)
+    }
+  ];
+};
+
+const generateFullstackProjectFiles = (repo: GitHubRepo, config: any): FileNode[] => {
+  return [
+    {
+      name: 'frontend',
+      type: 'folder',
+      isOpen: true,
+      children: [
+        {
+          name: 'src',
+          type: 'folder',
+          isOpen: true,
+          children: [
+            {
+              name: 'App.js',
+              type: 'file',
+              content: generateReactApp(repo, ['Login', 'Dashboard'])
+            },
+            {
+              name: 'components',
+              type: 'folder',
+              isOpen: false,
+              children: [
+                {
+                  name: 'Login.js',
+                  type: 'file',
+                  content: generateReactComponent('Login', repo)
+                },
+                {
+                  name: 'Dashboard.js',
+                  type: 'file',
+                  content: generateReactComponent('Dashboard', repo)
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: 'package.json',
+          type: 'file',
+          content: generatePackageJson(repo, 'react')
+        }
+      ]
+    },
+    {
+      name: 'backend',
+      type: 'folder',
+      isOpen: true,
+      children: [
+        {
+          name: 'server.js',
+          type: 'file',
+          content: generateExpressServer(repo)
+        },
+        {
+          name: 'routes',
+          type: 'folder',
+          isOpen: false,
+          children: [
+            {
+              name: 'auth.js',
+              type: 'file',
+              content: generateExpressRoute('auth', repo)
+            },
+            {
+              name: 'api.js',
+              type: 'file',
+              content: generateExpressRoute('api', repo)
+            }
+          ]
+        },
+        {
+          name: 'package.json',
+          type: 'file',
+          content: generatePackageJson(repo, 'nodejs')
+        }
+      ]
+    },
+    {
+      name: 'README.md',
+      type: 'file',
+      content: generateReadme(repo)
+    }
+  ];
+};
+
+const generateBasicProjectFiles = (repo: GitHubRepo): FileNode[] => {
+  return [
+    {
+      name: 'src',
+      type: 'folder',
+      isOpen: true,
+      children: [
+        {
+          name: 'index.js',
+          type: 'file',
+          content: `// ${repo.name}\n// ${repo.description}\n\nconsole.log('Welcome to ${repo.name}!');\n\n// TODO: Start building your project here\n// Check the user stories for specific requirements\n\n${repo.userStories.map(story => `// User Story: ${story.title}\n// ${story.description}\n// Difficulty: ${story.difficulty} | XP: ${story.xpReward}`).join('\n\n')}`
+        }
+      ]
+    },
+    {
+      name: 'README.md',
+      type: 'file',
+      content: generateReadme(repo)
+    }
+  ];
+};
+
+// Content generation helper functions
+const generateReactComponent = (componentName: string, repo: GitHubRepo): string => {
+  const componentTemplates: { [key: string]: string } = {
+    Counter: `import React, { useState } from 'react';\n\nfunction Counter() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <div className="counter">\n      <h2>Counter: {count}</h2>\n      <button onClick={() => setCount(count - 1)}>-</button>\n      <button onClick={() => setCount(0)}>Reset</button>\n      <button onClick={() => setCount(count + 1)}>+</button>\n    </div>\n  );\n}\n\nexport default Counter;`,
+    TodoList: `import React, { useState } from 'react';\n\nfunction TodoList() {\n  const [todos, setTodos] = useState([]);\n  const [inputValue, setInputValue] = useState('');\n\n  const addTodo = () => {\n    if (inputValue.trim()) {\n      setTodos([...todos, { id: Date.now(), text: inputValue, completed: false }]);\n      setInputValue('');\n    }\n  };\n\n  const toggleTodo = (id) => {\n    setTodos(todos.map(todo => \n      todo.id === id ? { ...todo, completed: !todo.completed } : todo\n    ));\n  };\n\n  return (\n    <div className="todo-list">\n      <h2>Todo List</h2>\n      <div>\n        <input \n          value={inputValue}\n          onChange={(e) => setInputValue(e.target.value)}\n          placeholder="Add a todo..."\n        />\n        <button onClick={addTodo}>Add</button>\n      </div>\n      <ul>\n        {todos.map(todo => (\n          <li key={todo.id} onClick={() => toggleTodo(todo.id)}>\n            <span style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>\n              {todo.text}\n            </span>\n          </li>\n        ))}\n      </ul>\n    </div>\n  );\n}\n\nexport default TodoList;`,
+    UserProfile: `import React, { useState } from 'react';\n\nfunction UserProfile() {\n  const [user, setUser] = useState({\n    name: 'John Doe',\n    email: 'john@example.com',\n    bio: 'Web developer passionate about React'\n  });\n\n  const [isEditing, setIsEditing] = useState(false);\n\n  return (\n    <div className="user-profile">\n      <h2>User Profile</h2>\n      {isEditing ? (\n        <div>\n          <input \n            value={user.name}\n            onChange={(e) => setUser({...user, name: e.target.value})}\n          />\n          <input \n            value={user.email}\n            onChange={(e) => setUser({...user, email: e.target.value})}\n          />\n          <textarea \n            value={user.bio}\n            onChange={(e) => setUser({...user, bio: e.target.value})}\n          />\n          <button onClick={() => setIsEditing(false)}>Save</button>\n        </div>\n      ) : (\n        <div>\n          <h3>{user.name}</h3>\n          <p>{user.email}</p>\n          <p>{user.bio}</p>\n          <button onClick={() => setIsEditing(true)}>Edit</button>\n        </div>\n      )}\n    </div>\n  );\n}\n\nexport default UserProfile;`
+  };
+
+  return componentTemplates[componentName] || `import React from 'react';\n\nfunction ${componentName}() {\n  // TODO: Implement ${componentName} component\n  // Check the user stories for specific requirements\n  \n  return (\n    <div className="${componentName.toLowerCase()}">\n      <h2>${componentName}</h2>\n      <p>Component implementation goes here...</p>\n    </div>\n  );\n}\n\nexport default ${componentName};`;
+};
+
+const generateReactApp = (repo: GitHubRepo, components: string[]): string => {
+  const imports = components.map(comp => `import ${comp} from './components/${comp}';`).join('\n');
+  const componentUsage = components.map(comp => `        <${comp} />`).join('\n');
+
+  return `import React from 'react';\n${imports}\nimport './App.css';\n\nfunction App() {\n  return (\n    <div className="App">\n      <header className="App-header">\n        <h1>${repo.name}</h1>\n        <p>${repo.description}</p>\n      </header>\n      \n      <main className="App-main">\n${componentUsage}\n      </main>\n    </div>\n  );\n}\n\nexport default App;`;
+};
+
+const generateReactCSS = (repo: GitHubRepo): string => {
+  return `.App {\n  text-align: center;\n  min-height: 100vh;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n  padding: 20px;\n}\n\n.App-header {\n  margin-bottom: 40px;\n}\n\n.App-header h1 {\n  font-size: 2.5rem;\n  margin-bottom: 10px;\n}\n\n.App-main {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));\n  gap: 30px;\n  max-width: 1200px;\n  margin: 0 auto;\n}\n\n.counter, .todo-list, .user-profile {\n  background: rgba(255, 255, 255, 0.1);\n  border-radius: 15px;\n  padding: 25px;\n  backdrop-filter: blur(10px);\n  border: 1px solid rgba(255, 255, 255, 0.2);\n}\n\nbutton {\n  background: linear-gradient(135deg, #74c0fc, #339af0);\n  color: white;\n  border: none;\n  padding: 10px 20px;\n  border-radius: 8px;\n  cursor: pointer;\n  margin: 5px;\n  transition: all 0.3s ease;\n}\n\nbutton:hover {\n  transform: translateY(-2px);\n  box-shadow: 0 4px 15px rgba(0,0,0,0.2);\n}\n\ninput, textarea {\n  padding: 10px;\n  border: 1px solid rgba(255,255,255,0.3);\n  border-radius: 8px;\n  background: rgba(255,255,255,0.1);\n  color: white;\n  margin: 5px;\n}\n\ninput::placeholder {\n  color: rgba(255,255,255,0.7);\n}`;
+};
+
+const generateExpressServer = (repo: GitHubRepo): string => {
+  return `const express = require('express');\nconst cors = require('cors');\nconst app = express();\nconst PORT = process.env.PORT || 3000;\n\n// Middleware\napp.use(cors());\napp.use(express.json());\n\n// Routes\napp.get('/', (req, res) => {\n  res.json({ \n    message: 'Welcome to ${repo.name} API!',\n    description: '${repo.description}'\n  });\n});\n\n// TODO: Add your API routes here\n// Example:\n// app.get('/api/users', (req, res) => {\n//   res.json({ users: [] });\n// });\n\napp.listen(PORT, () => {\n  console.log(\`Server running on port \${PORT}\`);\n});`;
+};
+
+const generateExpressRoute = (routeName: string, repo: GitHubRepo): string => {
+  const routeTemplates: { [key: string]: string } = {
+    index: `const express = require('express');\nconst router = express.Router();\n\n// Home route\nrouter.get('/', (req, res) => {\n  res.json({ message: 'Welcome to ${repo.name}!' });\n});\n\nmodule.exports = router;`,
+    api: `const express = require('express');\nconst router = express.Router();\n\n// Sample data\nlet items = [\n  { id: 1, name: 'Item 1', completed: false },\n  { id: 2, name: 'Item 2', completed: true }\n];\n\n// GET all items\nrouter.get('/items', (req, res) => {\n  res.json(items);\n});\n\n// POST new item\nrouter.post('/items', (req, res) => {\n  const newItem = {\n    id: Date.now(),\n    name: req.body.name,\n    completed: false\n  };\n  items.push(newItem);\n  res.status(201).json(newItem);\n});\n\n// PUT update item\nrouter.put('/items/:id', (req, res) => {\n  const id = parseInt(req.params.id);\n  const itemIndex = items.findIndex(item => item.id === id);\n  \n  if (itemIndex !== -1) {\n    items[itemIndex] = { ...items[itemIndex], ...req.body };\n    res.json(items[itemIndex]);\n  } else {\n    res.status(404).json({ error: 'Item not found' });\n  }\n});\n\n// DELETE item\nrouter.delete('/items/:id', (req, res) => {\n  const id = parseInt(req.params.id);\n  items = items.filter(item => item.id !== id);\n  res.json({ message: 'Item deleted' });\n});\n\nmodule.exports = router;`,
+    auth: `const express = require('express');\nconst router = express.Router();\n\n// Mock user data\nconst users = [\n  { id: 1, username: 'demo', password: 'password', email: 'demo@example.com' }\n];\n\n// Login route\nrouter.post('/login', (req, res) => {\n  const { username, password } = req.body;\n  const user = users.find(u => u.username === username && u.password === password);\n  \n  if (user) {\n    res.json({ \n      message: 'Login successful',\n      user: { id: user.id, username: user.username, email: user.email }\n    });\n  } else {\n    res.status(401).json({ error: 'Invalid credentials' });\n  }\n});\n\n// Register route\nrouter.post('/register', (req, res) => {\n  const { username, password, email } = req.body;\n  \n  // Check if user already exists\n  if (users.find(u => u.username === username)) {\n    return res.status(400).json({ error: 'User already exists' });\n  }\n  \n  const newUser = {\n    id: Date.now(),\n    username,\n    password,\n    email\n  };\n  \n  users.push(newUser);\n  res.status(201).json({ \n    message: 'User created successfully',\n    user: { id: newUser.id, username: newUser.username, email: newUser.email }\n  });\n});\n\nmodule.exports = router;`
+  };
+
+  return routeTemplates[routeName] || `const express = require('express');\nconst router = express.Router();\n\n// TODO: Implement ${routeName} routes\n// Add your route handlers here\n\nrouter.get('/', (req, res) => {\n  res.json({ message: '${routeName} route' });\n});\n\nmodule.exports = router;`;
+};
+
+const generatePackageJson = (repo: GitHubRepo, type: string): string => {
+  const packageTemplates: { [key: string]: any } = {
+    react: {
+      name: repo.name,
+      version: "0.1.0",
+      private: true,
+      dependencies: {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-scripts": "5.0.1"
+      },
+      scripts: {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
+      }
+    },
+    nodejs: {
+      name: repo.name,
+      version: "1.0.0",
+      description: repo.description,
+      main: "server.js",
+      scripts: {
+        "start": "node server.js",
+        "dev": "nodemon server.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+      },
+      dependencies: {
+        "express": "^4.18.2",
+        "cors": "^2.8.5"
+      },
+      devDependencies: {
+        "nodemon": "^2.0.22"
+      }
+    },
+    angular: {
+      name: repo.name,
+      version: "0.0.0",
+      scripts: {
+        "ng": "ng",
+        "start": "ng serve",
+        "build": "ng build",
+        "test": "ng test"
+      },
+      dependencies: {
+        "@angular/animations": "^15.0.0",
+        "@angular/common": "^15.0.0",
+        "@angular/compiler": "^15.0.0",
+        "@angular/core": "^15.0.0",
+        "@angular/forms": "^15.0.0",
+        "@angular/platform-browser": "^15.0.0",
+        "@angular/platform-browser-dynamic": "^15.0.0",
+        "@angular/router": "^15.0.0"
+      }
+    },
+    vue: {
+      name: repo.name,
+      version: "0.0.0",
+      scripts: {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
+      },
+      dependencies: {
+        "vue": "^3.2.47"
+      },
+      devDependencies: {
+        "@vitejs/plugin-vue": "^4.0.0",
+        "vite": "^4.0.0"
+      }
+    }
+  };
+
+  return JSON.stringify(packageTemplates[type] || packageTemplates.nodejs, null, 2);
+};
+
+const generateReadme = (repo: GitHubRepo): string => {
+  return `# ${repo.name}\n\n${repo.description}\n\n## 🚀 Getting Started\n\n${repo.setupInstructions.map(step => `- ${step}`).join('\n')}\n\n## 📋 User Stories\n\n${repo.userStories.map((story, index) => `### ${index + 1}. ${story.title}\n\n${story.description}\n\n**Difficulty:** ${story.difficulty} | **XP Reward:** ${story.xpReward}\n\n**Tasks:**\n${story.tasks.map(task => `- [ ] ${task.description}`).join('\n')}\n\n**Hints:**\n${story.hints.map(hint => `💡 ${hint}`).join('\n')}`).join('\n\n---\n\n')}\n\n## 🏆 Completion Criteria\n\nComplete all user stories to earn the full XP reward and unlock achievements!\n\n## 📚 Learning Resources\n\n- Check the hints in each user story\n- Use the AI advisor for guidance\n- Explore the code examples in the playground\n\n---\n\n**Happy coding! 🎉**`;
+};
+
+const generateVueComponent = (componentName: string, repo: GitHubRepo): string => {
+  const vueTemplates: { [key: string]: string } = {
+    Counter: `<template>\n  <div class="counter">\n    <h2>Counter: {{ count }}</h2>\n    <button @click="decrement">-</button>\n    <button @click="reset">Reset</button>\n    <button @click="increment">+</button>\n  </div>\n</template>\n\n<script>\nexport default {\n  name: 'Counter',\n  data() {\n    return {\n      count: 0\n    }\n  },\n  methods: {\n    increment() {\n      this.count++\n    },\n    decrement() {\n      this.count--\n    },\n    reset() {\n      this.count = 0\n    }\n  }\n}\n</script>\n\n<style scoped>\n.counter {\n  text-align: center;\n  padding: 20px;\n  border-radius: 10px;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n}\n\nbutton {\n  margin: 5px;\n  padding: 10px 20px;\n  border: none;\n  border-radius: 5px;\n  background: #42b883;\n  color: white;\n  cursor: pointer;\n}\n\nbutton:hover {\n  background: #369870;\n}\n</style>`,
+    TodoList: `<template>\n  <div class="todo-list">\n    <h2>Todo List</h2>\n    <div class="input-section">\n      <input v-model="newTodo" @keyup.enter="addTodo" placeholder="Add a todo..." />\n      <button @click="addTodo">Add</button>\n    </div>\n    <ul>\n      <li v-for="todo in todos" :key="todo.id" @click="toggleTodo(todo.id)">\n        <span :class="{ completed: todo.completed }">{{ todo.text }}</span>\n      </li>\n    </ul>\n  </div>\n</template>\n\n<script>\nexport default {\n  name: 'TodoList',\n  data() {\n    return {\n      newTodo: '',\n      todos: []\n    }\n  },\n  methods: {\n    addTodo() {\n      if (this.newTodo.trim()) {\n        this.todos.push({\n          id: Date.now(),\n          text: this.newTodo,\n          completed: false\n        })\n        this.newTodo = ''\n      }\n    },\n    toggleTodo(id) {\n      const todo = this.todos.find(t => t.id === id)\n      if (todo) {\n        todo.completed = !todo.completed\n      }\n    }\n  }\n}\n</script>\n\n<style scoped>\n.todo-list {\n  max-width: 400px;\n  margin: 0 auto;\n  padding: 20px;\n}\n\n.input-section {\n  display: flex;\n  margin-bottom: 20px;\n}\n\ninput {\n  flex: 1;\n  padding: 10px;\n  border: 1px solid #ddd;\n  border-radius: 4px;\n}\n\nbutton {\n  padding: 10px 20px;\n  background: #42b883;\n  color: white;\n  border: none;\n  border-radius: 4px;\n  margin-left: 10px;\n  cursor: pointer;\n}\n\nul {\n  list-style: none;\n  padding: 0;\n}\n\nli {\n  padding: 10px;\n  border-bottom: 1px solid #eee;\n  cursor: pointer;\n}\n\n.completed {\n  text-decoration: line-through;\n  opacity: 0.6;\n}\n</style>`
+  };
+
+  return vueTemplates[componentName] || `<template>\n  <div class="${componentName.toLowerCase()}">\n    <h2>${componentName}</h2>\n    <p>Component implementation goes here...</p>\n  </div>\n</template>\n\n<script>\nexport default {\n  name: '${componentName}',\n  data() {\n    return {\n      // Add your data properties here\n    }\n  },\n  methods: {\n    // Add your methods here\n  }\n}\n</script>\n\n<style scoped>\n.${componentName.toLowerCase()} {\n  padding: 20px;\n  text-align: center;\n}\n</style>`;
+};
+
+const generateVueApp = (repo: GitHubRepo, components: string[]): string => {
+  const imports = components.map(comp => `import ${comp} from './components/${comp}.vue'`).join('\n');
+  const componentRegistrations = components.map(comp => `    ${comp}`).join(',\n');
+  const componentUsage = components.map(comp => `    <${comp} />`).join('\n');
+
+  return `<template>\n  <div id="app">\n    <header>\n      <h1>${repo.name}</h1>\n      <p>${repo.description}</p>\n    </header>\n    \n    <main>\n${componentUsage}\n    </main>\n  </div>\n</template>\n\n<script>\n${imports}\n\nexport default {\n  name: 'App',\n  components: {\n${componentRegistrations}\n  }\n}\n</script>\n\n<style>\n#app {\n  font-family: Avenir, Helvetica, Arial, sans-serif;\n  text-align: center;\n  color: #2c3e50;\n  margin-top: 60px;\n}\n\nheader {\n  margin-bottom: 40px;\n}\n\nmain {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));\n  gap: 30px;\n  max-width: 1200px;\n  margin: 0 auto;\n  padding: 20px;\n}\n</style>`;
+};
+
+const generateAngularComponent = (componentName: string, repo: GitHubRepo): string => {
+  return `import { Component } from '@angular/core';\n\n@Component({\n  selector: 'app-${componentName.toLowerCase()}',\n  templateUrl: './${componentName.toLowerCase()}.component.html',\n  styleUrls: ['./${componentName.toLowerCase()}.component.css']\n})\nexport class ${componentName}Component {\n  title = '${repo.name}';\n  description = '${repo.description}';\n  \n  // TODO: Add your component logic here\n  // Check the user stories for specific requirements\n}`;
+};
+
+const generateAngularTemplate = (componentName: string, repo: GitHubRepo): string => {
+  return `<div class="container">\n  <h1>Welcome to {{title}}!</h1>\n  <p>{{description}}</p>\n  \n  <!-- TODO: Add your component template here -->\n  <!-- Check the user stories for specific requirements -->\n  \n  <div class="content">\n    <p>Start building your Angular application here!</p>\n  </div>\n</div>`;
+};
+
+const generateAngularCSS = (repo: GitHubRepo): string => {
+  return `.container {\n  text-align: center;\n  padding: 20px;\n  max-width: 800px;\n  margin: 0 auto;\n}\n\nh1 {\n  color: #dd0031;\n  font-size: 2.5rem;\n  margin-bottom: 10px;\n}\n\np {\n  color: #666;\n  font-size: 1.1rem;\n  margin-bottom: 20px;\n}\n\n.content {\n  background: #f5f5f5;\n  padding: 30px;\n  border-radius: 10px;\n  margin-top: 30px;\n}`;
+};
+
+const generateAngularModule = (repo: GitHubRepo): string => {
+  return `import { NgModule } from '@angular/core';\nimport { BrowserModule } from '@angular/platform-browser';\nimport { FormsModule } from '@angular/forms';\n\nimport { AppRoutingModule } from './app-routing.module';\nimport { AppComponent } from './app.component';\n\n@NgModule({\n  declarations: [\n    AppComponent\n    // TODO: Add your components here\n  ],\n  imports: [\n    BrowserModule,\n    AppRoutingModule,\n    FormsModule\n  ],\n  providers: [],\n  bootstrap: [AppComponent]\n})\nexport class AppModule { }`;
+};
+
+const generateHtmlFile = (repo: GitHubRepo): string => {
+  return `<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>${repo.name}</title>\n    <link rel="stylesheet" href="style.css">\n</head>\n<body>\n    <div class="container">\n        <header>\n            <h1>${repo.name}</h1>\n            <p>${repo.description}</p>\n        </header>\n        \n        <main>\n            <!-- TODO: Add your HTML content here -->\n            <!-- Check the user stories for specific requirements -->\n            \n            <section class="demo-section">\n                <h2>Demo Section</h2>\n                <p>Start building your project here!</p>\n                \n                <div class="interactive-demo">\n                    <button id="demo-btn">Click Me!</button>\n                    <p id="demo-output">Output will appear here...</p>\n                </div>\n            </section>\n        </main>\n        \n        <footer>\n            <p>Built with HTML, CSS, and JavaScript</p>\n        </footer>\n    </div>\n    \n    <script src="script.js"></script>\n</body>\n</html>`;
+};
+
+const generateCssFile = (repo: GitHubRepo): string => {
+  return `/* ${repo.name} Styles */\n\n* {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n}\n\nbody {\n    font-family: 'Arial', sans-serif;\n    line-height: 1.6;\n    color: #333;\n    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n    min-height: 100vh;\n}\n\n.container {\n    max-width: 1200px;\n    margin: 0 auto;\n    padding: 20px;\n}\n\nheader {\n    text-align: center;\n    margin-bottom: 40px;\n    color: white;\n}\n\nheader h1 {\n    font-size: 2.5rem;\n    margin-bottom: 10px;\n    text-shadow: 0 2px 4px rgba(0,0,0,0.3);\n}\n\nheader p {\n    font-size: 1.2rem;\n    opacity: 0.9;\n}\n\nmain {\n    background: rgba(255, 255, 255, 0.95);\n    border-radius: 15px;\n    padding: 30px;\n    box-shadow: 0 10px 30px rgba(0,0,0,0.2);\n    backdrop-filter: blur(10px);\n}\n\n.demo-section {\n    text-align: center;\n    padding: 20px;\n}\n\n.demo-section h2 {\n    color: #333;\n    margin-bottom: 20px;\n    font-size: 1.8rem;\n}\n\n.interactive-demo {\n    background: #f8f9fa;\n    padding: 30px;\n    border-radius: 10px;\n    margin: 20px 0;\n    border: 2px solid #e9ecef;\n}\n\nbutton {\n    background: linear-gradient(135deg, #667eea, #764ba2);\n    color: white;\n    border: none;\n    padding: 12px 24px;\n    border-radius: 8px;\n    font-size: 1rem;\n    cursor: pointer;\n    transition: all 0.3s ease;\n    box-shadow: 0 4px 15px rgba(0,0,0,0.2);\n}\n\nbutton:hover {\n    transform: translateY(-2px);\n    box-shadow: 0 6px 20px rgba(0,0,0,0.3);\n}\n\nbutton:active {\n    transform: translateY(0);\n}\n\n#demo-output {\n    margin-top: 20px;\n    padding: 15px;\n    background: white;\n    border-radius: 8px;\n    border: 1px solid #ddd;\n    min-height: 50px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    font-weight: 500;\n}\n\nfooter {\n    text-align: center;\n    margin-top: 40px;\n    color: white;\n    opacity: 0.8;\n}\n\n/* Responsive Design */\n@media (max-width: 768px) {\n    .container {\n        padding: 10px;\n    }\n    \n    header h1 {\n        font-size: 2rem;\n    }\n    \n    main {\n        padding: 20px;\n    }\n}`;
+};
+
+const generateJsFile = (repo: GitHubRepo): string => {
+  return `// ${repo.name} JavaScript\n// ${repo.description}\n\n// Wait for DOM to be fully loaded\ndocument.addEventListener('DOMContentLoaded', function() {\n    console.log('Welcome to ${repo.name}!');\n    \n    // Initialize the application\n    initializeApp();\n});\n\nfunction initializeApp() {\n    // TODO: Add your initialization code here\n    // Check the user stories for specific requirements\n    \n    setupEventListeners();\n    setupDemoFeatures();\n}\n\nfunction setupEventListeners() {\n    // Demo button functionality\n    const demoBtn = document.getElementById('demo-btn');\n    const demoOutput = document.getElementById('demo-output');\n    \n    if (demoBtn && demoOutput) {\n        demoBtn.addEventListener('click', function() {\n            const messages = [\n                'Hello, World! 👋',\n                'JavaScript is working! ✨',\n                'Ready to build something amazing! 🚀',\n                'Let\\'s code together! 💻',\n                'The possibilities are endless! 🌟'\n            ];\n            \n            const randomMessage = messages[Math.floor(Math.random() * messages.length)];\n            demoOutput.textContent = randomMessage;\n            \n            // Add some visual feedback\n            demoOutput.style.background = '#e8f5e8';\n            demoOutput.style.color = '#2d5a2d';\n            demoOutput.style.border = '2px solid #4caf50';\n            \n            setTimeout(() => {\n                demoOutput.style.background = 'white';\n                demoOutput.style.color = '#333';\n                demoOutput.style.border = '1px solid #ddd';\n            }, 2000);\n        });\n    }\n}\n\nfunction setupDemoFeatures() {\n    // TODO: Add more interactive features here\n    // Examples:\n    // - Form validation\n    // - Dynamic content loading\n    // - Local storage functionality\n    // - API calls\n    // - Animation effects\n    \n    console.log('Demo features initialized');\n}\n\n// Utility functions\nfunction showMessage(message, type = 'info') {\n    // TODO: Implement a message display system\n    console.log(\`[\${type.toUpperCase()}] \${message}\`);\n}\n\nfunction saveToLocalStorage(key, data) {\n    try {\n        localStorage.setItem(key, JSON.stringify(data));\n        return true;\n    } catch (error) {\n        console.error('Error saving to localStorage:', error);\n        return false;\n    }\n}\n\nfunction loadFromLocalStorage(key) {\n    try {\n        const data = localStorage.getItem(key);\n        return data ? JSON.parse(data) : null;\n    } catch (error) {\n        console.error('Error loading from localStorage:', error);\n        return null;\n    }\n}\n\n// Export functions for testing (if using modules)\nif (typeof module !== 'undefined' && module.exports) {\n    module.exports = {\n        initializeApp,\n        setupEventListeners,\n        setupDemoFeatures,\n        showMessage,\n        saveToLocalStorage,\n        loadFromLocalStorage\n    };\n}`;
+};
+
+// ===== PRODUCTION-READY PROJECT GENERATORS =====
+
+const generateReactTodoApp = (repo: GitHubRepo): FileNode[] => {
+  return [
+    {
+      name: 'src',
+      type: 'folder',
+      isOpen: true,
+      children: [
+        {
+          name: 'components',
+          type: 'folder',
+          isOpen: true,
+          children: [
+            {
+              name: 'TodoList.js',
+              type: 'file',
+              content: `import React, { useState } from 'react';\nimport TodoItem from './TodoItem';\nimport './TodoList.css';\n\nfunction TodoList() {\n  const [todos, setTodos] = useState([\n    { id: 1, text: 'Learn React', completed: false },\n    { id: 2, text: 'Build a todo app', completed: true },\n    { id: 3, text: 'Master JavaScript', completed: false }\n  ]);\n  const [inputValue, setInputValue] = useState('');\n\n  // TODO: Fix this function - it's not working!\n  const addTodo = () => {\n    // BUG: This function is incomplete\n    // HINT: You need to create a new todo object and add it to the todos array\n    console.log('Adding todo:', inputValue);\n  };\n\n  const toggleTodo = (id) => {\n    setTodos(todos.map(todo => \n      todo.id === id ? { ...todo, completed: !todo.completed } : todo\n    ));\n  };\n\n  // TODO: Implement delete functionality\n  const deleteTodo = (id) => {\n    // HINT: Use filter to remove the todo with the given id\n    console.log('Deleting todo:', id);\n  };\n\n  return (\n    <div className="todo-list">\n      <h1>My Todo App</h1>\n      \n      <div className="add-todo">\n        <input \n          type="text"\n          value={inputValue}\n          onChange={(e) => setInputValue(e.target.value)}\n          placeholder="Add a new todo..."\n          onKeyPress={(e) => e.key === 'Enter' && addTodo()}\n        />\n        <button onClick={addTodo} className="add-btn">\n          Add Todo\n        </button>\n      </div>\n\n      <div className="todos">\n        {todos.map(todo => (\n          <TodoItem \n            key={todo.id}\n            todo={todo}\n            onToggle={toggleTodo}\n            onDelete={deleteTodo}\n          />\n        ))}\n      </div>\n      \n      <div className="stats">\n        <p>Total: {todos.length} | Completed: {todos.filter(t => t.completed).length}</p>\n      </div>\n    </div>\n  );\n}\n\nexport default TodoList;`
+            },
+            {
+              name: 'TodoItem.js',
+              type: 'file',
+              content: `import React from 'react';\nimport './TodoItem.css';\n\nfunction TodoItem({ todo, onToggle, onDelete }) {\n  return (\n    <div className={\`todo-item \${todo.completed ? 'completed' : ''}\`}>\n      <input \n        type="checkbox"\n        checked={todo.completed}\n        onChange={() => onToggle(todo.id)}\n        className="todo-checkbox"\n      />\n      <span className="todo-text">{todo.text}</span>\n      {/* TODO: Add delete button */}\n      {/* HINT: Create a button that calls onDelete(todo.id) */}\n    </div>\n  );\n}\n\nexport default TodoItem;`
+            }
+          ]
+        },
+        {
+          name: 'App.js',
+          type: 'file',
+          content: `import React from 'react';\nimport TodoList from './components/TodoList';\nimport './App.css';\n\nfunction App() {\n  return (\n    <div className="App">\n      <TodoList />\n    </div>\n  );\n}\n\nexport default App;`
+        },
+        {
+          name: 'App.css',
+          type: 'file',
+          content: `.App {\n  text-align: center;\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n}\n\nbody {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  min-height: 100vh;\n  margin: 0;\n}`
+        },
+        {
+          name: 'components',
+          type: 'folder',
+          isOpen: false,
+          children: [
+            {
+              name: 'TodoList.css',
+              type: 'file',
+              content: `.todo-list {\n  background: white;\n  border-radius: 15px;\n  padding: 30px;\n  box-shadow: 0 10px 30px rgba(0,0,0,0.2);\n}\n\n.todo-list h1 {\n  color: #333;\n  margin-bottom: 30px;\n  font-size: 2.5rem;\n}\n\n.add-todo {\n  display: flex;\n  gap: 10px;\n  margin-bottom: 30px;\n}\n\n.add-todo input {\n  flex: 1;\n  padding: 15px;\n  border: 2px solid #e1e5e9;\n  border-radius: 10px;\n  font-size: 16px;\n  outline: none;\n  transition: border-color 0.3s;\n}\n\n.add-todo input:focus {\n  border-color: #667eea;\n}\n\n.add-btn {\n  background: linear-gradient(135deg, #667eea, #764ba2);\n  color: white;\n  border: none;\n  padding: 15px 25px;\n  border-radius: 10px;\n  font-size: 16px;\n  font-weight: 600;\n  cursor: pointer;\n  transition: transform 0.2s;\n}\n\n.add-btn:hover {\n  transform: translateY(-2px);\n}\n\n.todos {\n  margin-bottom: 20px;\n}\n\n.stats {\n  color: #666;\n  font-size: 14px;\n  padding: 15px;\n  background: #f8f9fa;\n  border-radius: 10px;\n}`
+            },
+            {
+              name: 'TodoItem.css',
+              type: 'file',
+              content: `.todo-item {\n  display: flex;\n  align-items: center;\n  gap: 15px;\n  padding: 15px;\n  margin-bottom: 10px;\n  background: #f8f9fa;\n  border-radius: 10px;\n  transition: all 0.3s;\n}\n\n.todo-item:hover {\n  background: #e9ecef;\n  transform: translateX(5px);\n}\n\n.todo-item.completed {\n  opacity: 0.7;\n}\n\n.todo-checkbox {\n  width: 20px;\n  height: 20px;\n  cursor: pointer;\n}\n\n.todo-text {\n  flex: 1;\n  text-align: left;\n  font-size: 16px;\n  color: #333;\n}\n\n.todo-item.completed .todo-text {\n  text-decoration: line-through;\n  color: #999;\n}\n\n.delete-btn {\n  background: #ff6b6b;\n  color: white;\n  border: none;\n  padding: 8px 12px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-size: 12px;\n  transition: background 0.3s;\n}\n\n.delete-btn:hover {\n  background: #ff5252;\n}`
+            }
+          ]
+        },
+        {
+          name: 'index.js',
+          type: 'file',
+          content: `import React from 'react';\nimport ReactDOM from 'react-dom/client';\nimport App from './App';\n\nconst root = ReactDOM.createRoot(document.getElementById('root'));\nroot.render(<App />);`
+        }
+      ]
+    },
+    {
+      name: 'public',
+      type: 'folder',
+      isOpen: false,
+      children: [
+        {
+          name: 'index.html',
+          type: 'file',
+          content: `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="utf-8" />\n  <meta name="viewport" content="width=device-width, initial-scale=1" />\n  <title>React Todo App</title>\n</head>\n<body>\n  <div id="root"></div>\n</body>\n</html>`
+        }
+      ]
+    },
+    {
+      name: 'package.json',
+      type: 'file',
+      content: generatePackageJson(repo, 'react')
+    },
+    {
+      name: 'README.md',
+      type: 'file',
+      content: generateReadme(repo)
+    }
+  ];
+};
+
+const generateNodeJs10Projects = (repo: GitHubRepo): FileNode[] => {
+  return [
+    {
+      name: 'routes',
+      type: 'folder',
+      isOpen: true,
+      children: [
+        {
+          name: 'todos.js',
+          type: 'file',
+          content: `const express = require('express');\nconst router = express.Router();\n\n// In-memory storage for demo (use database in production)\nlet todos = [\n  { id: 1, title: 'Learn Node.js', completed: false, createdAt: new Date() },\n  { id: 2, title: 'Build REST API', completed: true, createdAt: new Date() },\n  { id: 3, title: 'Add validation', completed: false, createdAt: new Date() }\n];\n\nlet nextId = 4;\n\n// GET /api/todos - Get all todos with optional filtering\nrouter.get('/', (req, res) => {\n  try {\n    let filteredTodos = todos;\n    \n    // TODO: Add query filtering for completed status\n    // HINT: Check if req.query.completed exists and filter accordingly\n    // Example: if (req.query.completed !== undefined) { ... }\n    \n    res.json({\n      success: true,\n      count: filteredTodos.length,\n      data: filteredTodos\n    });\n  } catch (error) {\n    res.status(500).json({ success: false, error: error.message });\n  }\n});\n\n// POST /api/todos - Create a new todo\nrouter.post('/', (req, res) => {\n  try {\n    const { title, completed = false } = req.body;\n    \n    // TODO: Add input validation\n    // HINT: Check if title exists and is not empty\n    // if (!title || title.trim() === '') { return res.status(400).json({...}) }\n    \n    const newTodo = {\n      id: nextId++,\n      title: title.trim(),\n      completed: Boolean(completed),\n      createdAt: new Date()\n    };\n    \n    todos.push(newTodo);\n    \n    res.status(201).json({\n      success: true,\n      message: 'Todo created successfully',\n      data: newTodo\n    });\n  } catch (error) {\n    res.status(500).json({ success: false, error: error.message });\n  }\n});\n\n// PUT /api/todos/:id - Update a todo\nrouter.put('/:id', (req, res) => {\n  try {\n    const id = parseInt(req.params.id);\n    const { title, completed } = req.body;\n    \n    // TODO: Find todo by ID and update it\n    // HINT: Use todos.findIndex() to find the todo\n    // const todoIndex = todos.findIndex(todo => todo.id === id);\n    \n    res.status(501).json({ \n      success: false, \n      error: 'Update functionality not implemented yet',\n      hint: 'Find the todo by ID and update its properties'\n    });\n  } catch (error) {\n    res.status(500).json({ success: false, error: error.message });\n  }\n});\n\n// DELETE /api/todos/:id - Delete a todo\nrouter.delete('/:id', (req, res) => {\n  try {\n    const id = parseInt(req.params.id);\n    \n    // TODO: Find and remove todo by ID\n    // HINT: Use todos.filter() to remove the todo\n    // todos = todos.filter(todo => todo.id !== id);\n    \n    res.status(501).json({ \n      success: false, \n      error: 'Delete functionality not implemented yet',\n      hint: 'Filter out the todo with the given ID'\n    });\n  } catch (error) {\n    res.status(500).json({ success: false, error: error.message });\n  }\n});\n\nmodule.exports = router;`
+        },
+        {
+          name: 'index.js',
+          type: 'file',
+          content: `const express = require('express');\nconst router = express.Router();\n\n// Home route\nrouter.get('/', (req, res) => {\n  res.json({\n    message: 'Welcome to Node.js 10 Projects API!',\n    version: '1.0.0',\n    endpoints: {\n      'GET /': 'This endpoint',\n      'GET /api/todos': 'Get all todos',\n      'POST /api/todos': 'Create a new todo',\n      'PUT /api/todos/:id': 'Update a todo',\n      'DELETE /api/todos/:id': 'Delete a todo'\n    },\n    documentation: 'Check README.md for detailed API documentation'\n  });\n});\n\nmodule.exports = router;`
+        }
+      ]
+    },
+    {
+      name: 'middleware',
+      type: 'folder',
+      isOpen: false,
+      children: [
+        {
+          name: 'validation.js',
+          type: 'file',
+          content: `// TODO: Implement validation middleware\n// HINT: Use express-validator for input validation\n\nconst validateTodo = (req, res, next) => {\n  // TODO: Add validation rules\n  // Example validation:\n  // - title is required and not empty\n  // - title is a string\n  // - completed is optional boolean\n  \n  console.log('Validation middleware called');\n  next(); // Continue to next middleware\n};\n\nmodule.exports = {\n  validateTodo\n};`
+        },
+        {
+          name: 'errorHandler.js',
+          type: 'file',
+          content: `// Global error handling middleware\nconst errorHandler = (err, req, res, next) => {\n  console.error('Error:', err.message);\n  \n  // Default error\n  let error = { ...err };\n  error.message = err.message;\n  \n  // Log error for debugging\n  console.error(err.stack);\n  \n  res.status(error.statusCode || 500).json({\n    success: false,\n    error: error.message || 'Server Error',\n    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })\n  });\n};\n\nmodule.exports = errorHandler;`
+        }
+      ]
+    },
+    {
+      name: 'server.js',
+      type: 'file',
+      content: `const express = require('express');\nconst cors = require('cors');\nconst morgan = require('morgan');\nconst errorHandler = require('./middleware/errorHandler');\n\nconst app = express();\n\n// Middleware\napp.use(cors());\napp.use(morgan('combined'));\napp.use(express.json({ limit: '10mb' }));\napp.use(express.urlencoded({ extended: true }));\n\n// Routes\nconst indexRouter = require('./routes/index');\nconst todosRouter = require('./routes/todos');\n\napp.use('/', indexRouter);\napp.use('/api/todos', todosRouter);\n\n// Error handling middleware (must be last)\napp.use(errorHandler);\n\n// Handle 404\napp.use('*', (req, res) => {\n  res.status(404).json({\n    success: false,\n    error: 'Route not found',\n    availableRoutes: {\n      'GET /': 'API information',\n      'GET /api/todos': 'Get all todos',\n      'POST /api/todos': 'Create todo',\n      'PUT /api/todos/:id': 'Update todo',\n      'DELETE /api/todos/:id': 'Delete todo'\n    }\n  });\n});\n\nconst PORT = process.env.PORT || 3000;\n\napp.listen(PORT, () => {\n  console.log(\`🚀 Server running on port \${PORT}\`);\n  console.log(\`📝 API available at http://localhost:\${PORT}\`);\n  console.log(\`📋 Todos endpoint: http://localhost:\${PORT}/api/todos\`);\n  console.log(\`📖 Documentation: Check README.md\`);\n});`
+    },
+    {
+      name: 'package.json',
+      type: 'file',
+      content: `{\n  "name": "nodejs-10-projects",\n  "version": "1.0.0",\n  "description": "Collection of 10 Node.js projects for learning",\n  "main": "server.js",\n  "scripts": {\n    "start": "node server.js",\n    "dev": "nodemon server.js",\n    "test": "echo \\"Error: no test specified\\" && exit 1"\n  },\n  "dependencies": {\n    "express": "^4.18.2",\n    "cors": "^2.8.5",\n    "morgan": "^1.10.0",\n    "express-validator": "^6.15.0"\n  },\n  "devDependencies": {\n    "nodemon": "^3.0.1"\n  },\n  "keywords": ["nodejs", "express", "rest-api", "learning", "projects"],\n  "author": "Web Elevate Student",\n  "license": "MIT"\n}`
+    },
+    {
+      name: '.env.example',
+      type: 'file',
+      content: `# Environment Variables\nPORT=3000\nNODE_ENV=development\n\n# Database (for future use)\n# DB_HOST=localhost\n# DB_PORT=5432\n# DB_NAME=todos\n# DB_USER=your_username\n# DB_PASS=your_password`
+    },
+    {
+      name: 'README.md',
+      type: 'file',
+      content: generateReadme(repo)
+    }
+  ];
+};
+
+const generateReactWeatherApp = (repo: GitHubRepo): FileNode[] => {
+  return [
+    {
+      name: 'src',
+      type: 'folder',
+      isOpen: true,
+      children: [
+        {
+          name: 'components',
+          type: 'folder',
+          isOpen: true,
+          children: [
+            {
+              name: 'WeatherApp.js',
+              type: 'file',
+              content: `import React, { useState, useEffect } from 'react';\nimport './WeatherApp.css';\n\nfunction WeatherApp() {\n  const [weather, setWeather] = useState(null);\n  const [city, setCity] = useState('London');\n  const [loading, setLoading] = useState(false);\n  const [error, setError] = useState(null);\n\n  // TODO: Fix the API integration\n  const fetchWeather = async (cityName) => {\n    setLoading(true);\n    setError(null);\n    \n    try {\n      // BUG: API endpoint is incorrect\n      // HINT: Use OpenWeatherMap API: https://api.openweathermap.org/data/2.5/weather\n      const response = await fetch(\`https://api.broken-weather.com/weather?q=\${cityName}\`);\n      \n      if (!response.ok) {\n        throw new Error('Weather data not found');\n      }\n      \n      const data = await response.json();\n      setWeather(data);\n    } catch (err) {\n      setError(err.message);\n      console.error('Weather API Error:', err);\n    } finally {\n      setLoading(false);\n    }\n  };\n\n  useEffect(() => {\n    fetchWeather(city);\n  }, []);\n\n  const handleSearch = (e) => {\n    e.preventDefault();\n    if (city.trim()) {\n      fetchWeather(city.trim());\n    }\n  };\n\n  return (\n    <div className="weather-app">\n      <h1>🌤️ Weather App</h1>\n      \n      <form onSubmit={handleSearch} className="search-form">\n        <input \n          type="text"\n          value={city}\n          onChange={(e) => setCity(e.target.value)}\n          placeholder="Enter city name..."\n          className="city-input"\n        />\n        <button type="submit" className="search-btn">\n          Get Weather\n        </button>\n      </form>\n\n      {loading && <div className="loading">Loading weather data...</div>}\n      \n      {error && (\n        <div className="error">\n          <p>❌ {error}</p>\n          <p className="hint">💡 Hint: Check the API endpoint and your internet connection</p>\n        </div>\n      )}\n      \n      {weather && (\n        <div className="weather-info">\n          <h2>{weather.name}</h2>\n          <div className="temperature">{Math.round(weather.main?.temp || 0)}°C</div>\n          <div className="description">{weather.weather?.[0]?.description || 'No description'}</div>\n          <div className="details">\n            <p>Feels like: {Math.round(weather.main?.feels_like || 0)}°C</p>\n            <p>Humidity: {weather.main?.humidity || 0}%</p>\n            <p>Wind: {weather.wind?.speed || 0} m/s</p>\n          </div>\n        </div>\n      )}\n    </div>\n  );\n}\n\nexport default WeatherApp;`
+            }
+          ]
+        },
+        {
+          name: 'App.js',
+          type: 'file',
+          content: `import React from 'react';\nimport WeatherApp from './components/WeatherApp';\nimport './App.css';\n\nfunction App() {\n  return (\n    <div className="App">\n      <WeatherApp />\n    </div>\n  );\n}\n\nexport default App;`
+        },
+        {
+          name: 'App.css',
+          type: 'file',
+          content: `.App {\n  text-align: center;\n  min-height: 100vh;\n  background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);\n  padding: 20px;\n  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n}`
+        },
+        {
+          name: 'components',
+          type: 'folder',
+          isOpen: false,
+          children: [
+            {
+              name: 'WeatherApp.css',
+              type: 'file',
+              content: `.weather-app {\n  max-width: 500px;\n  margin: 0 auto;\n  background: rgba(255, 255, 255, 0.95);\n  border-radius: 20px;\n  padding: 30px;\n  box-shadow: 0 15px 35px rgba(0,0,0,0.1);\n  backdrop-filter: blur(10px);\n}\n\n.weather-app h1 {\n  color: #2d3436;\n  margin-bottom: 30px;\n  font-size: 2.5rem;\n}\n\n.search-form {\n  display: flex;\n  gap: 10px;\n  margin-bottom: 30px;\n}\n\n.city-input {\n  flex: 1;\n  padding: 15px;\n  border: 2px solid #ddd;\n  border-radius: 10px;\n  font-size: 16px;\n  outline: none;\n  transition: border-color 0.3s;\n}\n\n.city-input:focus {\n  border-color: #74b9ff;\n}\n\n.search-btn {\n  background: linear-gradient(135deg, #74b9ff, #0984e3);\n  color: white;\n  border: none;\n  padding: 15px 25px;\n  border-radius: 10px;\n  font-size: 16px;\n  font-weight: 600;\n  cursor: pointer;\n  transition: transform 0.2s;\n}\n\n.search-btn:hover {\n  transform: translateY(-2px);\n}\n\n.loading {\n  color: #74b9ff;\n  font-size: 18px;\n  margin: 20px 0;\n}\n\n.error {\n  background: #ffe0e0;\n  border: 2px solid #ff6b6b;\n  border-radius: 10px;\n  padding: 20px;\n  margin: 20px 0;\n  color: #d63031;\n}\n\n.hint {\n  font-size: 14px;\n  margin-top: 10px;\n  color: #636e72;\n}\n\n.weather-info {\n  background: linear-gradient(135deg, #74b9ff, #0984e3);\n  color: white;\n  border-radius: 15px;\n  padding: 30px;\n  margin-top: 20px;\n}\n\n.weather-info h2 {\n  font-size: 2rem;\n  margin-bottom: 15px;\n}\n\n.temperature {\n  font-size: 4rem;\n  font-weight: bold;\n  margin: 20px 0;\n}\n\n.description {\n  font-size: 1.5rem;\n  text-transform: capitalize;\n  margin-bottom: 20px;\n}\n\n.details {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));\n  gap: 15px;\n  margin-top: 20px;\n}\n\n.details p {\n  background: rgba(255,255,255,0.2);\n  padding: 10px;\n  border-radius: 8px;\n  margin: 0;\n}`
+            }
+          ]
+        },
+        {
+          name: 'index.js',
+          type: 'file',
+          content: `import React from 'react';\nimport ReactDOM from 'react-dom/client';\nimport App from './App';\n\nconst root = ReactDOM.createRoot(document.getElementById('root'));\nroot.render(<App />);`
+        }
+      ]
+    },
+    {
+      name: 'public',
+      type: 'folder',
+      isOpen: false,
+      children: [
+        {
+          name: 'index.html',
+          type: 'file',
+          content: `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="utf-8" />\n  <meta name="viewport" content="width=device-width, initial-scale=1" />\n  <title>React Weather App</title>\n</head>\n<body>\n  <div id="root"></div>\n</body>\n</html>`
+        }
+      ]
+    },
+    {
+      name: 'package.json',
+      type: 'file',
+      content: generatePackageJson(repo, 'react')
+    },
+    {
+      name: 'README.md',
+      type: 'file',
+      content: generateReadme(repo)
+    }
+  ];
+};
+
+// Add placeholder generators for other projects
+const generateExpressBlogApi = (repo: GitHubRepo): FileNode[] => {
+  return generateNodeJsProjectFiles(repo, { type: 'Blog API', features: ['CRUD operations', 'Authentication', 'Validation'] });
+};
+
+const generateReact85Projects = (repo: GitHubRepo): FileNode[] => {
+  return generateReactProjectFiles(repo, { mainComponent: 'App', components: ['MovieSearch', 'PaginatedList', 'FormValidation'], features: ['API integration', 'Pagination', 'Form validation'] });
+};
+
+const generateAngularBeginnerStarter = (repo: GitHubRepo): FileNode[] => {
+  return generateAngularProjectFiles(repo, { mainComponent: 'AppComponent', components: ['HomeComponent', 'FormComponent'], features: ['Routing', 'Two-way binding', 'Services'] });
+};
+
+const generateAngularTicTacToe = (repo: GitHubRepo): FileNode[] => {
+  return generateAngularProjectFiles(repo, { mainComponent: 'GameComponent', components: ['BoardComponent', 'SquareComponent'], features: ['Game logic', 'State management', 'Win detection'] });
+};
+
+const generateNodeRealworldApi = (repo: GitHubRepo): FileNode[] => {
+  return generateNodeJsProjectFiles(repo, { type: 'Realworld API', features: ['JWT Authentication', 'User profiles', 'Article CRUD', 'Following system'] });
 };
 
 export default Playground;
