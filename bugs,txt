@@ -1,0 +1,245 @@
+KQ_PG_01 – Extra Scroll Space in Panels
+Context:
+Occurs in Playground → Components when interacting with Workloads or Networking side panels.
+
+Problem:
+After all list items are loaded, users can still scroll further down into an empty area. This means there’s unnecessary space at the bottom, making it feel like more content should load – but nothing does.
+
+Expected Behavior:
+
+The scroll bar should appear only if the list's height exceeds the visible container.
+
+Once everything is visible, no scrollable empty space should exist.
+
+The scroll should end exactly at the last visible item.
+
+Why It's a Problem:
+Unnecessary scrolling confuses users and suggests broken or incomplete loading behavior. It affects UX quality and polish.
+-------------------------------------------------------------
+KQ_PG_02 -– Misaligned Text in Side Panel
+Context:
+Happens inside the Playground feature, particularly within the side panel.
+
+Problem:
+Text appears visually off – not centered or aligned with other UI elements. This could mean incorrect padding/margin, off-grid placement, or inconsistent styling.
+
+Expected Behavior:
+
+Text should follow a consistent design grid.
+
+Text blocks, labels, and descriptions should align with other elements for visual harmony and readability.
+
+Why It's a Problem:
+Misalignment makes the interface look unprofessional and hard to read. It also violates standard design principles (e.g., modular grids, padding consistency).
+-------------------------------------------------------------------------
+KQ_PG_03 – Invalid Popup Message
+Context:
+In the Playground, a popup says "Architecture looks good!".
+
+Problem:
+
+The message appears even when no components have been added.
+
+It doesn't auto-dismiss, lingering on screen unnecessarily.
+
+Expected Behavior:
+
+Popup should appear only when the architecture meets criteria (i.e., valid components/configurations are present).
+
+It should auto-close after a few seconds or have a manual close button.
+
+Why It's a Problem:
+False positive feedback confuses users. Persistent popups clutter the UI and feel like bugs.
+---------------------------------------------------
+KQ_PG_04 – Extra Tick in Apply Changes Popup
+Context:
+Inside YAML Editor, after clicking "Apply Changes".
+
+Problem:
+The confirmation popup shows an extra tick symbol that isn’t part of the standard UI, making it look inconsistent and visually cluttered.
+
+Expected Behavior:
+
+Only relevant icons (e.g., success icon) should appear.
+
+Avoid duplicate or unnecessary visual elements.
+
+Why It's a Problem:
+Extra icons create visual noise, break design rules, and reduce clarity of feedback.
+-------------------------------------------------
+KQ_PG_05 – Extra Cross Symbol in Error Popup
+Context:
+During Connect Components action in Playground → Components.
+
+Problem:
+If incompatible components are connected, an error popup appears with an extra cross (X) symbol, misaligning with the design and creating visual clutter.
+
+Expected Behavior:
+
+Display only the intended error message/icon.
+
+No extra symbols that disrupt layout or clarity.
+
+Why It's a Problem:
+Redundant UI elements degrade user trust and consistency in error feedback.
+-----------------------------------------------------------------------------
+KQ_PG_06 – Popups Overlap Important UI
+Context:
+In the Playground, suggestion and warning popups sometimes appear in front of buttons or interactive elements.
+
+Problem:
+Popups block access to buttons, making it hard or impossible to interact with the UI.
+
+Expected Behavior:
+
+Popups should appear in non-intrusive locations.
+
+They must not obstruct key interactions or controls.
+
+Why It's a Problem:
+It breaks usability and accessibility, forcing users to refresh or find workarounds.
+-----------------------------------------------------------
+KQ_PG_07 – Connection Lines Flicker After Component Deletion
+Context:
+In Playground, after deleting a component.
+
+Problem:
+The lines connecting components don't disappear instantly. They remain temporarily, flicker, or linger awkwardly on screen.
+
+Expected Behavior:
+
+Connection lines should disappear smoothly and immediately when a component is removed.
+
+No visual remnants or glitches should remain.
+
+Why It's a Problem:
+Visual artifacts can confuse users and give the impression of a broken system.
+-----------------------------------------------------------------------------
+KQ_PG_08 – Scroll Not Working in App Status Panel
+Context:
+In Playground → Show Panel → App Status.
+
+Problem:
+Scroll feature does not function. Users can’t scroll using mouse wheel or scrollbar to see hidden content.
+
+Expected Behavior:
+
+Full vertical scroll support via mouse wheel, trackpad, scrollbar.
+
+Users should access all items/content, even if not visible initially.
+
+Why It's a Problem:
+If users can’t see all content, they miss key information. This seriously limits functionality and may cause incorrect usage or understanding.
+
+
+-----------------------------------------------
+
+✅ Styling & Branding Inconsistencies
+[KQ_MS_01 / Home] – Company name “SAMWI” is written inconsistently (uppercase in some places).
+🔧 Use consistent casing – Prefer "Sanwi" for branding consistency across UI.
+
+🔍 UI/UX Design & Layout Issues
+[Home] – Course icons are missing on the course listing page.
+🔧 Use visual icons to improve navigation clarity.
+
+[Examples Page] – Layout of example cards is inconsistent.
+🔧 Diagrams overflow containers, missing descriptions create imbalance.
+
+[Examples Page] – Some tooltips and popups block other UI elements.
+🔧 Reposition or auto-dismiss popups to avoid blocking buttons.
+
+[Playground] – Popups (e.g., success/error messages) appear with extra tick/X icons and bad positioning, overlapping buttons.
+🔧 Clean up icon usage and place popups away from core interactive elements.
+
+[Playground] – Lines connecting components flicker after deletion.
+🔧 Ensure connector lines are removed cleanly when components are deleted.
+
+🎨 Visual & Accessibility Issues
+[Examples Page] – Category labels (e.g., “Basic”, “Easy”, “Production”) are used inconsistently.
+🔧 Standardize the label taxonomy for clarity.
+
+[Examples Page] – Titles/descriptions are vague or not beginner-friendly.
+🔧 Improve title clarity and add simpler explanations.
+
+[Examples Page] – Diagram descriptions are inconsistently placed.
+🔧 Stick to one placement – below or inside cards, not both.
+
+[About Page – KQ_ABOUT_01] – Missing spacing between two words.
+🔧 Ensure proper spacing in displayed text.
+
+[Examples Page] – Some animations don’t trigger on "Click me to see traffic flow".
+🔧 Standardize animation logic across examples.
+
+🧪 Functionality Bugs
+[KQ_HOME_01] – PDF export from K8 Architecture module has blurry text.
+🔧 Fix PDF rendering engine or export resolution.
+
+[KQ_HOME_02] – Zoom in/out buttons don't work in K8 Architecture module.
+🔧 Add or fix handlers for zoom controls.
+
+[KQ_HOME_03] – Video content missing in sub-modules.
+🔧 Ensure all video links are loaded and not broken.
+
+[KQ_HOME_04] – Scenes and labels in animations are misaligned.
+🔧 Fix positioning and layering of animated components.
+
+[KQ_DEBUG_01] – Help command doesn't work in K8s Debugging.
+🔧 Bind help command to a proper response handler.
+
+🚨 Challenge Section Issues
+[KQ_CHG_01] – 5 challenges are missing (modules 16–20).
+🔧 Ensure all 56 challenges are visible and accessible.
+
+[KQ_CHG_02] – YAML editor scroll is unresponsive.
+🔧 Fix scroll handler in the YAML editor panel.
+
+[KQ_CHG_03] – Hint section is not visible even after full scroll.
+🔧 Ensure hint area is not clipped or hidden.
+
+[KQ_CHG_04] – Expanding YAML editor freezes UI and breaks navigation.
+🔧 Avoid full refresh or route loss after expansion.
+
+[KQ_CHG_05] – “Analysis” button repeatedly expands editor.
+🔧 Make expansion toggle-based; prevent cumulative width growth. ----> remove analytics button
+
+[KQ_CHG_06] – “Show Solution” scrolls far down; users might miss it.
+🔧 Auto-scroll or show in modal for better visibility.
+
+[KQ_CHG_07] – Generic “Issuefound” feedback message on wrong solution.
+🔧 Provide meaningful feedback about the mistake.
+
+🧩 Playground Component Issues
+[KQ_PG_01] – Extra scroll space in side panels (Workloads, Networking).
+🔧 Limit scroll to content height.
+
+[KQ_PG_02] – Misaligned text in Playground side panel.
+🔧 Align all text to a common grid.
+
+[KQ_PG_03] – “Architecture looks good” popup appears even without components.
+🔧 Only show message on valid architecture.
+
+[KQ_PG_04] – “Apply Changes” success popup has extra tick symbol.
+🔧 Clean up UI of confirmation messages.
+
+[KQ_PG_05] – Error popups have extra cross icons.
+🔧 Remove redundant icons for visual clarity.
+
+[KQ_PG_06] – Suggestion/warning popups overlap buttons.
+🔧 Reposition or dock these messages better.
+
+[KQ_PG_08] – App Status panel is not scrollable.
+🔧 Fix overflow/scroll styling to enable full view.
+
+✅ Functional Tests Passed (No Fix Needed)
+Examples page loads and displays correctly.
+
+URL routing and browser navigation works.
+
+Search/filtering behaves as expected.
+
+YAML copy/paste and validation work correctly.
+
+Accessibility: button labels, focus visibility, and contrast all meet requirements.
+
+Proper error messages for invalid searches.
+
