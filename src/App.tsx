@@ -18,7 +18,7 @@ import Challenges from './pages/Challenges';
 import Examples from './pages/Examples';
 import K8sDebugging from './pages/K8sDebugging';
 import Documentation from './pages/Documentation';
-import AboutFeedback from './pages/AboutFeedback';
+
 
 // Cloud Architecture Module
 import CloudArchitectureApp from '../modules/cloud-architecture/src/CloudArchitectureApp';
@@ -59,7 +59,7 @@ function App() {
             <Route path="/kubernetes/examples" element={<KubeQuestLayout><Examples /></KubeQuestLayout>} />
             <Route path="/kubernetes/debugging" element={<KubeQuestLayout><K8sDebugging /></KubeQuestLayout>} />
             <Route path="/kubernetes/docs" element={<KubeQuestLayout><Documentation /></KubeQuestLayout>} />
-            <Route path="/kubernetes/about-feedback" element={<KubeQuestLayout><AboutFeedback /></KubeQuestLayout>} />
+
 
             {/* Cloud Architecture Module Routes - all prefixed with /cloud-architecture */}
             <Route path="/cloud-architecture/*" element={<CloudArchitectureApp />} />
@@ -102,8 +102,8 @@ function App() {
             }}
           />
 
-          {/* Floating Collaborators Button */}
-          <CollaboratorsButton />
+          {/* Floating Collaborators Button - DEACTIVATED */}
+          {/* <CollaboratorsButton /> */}
         </div>
       </Router>
   );

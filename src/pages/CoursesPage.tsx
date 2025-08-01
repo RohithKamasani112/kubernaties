@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import {
   Container,
@@ -34,6 +34,7 @@ const CoursesPage: React.FC = () => {
   const [selectedLevel, setSelectedLevel] = useState('all');
   const [selectedProvider, setSelectedProvider] = useState('all');
   const [previewCourse, setPreviewCourse] = useState<string | null>(null);
+  const [previewPosition, setPreviewPosition] = useState({ x: 0, y: 0 });
 
   const courses = [
     {
@@ -511,7 +512,14 @@ const CoursesPage: React.FC = () => {
                         {/* Action Buttons */}
                         <div className="flex space-x-2 self-start">
                           <motion.button
-                            onClick={() => setPreviewCourse(course.id)}
+                            onClick={(e) => {
+                              const rect = e.currentTarget.getBoundingClientRect();
+                              setPreviewPosition({
+                                x: rect.left - 320, // Position to the left of the button
+                                y: rect.top
+                              });
+                              setPreviewCourse(course.id);
+                            }}
                             className="bg-white/80 backdrop-blur-sm border border-slate-200 text-slate-700 px-4 py-2 rounded-lg font-medium hover:bg-white hover:shadow-md transition-all duration-300 flex items-center space-x-1"
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
@@ -863,7 +871,14 @@ const CoursesPage: React.FC = () => {
                           </motion.button>
 
                           <motion.button
-                            onClick={() => setPreviewCourse(course.id)}
+                            onClick={(e) => {
+                              const rect = e.currentTarget.getBoundingClientRect();
+                              setPreviewPosition({
+                                x: rect.left - 320, // Position to the left of the button
+                                y: rect.top
+                              });
+                              setPreviewCourse(course.id);
+                            }}
                             className="bg-white/80 backdrop-blur-sm border border-slate-200 text-slate-700 px-4 py-2 rounded-lg font-medium hover:bg-white hover:shadow-md transition-all duration-300 flex items-center space-x-1"
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
@@ -1012,22 +1027,26 @@ const CoursesPage: React.FC = () => {
           </div>
         </section>
 
-        {/* Preview Modal */}
-        {previewCourse && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            onClick={() => setPreviewCourse(null)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
-            >
+        {/* Preview Popup - Small popup without full background blur */}
+        <AnimatePresence>
+          {previewCourse && (
+            <>
+              {/* Invisible backdrop for click-outside-to-close */}
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setPreviewCourse(null)}
+              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="fixed z-50 bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-md w-80 max-h-96 overflow-y-auto"
+                style={{
+                  left: Math.max(16, Math.min(previewPosition.x, window.innerWidth - 336)), // Keep within screen bounds
+                  top: Math.max(16, previewPosition.y)
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
               {(() => {
                 const course = courses.find(c => c.id === previewCourse);
                 if (!course) return null;
@@ -1104,9 +1123,10 @@ const CoursesPage: React.FC = () => {
                   </div>
                 );
               })()}
-            </motion.div>
-          </motion.div>
-        )}
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
     </>
   );

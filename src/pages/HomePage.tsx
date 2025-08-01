@@ -45,7 +45,7 @@ const HomePage: React.FC = () => {
   const [missionRef, missionInView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [ctaRef, ctaInView] = useInView({ triggerOnce: true, threshold: 0.1 });
   
-  const [email, setEmail] = useState('');
+
 
   // Typing animation state
   const [showFirstLine, setShowFirstLine] = React.useState(false);
@@ -62,12 +62,12 @@ const HomePage: React.FC = () => {
   // Feedback modal state
   const [showFeedbackModal, setShowFeedbackModal] = React.useState(false);
   const [feedbackData, setFeedbackData] = React.useState({
-    name: '',
     email: '',
-    interest: '',
-    experience: '',
-    message: ''
+    likedMost: '',
+    improvements: '',
+    bugs: ''
   });
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = React.useState(false);
 
   const technologies = [
     {
@@ -488,13 +488,7 @@ const HomePage: React.FC = () => {
     { number: '100%', label: 'Free Access', icon: Heart }
   ];
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      // Pass email as URL parameter to pre-fill the join form
-      window.location.href = `/join?email=${encodeURIComponent(email)}`;
-    }
-  };
+
 
   return (
     <>
@@ -1363,34 +1357,17 @@ const HomePage: React.FC = () => {
                 ))}
               </div>
 
-              <form onSubmit={handleEmailSubmit} className="max-w-md mx-auto px-2 sm:px-0">
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                  <div className="flex-1">
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email address"
-                      className="w-full px-4 sm:px-6 py-3 sm:py-4 border border-slate-200 rounded-xl sm:rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300 bg-white/80 backdrop-blur-sm text-sm sm:text-base"
-                      required
-                    />
-                  </div>
-                  <motion.button
-                    type="submit"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center space-x-2 min-h-[48px] touch-manipulation"
-                  >
-                    <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="text-sm sm:text-base">Register Now</span>
-                  </motion.button>
-                </div>
-              </form>
-
-              <p className="text-sm text-slate-500 mt-6 flex items-center justify-center space-x-2">
-                <Shield className="w-4 h-4" />
-                <span>No spam, unsubscribe anytime. We respect your privacy.</span>
-              </p>
+              <div className="max-w-md mx-auto px-2 sm:px-0">
+                <motion.button
+                  onClick={() => navigate('/join')}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center space-x-2 min-h-[48px] touch-manipulation"
+                >
+                  <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="text-sm sm:text-base">Register Now</span>
+                </motion.button>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -1414,7 +1391,7 @@ const HomePage: React.FC = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-gray-900">Join Our Learning Platform</h3>
+                <h3 className="text-xl font-bold text-gray-900">Share Your Feedback</h3>
                 <button
                   onClick={() => setShowFeedbackModal(false)}
                   className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -1428,41 +1405,47 @@ const HomePage: React.FC = () => {
               </p>
 
               <form
-                onSubmit={(e) => {
+                onSubmit={async (e) => {
                   e.preventDefault();
-                  // Handle form submission - could integrate with email service
-                  console.log('Feedback submitted:', feedbackData);
-                  setShowFeedbackModal(false);
-                  // Reset form
-                  setFeedbackData({
-                    name: '',
-                    email: '',
-                    interest: '',
-                    experience: '',
-                    message: ''
-                  });
-                  // Redirect to registration page
-                  navigate('/register');
+                  setIsSubmittingFeedback(true);
+
+                  try {
+                    // Google Form submission URL
+                    const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdOgGSpUjjnCo_L10sH53Yo_yFoMd9Hevacl0FyUBTgKl65jQ/formResponse';
+
+                    // Create form data for Google Forms
+                    const googleFormData = new FormData();
+                    googleFormData.append('entry.1508207582', feedbackData.email); // Email Address
+                    googleFormData.append('entry.974336969', feedbackData.likedMost); // What did you like the most
+                    googleFormData.append('entry.1814072838', feedbackData.improvements); // What we can improve
+                    googleFormData.append('entry.96251011', feedbackData.bugs); // Did u face any bugs
+
+                    // Submit to Google Forms
+                    await fetch(GOOGLE_FORM_URL, {
+                      method: 'POST',
+                      body: googleFormData,
+                      mode: 'no-cors' // Required for Google Forms
+                    });
+
+                    setShowFeedbackModal(false);
+                    // Reset form
+                    setFeedbackData({
+                      email: '',
+                      likedMost: '',
+                      improvements: '',
+                      bugs: ''
+                    });
+                  } catch (error) {
+                    console.error('Feedback submission error:', error);
+                  } finally {
+                    setIsSubmittingFeedback(false);
+                  }
                 }}
                 className="space-y-4"
               >
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={feedbackData.name}
-                    onChange={(e) => setFeedbackData(prev => ({ ...prev, name: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Your full name"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email *
+                    Email Address *
                   </label>
                   <input
                     type="email"
@@ -1476,50 +1459,42 @@ const HomePage: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    What interests you most?
-                  </label>
-                  <select
-                    value={feedbackData.interest}
-                    onChange={(e) => setFeedbackData(prev => ({ ...prev, interest: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="">Select an option</option>
-                    <option value="web-development">Web Development</option>
-                    <option value="cloud-architecture">Cloud Architecture</option>
-                    <option value="ai-ml">AI/ML</option>
-                    <option value="devops">DevOps</option>
-                    <option value="data-engineering">Data Engineering</option>
-                    <option value="all">All of the above</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Experience Level
-                  </label>
-                  <select
-                    value={feedbackData.experience}
-                    onChange={(e) => setFeedbackData(prev => ({ ...prev, experience: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="">Select your level</option>
-                    <option value="beginner">Beginner</option>
-                    <option value="intermediate">Intermediate</option>
-                    <option value="advanced">Advanced</option>
-                    <option value="expert">Expert</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Additional Message
+                    What did you like the most? *
                   </label>
                   <textarea
-                    value={feedbackData.message}
-                    onChange={(e) => setFeedbackData(prev => ({ ...prev, message: e.target.value }))}
+                    required
+                    value={feedbackData.likedMost}
+                    onChange={(e) => setFeedbackData(prev => ({ ...prev, likedMost: e.target.value }))}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     rows={3}
-                    placeholder="Tell us more about your learning goals..."
+                    placeholder="Tell us what you enjoyed most about the platform..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    What can we improve? *
+                  </label>
+                  <textarea
+                    required
+                    value={feedbackData.improvements}
+                    onChange={(e) => setFeedbackData(prev => ({ ...prev, improvements: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    rows={3}
+                    placeholder="Share your suggestions for improvements..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Did you face any bugs?
+                  </label>
+                  <textarea
+                    value={feedbackData.bugs}
+                    onChange={(e) => setFeedbackData(prev => ({ ...prev, bugs: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    rows={3}
+                    placeholder="Describe any bugs or issues you encountered (optional)..."
                   />
                 </div>
 
@@ -1533,9 +1508,17 @@ const HomePage: React.FC = () => {
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 px-4 py-2 bg-gradient-to-r from-[#6C63FF] to-[#8B7CF6] text-white rounded-lg hover:from-[#5848E2] hover:to-[#7C3AED] transition-all duration-300"
+                    disabled={isSubmittingFeedback}
+                    className="flex-1 px-4 py-2 bg-gradient-to-r from-[#6C63FF] to-[#8B7CF6] text-white rounded-lg hover:from-[#5848E2] hover:to-[#7C3AED] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                   >
-                    Start Learning
+                    {isSubmittingFeedback ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span>Submitting...</span>
+                      </>
+                    ) : (
+                      <span>Submit Feedback</span>
+                    )}
                   </button>
                 </div>
               </form>

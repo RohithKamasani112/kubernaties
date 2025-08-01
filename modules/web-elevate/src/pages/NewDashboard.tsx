@@ -21,15 +21,15 @@ import {
 const NewDashboard: React.FC = () => {
   const userStats = [
     {
-      label: 'Learning Paths Enrolled',
-      value: '3',
+      label: 'React Modules',
+      value: '6',
       icon: BookOpen,
       color: 'text-blue-600',
       bgColor: 'bg-blue-50'
     },
     {
       label: 'Modules Completed',
-      value: '12',
+      value: '6',
       icon: CheckCircle,
       color: 'text-green-600',
       bgColor: 'bg-green-50'
@@ -44,7 +44,7 @@ const NewDashboard: React.FC = () => {
     },
     {
       label: 'Total Learning Time',
-      value: '24h',
+      value: '18h',
       icon: Clock,
       color: 'text-purple-600',
       bgColor: 'bg-purple-50'
@@ -61,26 +61,6 @@ const NewDashboard: React.FC = () => {
       nextModule: 'React Hooks Deep Dive',
       color: 'from-blue-500 to-cyan-500',
       xpReward: 150
-    },
-    {
-      id: 'javascript-fundamentals',
-      title: 'JavaScript Fundamentals',
-      progress: 85,
-      totalModules: 8,
-      completedModules: 7,
-      nextModule: 'Async/Await Patterns',
-      color: 'from-yellow-500 to-orange-500',
-      xpReward: 120
-    },
-    {
-      id: 'node-backend',
-      title: 'Node.js Backend',
-      progress: 30,
-      totalModules: 12,
-      completedModules: 4,
-      nextModule: 'Express Middleware',
-      color: 'from-green-500 to-emerald-500',
-      xpReward: 200
     }
   ];
 
@@ -108,14 +88,6 @@ const NewDashboard: React.FC = () => {
       xp: 0,
       icon: Play,
       color: 'text-blue-600'
-    },
-    {
-      type: 'completed',
-      title: 'Completed "JavaScript Promises"',
-      time: '2 days ago',
-      xp: 30,
-      icon: CheckCircle,
-      color: 'text-green-600'
     }
   ];
 
@@ -192,39 +164,36 @@ const NewDashboard: React.FC = () => {
         </Link>
       </motion.div>
 
-      {/* Blueprint Feature Card */}
+      {/* Web Development Focus */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.15 }}
         className="mb-4"
       >
-        <Link
-          to="/blueprint-builder"
-          className="block bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-4 text-white hover:shadow-lg transition-all duration-200 group"
-        >
+        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-4 text-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-                <Target className="w-5 h-5 text-white" />
+                <Code className="w-5 h-5 text-white" />
               </div>
               <div>
                 <h3 className="text-lg font-bold mb-1">
-                  🚀 New: Project Blueprints
+                  🎯 Web Development Mastery
                 </h3>
                 <p className="text-indigo-100 text-sm">
-                  Build real-world projects with guided milestones and AI assistance
+                  Master modern web development with React, interactive labs, and real-world projects
                 </p>
               </div>
             </div>
             <div className="text-right">
               <div className="bg-white/20 px-3 py-1 rounded-full text-sm font-medium mb-1">
-                24 Projects
+                React Focus
               </div>
-              <ChevronRight className="w-5 h-5 text-white/80 group-hover:text-white transition-colors ml-auto" />
+              <div className="text-indigo-100 text-xs">Interactive Learning</div>
             </div>
           </div>
-        </Link>
+        </div>
       </motion.div>
 
       {/* Compact Stats */}
