@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
-import { 
-  Search, 
-  BookOpen, 
-  PlayCircle, 
+import {
+  Search,
+  BookOpen,
   Code,
   ExternalLink,
   ChevronRight,
@@ -1666,11 +1665,7 @@ spec:
     }
   };
 
-  const tryInPlayground = (code: string) => {
-    const playgroundUrl = `/playground?yaml=${encodeURIComponent(code)}`;
-    window.open(playgroundUrl, '_blank');
-    toast.success('Opening in playground...');
-  };
+
 
   if (selectedDoc) {
     return (
@@ -1753,13 +1748,7 @@ spec:
                               )}
                               <span className="text-sm">Copy</span>
                             </button>
-                            <button
-                              onClick={() => tryInPlayground(section.codeExample!)}
-                              className="flex items-center space-x-1 px-3 py-1 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition-colors"
-                            >
-                              <PlayCircle className="w-4 h-4" />
-                              <span>Try it</span>
-                            </button>
+
                           </div>
                         </div>
                         <div className="h-64">
