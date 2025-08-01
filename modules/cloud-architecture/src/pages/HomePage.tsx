@@ -163,12 +163,12 @@ const HomePage: React.FC = () => {
   const nextAction = getNextSuggestedAction();
 
   const quickAccessShortcuts = [
+    { name: 'Learning Paths', icon: '🎯', href: 'paths' },
     { name: 'Load Balancer', icon: '⚖️', href: 'studio?service=load-balancer' },
     { name: 'VPC Setup', icon: '🌐', href: 'studio?service=vpc' },
     { name: 'Terraform', icon: '🏗️', href: 'ai-generator?export=terraform' },
     { name: 'CI/CD Pipeline', icon: '🔄', href: 'scenarios?category=devops' },
-    { name: 'Serverless', icon: '⚡', href: 'scenarios?category=serverless' },
-    { name: 'Security', icon: '🔒', href: 'scenarios?category=security' }
+    { name: 'Serverless', icon: '⚡', href: 'scenarios?category=serverless' }
   ];
 
   const platformTrends = [
@@ -214,6 +214,157 @@ const HomePage: React.FC = () => {
                 <div>{currentTime.toLocaleDateString()}</div>
                 <div>{currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
               </div>
+            </div>
+          </motion.div>
+
+          {/* Features Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="mb-8"
+          >
+            <h2 className="text-2xl font-bold text-slate-900 mb-6">Features</h2>
+            <p className="text-slate-600 mb-6">Choose your learning path</p>
+
+            {/* Feature Navigation Pills */}
+            <div className="flex flex-wrap gap-3 mb-8">
+              {[
+                { name: 'Overview', description: 'Get started', active: true },
+                { name: 'Scenarios', description: 'Bit-sized examples', active: false, href: 'scenarios' },
+                { name: 'AI Gen', description: 'Text → architecture', active: false, href: 'ai-generator' },
+                { name: 'Builder', description: 'Drag & drop', active: false, href: 'builder' },
+                { name: 'Paths', description: 'Guided learning', active: false, href: 'paths' }
+              ].map((feature, index) => (
+                feature.href ? (
+                  <Link
+                    key={feature.name}
+                    to={feature.href}
+                    className="px-6 py-3 rounded-xl text-sm font-medium transition-all duration-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50 border border-gray-200 hover:border-gray-300"
+                  >
+                    <div className="text-center">
+                      <div className="font-semibold">{feature.name}</div>
+                      <div className="text-xs opacity-75">{feature.description}</div>
+                    </div>
+                  </Link>
+                ) : (
+                  <div
+                    key={feature.name}
+                    className={`px-6 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                      feature.active
+                        ? 'bg-purple-600 text-white shadow-lg'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border border-gray-200'
+                    }`}
+                  >
+                    <div className="text-center">
+                      <div className="font-semibold">{feature.name}</div>
+                      <div className="text-xs opacity-75">{feature.description}</div>
+                    </div>
+                  </div>
+                )
+              ))}
+            </div>
+
+            {/* Feature Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                {
+                  title: 'AWS Fundamentals',
+                  description: 'Master the basics of Amazon Web Services from compute to storage',
+                  level: 'beginner',
+                  modules: '3/8',
+                  duration: '12h',
+                  progress: 38,
+                  color: 'from-orange-500 to-red-500',
+                  href: 'paths'
+                },
+                {
+                  title: 'Azure Cloud Solutions',
+                  description: 'Build scalable applications and services on Microsoft Azure',
+                  level: 'intermediate',
+                  modules: '0/10',
+                  duration: '18h',
+                  progress: 0,
+                  color: 'from-blue-500 to-cyan-500',
+                  href: 'paths'
+                },
+                {
+                  title: 'GCP Architecture Mastery',
+                  description: 'Design enterprise-grade solutions on Google Cloud Platform',
+                  level: 'expert',
+                  modules: '0/12',
+                  duration: '25h',
+                  progress: 0,
+                  color: 'from-green-500 to-emerald-500',
+                  href: 'paths'
+                },
+                {
+                  title: 'Multi-Cloud Architecture',
+                  description: 'Master hybrid and multi-cloud deployment strategies',
+                  level: 'expert',
+                  modules: '0/15',
+                  duration: '30h',
+                  progress: 0,
+                  color: 'from-purple-500 to-pink-500',
+                  href: 'paths'
+                }
+              ].map((path, index) => (
+                <motion.div
+                  key={path.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + index * 0.1 }}
+                  className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 group"
+                >
+                  {/* Card Header */}
+                  <div className={`bg-gradient-to-r ${path.color} p-4 text-white relative overflow-hidden`}>
+                    <div className="relative z-10">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className={`px-2 py-1 rounded-full text-xs font-semibold bg-white/20 text-white`}>
+                          {path.level}
+                        </span>
+                        <div className="text-right">
+                          <div className="text-lg font-bold">{path.modules}</div>
+                          <div className="text-xs opacity-90">Modules</div>
+                        </div>
+                      </div>
+                      <h3 className="font-bold mb-1">{path.title}</h3>
+                      <p className="text-white/90 text-sm leading-relaxed">{path.description}</p>
+                    </div>
+                  </div>
+
+                  {/* Card Body */}
+                  <div className="p-4">
+                    {/* Progress Bar */}
+                    {path.progress > 0 && (
+                      <div className="mb-3">
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="text-xs font-medium text-gray-700">Progress</span>
+                          <span className="text-xs text-gray-500">{path.progress}%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-1.5">
+                          <div
+                            className={`bg-gradient-to-r ${path.color} h-1.5 rounded-full transition-all duration-300`}
+                            style={{ width: `${path.progress}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="text-center mb-3">
+                      <div className="text-sm text-gray-600">{path.duration} Duration</div>
+                    </div>
+
+                    <Link
+                      to={path.href}
+                      className="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2"
+                    >
+                      <span>View Path</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </Link>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
 

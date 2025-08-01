@@ -289,7 +289,7 @@ const ComponentPalette: React.FC = () => {
       </div>
 
       {/* Scrollable Categories */}
-      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-2 component-palette-scroll" style={{ minHeight: '300px' }}>
+      <div className="flex-1 overflow-y-auto px-3 py-2 space-y-2 component-palette-scroll" style={{ maxHeight: 'calc(100vh - 200px)' }}>
         {filteredCategories.map((category, categoryIndex) => (
           <motion.div
             key={category.id}
@@ -303,17 +303,17 @@ const ComponentPalette: React.FC = () => {
               onClick={() => toggleCategory(category.id)}
               className="w-full flex items-center justify-between px-4 py-3 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200 group"
             >
-              <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide group-hover:text-blue-700 transition-colors">
+              <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide group-hover:text-blue-700 transition-colors leading-tight">
                 {category.name}
               </h3>
-              <div className="flex items-center space-x-2">
-                <span className="text-xs font-semibold text-slate-600 bg-gradient-to-r from-slate-100 to-slate-200 px-2 py-1 rounded-full border border-slate-200">
+              <div className="flex items-center space-x-2 flex-shrink-0">
+                <span className="text-xs font-semibold text-slate-600 bg-gradient-to-r from-slate-100 to-slate-200 px-2 py-1 rounded-full border border-slate-200 leading-none">
                   {category.components.length}
                 </span>
                 {expandedCategories.includes(category.id) ? (
-                  <ChevronDown className="w-4 h-4 text-slate-600 group-hover:text-blue-600 transition-colors" />
+                  <ChevronDown className="w-4 h-4 text-slate-600 group-hover:text-blue-600 transition-colors flex-shrink-0" />
                 ) : (
-                  <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-blue-600 transition-colors" />
+                  <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-blue-600 transition-colors flex-shrink-0" />
                 )}
               </div>
             </button>
@@ -322,7 +322,7 @@ const ComponentPalette: React.FC = () => {
             <AnimatePresence>
               {expandedCategories.includes(category.id) && (
                 <motion.div
-                  className="space-y-1.5 px-3 pb-3 max-h-96 overflow-y-auto bg-gradient-to-b from-slate-50/50 to-white component-palette-scroll"
+                  className="space-y-1.5 px-3 pb-3 max-h-80 overflow-y-auto bg-gradient-to-b from-slate-50/50 to-white component-palette-scroll"
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
@@ -348,14 +348,14 @@ const ComponentPalette: React.FC = () => {
                         title={component.tooltip}
                       >
                         <div className="flex items-center space-x-3">
-                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${component.color} group-hover:scale-105 transition-transform duration-200 shadow-sm`}>
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${component.color} group-hover:scale-105 transition-transform duration-200 shadow-sm flex-shrink-0`}>
                             <Icon className="w-4 h-4" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h4 className="text-sm font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
+                            <h4 className="text-sm font-semibold text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">
                               {component.name}
                             </h4>
-                            <p className="text-xs text-slate-600 truncate">
+                            <p className="text-xs text-slate-600 truncate leading-tight mt-0.5">
                               {component.description}
                             </p>
                           </div>

@@ -16,7 +16,8 @@ import {
   Menu,
   X,
   ChevronRight,
-  Cloud
+  Cloud,
+  Construction
 } from 'lucide-react';
 
 interface WebElevateLayoutProps {
@@ -36,9 +37,10 @@ const WebElevateLayout: React.FC<WebElevateLayoutProps> = ({ children }) => {
     { name: 'Learning Paths', href: '/web-elevate/paths', icon: BookOpen },
     { name: 'Debug Challenges', href: '/web-elevate/debug-projects', icon: Zap },
     { name: 'Blueprints', href: '/web-elevate/blueprints', icon: Target },
-    { name: 'Collaboration', href: '/web-elevate/collaboration', icon: Users },
+    { name: 'Collaboration', href: '/web-elevate/collaboration', icon: Users, devInProgress: true },
     { name: 'Playground', href: '/web-elevate/playground', icon: Code },
-    { name: 'Portfolio', href: '/web-elevate/portfolio', icon: User },
+    { name: 'Portfolio', href: '/web-elevate/portfolio', icon: User, devInProgress: true },
+    { name: 'Settings', href: '/web-elevate/settings', icon: Settings, devInProgress: true },
   ];
 
   const isActive = (href: string) => {
@@ -110,10 +112,21 @@ const WebElevateLayout: React.FC<WebElevateLayoutProps> = ({ children }) => {
                   className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 group relative ${
                     active
                       ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600'
+                      : item.devInProgress
+                      ? 'text-slate-400 hover:text-slate-500 hover:bg-slate-25'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
                 >
-                  <item.icon className={`w-4 h-4 ${active ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'}`} />
+                  <div className="relative">
+                    <item.icon className={`w-4 h-4 ${
+                      active ? 'text-blue-600' :
+                      item.devInProgress ? 'text-slate-400' :
+                      'text-slate-400 group-hover:text-slate-600'
+                    }`} />
+                    {item.devInProgress && (
+                      <Construction className="w-2.5 h-2.5 text-orange-500 absolute -top-1 -right-1" />
+                    )}
+                  </div>
                   <span className="truncate">{item.name}</span>
                   {active && (
                     <motion.div
@@ -126,6 +139,13 @@ const WebElevateLayout: React.FC<WebElevateLayoutProps> = ({ children }) => {
                     <span className="ml-auto">
                       <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                         New
+                      </span>
+                    </span>
+                  )}
+                  {item.devInProgress && (
+                    <span className="ml-auto">
+                      <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-600">
+                        Dev
                       </span>
                     </span>
                   )}
@@ -183,15 +203,32 @@ const WebElevateLayout: React.FC<WebElevateLayoutProps> = ({ children }) => {
                     className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                       isActive(item.href)
                         ? 'bg-blue-50 text-blue-700'
+                        : item.devInProgress
+                        ? 'text-slate-400 hover:text-slate-500 hover:bg-slate-25'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                     }`}
                   >
-                    <item.icon className="w-4 h-4" />
+                    <div className="relative">
+                      <item.icon className={`w-4 h-4 ${
+                        isActive(item.href) ? 'text-blue-600' :
+                        item.devInProgress ? 'text-slate-400' : ''
+                      }`} />
+                      {item.devInProgress && (
+                        <Construction className="w-2.5 h-2.5 text-orange-500 absolute -top-1 -right-1" />
+                      )}
+                    </div>
                     <span>{item.name}</span>
                     {item.featured && (
                       <span className="ml-auto">
                         <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                           New
+                        </span>
+                      </span>
+                    )}
+                    {item.devInProgress && (
+                      <span className="ml-auto">
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-600">
+                          Dev
                         </span>
                       </span>
                     )}

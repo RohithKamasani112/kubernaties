@@ -87,6 +87,9 @@ const CoursesPage: React.FC = () => {
       rating: 4.9,
       path: '/web-elevate',
       provider: 'web-development',
+      status: 'Beta',
+      statusColor: 'bg-blue-100 text-blue-700',
+      betaNote: 'Under active development - New features being added weekly! Join the beta and help shape the future of web development learning.',
       features: [
         'Interactive Code Playground',
         'Real-world Project Blueprints',
@@ -491,9 +494,16 @@ const CoursesPage: React.FC = () => {
                             </motion.div>
                           </motion.div>
                           <div className="flex-1">
-                            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-1">
-                              {course.title}
-                            </h2>
+                            <div className="flex items-center space-x-2 mb-1">
+                              <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
+                                {course.title}
+                              </h2>
+                              {course.id === 'web-elevate' && (
+                                <span className="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full border border-blue-200">
+                                  BETA
+                                </span>
+                              )}
+                            </div>
                             <p className="text-slate-600 font-medium text-sm sm:text-base">{course.subtitle}</p>
                           </div>
                         </div>
@@ -785,6 +795,19 @@ const CoursesPage: React.FC = () => {
                         </div>
 
                         <p className="text-slate-700 mb-4 text-sm leading-relaxed">{course.description}</p>
+
+                        {/* Beta Note for Web Development */}
+                        {course.id === 'web-elevate' && course.betaNote && (
+                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                            <div className="flex items-start space-x-2">
+                              <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 animate-pulse flex-shrink-0" />
+                              <div>
+                                <p className="text-blue-800 text-xs font-medium mb-1">Beta Program</p>
+                                <p className="text-blue-700 text-xs">{course.betaNote}</p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
 
                         {/* Progress Details */}
                         <div className="bg-slate-50/80 backdrop-blur-sm rounded-xl p-3 mb-4">

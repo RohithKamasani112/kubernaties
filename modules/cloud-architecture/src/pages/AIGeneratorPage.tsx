@@ -28,50 +28,74 @@ const AIGeneratorPage: React.FC = () => {
     setIsGenerating(true);
     // Simulate AI generation
     setTimeout(() => {
-      setGeneratedArchitecture(`# Generated Cloud Architecture
+      // Check if the question is related to cloud architecture
+      const cloudKeywords = ['web app', 'architecture', 'aws', 'azure', 'gcp', 'cloud', 'server', 'database', 'api', 'microservice', 'container', 'kubernetes', 'docker', 'load balancer', 'cdn', 'storage', 'compute', 'scaling', 'deployment', 'infrastructure'];
+      const isCloudRelated = cloudKeywords.some(keyword =>
+        requirements.toLowerCase().includes(keyword.toLowerCase())
+      );
 
-## Architecture Overview
-Based on your requirements: "${requirements}"
+      if (!isCloudRelated) {
+        setGeneratedArchitecture(`# ❌ Out of Scope
 
-## Infrastructure Components
-- **Load Balancer**: Application Load Balancer (ALB)
-- **Compute**: Auto Scaling Group with EC2 instances
-- **Database**: Amazon RDS (PostgreSQL)
-- **Storage**: Amazon S3 for static assets
-- **CDN**: Amazon CloudFront
-- **Monitoring**: CloudWatch + X-Ray
+Sorry, I can only help with cloud architecture questions.
 
-## Security Recommendations
-- Enable WAF on ALB
-- Use VPC with private subnets
-- Implement IAM roles with least privilege
-- Enable encryption at rest and in transit
+**OpenAI Integration in Progress** 🚧
 
-## Cost Estimation
-- Monthly estimate: $450-650
-- Primary costs: EC2 instances (60%), RDS (25%), Data transfer (15%)
+Please ask questions related to:
+- Cloud infrastructure design
+- AWS, Azure, or GCP architectures
+- Web application deployment
+- Database and storage solutions
+- Scaling and load balancing
+- Security best practices
+- Cost optimization
 
-## Terraform Code
-\`\`\`hcl
-resource "aws_vpc" "main" {
-  cidr_block           = "10.0.0.0/16"
-  enable_dns_hostnames = true
-  enable_dns_support   = true
-  
-  tags = {
-    Name = "main-vpc"
-  }
-}
+Try asking something like:
+"Build a scalable web application with auto-scaling and database on AWS"`);
+      } else {
+        setGeneratedArchitecture(`# 🏗️ Scalable Web Application Architecture
 
-resource "aws_internet_gateway" "main" {
-  vpc_id = aws_vpc.main.id
-  
-  tags = {
-    Name = "main-igw"
-  }
-}
-\`\`\`
-`);
+**Architecture Overview**
+CloudFront → ALB → Auto Scaling Group (EC2) → RDS Multi-AZ with ElastiCache for session storage and S3 for static assets.
+
+## 🏛️ Architecture Overview
+
+**Services Used**
+- Application Load Balancer
+- Auto Scaling Groups
+- EC2 Instances
+- CloudFront
+- S3
+- Route 53
+
+## 🔒 Security Recommendations
+
+✅ WAF protection against common attacks
+✅ Security groups with least privilege access
+✅ RDS encryption at rest and in transit
+✅ CloudFront for audit logging
+✅ IAM roles with minimal permissions
+
+## 💰 Best Practices
+
+✅ Multi-AZ deployment for high availability
+✅ Auto Scaling for cost optimization
+✅ CloudWatch monitoring and alerting
+✅ Regular automated backups
+✅ Blue-green deployment strategy
+
+## 💵 Cost Estimate
+
+**$150-300/month** for moderate traffic (10k users)
+- EC2 instances: $80-150/month
+- RDS: $40-80/month
+- CloudFront: $10-20/month
+- Load Balancer: $20-25/month
+
+## 📤 Export Options
+
+**CloudFormation** | **Terraform** | **CDK** | **PNG Diagram** | **PDF Report**`);
+      }
       setIsGenerating(false);
     }, 3000);
   };
@@ -353,59 +377,170 @@ Be as detailed as you like - the more context, the better the result!"
                 </div>
 
                 <div className="p-8">
-                  <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 overflow-auto shadow-inner">
-                    <div className="flex items-center space-x-2 mb-4">
-                      <div className="flex space-x-1">
-                        <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                        <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  {/* Architecture Result Card - Matching User's Mockup */}
+                  <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+                    {/* Header with AWS badge */}
+                    <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-6 text-white">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-2xl font-bold">Scalable Web Application Architecture</h3>
+                          <p className="text-purple-100 mt-1">A production-ready, fault-tolerant web application architecture with auto scaling, monitoring, and security best practices.</p>
+                        </div>
+                        <div className="bg-orange-500 px-3 py-1 rounded-full text-sm font-semibold">
+                          AWS
+                        </div>
                       </div>
-                      <span className="text-slate-400 text-sm font-mono">architecture-output.md</span>
                     </div>
-                    <pre className="text-sm text-green-400 whitespace-pre-wrap font-mono leading-relaxed overflow-x-auto">
-                      {generatedArchitecture}
-                    </pre>
-                  </div>
 
-                  <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      className="flex items-center space-x-3 p-4 bg-blue-50 hover:bg-blue-100 rounded-xl border border-blue-200 transition-all duration-200"
-                    >
-                      <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                        <Code className="w-4 h-4 text-white" />
-                      </div>
-                      <div className="text-left">
-                        <h4 className="font-semibold text-blue-900">View in Studio</h4>
-                        <p className="text-xs text-blue-700">Open in visual editor</p>
-                      </div>
-                    </motion.button>
+                    <div className="p-6">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        {/* Left Column - Architecture Overview & Services */}
+                        <div className="space-y-6">
+                          <div>
+                            <div className="flex items-center space-x-2 mb-4">
+                              <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <span className="text-blue-600 text-sm">🏛️</span>
+                              </div>
+                              <h4 className="font-semibold text-gray-900">Architecture Overview</h4>
+                            </div>
+                            <p className="text-gray-600 text-sm leading-relaxed">
+                              CloudFront → ALB → Auto Scaling Group (EC2) → RDS Multi-AZ with ElastiCache for session storage and S3 for static assets.
+                            </p>
+                          </div>
 
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      className="flex items-center space-x-3 p-4 bg-purple-50 hover:bg-purple-100 rounded-xl border border-purple-200 transition-all duration-200"
-                    >
-                      <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
-                        <Sparkles className="w-4 h-4 text-white" />
-                      </div>
-                      <div className="text-left">
-                        <h4 className="font-semibold text-purple-900">Refine Further</h4>
-                        <p className="text-xs text-purple-700">Ask for modifications</p>
-                      </div>
-                    </motion.button>
+                          <div>
+                            <h4 className="font-semibold text-gray-900 mb-3">Services Used</h4>
+                            <div className="grid grid-cols-2 gap-2">
+                              {['Application Load Balancer', 'Auto Scaling Groups', 'EC2 Instances', 'CloudFront', 'S3', 'Route 53'].map((service, idx) => (
+                                <div key={idx} className="flex items-center space-x-2 p-2 bg-blue-50 rounded-lg">
+                                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                  <span className="text-sm text-gray-700">{service}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
 
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      className="flex items-center space-x-3 p-4 bg-green-50 hover:bg-green-100 rounded-xl border border-green-200 transition-all duration-200"
-                    >
-                      <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
-                        <Award className="w-4 h-4 text-white" />
+                          <div>
+                            <div className="flex items-center space-x-2 mb-3">
+                              <div className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center">
+                                <span className="text-green-600 text-sm">💰</span>
+                              </div>
+                              <h4 className="font-semibold text-gray-900">Cost Estimate</h4>
+                            </div>
+                            <div className="bg-gray-50 rounded-lg p-4">
+                              <div className="text-2xl font-bold text-gray-900 mb-1">$150-300/month</div>
+                              <div className="text-sm text-gray-600">for moderate traffic (10k users)</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Right Column - Security & Best Practices */}
+                        <div className="space-y-6">
+                          <div>
+                            <div className="flex items-center space-x-2 mb-4">
+                              <div className="w-6 h-6 bg-red-100 rounded-lg flex items-center justify-center">
+                                <span className="text-red-600 text-sm">🔒</span>
+                              </div>
+                              <h4 className="font-semibold text-gray-900">Security Recommendations</h4>
+                            </div>
+                            <div className="space-y-2">
+                              {[
+                                'WAF protection against common attacks',
+                                'Security groups with least privilege access',
+                                'RDS encryption at rest and in transit',
+                                'CloudFront for audit logging',
+                                'IAM roles with minimal permissions'
+                              ].map((item, idx) => (
+                                <div key={idx} className="flex items-center space-x-2">
+                                  <CheckCircle className="w-4 h-4 text-green-500" />
+                                  <span className="text-sm text-gray-600">{item}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div>
+                            <div className="flex items-center space-x-2 mb-4">
+                              <div className="w-6 h-6 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <span className="text-purple-600 text-sm">⚡</span>
+                              </div>
+                              <h4 className="font-semibold text-gray-900">Best Practices</h4>
+                            </div>
+                            <div className="space-y-2">
+                              {[
+                                'Multi-AZ deployment for high availability',
+                                'Auto Scaling for cost optimization',
+                                'CloudWatch monitoring and alerting',
+                                'Regular automated backups',
+                                'Blue-green deployment strategy'
+                              ].map((item, idx) => (
+                                <div key={idx} className="flex items-center space-x-2">
+                                  <CheckCircle className="w-4 h-4 text-blue-500" />
+                                  <span className="text-sm text-gray-600">{item}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-left">
-                        <h4 className="font-semibold text-green-900">Save & Share</h4>
-                        <p className="text-xs text-green-700">Add to your collection</p>
+
+                      {/* Export Options */}
+                      <div className="mt-8 pt-6 border-t border-gray-200">
+                        <div className="flex items-center space-x-2 mb-4">
+                          <div className="w-6 h-6 bg-orange-100 rounded-lg flex items-center justify-center">
+                            <span className="text-orange-600 text-sm">📤</span>
+                          </div>
+                          <h4 className="font-semibold text-gray-900">Export Options</h4>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                          {[
+                            { name: 'CloudFormation', icon: Code, color: 'bg-blue-500' },
+                            { name: 'Terraform', icon: Code, color: 'bg-purple-500' },
+                            { name: 'CDK', icon: Code, color: 'bg-green-500' },
+                            { name: 'PNG Diagram', icon: Download, color: 'bg-orange-500' },
+                            { name: 'PDF Report', icon: Download, color: 'bg-red-500' }
+                          ].map((option, idx) => (
+                            <motion.button
+                              key={idx}
+                              whileHover={{ scale: 1.05 }}
+                              className="flex flex-col items-center space-y-2 p-3 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 transition-all duration-200"
+                            >
+                              <div className={`w-8 h-8 ${option.color} rounded-lg flex items-center justify-center`}>
+                                <option.icon className="w-4 h-4 text-white" />
+                              </div>
+                              <span className="text-xs font-medium text-gray-700">{option.name}</span>
+                            </motion.button>
+                          ))}
+                        </div>
                       </div>
-                    </motion.button>
+
+                      {/* Action Buttons */}
+                      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          className="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
+                        >
+                          <Code className="w-4 h-4" />
+                          <span>Build in Canvas</span>
+                        </motion.button>
+
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          className="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2"
+                        >
+                          <Copy className="w-4 h-4" />
+                          <span>Copy Prompt</span>
+                        </motion.button>
+
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center justify-center space-x-2"
+                        >
+                          <RefreshCw className="w-4 h-4" />
+                          <span>Regenerate</span>
+                        </motion.button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

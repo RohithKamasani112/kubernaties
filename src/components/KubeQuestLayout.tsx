@@ -154,31 +154,58 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
         {/* Quick Navigation - Mobile Responsive */}
         <div className="px-3 sm:px-4 py-3 sm:py-4 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-blue-50">
           <div className="space-y-2">
-            <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 sm:mb-3 flex items-center space-x-2">
-              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full"></div>
-              <span>Samwi Platform</span>
-            </div>
+            <AnimatePresence>
+              {!isPlaygroundPage && (
+                <motion.div
+                  className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 sm:mb-3 flex items-center space-x-2"
+                  initial={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full"></div>
+                  <span>Samwi Platform</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <Link
               to="/"
-              className="flex items-center space-x-2 sm:space-x-3 px-2 sm:px-3 py-2 sm:py-2.5 bg-white border border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 rounded-lg transition-all duration-200 group text-xs sm:text-sm shadow-sm touch-manipulation"
+              className={`flex items-center ${isPlaygroundPage ? 'justify-center' : 'space-x-2 sm:space-x-3'} px-2 sm:px-3 py-2 sm:py-2.5 bg-white border border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 rounded-lg transition-all duration-200 group text-xs sm:text-sm shadow-sm touch-manipulation`}
+              title={isPlaygroundPage ? "SAMWI Homepage" : undefined}
             >
-              <Home className="w-4 h-4" />
-              <span className="font-semibold">SAMWI Homepage</span>
-              <div className="ml-auto">
-                <ArrowRight className="w-3 h-3 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
-              </div>
+              {isPlaygroundPage ? (
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">S</span>
+                </div>
+              ) : (
+                <>
+                  <Home className="w-4 h-4" />
+                  <span className="font-semibold">SAMWI Homepage</span>
+                  <div className="ml-auto">
+                    <ArrowRight className="w-3 h-3 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                  </div>
+                </>
+              )}
             </Link>
 
             <Link
               to="/courses"
-              className="flex items-center space-x-3 px-3 py-2 text-slate-600 hover:text-slate-900 hover:bg-white hover:shadow-sm rounded-lg transition-all duration-200 group text-sm"
+              className={`flex items-center ${isPlaygroundPage ? 'justify-center' : 'space-x-3'} px-3 py-2 text-slate-600 hover:text-slate-900 hover:bg-white hover:shadow-sm rounded-lg transition-all duration-200 group text-sm`}
+              title={isPlaygroundPage ? "All Courses" : undefined}
             >
-              <BookOpen className="w-4 h-4" />
-              <span className="font-medium">All Courses</span>
-              <div className="ml-auto">
-                <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-50 group-hover:translate-x-0.5 transition-all" />
-              </div>
+              {isPlaygroundPage ? (
+                <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">C</span>
+                </div>
+              ) : (
+                <>
+                  <BookOpen className="w-4 h-4" />
+                  <span className="font-medium">All Courses</span>
+                  <div className="ml-auto">
+                    <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-50 group-hover:translate-x-0.5 transition-all" />
+                  </div>
+                </>
+              )}
             </Link>
           </div>
         </div>
@@ -193,7 +220,7 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 group relative ${
+                className={`flex items-center ${isPlaygroundPage ? 'justify-center' : 'justify-between'} px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 group relative ${
                   active
                     ? isCloudArchitecture
                       ? 'bg-purple-50 text-purple-700'
@@ -202,7 +229,7 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
                 }`}
                 title={isPlaygroundPage ? item.name : undefined}
               >
-                <div className="flex items-center space-x-3">
+                <div className={`flex items-center ${isPlaygroundPage ? 'justify-center' : 'space-x-3'}`}>
                   <Icon className={`w-5 h-5 ${
                     active
                       ? isCloudArchitecture
@@ -222,7 +249,7 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
                     )}
                   </AnimatePresence>
                 </div>
-                {active && (
+                {active && !isPlaygroundPage && (
                   <motion.div
                     className={`w-2 h-2 rounded-full relative ${
                       isCloudArchitecture ? 'bg-purple-600' : 'bg-blue-600'
@@ -298,7 +325,9 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
                     <img src="/icons/kubequest-icon.svg" alt="KubeQuest" className="w-7 h-7 sm:w-8 sm:h-8" />
                   </div>
                   <div>
-                    <h1 className="text-base sm:text-lg font-bold text-slate-900">KubeQuest</h1>
+                    <h1 className="text-base sm:text-lg font-bold text-slate-900">
+                      {isPlaygroundPage ? 'K8s Playground' : 'KubeQuest'}
+                    </h1>
                   </div>
                 </>
               )}
@@ -373,7 +402,7 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
               className="text-slate-500 hover:text-slate-700 transition-colors flex items-center space-x-1 whitespace-nowrap"
             >
               <Home className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span>Samwi Learn</span>
+              <span>{isPlaygroundPage ? 'S' : 'Samwi Learn'}</span>
             </Link>
             <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-slate-400 flex-shrink-0" />
             <span className="text-slate-700 font-medium whitespace-nowrap">

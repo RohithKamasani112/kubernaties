@@ -44,6 +44,7 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
   const [showTrafficFlow, setShowTrafficFlow] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
+  const [showHints, setShowHints] = useState(false);
   const [realTimeValidation, setRealTimeValidation] = useState<{
     hasChanges: boolean;
     isLikelyCorrect: boolean;
@@ -202,6 +203,41 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
           const hasPersistentVolumeClaim = yamlContent.includes('persistentVolumeClaim:');
           const noEmptyDir = !yamlContent.includes('emptyDir: {}');
           isLikelyCorrect = hasPersistentVolumeClaim && noEmptyDir;
+          break;
+
+        case 16: // Pod Security Context Issue
+          const hasNonRootUserRT = yamlContent.includes('runAsUser: 1000') || yamlContent.includes('runAsUser: 1001');
+          const hasRunAsNonRootRT = yamlContent.includes('runAsNonRoot: true');
+          const noPrivilegeEscalationRT = !yamlContent.includes('allowPrivilegeEscalation: true');
+          isLikelyCorrect = hasNonRootUserRT && hasRunAsNonRootRT && noPrivilegeEscalationRT;
+          break;
+
+        case 17: // DaemonSet Not Scheduling
+          const hasRemovedNodeSelectorRT = !yamlContent.includes('nodeSelector:') || !yamlContent.includes('node-type: worker');
+          const hasTolerationsRT = yamlContent.includes('tolerations:');
+          isLikelyCorrect = hasRemovedNodeSelectorRT || hasTolerationsRT;
+          break;
+
+        case 18: // Job Never Completes
+          const hasCorrectRestartPolicyRT = yamlContent.includes('restartPolicy: Never') || yamlContent.includes('restartPolicy: OnFailure');
+          const hasExitingCommandRT = !yamlContent.includes('while true') && !yamlContent.includes('sleep 10; done');
+          isLikelyCorrect = hasCorrectRestartPolicyRT && hasExitingCommandRT;
+          break;
+
+        case 19: // Ingress TLS Certificate Error
+          const hasCorrectTLSSecretNameRT = yamlContent.includes('secretName: tls-secret') &&
+                                           yamlContent.includes('name: tls-secret') &&
+                                           !yamlContent.includes('name: wrong-tls-secret');
+          isLikelyCorrect = hasCorrectTLSSecretNameRT;
+          break;
+
+        case 20: // Resource Quota Exceeded
+          const hasIncreasedQuotaRT = yamlContent.includes('requests.cpu: "4"') || yamlContent.includes('requests.cpu: "5"') ||
+                                     yamlContent.includes('requests.memory: 4Gi') || yamlContent.includes('requests.memory: 5Gi') ||
+                                     yamlContent.includes('pods: "10"') || yamlContent.includes('pods: "8"');
+          const hasReducedReplicasRT = yamlContent.includes('replicas: 2') || yamlContent.includes('replicas: 1');
+          const hasReducedRequestsRT = yamlContent.includes('cpu: 200m') || yamlContent.includes('memory: 256Mi');
+          isLikelyCorrect = hasIncreasedQuotaRT || (hasReducedReplicasRT && hasReducedRequestsRT);
           break;
 
         case 28: // Crash from Bad ENV challenge
@@ -759,6 +795,97 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
         }
         break;
 
+      case 16: // Pod Security Context Issue
+        const hasNonRootUser = yamlContent.includes('runAsUser: 1000') || yamlContent.includes('runAsUser: 1001');
+        const hasRunAsNonRoot = yamlContent.includes('runAsNonRoot: true');
+        const noPrivilegeEscalation = !yamlContent.includes('allowPrivilegeEscalation: true');
+
+        if (hasNonRootUser && hasRunAsNonRoot && noPrivilegeEscalation) {
+          isValid = true;
+          message = 'Perfect! You configured the security context to run as non-root user with proper restrictions.';
+        } else {
+          if (!hasNonRootUser) {
+            issues.push('Change runAsUser from 0 (root) to a non-root user like 1000');
+          }
+          if (!hasRunAsNonRoot) {
+            issues.push('Set runAsNonRoot to true to enforce non-root execution');
+          }
+          if (yamlContent.includes('allowPrivilegeEscalation: true')) {
+            issues.push('Set allowPrivilegeEscalation to false for security');
+          }
+          message = 'Security context still allows root access or privilege escalation.';
+        }
+        break;
+
+      case 17: // DaemonSet Not Scheduling
+        const hasRemovedNodeSelector = !yamlContent.includes('nodeSelector:') || !yamlContent.includes('node-type: worker');
+        const hasTolerations = yamlContent.includes('tolerations:');
+
+        if (hasRemovedNodeSelector || hasTolerations) {
+          isValid = true;
+          message = 'Excellent! You fixed the scheduling issue by removing restrictive nodeSelector or adding tolerations.';
+        } else {
+          issues.push('Remove the restrictive nodeSelector or add tolerations for tainted nodes');
+          issues.push('DaemonSets should typically run on all nodes');
+          message = 'DaemonSet still has scheduling restrictions preventing it from running on all nodes.';
+        }
+        break;
+
+      case 18: // Job Never Completes
+        const hasCorrectRestartPolicy = yamlContent.includes('restartPolicy: Never') || yamlContent.includes('restartPolicy: OnFailure');
+        const hasExitingCommand = !yamlContent.includes('while true') && !yamlContent.includes('sleep 10; done');
+        const hasBackoffLimit = yamlContent.includes('backoffLimit:');
+
+        if (hasCorrectRestartPolicy && hasExitingCommand) {
+          isValid = true;
+          message = 'Great! You fixed the restart policy and made the command exit properly.';
+        } else {
+          if (!hasCorrectRestartPolicy) {
+            issues.push('Change restartPolicy from Always to Never or OnFailure');
+          }
+          if (yamlContent.includes('while true')) {
+            issues.push('Replace infinite loop with a command that completes and exits');
+          }
+          if (!hasBackoffLimit) {
+            issues.push('Consider adding backoffLimit for better job control');
+          }
+          message = 'Job still runs forever or has wrong restart policy.';
+        }
+        break;
+
+      case 19: // Ingress TLS Certificate Error
+        const hasCorrectTLSSecretName = yamlContent.includes('secretName: tls-secret') &&
+                                       yamlContent.includes('name: tls-secret') &&
+                                       !yamlContent.includes('name: wrong-tls-secret');
+
+        if (hasCorrectTLSSecretName) {
+          isValid = true;
+          message = 'Perfect! You fixed the TLS secret name mismatch.';
+        } else {
+          issues.push('Fix the secret name mismatch - Ingress references "tls-secret" but secret is named "wrong-tls-secret"');
+          issues.push('Change secret name from "wrong-tls-secret" to "tls-secret"');
+          message = 'TLS secret name still doesn\'t match the Ingress reference.';
+        }
+        break;
+
+      case 20: // Resource Quota Exceeded
+        const hasIncreasedQuota = yamlContent.includes('requests.cpu: "4"') || yamlContent.includes('requests.cpu: "5"') ||
+                                 yamlContent.includes('requests.memory: 4Gi') || yamlContent.includes('requests.memory: 5Gi') ||
+                                 yamlContent.includes('pods: "10"') || yamlContent.includes('pods: "8"');
+        const hasReducedReplicas = yamlContent.includes('replicas: 2') || yamlContent.includes('replicas: 1');
+        const hasReducedRequests = yamlContent.includes('cpu: 200m') || yamlContent.includes('memory: 256Mi');
+
+        if (hasIncreasedQuota || (hasReducedReplicas && hasReducedRequests)) {
+          isValid = true;
+          message = 'Excellent! You resolved the resource quota issue by adjusting limits or reducing resource consumption.';
+        } else {
+          issues.push('Either increase the resource quota limits or reduce deployment resource requests');
+          issues.push('Current quota allows only 2 pods but deployment wants 5');
+          issues.push('Total CPU requests (5 × 500m = 2.5) exceed quota limit of 1 CPU');
+          message = 'Resource quota still prevents pods from being scheduled.';
+        }
+        break;
+
       case 28: // Crash from Bad ENV challenge
         const hasCorrectConfigMapKey = yamlContent.includes('key: database_url') && !yamlContent.includes('key: db_url');
 
@@ -1147,9 +1274,11 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
           if (!hasChanges) {
             issues.push('❌ No modifications detected from the original broken configuration');
             issues.push('💡 Hint: Look for the specific issue mentioned in the problem description');
+            issues.push(`🎯 Problem to solve: ${challenge.problem}`);
           } else if (!hasSignificantChanges) {
             issues.push('❌ Changes are too minor to resolve the core issue');
             issues.push('💡 Focus on the main problem: ' + challenge.problem);
+            issues.push('🔧 Try making more substantial configuration changes');
           }
 
           // Add specific guidance based on challenge type
@@ -1188,8 +1317,14 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
     lineNumbers: 'on' as const,
     roundedSelection: false,
     scrollbar: {
-      vertical: 'auto' as const,
-      horizontal: 'auto' as const,
+      vertical: 'visible' as const,
+      horizontal: 'visible' as const,
+      verticalScrollbarSize: 14,
+      horizontalScrollbarSize: 14,
+      useShadows: false,
+      verticalHasArrows: true,
+      horizontalHasArrows: true,
+      alwaysConsumeMouseWheel: true
     },
     theme: 'vs-dark',
     wordWrap: 'on' as const,
@@ -1198,6 +1333,10 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
     folding: true,
     foldingStrategy: 'indentation' as const,
     showFoldingControls: 'always' as const,
+    mouseWheelZoom: false,
+    smoothScrolling: true,
+    scrollSensitivity: 1,
+    fastScrollSensitivity: 5
   };
 
   // Traffic flow visualization component
@@ -1291,13 +1430,6 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
               </div>
               <div className="flex items-center space-x-2">
                 <button
-                  onClick={() => setShowTrafficFlow(!showTrafficFlow)}
-                  className="flex items-center space-x-2 px-3 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors"
-                >
-                  {showTrafficFlow ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  <span>Analysis</span>
-                </button>
-                <button
                   onClick={() => setIsExpanded(!isExpanded)}
                   className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors"
                   title={isExpanded ? "Minimize" : "Expand"}
@@ -1342,20 +1474,40 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
                   )}
                 </button>
                 <button
+                  onClick={() => setShowHints(!showHints)}
+                  className="flex items-center space-x-2 px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
+                >
+                  {showHints ? (
+                    <>
+                      <EyeOff className="w-4 h-4" />
+                      <span>Hide Hints</span>
+                    </>
+                  ) : (
+                    <>
+                      <Eye className="w-4 h-4" />
+                      <span>Show Hints</span>
+                    </>
+                  )}
+                </button>
+                <button
                   onClick={() => {
                     setShowSolution(!showSolution);
-                    // Scroll to solution after a brief delay to allow animation
+                    // Improved scroll behavior - scroll to solution with better positioning
                     if (!showSolution) {
                       setTimeout(() => {
                         const solutionElement = document.getElementById('solution-section');
                         if (solutionElement) {
-                          solutionElement.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start',
-                            inline: 'nearest'
+                          // Get the current viewport height
+                          const viewportHeight = window.innerHeight;
+                          const elementRect = solutionElement.getBoundingClientRect();
+
+                          // Scroll to position the solution section near the top but not completely at the top
+                          window.scrollTo({
+                            top: window.scrollY + elementRect.top - (viewportHeight * 0.1), // 10% from top
+                            behavior: 'smooth'
                           });
                         }
-                      }, 300);
+                      }, 400); // Slightly longer delay for animation
                     }
                   }}
                   className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
@@ -1377,7 +1529,22 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
           </div>
 
           {/* YAML Editor */}
-          <div className={`flex-1 ${isExpanded ? 'fixed inset-0 z-50 bg-white' : ''}`}>
+          <div className={`flex-1 transition-all duration-300 ${
+            isExpanded
+              ? 'absolute inset-x-0 top-0 bottom-0 z-40 bg-white shadow-2xl'
+              : 'relative'
+          }`}>
+            {isExpanded && (
+              <div className="absolute top-4 right-4 z-50">
+                <button
+                  onClick={() => setIsExpanded(false)}
+                  className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                  title="Minimize Editor"
+                >
+                  <Minimize2 className="w-5 h-5" />
+                </button>
+              </div>
+            )}
             <Editor
               height="100%"
               defaultLanguage="yaml"
@@ -1515,6 +1682,47 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
         </motion.div>
       )}
 
+      {/* Hints Display */}
+      {showHints && (
+        <motion.div
+          className="border-t bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200 shadow-lg"
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="p-6">
+            <div className="flex items-start space-x-4">
+              <div className="p-3 bg-yellow-100 rounded-full">
+                <Eye className="w-6 h-6 text-yellow-600" />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-lg font-bold mb-3 text-yellow-900 flex items-center">
+                  💡 Helpful Hints
+                  <span className="ml-2 px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full font-medium">
+                    Step by Step
+                  </span>
+                </h4>
+                <div className="space-y-3">
+                  {challenge.hints.map((hint, index) => (
+                    <div key={index} className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+                      <div className="flex items-start space-x-3">
+                        <span className="bg-yellow-200 text-yellow-800 text-sm font-bold px-2 py-1 rounded-full min-w-[24px] text-center">
+                          {index + 1}
+                        </span>
+                        <p className="text-sm text-yellow-800 font-medium leading-relaxed">
+                          {hint}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
       {/* Solution Display */}
       {showSolution && (
         <motion.div
@@ -1544,9 +1752,24 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({ challenge }) 
                     </p>
                   </div>
 
-                <div className="bg-white rounded-lg p-3 border border-blue-200">
-                  <h5 className="text-xs font-medium text-blue-800 mb-2">Key Learning Points:</h5>
-                  <ul className="text-xs text-blue-700 space-y-1">
+                {/* Hints Section */}
+                <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-200 mb-4">
+                  <h5 className="text-sm font-bold text-yellow-800 mb-3 flex items-center">
+                    💡 Helpful Hints
+                  </h5>
+                  <ul className="text-sm text-yellow-700 space-y-2">
+                    {challenge.hints.map((hint, index) => (
+                      <li key={index} className="flex items-start space-x-2">
+                        <span className="text-yellow-600 font-bold">{index + 1}.</span>
+                        <span>{hint}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="bg-white rounded-lg p-4 border border-blue-200">
+                  <h5 className="text-sm font-medium text-blue-800 mb-3">Key Learning Points:</h5>
+                  <ul className="text-sm text-blue-700 space-y-2">
                     <li>• {challenge.realWorldContext}</li>
                     <li>• Always verify that selectors match labels exactly</li>
                     <li>• Use kubectl commands to debug connectivity issues</li>
@@ -1752,6 +1975,38 @@ spec:
                             'emptyDir: {}  # Data will be lost on pod restart!',
                             'persistentVolumeClaim:\n        claimName: data-pvc  # Persistent storage'
                           );
+                          break;
+                        case 16: // Pod Security Context Issue - Fix security context
+                          correctedYaml = challenge.brokenYaml
+                            .replace('runAsUser: 0  # Running as root is blocked by policy', 'runAsUser: 1000  # Non-root user')
+                            .replace('runAsGroup: 0', 'runAsGroup: 1000')
+                            .replace('fsGroup: 0', 'fsGroup: 1000')
+                            .replace('allowPrivilegeEscalation: true  # Not allowed by policy', 'allowPrivilegeEscalation: false  # Security compliant')
+                            .replace('runAsNonRoot: false  # Conflicts with policy', 'runAsNonRoot: true  # Enforces non-root');
+                          break;
+                        case 17: // DaemonSet Not Scheduling - Remove nodeSelector
+                          correctedYaml = challenge.brokenYaml.replace(
+                            '      nodeSelector:\n        node-type: worker  # Some nodes don\'t have this label',
+                            '      # nodeSelector removed to allow scheduling on all nodes'
+                          );
+                          break;
+                        case 18: // Job Never Completes - Fix restart policy and command
+                          correctedYaml = challenge.brokenYaml
+                            .replace('restartPolicy: Always  # Wrong policy for Jobs', 'restartPolicy: Never  # Correct for Jobs')
+                            .replace('args: ["while true; do echo processing...; sleep 10; done"]  # Never exits', 'args: ["echo processing complete; sleep 30; echo done"]  # Exits after work')
+                            .replace('      # Missing: backoffLimit and activeDeadlineSeconds', '  backoffLimit: 3\n  activeDeadlineSeconds: 300  # 5 minute timeout');
+                          break;
+                        case 19: // Ingress TLS Certificate Error - Fix secret name
+                          correctedYaml = challenge.brokenYaml.replace(
+                            'name: wrong-tls-secret  # Wrong name!',
+                            'name: tls-secret  # Now matches Ingress reference'
+                          );
+                          break;
+                        case 20: // Resource Quota Exceeded - Increase quota
+                          correctedYaml = challenge.brokenYaml
+                            .replace('requests.cpu: "1"      # Very restrictive', 'requests.cpu: "4"      # Increased for production')
+                            .replace('requests.memory: 1Gi   # Too low for production', 'requests.memory: 4Gi   # Adequate for production')
+                            .replace('pods: "2"              # Only 2 pods allowed', 'pods: "10"             # Allow more pods');
                           break;
                         case 28: // Crash from Bad ENV - Fix ConfigMap key name
                           correctedYaml = challenge.brokenYaml.replace(

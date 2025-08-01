@@ -243,3 +243,25 @@ Accessibility: button labels, focus visibility, and contrast all meet requiremen
 
 Proper error messages for invalid searches.
 
+
+
+http://localhost:5173/web-elevate/paths/react-mastery
+the loafin of the topics are lazy loading
+its too furstating
+change the ui and make it effective
+
+
+
+----------
+http://localhost:5173/web-elevate/playground
+some xmapke are not laogoin correct in to the play ground make usre oyu solve them
+
+0--------------
+http://localhost:5173/web-elevate/debug-projects
+chaneh the srylin make it more effective
+as og not its too basic
+
+------------|
+Main
+the entire applicaiotn is slow
+makle somehti to amke it fast

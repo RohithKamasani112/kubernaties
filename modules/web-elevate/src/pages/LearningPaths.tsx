@@ -15,24 +15,14 @@ import {
   Code,
   Server,
   Layers,
-  Zap,
-  Trophy,
-  Target,
-  Flame,
-  Award,
-  TrendingUp,
-  Gift,
-  Crown,
-  Sparkles
+  Zap
 } from 'lucide-react';
 import { useWebElevateStore } from '../store/webElevateStore';
-import GamificationPanel from '../components/GamificationPanel';
 
 const LearningPaths: React.FC = () => {
-  const { learningPaths, startPath, userProgress, awardPoints, updateStreak, initializeApp, isInitialized } = useWebElevateStore();
+  const { learningPaths, startPath, initializeApp, isInitialized } = useWebElevateStore();
   const [selectedCategory, setSelectedCategory] = React.useState<string>('all');
   const [searchQuery, setSearchQuery] = React.useState('');
-  const [showGamificationPanel, setShowGamificationPanel] = React.useState(false);
 
   // Initialize the app when component mounts
   useEffect(() => {
@@ -95,117 +85,7 @@ const LearningPaths: React.FC = () => {
         </p>
       </motion.div>
 
-      {/* Gamification Dashboard */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="mb-8"
-      >
-        <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-6 border border-purple-100">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 flex items-center space-x-2">
-              <Trophy className="w-6 h-6 text-yellow-500" />
-              <span>Your Learning Journey</span>
-            </h2>
-            <div className="flex items-center space-x-2 bg-white px-4 py-2 rounded-lg shadow-sm">
-              <Crown className="w-5 h-5 text-yellow-500" />
-              <span className="font-semibold text-gray-900">Level {userProgress.level}</span>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {/* Total Points */}
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-yellow-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Total Points</p>
-                  <p className="text-xl font-bold text-gray-900">{(userProgress?.totalPoints || 0).toLocaleString()}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Current Streak */}
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                  <Flame className="w-5 h-5 text-orange-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Learning Streak</p>
-                  <p className="text-xl font-bold text-gray-900">{userProgress.learningStreak?.currentStreak || 0} days</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Completed Modules */}
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Completed</p>
-                  <p className="text-xl font-bold text-gray-900">{userProgress?.completedModules?.length || 0} modules</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Experience Progress */}
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <TrendingUp className="w-5 h-5 text-blue-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm text-gray-600">Level Progress</p>
-                  <div className="flex items-center space-x-2">
-                    <div className="flex-1 bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                        style={{
-                          width: `${((userProgress.experiencePoints || 0) / (userProgress.experienceToNextLevel || 100)) * 100}%`
-                        }}
-                      />
-                    </div>
-                    <span className="text-xs text-gray-500">
-                      {userProgress.experiencePoints || 0}/{userProgress.experienceToNextLevel || 100}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Actions */}
-          <div className="mt-6 flex flex-wrap gap-3">
-            <button
-              onClick={() => {
-                updateStreak();
-                awardPoints(10, 'Daily check-in');
-              }}
-              className="flex items-center space-x-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200"
-            >
-              <Gift className="w-4 h-4" />
-              <span>Daily Check-in (+10 XP)</span>
-            </button>
-            <button className="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all duration-200">
-              <Target className="w-4 h-4" />
-              <span>Daily Challenge</span>
-            </button>
-            <button
-              onClick={() => setShowGamificationPanel(true)}
-              className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-200"
-            >
-              <Award className="w-4 h-4" />
-              <span>View Achievements</span>
-            </button>
-          </div>
-        </div>
-      </motion.div>
 
       {/* Search and Filters */}
       <motion.div
@@ -382,22 +262,6 @@ const LearningPaths: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Gamification Stats */}
-                  <div className="flex items-center justify-between text-xs text-gray-500 mb-3 bg-gray-50 rounded-lg p-2">
-                    <div className="flex items-center space-x-1">
-                      <Trophy className="w-3 h-3 text-yellow-500" />
-                      <span>{path.modules.length * 50} XP</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Star className="w-3 h-3 text-purple-500" />
-                      <span>{path.difficulty === 'beginner' ? '⭐' : path.difficulty === 'intermediate' ? '⭐⭐' : '⭐⭐⭐'}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Award className="w-3 h-3 text-blue-500" />
-                      <span>{Math.floor(path.modules.length / 3)} badges</span>
-                    </div>
-                  </div>
-
                   {/* Action Button */}
                   {isReact ? (
                     <Link
@@ -405,7 +269,6 @@ const LearningPaths: React.FC = () => {
                       onClick={() => {
                         if (!path.isStarted) {
                           handleStartPath(path.id);
-                          awardPoints(25, `Started ${path.title} learning path`);
                         }
                       }}
                       className={`w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
@@ -422,7 +285,7 @@ const LearningPaths: React.FC = () => {
                       ) : (
                         <>
                           <Play className="w-4 h-4" />
-                          <span>Start Path (+25 XP)</span>
+                          <span>Start Path</span>
                         </>
                       )}
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
@@ -440,9 +303,9 @@ const LearningPaths: React.FC = () => {
                       }}
                       className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-lg font-medium bg-gradient-to-r from-gray-400 to-gray-500 text-white cursor-not-allowed"
                     >
-                      <Crown className="w-4 h-4" />
+                      <Lock className="w-4 h-4" />
                       <span>Coming Soon</span>
-                      <Sparkles className="w-4 h-4 animate-pulse" />
+                      <Star className="w-4 h-4 animate-pulse" />
                     </motion.div>
                   )}
                 </div>
@@ -462,11 +325,6 @@ const LearningPaths: React.FC = () => {
         )}
       </motion.div>
 
-      {/* Gamification Panel */}
-      <GamificationPanel
-        isOpen={showGamificationPanel}
-        onClose={() => setShowGamificationPanel(false)}
-      />
     </div>
   );
 };

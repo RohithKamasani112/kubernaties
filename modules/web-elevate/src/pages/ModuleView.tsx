@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -32,6 +32,9 @@ import {
   Moon
 } from 'lucide-react';
 import { useWebElevateStore } from '../store/webElevateStore';
+import LoadingSpinner from '../components/LoadingSpinner';
+
+// Import topics synchronously for now, but we'll optimize loading
 import { comprehensiveReactTopics } from '../data/reactTopicsComprehensive';
 
 type ModuleStep = 'concept' | 'code' | 'playground' | 'challenge';
@@ -242,14 +245,19 @@ const ModuleView: React.FC = () => {
     playground: 0,
     challenge: 0
   });
+  const [topicData, setTopicData] = useState<any>(null);
+  const [isLoadingTopic, setIsLoadingTopic] = useState(false);
 
   const path = learningPaths.find(p => p.id === pathId);
   const module = path?.modules.find(m => m.id === moduleId);
 
-  // Get comprehensive topic data for React path
-  const topicData = pathId === 'react-mastery'
-    ? comprehensiveReactTopics.find(topic => topic.id === moduleId)
-    : null;
+  // Load comprehensive topic data for React path immediately
+  useEffect(() => {
+    if (pathId === 'react-mastery' && moduleId) {
+      const topic = comprehensiveReactTopics.find(topic => topic.id === moduleId);
+      setTopicData(topic);
+    }
+  }, [pathId, moduleId]);
 
   if (!path || !module) {
     return (
@@ -266,6 +274,8 @@ const ModuleView: React.FC = () => {
       </div>
     );
   }
+
+  // No loading state needed since we load immediately
 
   const steps: { id: ModuleStep; name: string; icon: any; description: string; xpReward: number }[] = [
     { id: 'concept', name: 'Concept', icon: BookOpen, description: 'Learn the theory', xpReward: 25 },
@@ -348,8 +358,8 @@ const ModuleView: React.FC = () => {
 
       {/* Module Stepper */}
       <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+          <div className="flex items-center justify-center space-x-8">
             {steps.map((step, index) => {
               const isActive = step.id === currentStep;
               const isCompleted = stepProgress[step.id];
@@ -413,14 +423,15 @@ const ModuleView: React.FC = () => {
       </div>
 
       {/* Content Area */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="min-h-[600px]"
           >
             {currentStep === 'concept' && <ConceptView module={module} topicData={topicData} />}
             {currentStep === 'code' && <CodeView module={module} topicData={topicData} />}

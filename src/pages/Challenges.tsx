@@ -781,6 +781,242 @@ spec:
       solution: 'Fix storage class name and change access mode to ReadWriteOnce'
     },
 
+    // MISSING CHALLENGES 16-20
+    {
+      id: 16,
+      title: 'Pod Security Context Issue',
+      description: 'Pod fails to start due to security context restrictions',
+      difficulty: 'Advanced',
+      category: 'Security',
+      estimatedTime: '25 min',
+      completed: false,
+      locked: false,
+      scenario: 'Application pod fails to start with security context errors',
+      skills: ['Security Context', 'Pod Security', 'User Management'],
+      problem: 'Pod tries to run as root but security policy prevents it',
+      realWorldContext: 'Security contexts are critical for production security compliance',
+      brokenYaml: `apiVersion: v1
+kind: Pod
+metadata:
+  name: secure-app
+  labels:
+    app: secure-app
+spec:
+  securityContext:
+    runAsUser: 0  # Running as root is blocked by policy
+    runAsGroup: 0
+    fsGroup: 0
+  containers:
+  - name: app
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+    securityContext:
+      allowPrivilegeEscalation: true  # Not allowed by policy
+      runAsNonRoot: false  # Conflicts with policy`,
+      hints: [
+        'Check the security context settings - running as root may be blocked',
+        'Look at runAsUser, runAsGroup, and runAsNonRoot settings',
+        'Security policies often require non-root users',
+        'Use a non-root user ID like 1000'
+      ],
+      solution: 'Change security context to run as non-root user and disable privilege escalation'
+    },
+    {
+      id: 17,
+      title: 'DaemonSet Not Scheduling',
+      description: 'DaemonSet pods not appearing on all nodes',
+      difficulty: 'Advanced',
+      category: 'Scheduling',
+      estimatedTime: '30 min',
+      completed: false,
+      locked: false,
+      scenario: 'DaemonSet should run on all nodes but some nodes have no pods',
+      skills: ['DaemonSet', 'Node Selectors', 'Taints and Tolerations'],
+      problem: 'Node selector or taints prevent DaemonSet from scheduling on all nodes',
+      realWorldContext: 'DaemonSets are used for system services that must run on every node',
+      brokenYaml: `apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: log-collector
+  labels:
+    app: log-collector
+spec:
+  selector:
+    matchLabels:
+      app: log-collector
+  template:
+    metadata:
+      labels:
+        app: log-collector
+    spec:
+      nodeSelector:
+        node-type: worker  # Some nodes don't have this label
+      containers:
+      - name: log-collector
+        image: fluentd:latest
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log`,
+      hints: [
+        'Check if all nodes have the required nodeSelector labels',
+        'Some nodes might be tainted and need tolerations',
+        'DaemonSets should typically run on all nodes',
+        'Remove or adjust nodeSelector to be less restrictive'
+      ],
+      solution: 'Remove restrictive nodeSelector or add tolerations for tainted nodes'
+    },
+    {
+      id: 18,
+      title: 'Job Never Completes',
+      description: 'Kubernetes Job runs forever without completing',
+      difficulty: 'Advanced',
+      category: 'Workloads',
+      estimatedTime: '20 min',
+      completed: false,
+      locked: false,
+      scenario: 'Batch job starts but never finishes, consuming resources indefinitely',
+      skills: ['Jobs', 'Batch Processing', 'Resource Management'],
+      problem: 'Job has no completion criteria or wrong restart policy',
+      realWorldContext: 'Jobs are used for batch processing and must complete successfully',
+      brokenYaml: `apiVersion: batch/v1
+kind: Job
+metadata:
+  name: data-processor
+spec:
+  template:
+    spec:
+      restartPolicy: Always  # Wrong policy for Jobs
+      containers:
+      - name: processor
+        image: busybox
+        command: ["sh", "-c"]
+        args: ["while true; do echo processing...; sleep 10; done"]  # Never exits
+      # Missing: backoffLimit and activeDeadlineSeconds`,
+      hints: [
+        'Jobs should have a completion condition, not run forever',
+        'Check the restart policy - Jobs need different policies than Deployments',
+        'The command should exit when work is complete',
+        'Add backoffLimit and activeDeadlineSeconds for safety'
+      ],
+      solution: 'Fix restart policy to Never/OnFailure and make command exit after completing work'
+    },
+    {
+      id: 19,
+      title: 'Ingress TLS Certificate Error',
+      description: 'HTTPS traffic fails due to TLS certificate issues',
+      difficulty: 'Advanced',
+      category: 'Networking',
+      estimatedTime: '35 min',
+      completed: false,
+      locked: false,
+      scenario: 'Web application accessible via HTTP but HTTPS returns certificate errors',
+      skills: ['Ingress', 'TLS', 'Certificates', 'HTTPS'],
+      problem: 'TLS secret missing or certificate doesn\'t match hostname',
+      realWorldContext: 'TLS configuration is essential for production web applications',
+      brokenYaml: `apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-app-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  tls:
+  - hosts:
+    - myapp.example.com
+    secretName: tls-secret  # This secret doesn't exist
+  rules:
+  - host: myapp.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web-app-service
+            port:
+              number: 80
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: wrong-tls-secret  # Wrong name!
+type: kubernetes.io/tls
+data:
+  tls.crt: LS0tLS1CRUdJTi...  # Certificate for different domain
+  tls.key: LS0tLS1CRUdJTi...`,
+      hints: [
+        'Check if the TLS secret exists and has the correct name',
+        'Verify the certificate matches the hostname in the Ingress',
+        'TLS secrets need specific type and data fields',
+        'Certificate and private key must be base64 encoded'
+      ],
+      solution: 'Fix secret name and ensure certificate matches the hostname'
+    },
+    {
+      id: 20,
+      title: 'Resource Quota Exceeded',
+      description: 'Pods fail to schedule due to namespace resource limits',
+      difficulty: 'Advanced',
+      category: 'Resource Management',
+      estimatedTime: '25 min',
+      completed: false,
+      locked: false,
+      scenario: 'New pods remain in Pending state due to resource quota restrictions',
+      skills: ['Resource Quotas', 'Limits', 'Namespace Management'],
+      problem: 'Namespace resource quota prevents new pods from being created',
+      realWorldContext: 'Resource quotas prevent teams from consuming excessive cluster resources',
+      brokenYaml: `apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: compute-quota
+  namespace: production
+spec:
+  hard:
+    requests.cpu: "1"      # Very restrictive
+    requests.memory: 1Gi   # Too low for production
+    limits.cpu: "2"
+    limits.memory: 2Gi
+    pods: "2"              # Only 2 pods allowed
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+  namespace: production
+spec:
+  replicas: 5  # Wants 5 pods but quota allows only 2
+  selector:
+    matchLabels:
+      app: web-app
+  template:
+    metadata:
+      labels:
+        app: web-app
+    spec:
+      containers:
+      - name: web
+        image: nginx:latest
+        resources:
+          requests:
+            cpu: 500m     # Each pod wants 500m CPU
+            memory: 512Mi # Total would exceed quota
+          limits:
+            cpu: 1000m
+            memory: 1Gi`,
+      hints: [
+        'Check the resource quota limits in the namespace',
+        'Calculate total resource requests for all pods',
+        'Either increase quota or reduce resource requests',
+        'Consider if the quota limits are appropriate for the workload'
+      ],
+      solution: 'Increase resource quota limits or reduce deployment resource requests and replica count'
+    },
+
     // NEW BEGINNER CHALLENGES (20)
     {
       id: 21,

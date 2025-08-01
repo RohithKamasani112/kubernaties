@@ -233,16 +233,21 @@ const KubernetesCanvas: React.FC = () => {
         // Remove pods from store directly
         podIdsToRemove.forEach(podId => removeNode(podId));
 
+        // Batch edge updates to prevent flickering
         const updatedEdges = (flowEdges || []).filter(edge =>
           edge && edge.source && edge.target &&
           !podIdsToRemove.includes(edge.source) && !podIdsToRemove.includes(edge.target)
         );
-        if (setFlowEdges && typeof setFlowEdges === 'function') {
-          setFlowEdges(updatedEdges);
-        }
-        if (updateEdges && typeof updateEdges === 'function') {
-          updateEdges(updatedEdges);
-        }
+
+        // Use requestAnimationFrame to batch updates and prevent flickering
+        requestAnimationFrame(() => {
+          if (setFlowEdges && typeof setFlowEdges === 'function') {
+            setFlowEdges(updatedEdges);
+          }
+          if (updateEdges && typeof updateEdges === 'function') {
+            updateEdges(updatedEdges);
+          }
+        });
 
         if (!suppressNotifications) {
           toast.success(`Removed ${podsToRemove.length} pod(s) to match deployment replicas (${replicas})`, {
@@ -924,9 +929,14 @@ const KubernetesCanvas: React.FC = () => {
           return;
         }
 
+        // Batch edge updates to prevent flickering
         const newEdge = addEdge(params, flowEdges);
-        setFlowEdges(newEdge);
-        updateEdges(newEdge);
+
+        // Use requestAnimationFrame to batch updates
+        requestAnimationFrame(() => {
+          setFlowEdges(newEdge);
+          updateEdges(newEdge);
+        });
 
         // Check if we connected a deployment to a pod and manage pod count
         const sourceNode = flowNodes.find(n => n.id === params.source);
@@ -1360,7 +1370,10 @@ const KubernetesCanvas: React.FC = () => {
   }, [onNodesChange, flowNodes, updateNodes, setFlowEdges, setFlowNodes]);
 
   const handleEdgesChange = useCallback((changes: any) => {
-    onEdgesChange(changes);
+    // Batch edge changes to prevent flickering
+    requestAnimationFrame(() => {
+      onEdgesChange(changes);
+    });
   }, [onEdgesChange]);
 
   return (

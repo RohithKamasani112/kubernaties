@@ -86,54 +86,61 @@ const DebugPlatformDashboard: React.FC<DebugPlatformDashboardProps> = ({
   const renderChallengeCard = (challenge: DebugChallenge) => (
     <motion.div
       key={challenge.id}
-      className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-lg transition-shadow cursor-pointer"
-      whileHover={{ y: -2 }}
+      className="bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200/50 p-6 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 cursor-pointer group"
+      whileHover={{ y: -4, scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
       onClick={() => handleChallengeSelect(challenge.id)}
     >
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">{challenge.title}</h3>
-          <p className="text-gray-600 text-sm line-clamp-2">{challenge.description}</p>
+          <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
+            {challenge.title}
+          </h3>
+          <p className="text-gray-600 text-sm line-clamp-2 leading-relaxed">{challenge.description}</p>
         </div>
-        <div className="ml-4 flex flex-col items-end">
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-            challenge.difficulty === 'beginner' ? 'bg-green-100 text-green-800' :
-            challenge.difficulty === 'intermediate' ? 'bg-yellow-100 text-yellow-800' :
-            'bg-red-100 text-red-800'
+        <div className="ml-4 flex flex-col items-end space-y-2">
+          <span className={`px-3 py-1 rounded-full text-xs font-bold shadow-sm ${
+            challenge.difficulty === 'beginner' ? 'bg-gradient-to-r from-green-400 to-green-500 text-white' :
+            challenge.difficulty === 'intermediate' ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white' :
+            'bg-gradient-to-r from-red-400 to-red-500 text-white'
           }`}>
-            {challenge.difficulty}
+            {challenge.difficulty.toUpperCase()}
           </span>
-          <span className="text-sm text-gray-500 mt-1">{challenge.techStack}</span>
+          <span className="text-sm font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-lg">
+            {challenge.techStack}
+          </span>
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4 text-sm text-gray-500">
-          <div className="flex items-center space-x-1">
-            <Clock className="w-4 h-4" />
-            <span>{challenge.estimatedTime}</span>
+      <div className="flex items-center justify-between mt-4">
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 bg-blue-50 px-3 py-1 rounded-lg">
+            <Clock className="w-4 h-4 text-blue-600" />
+            <span className="text-sm font-medium text-blue-700">{challenge.estimatedTime}</span>
           </div>
-          <div className="flex items-center space-x-1">
-            <Zap className="w-4 h-4" />
-            <span>{challenge.xpReward} XP</span>
+          <div className="flex items-center space-x-2 bg-gradient-to-r from-yellow-400 to-orange-500 px-3 py-1 rounded-lg">
+            <Zap className="w-4 h-4 text-white" />
+            <span className="text-sm font-bold text-white">{challenge.xpReward} XP</span>
           </div>
         </div>
-        
-        <div className="flex items-center space-x-2">
+
+        <div className="flex items-center space-x-3">
           <div className="flex flex-wrap gap-1">
             {challenge.tags.slice(0, 2).map((tag, index) => (
               <span
                 key={index}
-                className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded"
+                className="px-2 py-1 bg-gradient-to-r from-purple-500 to-blue-600 text-white text-xs rounded-full font-medium"
               >
                 {tag}
               </span>
             ))}
             {challenge.tags.length > 2 && (
-              <span className="text-xs text-gray-400">+{challenge.tags.length - 2}</span>
+              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                +{challenge.tags.length - 2}
+              </span>
             )}
           </div>
-          <ChevronRight className="w-4 h-4 text-gray-400" />
+          <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-blue-600 transition-colors" />
         </div>
       </div>
     </motion.div>
@@ -194,34 +201,58 @@ const DebugPlatformDashboard: React.FC<DebugPlatformDashboardProps> = ({
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-gray-200/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-6">
+          <div className="py-8">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Debug Challenges</h1>
-                <p className="text-gray-600 mt-1">Master debugging skills with hands-on challenges</p>
+                <motion.h1
+                  className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                >
+                  🐛 Debug Challenges
+                </motion.h1>
+                <motion.p
+                  className="text-lg text-gray-600 mt-3 max-w-2xl"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                >
+                  Master debugging skills with hands-on challenges across React, Angular, and Node.js
+                </motion.p>
               </div>
-              
-              <div className="flex items-center space-x-4">
-                <div className="bg-blue-50 px-4 py-2 rounded-lg">
-                  <div className="text-sm text-blue-600 font-medium">Available Challenges</div>
-                  <div className="text-2xl font-bold text-blue-900">{allChallenges.length}</div>
+
+              <motion.div
+                className="flex items-center space-x-4"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4 rounded-xl shadow-lg">
+                  <div className="text-sm text-blue-100 font-medium">Available Challenges</div>
+                  <div className="text-3xl font-bold text-white">{allChallenges.length}</div>
                 </div>
-                <div className="bg-purple-50 px-4 py-2 rounded-lg">
-                  <div className="text-sm text-purple-600 font-medium">Total XP</div>
-                  <div className="text-2xl font-bold text-purple-900">
+                <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-6 py-4 rounded-xl shadow-lg">
+                  <div className="text-sm text-purple-100 font-medium">Total XP</div>
+                  <div className="text-3xl font-bold text-white">
                     {allChallenges.reduce((sum, c) => sum + c.xpReward, 0)}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
 
             {/* Tab Navigation */}
-            <div className="mt-6">
-              <nav className="flex space-x-8">
+            <motion.div
+              className="mt-8"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <nav className="flex space-x-2 bg-gray-100 p-1 rounded-xl">
                 {[
                   { id: 'challenges', label: 'Challenges', icon: Target },
                   { id: 'categories', label: 'Categories', icon: BookOpen },
@@ -229,22 +260,24 @@ const DebugPlatformDashboard: React.FC<DebugPlatformDashboardProps> = ({
                 ].map((tab) => {
                   const Icon = tab.icon;
                   return (
-                    <button
+                    <motion.button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id as any)}
-                      className={`flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-sm ${
+                      className={`flex items-center space-x-2 py-3 px-6 rounded-lg font-medium text-sm transition-all duration-200 ${
                         activeTab === tab.id
-                          ? 'border-blue-500 text-blue-600'
-                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                          ? 'bg-white text-blue-600 shadow-md'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
                       }`}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <Icon className="w-4 h-4" />
+                      <Icon className="w-5 h-5" />
                       <span>{tab.label}</span>
-                    </button>
+                    </motion.button>
                   );
                 })}
               </nav>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
@@ -324,14 +357,35 @@ const DebugPlatformDashboard: React.FC<DebugPlatformDashboardProps> = ({
         )}
 
         {activeTab === 'progress' && (
-          <div className="bg-white rounded-lg border border-gray-200 p-8 text-center">
-            <Award className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Progress Tracking</h3>
-            <p className="text-gray-600">
-              Progress tracking will be implemented here. Track your completed challenges, 
+          <motion.div
+            className="bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200/50 p-8 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="bg-gradient-to-r from-blue-500 to-purple-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Award className="w-10 h-10 text-white" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Progress Tracking</h3>
+            <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
+              Progress tracking will be implemented here. Track your completed challenges,
               earned XP, and skill progression across different technologies.
             </p>
-          </div>
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-gradient-to-r from-green-400 to-green-500 p-6 rounded-xl text-white">
+                <div className="text-3xl font-bold">0</div>
+                <div className="text-green-100">Challenges Completed</div>
+              </div>
+              <div className="bg-gradient-to-r from-blue-400 to-blue-500 p-6 rounded-xl text-white">
+                <div className="text-3xl font-bold">0</div>
+                <div className="text-blue-100">Total XP Earned</div>
+              </div>
+              <div className="bg-gradient-to-r from-purple-400 to-purple-500 p-6 rounded-xl text-white">
+                <div className="text-3xl font-bold">0</div>
+                <div className="text-purple-100">Skills Mastered</div>
+              </div>
+            </div>
+          </motion.div>
         )}
       </div>
     </div>

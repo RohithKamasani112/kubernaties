@@ -23,7 +23,10 @@ import {
   Globe,
   Mail,
   Linkedin,
-  Twitter
+  Twitter,
+  Construction,
+  Wrench,
+  Briefcase
 } from 'lucide-react';
 import { useWebElevateStore } from '../store/webElevateStore';
 
@@ -92,14 +95,51 @@ const Portfolio: React.FC = () => {
           </div>
 
           <div className="flex flex-col space-y-3">
-            <button className="flex items-center space-x-2 bg-white text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-indigo-50 transition-colors">
+            <button
+              disabled
+              className="flex items-center space-x-2 bg-white/50 text-indigo-400 px-6 py-3 rounded-lg font-semibold cursor-not-allowed relative"
+            >
               <Share2 className="w-4 h-4" />
               <span>Share Portfolio</span>
+              <Construction className="w-3 h-3 text-orange-500 absolute -top-1 -right-1" />
             </button>
-            <button className="flex items-center space-x-2 bg-white/20 text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/30 transition-colors">
+            <button
+              disabled
+              className="flex items-center space-x-2 bg-white/10 text-white/50 px-6 py-3 rounded-lg font-semibold cursor-not-allowed relative"
+            >
               <Download className="w-4 h-4" />
               <span>Export PDF</span>
+              <Construction className="w-3 h-3 text-orange-500 absolute -top-1 -right-1" />
             </button>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Dev in Progress Banner */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="mb-8"
+      >
+        <div className="bg-orange-50 border border-orange-200 rounded-xl p-6">
+          <div className="flex items-center justify-center space-x-4">
+            <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+              <Construction className="w-6 h-6 text-orange-500" />
+            </div>
+            <div className="text-center">
+              <h3 className="font-bold text-orange-800 text-lg flex items-center justify-center space-x-2">
+                <Briefcase className="w-5 h-5" />
+                <span>🚧 Portfolio Builder in Development</span>
+              </h3>
+              <p className="text-orange-600 text-sm mt-1">
+                Advanced portfolio features are being developed. Current view shows preview functionality.
+              </p>
+              <div className="flex items-center justify-center space-x-2 mt-2">
+                <Wrench className="w-4 h-4 text-orange-500" />
+                <span className="text-xs text-orange-600 font-medium">Expected release: Q3 2024</span>
+              </div>
+            </div>
           </div>
         </div>
       </motion.div>
