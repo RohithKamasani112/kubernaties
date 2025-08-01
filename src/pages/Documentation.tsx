@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import {
   Search,
   BookOpen,
+  PlayCircle,
   Code,
   ExternalLink,
   ChevronRight,
