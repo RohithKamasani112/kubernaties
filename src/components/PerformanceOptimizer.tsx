@@ -105,21 +105,9 @@ const PerformanceOptimizer: React.FC = () => {
 
     // Preload critical fonts for better text rendering
     const preloadFonts = () => {
-      const fonts = [
-        'Inter',
-        'Segoe UI',
-        'Roboto'
-      ];
-
-      fonts.forEach(font => {
-        const link = document.createElement('link');
-        link.rel = 'preload';
-        link.as = 'font';
-        link.type = 'font/woff2';
-        link.crossOrigin = 'anonymous';
-        // Note: In a real app, you'd have actual font URLs here
-        document.head.appendChild(link);
-      });
+      // Skip font preloading for now since we don't have actual font URLs
+      // This prevents the invalid href errors
+      console.log('Font preloading skipped - using system fonts');
     };
 
     preloadFonts();

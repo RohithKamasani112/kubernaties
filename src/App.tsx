@@ -72,8 +72,7 @@ function App() {
           </Routes>
         </AnimatePresence>
 
-        {/* Collaborators Button - Only on main pages */}
-        <CollaboratorsButton />
+
 
           {/* Global Toast Notifications */}
           <Toaster
@@ -102,6 +101,9 @@ function App() {
               },
             }}
           />
+
+          {/* Floating Collaborators Button */}
+          <CollaboratorsButton />
         </div>
       </Router>
   );
