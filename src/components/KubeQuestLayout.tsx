@@ -19,6 +19,7 @@ import {
   Menu,
   X
 } from 'lucide-react';
+import ScrollToTopButton from './ScrollToTopButton';
 
 interface KubeQuestLayoutProps {
   children: React.ReactNode;
@@ -53,7 +54,7 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
     { name: 'Challenges', href: '/kubernetes/challenges', icon: Target },
     { name: 'K8s Debugging', href: '/kubernetes/debugging', icon: Bug },
     { name: 'Docs', href: '/kubernetes/docs', icon: FileText },
-    { name: 'About & Feedback', href: '/kubernetes/about-feedback', icon: MessageCircle },
+
     { name: 'Cloud Architecture', href: '/cloud-architecture', icon: Cloud },
     { name: 'Web Elevate', href: '/web-elevate', icon: Zap },
   ];
@@ -458,6 +459,9 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
 
         {/* Floating Navigation for Playground Mode - REMOVED FOR CLEANER UI */}
       </div>
+
+      {/* Scroll to Top Button */}
+      <ScrollToTopButton />
     </div>
   );
 };

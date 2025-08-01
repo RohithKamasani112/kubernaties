@@ -38,7 +38,7 @@ import SimulatedTerminal from '../components/debugging/SimulatedTerminal';
 import LogViewer from '../components/debugging/LogViewer';
 import YamlEditor from '../components/debugging/YamlEditor';
 import MetricsDashboard from '../components/debugging/MetricsDashboard';
-import QuickActionButtons from '../components/debugging/QuickActionButtons';
+
 import InlineFixSuggestions from '../components/debugging/InlineFixSuggestions';
 import PodRestartTimeline from '../components/debugging/PodRestartTimeline';
 import AutoDiagnosisPanel from '../components/debugging/AutoDiagnosisPanel';
@@ -59,9 +59,11 @@ const K8sDebugging: React.FC = () => {
     currentScenario,
     clusterState,
     simulationStatus,
+    selectedResource,
     startScenario,
     pauseSimulation,
     resetScenario,
+    executeCommand,
     isLoading
   } = useDebuggingStore();
 
@@ -134,17 +136,11 @@ const K8sDebugging: React.FC = () => {
         return <YamlAutoFix />;
       case 'suggestions':
         return (
-          <div className="space-y-6">
-            <InlineFixSuggestions
-              logs={clusterState.logs}
-              events={clusterState.events}
-              selectedResource={selectedResource}
-            />
-            <QuickActionButtons
-              selectedResource={selectedResource}
-              onCommandExecute={executeCommand}
-            />
-          </div>
+          <InlineFixSuggestions
+            logs={clusterState.logs}
+            events={clusterState.events}
+            selectedResource={selectedResource}
+          />
         );
       default:
         return <ClusterExplorer />;

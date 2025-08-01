@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
@@ -21,8 +21,10 @@ import {
   Layers,
   FileText
 } from 'lucide-react';
+import FeedbackModal from '../components/FeedbackModal';
 
 const Dashboard: React.FC = () => {
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const features = [
     {
       icon: Play,
@@ -163,7 +165,7 @@ const Dashboard: React.FC = () => {
             {/* Quick Feedback CTA */}
             <div className="flex-shrink-0">
               <button
-                onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRRM1ZI7aSogq93y9onzbR2R4vJZkxswPGqV6wqSQyUm0FSA/viewform?usp=dialog', '_blank', 'width=800,height=900,scrollbars=yes,resizable=yes')}
+                onClick={() => setShowFeedbackModal(true)}
                 className="inline-flex items-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
               >
                 <MessageSquare className="w-4 h-4" />
@@ -311,7 +313,7 @@ const Dashboard: React.FC = () => {
                     Something not working as expected? Let us know so we can fix it quickly.
                   </p>
                   <button
-                    onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRRM1ZI7aSogq93y9onzbR2R4vJZkxswPGqV6wqSQyUm0FSA/viewform?usp=dialog', '_blank', 'width=800,height=900,scrollbars=yes,resizable=yes')}
+                    onClick={() => setShowFeedbackModal(true)}
                     className="text-red-600 hover:text-red-700 font-medium text-sm flex items-center justify-center"
                   >
                     Report Bug <ArrowRight className="w-4 h-4 ml-1" />
@@ -329,7 +331,7 @@ const Dashboard: React.FC = () => {
                     Have an idea that could make learning even better? Share it with us!
                   </p>
                   <button
-                    onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRRM1ZI7aSogq93y9onzbR2R4vJZkxswPGqV6wqSQyUm0FSA/viewform?usp=dialog', '_blank', 'width=800,height=900,scrollbars=yes,resizable=yes')}
+                    onClick={() => setShowFeedbackModal(true)}
                     className="text-yellow-600 hover:text-yellow-700 font-medium text-sm flex items-center justify-center"
                   >
                     Share Idea <ArrowRight className="w-4 h-4 ml-1" />
@@ -347,7 +349,7 @@ const Dashboard: React.FC = () => {
                     Share your overall experience and help us understand what's working well.
                   </p>
                   <button
-                    onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRRM1ZI7aSogq93y9onzbR2R4vJZkxswPGqV6wqSQyUm0FSA/viewform?usp=dialog', '_blank', 'width=800,height=900,scrollbars=yes,resizable=yes')}
+                    onClick={() => setShowFeedbackModal(true)}
                     className="text-green-600 hover:text-green-700 font-medium text-sm flex items-center justify-center"
                   >
                     Give Feedback <ArrowRight className="w-4 h-4 ml-1" />
@@ -359,11 +361,11 @@ const Dashboard: React.FC = () => {
             {/* Main CTA */}
             <div className="text-center">
               <button
-                onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRRM1ZI7aSogq93y9onzbR2R4vJZkxswPGqV6wqSQyUm0FSA/viewform?usp=dialog', '_blank', 'width=800,height=900,scrollbars=yes,resizable=yes')}
+                onClick={() => setShowFeedbackModal(true)}
                 className="inline-flex items-center space-x-3 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
               >
-                <ExternalLink className="w-5 h-5" />
-                <span>Open Complete Feedback Form</span>
+                <MessageSquare className="w-5 h-5" />
+                <span>Share Your Feedback</span>
               </button>
               <p className="text-sm text-gray-500 mt-3">
                 Quick & easy • Takes 2-3 minutes • Your input shapes our roadmap
@@ -389,24 +391,12 @@ const Dashboard: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* Floating Feedback Button */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, delay: 1 }}
-        className="fixed bottom-6 right-6 z-50"
-      >
-        <button
-          onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRRM1ZI7aSogq93y9onzbR2R4vJZkxswPGqV6wqSQyUm0FSA/viewform?usp=dialog', '_blank', 'width=800,height=900,scrollbars=yes,resizable=yes')}
-          className="group bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110"
-          title="Give Feedback"
-        >
-          <MessageSquare className="w-6 h-6" />
-          <span className="absolute right-full mr-3 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white text-sm px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
-            Give Feedback
-          </span>
-        </button>
-      </motion.div>
+
+      {/* Feedback Modal */}
+      <FeedbackModal
+        isOpen={showFeedbackModal}
+        onClose={() => setShowFeedbackModal(false)}
+      />
     </div>
   );
 };

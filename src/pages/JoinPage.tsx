@@ -11,6 +11,7 @@ const JoinPage: React.FC = () => {
     email: '',
     feedback: ''
   });
+  const [countryCode, setCountryCode] = useState('+1');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -23,6 +24,30 @@ const JoinPage: React.FC = () => {
       setFormData(prev => ({ ...prev, email: emailParam }));
     }
   }, []);
+
+  // Common country codes
+  const countryCodes = [
+    { code: '+1', country: 'US/CA', flag: '🇺🇸' },
+    { code: '+91', country: 'India', flag: '🇮🇳' },
+    { code: '+44', country: 'UK', flag: '🇬🇧' },
+    { code: '+49', country: 'Germany', flag: '🇩🇪' },
+    { code: '+33', country: 'France', flag: '🇫🇷' },
+    { code: '+86', country: 'China', flag: '🇨🇳' },
+    { code: '+81', country: 'Japan', flag: '🇯🇵' },
+    { code: '+82', country: 'S. Korea', flag: '🇰🇷' },
+    { code: '+61', country: 'Australia', flag: '🇦🇺' },
+    { code: '+55', country: 'Brazil', flag: '🇧🇷' },
+    { code: '+7', country: 'Russia', flag: '🇷🇺' },
+    { code: '+34', country: 'Spain', flag: '🇪🇸' },
+    { code: '+39', country: 'Italy', flag: '🇮🇹' },
+    { code: '+31', country: 'Netherlands', flag: '🇳🇱' },
+    { code: '+46', country: 'Sweden', flag: '🇸🇪' },
+    { code: '+47', country: 'Norway', flag: '🇳🇴' },
+    { code: '+45', country: 'Denmark', flag: '🇩🇰' },
+    { code: '+41', country: 'Switzerland', flag: '🇨🇭' },
+    { code: '+43', country: 'Austria', flag: '🇦🇹' },
+    { code: '+32', country: 'Belgium', flag: '🇧🇪' }
+  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +70,7 @@ const JoinPage: React.FC = () => {
 
       // Correct entry IDs from your Google Form:
       googleFormData.append('entry.396195895', formData.name); // Name field
-      googleFormData.append('entry.1338141041', formData.mobile); // Mobile field
+      googleFormData.append('entry.1338141041', `${countryCode} ${formData.mobile}`); // Mobile field with country code
       googleFormData.append('entry.786313690', formData.email); // Email field
       googleFormData.append('entry.469946608', formData.feedback); // Feedback field
 
@@ -177,18 +202,41 @@ const JoinPage: React.FC = () => {
                 <label htmlFor="mobile" className="block text-sm font-medium text-slate-700 mb-2">
                   Mobile Number
                 </label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-                  <input
-                    type="tel"
-                    id="mobile"
-                    name="mobile"
-                    value={formData.mobile}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300"
-                    placeholder="Enter your mobile number"
-                  />
+                <div className="flex space-x-2">
+                  {/* Country Code Selector */}
+                  <div className="relative">
+                    <select
+                      value={countryCode}
+                      onChange={(e) => setCountryCode(e.target.value)}
+                      className="appearance-none bg-white border border-slate-300 rounded-xl px-3 py-3 pr-8 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300 text-sm font-medium min-w-[100px]"
+                    >
+                      {countryCodes.map((country) => (
+                        <option key={country.code} value={country.code}>
+                          {country.flag} {country.code}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                      <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Phone Number Input */}
+                  <div className="relative flex-1">
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <input
+                      type="tel"
+                      id="mobile"
+                      name="mobile"
+                      value={formData.mobile}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300"
+                      placeholder="Enter your mobile number"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -226,7 +274,7 @@ const JoinPage: React.FC = () => {
                     onChange={handleInputChange}
                     rows={5}
                     className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300 resize-none"
-                    placeholder="Tell us about your learning goals and feedback:&#10;• Which courses would you like to register for? (e.g., Advanced Kubernetes, AWS Solutions Architect, DevOps with Terraform)&#10;• Course requests and topics you want to learn&#10;• Feedback on existing content&#10;• Platform feature requests&#10;• Suggestions for improvements&#10;&#10;We'll take care of everything from here and keep you updated on course availability and our progress!"
+                    placeholder="Share your learning goals and feedback:&#10;• Course interests (Kubernetes, AWS, DevOps, etc.)&#10;• Platform feedback and suggestions&#10;• Feature requests&#10;&#10;We'll keep you updated on new courses and features!"
                   />
                 </div>
               </div>
