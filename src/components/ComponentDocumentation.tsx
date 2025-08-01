@@ -319,16 +319,7 @@ const ComponentDocumentation: React.FC<ComponentDocumentationProps> = ({
                                   <h4 className="font-semibold text-gray-900">{example.title}</h4>
                                   <p className="text-gray-600 text-sm">{example.description}</p>
                                 </div>
-                                <button
-                                  onClick={() => {
-                                    setSelectedExample(example);
-                                    setShowTerminal(true);
-                                  }}
-                                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg"
-                                >
-                                  <Terminal className="w-4 h-4" />
-                                  Try It
-                                </button>
+
                               </div>
                               <div className="bg-gray-100 rounded-lg p-3 font-mono text-sm">
                                 <code className="text-gray-800">{example.command}</code>

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Editor } from '@monaco-editor/react';
-import { 
-  ArrowLeft, 
-  ArrowRight, 
-  PlayCircle, 
+import {
+  ArrowLeft,
+  ArrowRight,
   CheckCircle,
   BookOpen,
   Code,
@@ -92,12 +91,7 @@ const LessonViewer: React.FC<LessonViewerProps> = ({ lesson, onBack }) => {
     }
   };
 
-  const tryInPlayground = () => {
-    // Navigate to playground with the current YAML
-    const playgroundUrl = `/playground?yaml=${encodeURIComponent(yamlContent)}`;
-    window.open(playgroundUrl, '_blank');
-    toast.success('Opening in playground...');
-  };
+
 
   const copyToClipboard = async () => {
     try {
@@ -230,13 +224,7 @@ const LessonViewer: React.FC<LessonViewerProps> = ({ lesson, onBack }) => {
                         {copiedCode ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                         <span className="text-sm">{copiedCode ? 'Copied!' : 'Copy'}</span>
                       </button>
-                      <button
-                        onClick={tryInPlayground}
-                        className="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition-colors"
-                      >
-                        <PlayCircle className="w-4 h-4" />
-                        <span>Try in Playground</span>
-                      </button>
+
                     </div>
                   </div>
                 </div>

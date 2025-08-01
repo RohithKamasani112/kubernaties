@@ -7,7 +7,6 @@ import {
   Clock,
   Star,
   BookOpen,
-  PlayCircle,
   ArrowRight,
   TrendingUp,
   Award,
@@ -89,29 +88,7 @@ const Dashboard: React.FC = () => {
 
   ];
 
-  const quickActions = [
-    {
-      icon: BookOpen,
-      title: 'Continue Learning',
-      description: 'Resume your current lesson',
-      color: 'bg-blue-500',
-      link: '/lessons'
-    },
-    {
-      icon: PlayCircle,
-      title: 'Try Playground',
-      description: 'Experiment with Kubernetes',
-      color: 'bg-green-500',
-      link: '/playground'
-    },
-    {
-      icon: Target,
-      title: 'Take Challenge',
-      description: 'Test your debugging skills',
-      color: 'bg-orange-500',
-      link: '/challenges'
-    }
-  ];
+
 
   const recentActivity = [
     {
@@ -225,36 +202,7 @@ const Dashboard: React.FC = () => {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Quick Actions */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="lg:col-span-2"
-          >
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {quickActions.map((action, index) => (
-                <Link
-                  key={index}
-                  to={action.link}
-                  className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 hover:scale-105 group"
-                >
-                  <div className={`w-12 h-12 ${action.color} rounded-lg flex items-center justify-center mb-4`}>
-                    <action.icon className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">{action.title}</h3>
-                  <p className="text-sm text-gray-600 mb-4">{action.description}</p>
-                  <div className="flex items-center text-blue-600 text-sm font-medium">
-                    <span>Get started</span>
-                    <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </motion.div>
-
+        <div className="grid grid-cols-1 gap-8">
           {/* Recent Activity */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
