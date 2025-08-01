@@ -11,6 +11,8 @@ import {
   Mail,
   ExternalLink
 } from 'lucide-react';
+import { useScrollToTop } from '../hooks/useScrollToTop';
+import ScrollToTopButton from './ScrollToTopButton';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -19,6 +21,9 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+
+  // Scroll to top when location changes
+  useScrollToTop('smooth');
 
   const navigation = [
     { name: 'Home', href: '/', icon: Home },
@@ -30,6 +35,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const isActive = (path: string) => location.pathname === path;
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Skip Link for Accessibility */}
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-sm border-b border-slate-200/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,9 +49,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
                 <span className="text-white font-bold text-lg">S</span>
               </div>
-              <div className="hidden sm:block">
-                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Samwi Learn</h1>
-                <p className="text-xs text-slate-600 -mt-1">Interactive Tech Education</p>
+              <div className="block">
+                <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Samwi Learn</h1>
+                <p className="text-xs text-slate-600 -mt-1 hidden sm:block">Interactive Tech Education</p>
               </div>
             </Link>
 
@@ -130,7 +140,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {children}
       </main>
 
@@ -235,6 +245,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </div>
       </footer>
+
+      {/* Scroll to Top Button */}
+      <ScrollToTopButton />
     </div>
   );
 };

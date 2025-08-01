@@ -18,98 +18,216 @@ export const debugChallenges = [
   {
     id: 'react-state-delay',
     title: 'State Not Updating Immediately',
-    description: "User changes input, but value does not reflect immediately in the console.",
+    description: "A React input component logs the wrong value to console. When typing, the console shows the previous value instead of the current one. This is a common React state management issue.",
     techStack: 'React',
     difficulty: 'beginner',
     estimatedTime: '10 min',
     xpReward: 80,
     tags: ['React', 'useState', 'Asynchronous'],
-    rootCause: 'Misunderstanding that useState updates are async',
+    rootCause: 'useState updates are asynchronous and batched - state doesn\'t update immediately',
     category: 'State Management',
     files: {
       'App.jsx': `import React, { useState } from 'react';
 
+// PROBLEM: This component has a state logging issue
 function InputBox() {
   const [value, setValue] = useState('');
 
   const handleChange = (e) => {
     setValue(e.target.value);
-    console.log('Current value:', value); // BUG: This logs the previous value!
+    // BUG: This logs the OLD value, not the new one!
+    console.log('Current value:', value);
   };
 
   return (
-    <div>
+    <div className="input-container">
+      <h2>🐛 Debug Challenge: State Logging Issue</h2>
+      <p>Type in the input below and check the console:</p>
+
       <input
         type="text"
         value={value}
         onChange={handleChange}
-        placeholder="Type something..."
+        placeholder="Type something and watch the console..."
+        className="debug-input"
       />
-      <p>You typed: {value}</p>
+
+      <div className="display-section">
+        <p><strong>UI shows:</strong> "{value}"</p>
+        <p><strong>Console shows:</strong> Previous value (check DevTools)</p>
+      </div>
+
+      <div className="problem-explanation">
+        <h3>🤔 What's Wrong?</h3>
+        <p>The console.log shows the previous state value, not the current input value!</p>
+      </div>
     </div>
   );
 }
 
-export default InputBox;`
+export default InputBox;`,
+      'styles.css': `/* Styles for the debug challenge */
+.input-container {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.debug-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #cbd5e0;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.display-section {
+  background: #f7fafc;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 15px 0;
+}
+
+.problem-explanation {
+  background: #fed7d7;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #f56565;
+}`
     },
     hints: [
-      'useState updates are asynchronous - the state does not update immediately',
-      'The console.log runs before the state actually updates',
-      'Try logging e.target.value instead of the state variable',
-      'Consider using useEffect to log state changes'
+      '🔍 useState updates are asynchronous - state doesn\'t change immediately',
+      '⏰ The console.log runs BEFORE the state actually updates',
+      '💡 Try logging e.target.value instead of the state variable',
+      '🎯 Consider using useEffect to observe state changes after they happen'
     ],
     solution: {
       'App.jsx': `import React, { useState, useEffect } from 'react';
 
+// FIXED: Multiple solutions to the state logging issue
 function InputBox() {
   const [value, setValue] = useState('');
 
   const handleChange = (e) => {
     setValue(e.target.value);
-    // FIXED: Log the actual input value, not the state
-    console.log('Current value:', e.target.value);
+
+    // FIXED Solution 1: Log the input value directly
+    console.log('Current value (from input):', e.target.value);
   };
 
-  // ALTERNATIVE: Use useEffect to log state changes
+  // FIXED Solution 2: Use useEffect to log state changes
   useEffect(() => {
     console.log('State updated to:', value);
   }, [value]);
 
   return (
-    <div>
-      <input 
-        type="text" 
-        value={value} 
-        onChange={handleChange} 
-        placeholder="Type something..."
+    <div className="input-container">
+      <h2>✅ Fixed: State Logging Issue</h2>
+      <p>Now the console shows the correct values!</p>
+
+      <input
+        type="text"
+        value={value}
+        onChange={handleChange}
+        placeholder="Type something and watch the console..."
+        className="debug-input"
       />
-      <p>You typed: {value}</p>
+
+      <div className="display-section">
+        <p><strong>UI shows:</strong> "{value}"</p>
+        <p><strong>Console shows:</strong> Correct current value ✅</p>
+      </div>
+
+      <div className="solution-explanation">
+        <h3>🎉 How It's Fixed:</h3>
+        <ul>
+          <li><strong>Method 1:</strong> Log <code>e.target.value</code> directly</li>
+          <li><strong>Method 2:</strong> Use <code>useEffect</code> to observe state changes</li>
+          <li><strong>Why:</strong> useState updates are asynchronous and batched</li>
+        </ul>
+      </div>
     </div>
   );
 }
 
-export default InputBox;`
+export default InputBox;`,
+      'styles.css': `/* Enhanced styles for the fixed version */
+.input-container {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 2px solid #48bb78;
+  border-radius: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.debug-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #48bb78;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.display-section {
+  background: #f0fff4;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 15px 0;
+}
+
+.solution-explanation {
+  background: #c6f6d5;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #48bb78;
+}
+
+.solution-explanation code {
+  background: #2d3748;
+  color: #68d391;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+}`
     },
     testCases: [
-      'Console should log the correct current value when typing',
-      'State should update and display correctly in the UI',
-      'No delay between typing and state update'
+      'Type in the input and verify console shows correct current value',
+      'Check that UI updates immediately when typing',
+      'Verify useEffect logs state changes after they occur',
+      'Confirm no delay between typing and state update'
     ],
     debuggingSteps: [
-      'Check console output when typing in input',
-      'Compare logged value with displayed value',
-      'Use React DevTools to inspect state changes'
+      '1. Open browser DevTools console',
+      '2. Type in the input field',
+      '3. Notice console shows previous value (the bug)',
+      '4. Compare console output with UI display',
+      '5. Apply the fix by logging e.target.value instead',
+      '6. Test the fix and verify console shows correct values'
     ],
     commonMistakes: [
-      'Expecting synchronous state updates',
-      'Using stale state values in calculations',
-      'Not understanding React batching behavior'
+      'Expecting useState to update synchronously',
+      'Using stale state values in event handlers',
+      'Not understanding React\'s batching behavior',
+      'Forgetting that state updates are asynchronous'
     ],
-    productionImpact: 'Can lead to incorrect calculations and race conditions in real applications',
+    productionImpact: 'Can lead to incorrect calculations, race conditions, and confusing user experiences in real applications',
     preventionTips: [
-      'Use functional updates when new state depends on previous state',
-      'Use useEffect to perform side effects after state updates',
-      'Log event values instead of state for immediate feedback'
+      'Always use the event value directly when available',
+      'Use useEffect to perform actions after state updates',
+      'Understand React\'s batching and async nature',
+      'Use functional state updates when new state depends on previous state'
+    ],
+    learningObjectives: [
+      'Understand React state update timing',
+      'Learn the difference between synchronous and asynchronous operations',
+      'Master proper event handling in React',
+      'Practice debugging state-related issues'
     ]
   },
   {

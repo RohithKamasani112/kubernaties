@@ -16,39 +16,75 @@ import {
   Bug,
   Lightbulb,
   ExternalLink,
-  Send
+  Send,
+  Play,
+  Layers,
+  FileText
 } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  const stats = [
+  const features = [
     {
-      icon: CheckCircle,
-      value: '3',
-      label: 'Lessons Completed',
-      color: 'text-green-600',
-      bgColor: 'bg-green-50'
+      icon: Play,
+      title: 'Interactive Playground',
+      description: 'Experiment with Kubernetes in a safe environment. Deploy, scale, and manage containers.',
+      color: 'from-blue-500 to-cyan-500',
+      bgColor: 'bg-blue-50',
+      iconColor: 'text-blue-600',
+      link: '/kubernetes/playground',
+      animation: 'hover:scale-105'
+    },
+    {
+      icon: BookOpen,
+      title: 'Guided Lessons',
+      description: 'Learn Kubernetes step-by-step with interactive tutorials and hands-on exercises.',
+      color: 'from-green-500 to-emerald-500',
+      bgColor: 'bg-green-50',
+      iconColor: 'text-green-600',
+      link: '/kubernetes/lessons',
+      animation: 'hover:scale-105'
     },
     {
       icon: Target,
-      value: '1',
-      label: 'Challenges Solved',
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-50'
+      title: 'Debug Challenges',
+      description: 'Test your skills with real-world debugging scenarios and troubleshooting tasks.',
+      color: 'from-orange-500 to-red-500',
+      bgColor: 'bg-orange-50',
+      iconColor: 'text-orange-600',
+      link: '/kubernetes/challenges',
+      animation: 'hover:scale-105'
     },
     {
-      icon: Clock,
-      value: '2.5h',
-      label: 'Time Spent',
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50'
+      icon: Layers,
+      title: 'YAML Examples',
+      description: 'Explore curated Kubernetes manifests and learn best practices through examples.',
+      color: 'from-purple-500 to-pink-500',
+      bgColor: 'bg-purple-50',
+      iconColor: 'text-purple-600',
+      link: '/kubernetes/examples',
+      animation: 'hover:scale-105'
     },
     {
-      icon: Star,
-      value: 'Beginner',
-      label: 'Current Level',
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50'
-    }
+      icon: Bug,
+      title: 'K8s Debugging',
+      description: 'Master debugging techniques with interactive cluster troubleshooting scenarios.',
+      color: 'from-red-500 to-pink-500',
+      bgColor: 'bg-red-50',
+      iconColor: 'text-red-600',
+      link: '/kubernetes/debugging',
+      animation: 'hover:scale-105'
+    },
+    {
+      icon: FileText,
+      title: 'Documentation',
+      description: 'Access comprehensive guides, references, and best practices for Kubernetes.',
+      color: 'from-indigo-500 to-blue-500',
+      bgColor: 'bg-indigo-50',
+      iconColor: 'text-indigo-600',
+      link: '/kubernetes/docs',
+      animation: 'hover:scale-105'
+    },
+
   ];
 
   const quickActions = [
@@ -137,25 +173,54 @@ const Dashboard: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Stats Grid */}
+        {/* Feature Cards */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+          className="mb-8"
         >
-          {stats.map((stat, index) => (
-            <div key={index} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-              <div className="flex items-center justify-between mb-4">
-                <div className={`p-3 rounded-lg ${stat.bgColor}`}>
-                  <stat.icon className={`w-6 h-6 ${stat.color}`} />
-                </div>
-                <TrendingUp className="w-4 h-4 text-gray-400" />
-              </div>
-              <div className="text-2xl font-bold text-gray-900 mb-1">{stat.value}</div>
-              <div className="text-sm text-gray-600">{stat.label}</div>
-            </div>
-          ))}
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Explore Features</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 + index * 0.1 }}
+                whileHover={{ y: -5 }}
+                className="group"
+              >
+                <Link
+                  to={feature.link}
+                  className={`block bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 ${feature.animation} h-full`}
+                >
+                  {/* Icon with gradient background */}
+                  <div className="relative mb-4">
+                    <div className={`w-12 h-12 bg-gradient-to-r ${feature.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                      <feature.icon className="w-6 h-6 text-white" />
+                    </div>
+                    {/* Animated background effect */}
+                    <div className={`absolute inset-0 w-12 h-12 bg-gradient-to-r ${feature.color} rounded-lg opacity-20 group-hover:scale-125 transition-transform duration-300 -z-10`}></div>
+                  </div>
+
+                  {/* Content */}
+                  <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-gray-700 transition-colors">
+                    {feature.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                    {feature.description}
+                  </p>
+
+                  {/* Action indicator */}
+                  <div className="flex items-center text-blue-600 text-sm font-medium">
+                    <span>Explore</span>
+                    <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

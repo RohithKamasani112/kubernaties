@@ -34,6 +34,9 @@ import KubeQuestLayout from './components/KubeQuestLayout';
 import CollaboratorsButton from './components/CollaboratorsButton';
 import PerformanceOptimizer from './components/PerformanceOptimizer';
 
+// Styles
+import './styles/scroll.css';
+
 function App() {
   return (
     <Router>
@@ -69,8 +72,7 @@ function App() {
           </Routes>
         </AnimatePresence>
 
-        {/* Collaborators Button - Only on main pages */}
-        <CollaboratorsButton />
+
 
           {/* Global Toast Notifications */}
           <Toaster
@@ -99,6 +101,9 @@ function App() {
               },
             }}
           />
+
+          {/* Floating Collaborators Button */}
+          <CollaboratorsButton />
         </div>
       </Router>
   );

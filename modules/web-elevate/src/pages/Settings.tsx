@@ -16,7 +16,11 @@ import {
   Smartphone,
   Volume2,
   Eye,
-  Lock
+  Lock,
+  Users,
+  Briefcase,
+  Construction,
+  Wrench
 } from 'lucide-react';
 
 const Settings: React.FC = () => {
@@ -36,7 +40,9 @@ const Settings: React.FC = () => {
     { id: 'notifications', label: 'Notifications', icon: Bell },
     { id: 'appearance', label: 'Appearance', icon: Palette },
     { id: 'privacy', label: 'Privacy', icon: Shield },
-    { id: 'data', label: 'Data', icon: Download }
+    { id: 'data', label: 'Data', icon: Download },
+    { id: 'collaboration', label: 'Collaboration', icon: Users, devInProgress: true },
+    { id: 'portfolio', label: 'Portfolio', icon: Briefcase, devInProgress: true }
   ];
 
   const themeOptions = [
@@ -73,15 +79,28 @@ const Settings: React.FC = () => {
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
+                    onClick={() => !tab.devInProgress && setActiveTab(tab.id)}
+                    disabled={tab.devInProgress}
                     className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
                       activeTab === tab.id
                         ? 'bg-purple-50 text-purple-700 font-medium'
+                        : tab.devInProgress
+                        ? 'text-gray-400 cursor-not-allowed bg-gray-50'
                         : 'text-gray-600 hover:bg-gray-50'
                     }`}
                   >
-                    <Icon className="w-5 h-5" />
+                    <div className="relative">
+                      <Icon className="w-5 h-5" />
+                      {tab.devInProgress && (
+                        <Construction className="w-3 h-3 text-orange-500 absolute -top-1 -right-1" />
+                      )}
+                    </div>
                     <span>{tab.label}</span>
+                    {tab.devInProgress && (
+                      <span className="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full ml-auto">
+                        Dev in Progress
+                      </span>
+                    )}
                   </button>
                 );
               })}
@@ -290,6 +309,86 @@ const Settings: React.FC = () => {
                       <Trash2 className="w-4 h-4" />
                       <span>Delete Account</span>
                     </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'collaboration' && (
+              <div className="space-y-6">
+                <div className="text-center py-12">
+                  <div className="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Construction className="w-12 h-12 text-orange-500" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">Collaboration Features</h2>
+                  <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                    Team collaboration, code sharing, and real-time pair programming features are currently under development.
+                  </p>
+                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 max-w-md mx-auto">
+                    <div className="flex items-center space-x-3">
+                      <Wrench className="w-5 h-5 text-orange-600" />
+                      <div className="text-left">
+                        <p className="font-medium text-orange-800">Coming Soon</p>
+                        <p className="text-sm text-orange-600">Expected release: Q2 2024</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <Users className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                      <h3 className="font-medium text-gray-700">Team Workspaces</h3>
+                      <p className="text-sm text-gray-500 mt-1">Shared learning environments</p>
+                    </div>
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <Globe className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                      <h3 className="font-medium text-gray-700">Code Sharing</h3>
+                      <p className="text-sm text-gray-500 mt-1">Share projects instantly</p>
+                    </div>
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <Mail className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                      <h3 className="font-medium text-gray-700">Live Sessions</h3>
+                      <p className="text-sm text-gray-500 mt-1">Real-time collaboration</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'portfolio' && (
+              <div className="space-y-6">
+                <div className="text-center py-12">
+                  <div className="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Construction className="w-12 h-12 text-orange-500" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">Portfolio Builder</h2>
+                  <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                    Showcase your projects, skills, and achievements with our professional portfolio builder.
+                  </p>
+                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 max-w-md mx-auto">
+                    <div className="flex items-center space-x-3">
+                      <Wrench className="w-5 h-5 text-orange-600" />
+                      <div className="text-left">
+                        <p className="font-medium text-orange-800">In Development</p>
+                        <p className="text-sm text-orange-600">Expected release: Q3 2024</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <Briefcase className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                      <h3 className="font-medium text-gray-700">Project Showcase</h3>
+                      <p className="text-sm text-gray-500 mt-1">Display your best work</p>
+                    </div>
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <Eye className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                      <h3 className="font-medium text-gray-700">Skills Matrix</h3>
+                      <p className="text-sm text-gray-500 mt-1">Visualize your expertise</p>
+                    </div>
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <Globe className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                      <h3 className="font-medium text-gray-700">Public Profile</h3>
+                      <p className="text-sm text-gray-500 mt-1">Share with employers</p>
+                    </div>
                   </div>
                 </div>
               </div>

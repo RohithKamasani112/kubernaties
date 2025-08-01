@@ -181,7 +181,7 @@ const StatusPanel: React.FC = () => {
 
   return (
     <motion.div
-      className="w-full h-full flex flex-col overflow-hidden"
+      className="w-full h-full flex flex-col"
       initial={{ x: 100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.3 }}
@@ -254,9 +254,6 @@ const StatusPanel: React.FC = () => {
                 }
               </span>
             </div>
-            {appStatus.overall === 'running' && appStatus.connections > 0 && appStatus.errors === 0 && appStatus.warnings === 0 && (
-              <CheckCircle className="w-5 h-5 text-emerald-600" />
-            )}
           </div>
           {appStatus.errors > 0 && (
             <p className="text-sm mt-1 opacity-90">
@@ -340,7 +337,7 @@ const StatusPanel: React.FC = () => {
           </div>
         </div>
         
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto p-4" style={{ maxHeight: 'calc(100vh - 400px)' }}>
           {trafficLogs.length > 0 ? (
             <div className="space-y-3">
               {trafficLogs.map((log) => (

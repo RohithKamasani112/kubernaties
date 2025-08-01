@@ -305,7 +305,7 @@ const ChallengeView: React.FC<ChallengeViewProps> = ({
                 defaultLanguage={challenge.code?.language || 'javascript'}
                 value={code}
                 onChange={(value) => setCode(value || '')}
-                theme="vs-light"
+                theme="vs-dark"
                 options={{
                   minimap: { enabled: false },
                   fontSize: 14,
@@ -313,6 +313,8 @@ const ChallengeView: React.FC<ChallengeViewProps> = ({
                   roundedSelection: false,
                   scrollBeyondLastLine: false,
                   automaticLayout: true,
+                  wordWrap: 'on',
+                  tabSize: 2,
                 }}
               />
             </div>

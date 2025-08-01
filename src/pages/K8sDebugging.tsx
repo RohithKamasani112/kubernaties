@@ -318,25 +318,63 @@ const K8sDebugging: React.FC = () => {
         <div className="flex-1 flex flex-col">
           {selectedScenario && (
             <>
-              {/* Panel Navigation - Mobile Responsive */}
-              <div className="bg-white border-b border-slate-200 px-2 sm:px-4 py-2">
+              {/* Panel Navigation - Mobile Responsive with Discovery Animation */}
+              <div className="bg-white border-b border-slate-200 px-2 sm:px-4 py-2 relative">
+                {/* Animated discovery hint */}
+                <motion.div
+                  className="absolute -top-1 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-green-500 opacity-60"
+                  animate={{
+                    x: ['-100%', '100%'],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    repeatType: 'loop',
+                    ease: 'easeInOut',
+                  }}
+                />
                 <div className="flex items-center space-x-1 overflow-x-auto">
-                  {panels.map((panel) => {
+                  {panels.map((panel, index) => {
                     const Icon = panel.icon;
                     return (
-                      <button
+                      <motion.button
                         key={panel.id}
                         onClick={() => handlePanelChange(panel.id)}
-                        className={`flex items-center space-x-1 px-2 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all flex-shrink-0 min-h-[36px] touch-manipulation ${
+                        className={`flex items-center space-x-1 px-2 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all flex-shrink-0 min-h-[36px] touch-manipulation relative ${
                           activePanel === panel.id
                             ? 'bg-blue-50 text-blue-700 border border-blue-200'
                             : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                         }`}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1, duration: 0.3 }}
+                        whileHover={{
+                          scale: 1.05,
+                          y: -2,
+                          transition: { duration: 0.2 }
+                        }}
+                        whileTap={{ scale: 0.95 }}
                       >
+                        {/* Pulsing ring animation for inactive tabs */}
+                        {activePanel !== panel.id && (
+                          <motion.div
+                            className="absolute inset-0 rounded-md border-2 border-blue-400 opacity-0"
+                            animate={{
+                              opacity: [0, 0.6, 0],
+                              scale: [1, 1.1, 1],
+                            }}
+                            transition={{
+                              duration: 2,
+                              repeat: Infinity,
+                              delay: index * 0.5,
+                              repeatType: 'loop',
+                            }}
+                          />
+                        )}
                         <Icon className={`w-3 h-3 ${activePanel === panel.id ? panel.color : ''}`} />
                         <span className="hidden sm:inline">{panel.label}</span>
                         <span className="sm:hidden">{panel.label.split(' ')[0]}</span>
-                      </button>
+                      </motion.button>
                     );
                   })}
                 </div>

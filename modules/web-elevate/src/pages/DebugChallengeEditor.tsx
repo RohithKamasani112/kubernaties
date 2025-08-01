@@ -337,7 +337,12 @@ const DebugChallengeEditor: React.FC = () => {
                 roundedSelection: false,
                 scrollBeyondLastLine: false,
                 automaticLayout: true,
-                wordWrap: 'on'
+                wordWrap: 'on',
+                tabSize: 2,
+                fontFamily: 'Monaco, Menlo, "Ubuntu Mono", monospace',
+                renderLineHighlight: 'line',
+                cursorBlinking: 'blink',
+                cursorStyle: 'line'
               }}
             />
           </div>
@@ -371,21 +376,27 @@ const DebugChallengeEditor: React.FC = () => {
               <h2 className="text-lg font-semibold">Console Output</h2>
             </div>
             
-            <div className="space-y-2 font-mono text-sm">
+            <div className="space-y-2 font-mono text-sm bg-gray-800 p-4 rounded-lg min-h-[200px] max-h-[400px] overflow-y-auto">
               {consoleOutput.length === 0 ? (
                 <p className="text-gray-400">Click "Run & Test" to see output...</p>
               ) : (
                 consoleOutput.map((line, index) => (
                   <div
                     key={index}
-                    className={`${
+                    className={`leading-relaxed ${
                       line.includes('✅') ? 'text-green-400' :
                       line.includes('❌') ? 'text-red-400' :
                       line.includes('💡') ? 'text-yellow-400' :
                       line.includes('🎉') ? 'text-purple-400' :
-                      'text-gray-300'
+                      line.includes('Error') || line.includes('error') ? 'text-red-300' :
+                      line.includes('Warning') || line.includes('warning') ? 'text-yellow-300' :
+                      line.includes('Info') || line.includes('info') ? 'text-blue-300' :
+                      'text-gray-100'
                     }`}
                   >
+                    <span className="text-gray-500 mr-2 select-none">
+                      {String(index + 1).padStart(3, '0')}
+                    </span>
                     {line}
                   </div>
                 ))

@@ -1,0 +1,54 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="arrowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00D4FF;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1E88E5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3F51B5;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="orangeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF9800;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF5722;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main upward arrow -->
+  <path d="M200 80 L280 200 L240 200 L240 280 L160 280 L160 200 L120 200 Z" fill="url(#arrowGradient)"/>
+  
+  <!-- Circuit/tech elements -->
+  <g opacity="0.8">
+    <!-- Left side tech elements -->
+    <rect x="60" y="150" width="40" height="4" fill="#00D4FF"/>
+    <rect x="60" y="160" width="25" height="4" fill="#00D4FF"/>
+    <rect x="60" y="170" width="35" height="4" fill="#00D4FF"/>
+    <circle cx="105" cy="152" r="3" fill="#00D4FF"/>
+    <circle cx="90" cy="162" r="3" fill="#00D4FF"/>
+    
+    <!-- Right side tech elements -->
+    <rect x="300" y="150" width="40" height="4" fill="#00D4FF"/>
+    <rect x="315" y="160" width="25" height="4" fill="#00D4FF"/>
+    <rect x="305" y="170" width="35" height="4" fill="#00D4FF"/>
+    <circle cx="295" cy="152" r="3" fill="#00D4FF"/>
+    <circle cx="310" cy="162" r="3" fill="#00D4FF"/>
+  </g>
+  
+  <!-- Orange accent at bottom -->
+  <path d="M160 280 L200 320 L240 280 Z" fill="url(#orangeGradient)"/>
+  
+  <!-- Floating particles/dots -->
+  <g opacity="0.6">
+    <circle cx="120" cy="120" r="4" fill="#00D4FF"/>
+    <circle cx="280" cy="130" r="3" fill="#1E88E5"/>
+    <circle cx="100" cy="200" r="3" fill="#00D4FF"/>
+    <circle cx="300" cy="190" r="4" fill="#1E88E5"/>
+    <circle cx="140" cy="100" r="2" fill="#3F51B5"/>
+    <circle cx="260" cy="110" r="2" fill="#3F51B5"/>
+  </g>
+  
+  <!-- Dashed lines for movement effect -->
+  <g opacity="0.4">
+    <line x1="80" y1="140" x2="120" y2="120" stroke="#00D4FF" stroke-width="2" stroke-dasharray="5,5"/>
+    <line x1="280" y1="120" x2="320" y2="140" stroke="#00D4FF" stroke-width="2" stroke-dasharray="5,5"/>
+    <line x1="90" y1="220" x2="130" y2="240" stroke="#1E88E5" stroke-width="2" stroke-dasharray="5,5"/>
+    <line x1="270" y1="240" x2="310" y2="220" stroke="#1E88E5" stroke-width="2" stroke-dasharray="5,5"/>
+  </g>
+</svg>

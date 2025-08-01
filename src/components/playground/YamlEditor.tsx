@@ -185,8 +185,7 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
 
       // Show consolidated success notification after a brief delay
       setTimeout(() => {
-        toast.success('✅ YAML applied successfully! Canvas updated.', {
-          icon: '✅',
+        toast.success('YAML applied successfully! Canvas updated.', {
           duration: 3000,
         });
       }, 800);
@@ -287,16 +286,24 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
     lineNumbers: 'on' as const,
     roundedSelection: false,
     scrollbar: {
-      vertical: 'auto' as const,
-      horizontal: 'auto' as const,
+      vertical: 'visible' as const,
+      horizontal: 'visible' as const,
+      verticalScrollbarSize: 12,
+      horizontalScrollbarSize: 12,
+      useShadows: false,
+      verticalHasArrows: true,
+      horizontalHasArrows: true,
+      alwaysConsumeMouseWheel: false
     },
-    theme: 'vs-light',
+    theme: 'vs-dark',
     wordWrap: 'on' as const,
     automaticLayout: true,
     readOnly: false,
     folding: true,
     foldingStrategy: 'indentation' as const,
     showFoldingControls: 'always' as const,
+    mouseWheelZoom: false,
+    smoothScrolling: true
   };
 
   if (!isVisible) {
@@ -328,7 +335,7 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
   return (
     <motion.div
       className={`bg-white border-t border-slate-200 flex flex-col relative ${
-        isExpanded ? 'fixed inset-0 z-50' : ''
+        isExpanded ? 'fixed inset-0 z-50 bg-white shadow-2xl' : ''
       }`}
       style={{ height: isExpanded ? '100vh' : `${currentHeight}px` }}
       initial={{ y: 100, opacity: 0 }}
@@ -359,6 +366,7 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
           <div className="min-w-0">
             <h3 className="text-xs sm:text-sm font-bold text-slate-900 truncate">
               {isManualEdit ? '✏️ Custom YAML Manifest' : '🚀 Generated YAML Manifest'}
+              {isExpanded && ' (Expanded View)'}
             </h3>
             <p className="text-xs text-slate-600 hidden sm:block">
               {isManualEdit ? 'Manually edited - click Apply to visualize' : 'Live-generated from your architecture'}
@@ -424,7 +432,15 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
             <EyeOff className="w-3 h-3 sm:w-4 sm:h-4" />
           </button>
           <button
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={() => {
+              setIsExpanded(!isExpanded);
+              // Prevent body scroll when expanded
+              if (!isExpanded) {
+                document.body.style.overflow = 'hidden';
+              } else {
+                document.body.style.overflow = 'auto';
+              }
+            }}
             className="p-1.5 sm:p-2 text-slate-600 hover:text-slate-900 hover:bg-white rounded-lg transition-colors touch-manipulation"
             title={isExpanded ? "Minimize" : "Expand"}
           >
@@ -580,32 +596,7 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
         </div>
       )}
 
-      {/* Validation Warnings */}
-      {validationWarnings.length > 0 && (
-        <div className="px-4 py-3 bg-yellow-50 border-t border-yellow-200 flex-shrink-0">
-          <div className="flex items-start space-x-2">
-            <AlertTriangle className="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0" />
-            <div className="flex-1">
-              <h4 className="text-sm font-medium text-yellow-800 mb-1">Best Practice Suggestions</h4>
-              <ul className="text-xs text-yellow-700 space-y-1">
-                {validationWarnings.map((warning, index) => (
-                  <li key={index} className="flex items-start space-x-1">
-                    <span className="text-yellow-500">•</span>
-                    <span>{warning}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <button
-              onClick={() => setValidationWarnings([])}
-              className="w-6 h-6 flex items-center justify-center text-yellow-500 hover:text-yellow-700 hover:bg-yellow-100 rounded-full transition-colors"
-              title="Close validation warnings"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Best Practice Suggestions section removed - suggestions are provided elsewhere */}
 
 
     </motion.div>

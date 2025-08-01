@@ -191,6 +191,13 @@ const ExamplesGallery: React.FC<ExamplesGalleryProps> = ({ isVisible, onClose })
 
         {/* Examples Grid/List */}
         <div className="flex-1 overflow-y-auto p-6">
+          {/* Debug info */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mb-4 p-3 bg-yellow-100 rounded-lg text-sm">
+              <strong>Debug:</strong> Total examples: {yamlExamples.length}, Filtered: {filteredExamples.length}, Category: {selectedCategory}, Search: "{searchQuery}"
+            </div>
+          )}
+
           {filteredExamples.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <div className="p-6 bg-slate-100 rounded-full mb-4">
@@ -198,6 +205,7 @@ const ExamplesGallery: React.FC<ExamplesGalleryProps> = ({ isVisible, onClose })
               </div>
               <h3 className="text-2xl font-semibold text-slate-900 mb-2">No examples found</h3>
               <p className="text-slate-600">Try adjusting your search or category filter</p>
+              <p className="text-slate-500 text-sm mt-2">Total available examples: {yamlExamples.length}</p>
             </div>
           ) : (
             <div className={viewMode === 'grid' 

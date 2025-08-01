@@ -26,8 +26,14 @@ const BlueprintDetail: React.FC = () => {
   const navigate = useNavigate();
   const { blueprints, startBlueprint, createPlaygroundSession } = useWebElevateStore();
   const [activeTab, setActiveTab] = useState<'overview' | 'architecture' | 'requirements'>('overview');
-  
+
+
+
   const blueprint = blueprints.find(b => b.id === blueprintId);
+
+  // Calculate derived values from milestones
+  const totalDeliverables = blueprint?.milestones?.reduce((total, milestone) => total + (milestone.deliverables?.length || 0), 0) || 0;
+  const totalUserStories = blueprint?.milestones?.length || 0;
 
   if (!blueprint) {
     return (
@@ -108,58 +114,58 @@ const BlueprintDetail: React.FC = () => {
 
             <p className="text-gray-600 text-lg mb-6">{blueprint.description}</p>
 
-            {/* Scenario */}
+            {/* Project Details */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <h3 className="font-semibold text-blue-900 mb-2">Project Scenario</h3>
-              <p className="text-blue-800 text-sm">{blueprint.scenario}</p>
+              <h3 className="font-semibold text-blue-900 mb-2">What You'll Build</h3>
+              <p className="text-blue-800 text-sm">A comprehensive {blueprint.category} project using {blueprint.technologies?.slice(0, 3).join(', ') || 'modern technologies'} and more.</p>
             </div>
 
             {/* Technologies */}
             <div className="mb-6">
               <h3 className="text-sm font-semibold text-gray-900 mb-3">Technologies You'll Use</h3>
               <div className="flex flex-wrap gap-2">
-                {blueprint.technologies.map((tech) => (
+                {blueprint.technologies?.map((tech) => (
                   <span
                     key={tech}
                     className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-lg text-sm font-medium"
                   >
                     {tech}
                   </span>
-                ))}
+                )) || []}
               </div>
             </div>
 
             {/* Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
               <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">{blueprint.estimatedTime}</div>
+                <div className="text-2xl font-bold text-gray-900">{blueprint.estimatedDuration}</div>
                 <div className="text-sm text-gray-500">Est. Time</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">{blueprint.deliverables.length}</div>
+                <div className="text-2xl font-bold text-gray-900">{totalDeliverables}</div>
                 <div className="text-sm text-gray-500">Deliverables</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">{blueprint.userStories.length}</div>
-                <div className="text-sm text-gray-500">User Stories</div>
+                <div className="text-2xl font-bold text-gray-900">{totalUserStories}</div>
+                <div className="text-sm text-gray-500">Milestones</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">{Math.round(blueprint.progress)}%</div>
+                <div className="text-2xl font-bold text-gray-900">{Math.round(blueprint.progress || 0)}%</div>
                 <div className="text-sm text-gray-500">Progress</div>
               </div>
             </div>
 
             {/* Progress Bar */}
-            {blueprint.progress > 0 && (
+            {(blueprint.progress || 0) > 0 && (
               <div className="mb-6">
                 <div className="flex items-center justify-between text-sm mb-2">
                   <span className="font-medium text-gray-700">Overall Progress</span>
-                  <span className="font-medium text-gray-900">{Math.round(blueprint.progress)}%</span>
+                  <span className="font-medium text-gray-900">{Math.round(blueprint.progress || 0)}%</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
                   <div
                     className="bg-gradient-to-r from-indigo-500 to-purple-600 h-3 rounded-full transition-all duration-500"
-                    style={{ width: `${blueprint.progress}%` }}
+                    style={{ width: `${blueprint.progress || 0}%` }}
                   />
                 </div>
               </div>
@@ -197,11 +203,11 @@ const BlueprintDetail: React.FC = () => {
                     Complete the required learning paths to unlock this blueprint.
                   </p>
                   <div className="space-y-2">
-                    {blueprint.prerequisites.map((prereq, index) => (
+                    {blueprint.prerequisites?.map((prereq, index) => (
                       <div key={index} className="text-sm text-gray-600 bg-white p-2 rounded border">
                         {prereq}
                       </div>
-                    ))}
+                    )) || []}
                   </div>
                 </div>
               )}
@@ -219,7 +225,7 @@ const BlueprintDetail: React.FC = () => {
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-600">Time Estimate</span>
-                    <span className="font-medium text-gray-900">{blueprint.estimatedTime}</span>
+                    <span className="font-medium text-gray-900">{blueprint.estimatedDuration}</span>
                   </div>
                 </div>
               </div>
@@ -260,44 +266,47 @@ const BlueprintDetail: React.FC = () => {
         <div className="p-8">
           {activeTab === 'overview' && (
             <div className="space-y-8">
-              {/* User Stories */}
+              {/* Milestones */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">User Stories</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Project Milestones</h3>
                 <div className="space-y-3">
-                  {blueprint.userStories.map((story, index) => (
-                    <div key={index} className="flex items-start space-x-3 p-3 bg-blue-50 rounded-lg">
+                  {blueprint.milestones?.map((milestone, index) => (
+                    <div key={milestone.id} className="flex items-start space-x-3 p-3 bg-blue-50 rounded-lg">
                       <div className="w-6 h-6 bg-blue-200 text-blue-800 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
                         {index + 1}
                       </div>
-                      <p className="text-gray-700">{story}</p>
+                      <div>
+                        <p className="font-medium text-gray-900">{milestone.title}</p>
+                        <p className="text-gray-700 text-sm">{milestone.description}</p>
+                      </div>
                     </div>
-                  ))}
+                  )) || []}
                 </div>
               </div>
 
-              {/* Concepts */}
+              {/* Technologies */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Key Concepts You'll Learn</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Technologies You'll Master</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {blueprint.concepts.map((concept, index) => (
+                  {blueprint.technologies?.map((tech, index) => (
                     <div key={index} className="flex items-center space-x-2 p-3 bg-green-50 rounded-lg">
                       <CheckCircle className="w-4 h-4 text-green-600" />
-                      <span className="text-gray-700">{concept}</span>
+                      <span className="text-gray-700">{tech}</span>
                     </div>
-                  ))}
+                  )) || []}
                 </div>
               </div>
 
-              {/* Deliverables */}
+              {/* Prerequisites */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Project Deliverables</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Prerequisites</h3>
                 <div className="space-y-2">
-                  {blueprint.deliverables.map((deliverable, index) => (
+                  {blueprint.prerequisites?.map((prereq, index) => (
                     <div key={index} className="flex items-center space-x-3 p-3 bg-purple-50 rounded-lg">
                       <Trophy className="w-4 h-4 text-purple-600" />
-                      <span className="text-gray-700">{deliverable}</span>
+                      <span className="text-gray-700">{prereq}</span>
                     </div>
-                  ))}
+                  )) || []}
                 </div>
               </div>
             </div>
@@ -318,19 +327,19 @@ const BlueprintDetail: React.FC = () => {
               <div>
                 <h4 className="font-semibold text-gray-900 mb-4">System Components</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {blueprint.architectureComponents.map((component) => (
-                    <div key={component.id} className="border border-gray-200 rounded-lg p-4">
+                  {blueprint.architecture?.components?.map((component) => (
+                    <div key={component.name} className="border border-gray-200 rounded-lg p-4">
                       <h5 className="font-medium text-gray-900 mb-2">{component.name}</h5>
                       <p className="text-sm text-gray-600 mb-3">{component.description}</p>
                       <div className="flex flex-wrap gap-1">
-                        {component.technologies.map((tech) => (
+                        {component.technologies?.map((tech) => (
                           <span key={tech} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
                             {tech}
                           </span>
                         ))}
                       </div>
                     </div>
-                  ))}
+                  )) || []}
                 </div>
               </div>
             </div>
@@ -339,35 +348,35 @@ const BlueprintDetail: React.FC = () => {
           {activeTab === 'requirements' && (
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Technical Requirements</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Environment Variables</h3>
                 <div className="space-y-3">
-                  {blueprint.technicalRequirements.map((requirement, index) => (
+                  {blueprint.environmentVariables?.map((envVar, index) => (
                     <div key={index} className="flex items-start space-x-3 p-3 bg-orange-50 rounded-lg">
                       <div className="w-6 h-6 bg-orange-200 text-orange-800 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
                         {index + 1}
                       </div>
-                      <p className="text-gray-700">{requirement}</p>
+                      <p className="text-gray-700 font-mono text-sm">{envVar}</p>
                     </div>
-                  ))}
+                  )) || []}
                 </div>
               </div>
 
-              {/* Tests */}
+              {/* Test Suites */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Success Criteria</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Testing Strategy</h3>
                 <div className="space-y-3">
-                  {blueprint.tests.map((test) => (
-                    <div key={test.id} className="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg">
+                  {blueprint.testSuites?.map((testSuite) => (
+                    <div key={testSuite.id} className="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg">
                       <CheckCircle className="w-5 h-5 text-gray-400 mt-0.5" />
                       <div className="flex-1">
-                        <h4 className="font-medium text-gray-900">{test.name}</h4>
-                        <p className="text-sm text-gray-600 mt-1">{test.description}</p>
+                        <h4 className="font-medium text-gray-900">{testSuite.title}</h4>
+                        <p className="text-sm text-gray-600 mt-1">{testSuite.description}</p>
                         <span className="inline-block mt-2 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                          {test.type} test
+                          {testSuite.type} • {testSuite.framework}
                         </span>
                       </div>
                     </div>
-                  ))}
+                  )) || []}
                 </div>
               </div>
             </div>

@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Plus,
@@ -30,7 +31,7 @@ import {
   Move,
   Type,
   Eraser,
-  Link,
+  Link as LinkIcon,
   Zap,
   Brain,
   Code,
@@ -103,6 +104,7 @@ import {
   Maximize,
   RotateCw
 } from 'lucide-react';
+import { cloudScenarios } from '../../../../src/data/cloudScenarios';
 import { Helmet } from 'react-helmet-async';
 import { useCloudArchitecture } from '../context/CloudArchitectureContext';
 
@@ -203,6 +205,13 @@ interface CanvasProject {
     version: number;
     tags: string[];
     isPublic: boolean;
+    scenario?: {
+      id: string;
+      title: string;
+      prompt: string;
+      provider: string;
+      services: string[];
+    };
   };
 }
 
@@ -220,6 +229,15 @@ interface Scenario {
   sampleSolution?: CanvasProject;
 }
 
+interface AISuggestion {
+  id: string;
+  type: 'security-issue' | 'optimization' | 'connection' | 'best-practice';
+  title: string;
+  description: string;
+  severity?: 'low' | 'medium' | 'high';
+  action?: string;
+}
+
 interface ExportOptions {
   format: 'image' | 'json' | 'terraform' | 'cdk';
   imageFormat?: 'png' | 'svg';
@@ -230,6 +248,7 @@ interface ExportOptions {
 interface CanvasBuilderPageProps {}
 
 const CanvasBuilderPage: React.FC<CanvasBuilderPageProps> = () => {
+  const [searchParams] = useSearchParams();
   const { state } = useCloudArchitecture();
 
   // Core project state
@@ -264,10 +283,18 @@ const CanvasBuilderPage: React.FC<CanvasBuilderPageProps> = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isSimulating, setIsSimulating] = useState(false);
 
+  // Extracted state from currentProject for easier access
+  const [nodes, setNodes] = useState<CanvasNode[]>(currentProject.nodes);
+  const [connections, setConnections] = useState<Connection[]>(currentProject.connections);
+  const [connectionMode, setConnectionMode] = useState<{ active: boolean; fromNodeId?: string }>({ active: false });
+  const [aiAssistant, setAiAssistant] = useState<{ suggestions: AISuggestion[] }>({ suggestions: [] });
+
   // Panel states
   const [activeProvider, setActiveProvider] = useState<'aws' | 'azure' | 'gcp' | 'custom'>('aws');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedProvider, setSelectedProvider] = useState<string>('all');
+  const [selectedComplexity, setSelectedComplexity] = useState<string>('all');
   const [showBottomPanel, setShowBottomPanel] = useState(false);
   const [bottomPanelTab, setBottomPanelTab] = useState<'scenario' | 'comments' | 'ai' | 'cost'>('scenario');
 
@@ -288,6 +315,65 @@ const CanvasBuilderPage: React.FC<CanvasBuilderPageProps> = () => {
   // Canvas refs
   const canvasRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
+
+  // Sync selectedProvider with activeProvider
+  useEffect(() => {
+    setSelectedProvider(activeProvider === 'custom' ? 'all' : activeProvider);
+  }, [activeProvider]);
+
+  // Sync nodes and connections with currentProject
+  useEffect(() => {
+    setNodes(currentProject.nodes);
+    setConnections(currentProject.connections);
+  }, [currentProject.nodes, currentProject.connections]);
+
+  // Update currentProject when nodes or connections change
+  useEffect(() => {
+    setCurrentProject(prev => ({
+      ...prev,
+      nodes,
+      connections,
+      metadata: {
+        ...prev.metadata,
+        modified: new Date()
+      }
+    }));
+  }, [nodes, connections]);
+
+  // Load scenario from URL parameter
+  useEffect(() => {
+    const scenarioId = searchParams.get('scenario');
+    if (scenarioId) {
+      const scenario = cloudScenarios.find(s => s.id === scenarioId);
+      if (scenario) {
+        // Update project name and description
+        setCurrentProject(prev => ({
+          ...prev,
+          name: scenario.title,
+          description: scenario.description,
+          metadata: {
+            ...prev.metadata,
+            scenario: {
+              id: scenario.id,
+              title: scenario.title,
+              prompt: scenario.prompt,
+              provider: scenario.provider,
+              services: scenario.services
+            }
+          }
+        }));
+
+        // Set active provider based on scenario
+        if (scenario.provider !== 'multi-cloud' && scenario.provider !== 'hybrid') {
+          setActiveProvider(scenario.provider as 'aws' | 'azure' | 'gcp');
+        }
+
+        // Show scenario panel
+        setShowBottomPanel(true);
+        setBottomPanelTab('scenario');
+      }
+    }
+  }, [searchParams]);
 
   // Comprehensive cloud services data according to specifications
   const cloudServices: CloudService[] = [
@@ -1087,7 +1173,7 @@ const CanvasBuilderPage: React.FC<CanvasBuilderPageProps> = () => {
     return categories;
   };
 
-  const addToHistory = () => {
+  const addToHistory = (action?: string, data?: any) => {
     const newHistory = history.slice(0, historyIndex + 1);
     newHistory.push({ ...currentProject });
     setHistory(newHistory);
@@ -1113,10 +1199,10 @@ const CanvasBuilderPage: React.FC<CanvasBuilderPageProps> = () => {
 
 
   const snapToGridPosition = (position: { x: number; y: number }) => {
-    if (!snapToGrid) return position;
+    if (!currentProject.settings.snapToGrid) return position;
     return {
-      x: Math.round(position.x / gridSize) * gridSize,
-      y: Math.round(position.y / gridSize) * gridSize
+      x: Math.round(position.x / currentProject.settings.gridSize) * currentProject.settings.gridSize,
+      y: Math.round(position.y / currentProject.settings.gridSize) * currentProject.settings.gridSize
     };
   };
 
@@ -1162,7 +1248,7 @@ const CanvasBuilderPage: React.FC<CanvasBuilderPageProps> = () => {
 
     // Check for AI suggestions
     checkAISuggestions([...nodes, newNode]);
-  }, [nodes, snapToGrid, gridSize]);
+  }, [nodes, currentProject.settings.snapToGrid, currentProject.settings.gridSize]);
 
   const handleNodeMove = useCallback((nodeId: string, newPosition: { x: number; y: number }) => {
     const snappedPosition = snapToGridPosition(newPosition);
@@ -1176,7 +1262,7 @@ const CanvasBuilderPage: React.FC<CanvasBuilderPageProps> = () => {
         : node
     ));
     setHasUnsavedChanges(true);
-  }, [snapToGrid, gridSize]);
+  }, [currentProject.settings.snapToGrid, currentProject.settings.gridSize]);
 
   const handleNodeSelect = useCallback((nodeId: string, multiSelect = false) => {
     if (multiSelect) {
@@ -1527,7 +1613,7 @@ const CanvasBuilderPage: React.FC<CanvasBuilderPageProps> = () => {
           }`}>
             {/* Search Input */}
             <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-              <div className="relative">
+              <div className="relative mb-3">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
                   type="text"
@@ -1540,6 +1626,42 @@ const CanvasBuilderPage: React.FC<CanvasBuilderPageProps> = () => {
                       : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
                   }`}
                 />
+              </div>
+
+              {/* Filter Controls */}
+              <div className="flex space-x-2">
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className={`flex-1 px-3 py-1.5 text-xs border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    isDarkMode
+                      ? 'bg-gray-700 border-gray-600 text-white'
+                      : 'bg-white border-gray-300 text-gray-900'
+                  }`}
+                >
+                  <option value="all">All Categories</option>
+                  <option value="compute">Compute</option>
+                  <option value="storage">Storage</option>
+                  <option value="database">Database</option>
+                  <option value="networking">Networking</option>
+                  <option value="security">Security</option>
+                  <option value="serverless">Serverless</option>
+                </select>
+
+                <select
+                  value={selectedComplexity}
+                  onChange={(e) => setSelectedComplexity(e.target.value)}
+                  className={`flex-1 px-3 py-1.5 text-xs border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    isDarkMode
+                      ? 'bg-gray-700 border-gray-600 text-white'
+                      : 'bg-white border-gray-300 text-gray-900'
+                  }`}
+                >
+                  <option value="all">All Levels</option>
+                  <option value="beginner">Beginner</option>
+                  <option value="intermediate">Intermediate</option>
+                  <option value="advanced">Advanced</option>
+                </select>
               </div>
             </div>
 
@@ -1572,10 +1694,7 @@ const CanvasBuilderPage: React.FC<CanvasBuilderPageProps> = () => {
             {/* Services List */}
             <div className="flex-1 overflow-y-auto">
               {(() => {
-                const filteredServices = searchServices(
-                  getServicesByProvider(activeProvider === 'all' ? 'aws' : activeProvider),
-                  searchQuery
-                );
+                const filteredServices = getFilteredServices();
                 const categorizedServices = organizeServicesByCategory(filteredServices);
 
                 return Object.entries(categorizedServices).map(([category, services]) => (
@@ -1589,7 +1708,7 @@ const CanvasBuilderPage: React.FC<CanvasBuilderPageProps> = () => {
                       {services.map(service => {
                         const IconComponent = typeof service.icon === 'string' ?
                           () => <span className="text-lg">{service.icon}</span> :
-                          service.icon;
+                          service.icon || (() => <Cloud className="w-4 h-4" />);
 
                         return (
                           <motion.div
@@ -1598,7 +1717,7 @@ const CanvasBuilderPage: React.FC<CanvasBuilderPageProps> = () => {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             onDragStart={(e) => {
-                              e.dataTransfer.setData('application/json', JSON.stringify(service));
+                              e.dataTransfer.setData('application/json', JSON.stringify({ serviceId: service.id }));
                             }}
                             className={`flex items-center space-x-3 p-3 m-1 rounded-lg cursor-grab active:cursor-grabbing transition-all ${
                               isDarkMode
@@ -1661,8 +1780,13 @@ const CanvasBuilderPage: React.FC<CanvasBuilderPageProps> = () => {
                 const y = (e.clientY - rect.top) * (100 / currentProject.viewport.zoom) - currentProject.viewport.y;
 
                 try {
-                  const service = JSON.parse(e.dataTransfer.getData('application/json'));
-                  handleServiceDrop(service, { x, y });
+                  const dropData = JSON.parse(e.dataTransfer.getData('application/json'));
+                  const service = cloudServices.find(s => s.id === dropData.serviceId);
+                  if (service) {
+                    handleServiceDrop(service, { x, y });
+                  } else {
+                    console.error('Service not found:', dropData.serviceId);
+                  }
                 } catch (error) {
                   console.error('Error parsing dropped service:', error);
                 }
@@ -1781,7 +1905,7 @@ const CanvasBuilderPage: React.FC<CanvasBuilderPageProps> = () => {
                   const isSelected = selectedNodes.includes(node.id);
                   const IconComponent = typeof node.service.icon === 'string' ?
                     () => <span className="text-lg">{node.service.icon}</span> :
-                    node.service.icon;
+                    node.service.icon || (() => <Cloud className="w-4 h-4" />);
 
                   return (
                     <motion.div
@@ -1936,7 +2060,7 @@ const CanvasBuilderPage: React.FC<CanvasBuilderPageProps> = () => {
 
                   const IconComponent = typeof selectedNode.service.icon === 'string' ?
                     () => <span className="text-lg">{selectedNode.service.icon}</span> :
-                    selectedNode.service.icon;
+                    selectedNode.service.icon || (() => <Cloud className="w-4 h-4" />);
 
                   return (
                     <div className="p-4 space-y-6">
@@ -2346,27 +2470,67 @@ const CanvasBuilderPage: React.FC<CanvasBuilderPageProps> = () => {
               {bottomPanelTab === 'scenario' && (
                 <div className="p-4">
                   <div className={`rounded-lg p-4 ${isDarkMode ? 'bg-gray-700' : 'bg-blue-50'}`}>
-                    <h3 className={`text-lg font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                      Design Challenge: E-commerce Platform
-                    </h3>
-                    <p className={`mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      Create a scalable e-commerce platform that can handle 10,000 concurrent users during peak shopping seasons.
-                      The architecture should include web servers, database, caching, and CDN for global content delivery.
-                    </p>
-                    <div className="flex items-center space-x-4 text-sm">
-                      <span className={`flex items-center space-x-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        <Clock className="w-4 h-4" />
-                        <span>45 minutes</span>
-                      </span>
-                      <span className={`flex items-center space-x-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        <Target className="w-4 h-4" />
-                        <span>Intermediate</span>
-                      </span>
-                      <span className={`flex items-center space-x-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        <Star className="w-4 h-4" />
-                        <span>150 points</span>
-                      </span>
-                    </div>
+                    {currentProject.metadata?.scenario ? (
+                      <>
+                        <h3 className={`text-lg font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {currentProject.metadata.scenario.title}
+                        </h3>
+                        <p className={`mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          <strong>Challenge:</strong> {currentProject.metadata.scenario.prompt}
+                        </p>
+                        <div className="mb-4">
+                          <h4 className={`font-medium mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                            Required Services:
+                          </h4>
+                          <div className="flex flex-wrap gap-2">
+                            {currentProject.metadata.scenario.services.map((service, index) => (
+                              <span
+                                key={index}
+                                className={`px-2 py-1 rounded-md text-xs font-medium ${
+                                  isDarkMode ? 'bg-gray-600 text-gray-200' : 'bg-gray-200 text-gray-700'
+                                }`}
+                              >
+                                {service}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-4 text-sm">
+                            <span className={`flex items-center space-x-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                              <Target className="w-4 h-4" />
+                              <span className="capitalize">{currentProject.metadata.scenario.provider}</span>
+                            </span>
+                          </div>
+                          <Link
+                            to="/cloud-architecture/scenarios"
+                            className={`text-sm px-3 py-1 rounded-md transition-colors ${
+                              isDarkMode
+                                ? 'bg-gray-600 text-gray-200 hover:bg-gray-500'
+                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            }`}
+                          >
+                            ← Back to Scenarios
+                          </Link>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <h3 className={`text-lg font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          Design Challenge: Custom Architecture
+                        </h3>
+                        <p className={`mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          Start building your cloud architecture by dragging services from the left panel onto the canvas.
+                          Connect services to create data flows and define your system architecture.
+                        </p>
+                        <div className="flex items-center space-x-4 text-sm">
+                          <span className={`flex items-center space-x-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            <Target className="w-4 h-4" />
+                            <span>Free Design</span>
+                          </span>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               )}

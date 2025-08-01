@@ -77,25 +77,25 @@ const LessonAnimation: React.FC<LessonAnimationProps> = ({ animation, onComplete
               animate={{ opacity: 1, scale: 1, rotateY: 0 }}
               exit={{ opacity: 0, scale: 1.1, rotateY: 15 }}
               transition={{ duration: 0.6, ease: "easeInOut" }}
-              className="text-center w-full"
+              className="text-center w-full flex flex-col items-center justify-center h-full"
             >
               <motion.div
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.5 }}
-                className="mb-6"
+                className="mb-6 z-10 relative"
               >
-                <div className="inline-flex items-center space-x-2 bg-blue-100 px-3 py-1 rounded-full mb-4">
+                <div className="inline-flex items-center space-x-2 bg-blue-100 px-4 py-2 rounded-full mb-4 shadow-md border border-blue-200">
                   <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                  <span className="text-blue-800 font-medium text-sm">
+                  <span className="text-blue-800 font-semibold text-sm">
                     Scene {currentScene + 1} of {animation.scenes.length}
                   </span>
                 </div>
-                <h4 className="text-2xl font-bold text-blue-900 mb-4">
+                <h4 className="text-2xl font-bold text-blue-900 mb-4 drop-shadow-sm">
                   {currentSceneData?.title}
                 </h4>
-                <div className="bg-white rounded-xl p-6 border border-blue-200 shadow-sm max-w-2xl mx-auto">
-                  <p className="text-gray-700 leading-relaxed text-lg">
+                <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 border border-blue-200 shadow-lg max-w-2xl mx-auto">
+                  <p className="text-gray-800 leading-relaxed text-lg font-medium">
                     {currentSceneData?.description}
                   </p>
                 </div>
@@ -103,12 +103,14 @@ const LessonAnimation: React.FC<LessonAnimationProps> = ({ animation, onComplete
 
               {/* Enhanced Visual Elements */}
               <motion.div
-                className="flex justify-center items-center mt-8"
+                className="flex justify-center items-center mt-8 w-full"
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.6, duration: 0.5 }}
               >
-                <KubernetesVisualElements sceneIndex={currentScene} animationTitle={animation.title} />
+                <div className="w-full max-w-4xl">
+                  <KubernetesVisualElements sceneIndex={currentScene} animationTitle={animation.title} />
+                </div>
               </motion.div>
             </motion.div>
           </AnimatePresence>
@@ -216,24 +218,24 @@ const KubernetesVisualElements: React.FC<{ sceneIndex: number; animationTitle: s
   const currentElement = elements[sceneIndex] || elements[0];
 
   return (
-    <div className="flex flex-col items-center space-y-4">
+    <div className="flex flex-col items-center justify-center space-y-6 p-4">
       <motion.div
         key={`${sceneIndex}-${animationTitle}`}
         initial={{ scale: 0, rotate: -180 }}
         animate={{ scale: 1, rotate: 0 }}
         transition={{ duration: 0.6, type: "spring", bounce: 0.4 }}
-        className={`w-24 h-24 rounded-2xl bg-gradient-to-br ${currentElement.color} flex items-center justify-center text-4xl shadow-lg`}
+        className={`w-32 h-32 rounded-3xl bg-gradient-to-br ${currentElement.color} flex items-center justify-center text-5xl shadow-2xl border-4 border-white/50`}
       >
         {currentElement.icon}
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
         className="text-center"
       >
-        <span className="text-sm font-medium text-gray-600 bg-white px-3 py-1 rounded-full border border-gray-200 shadow-sm">
+        <span className="text-lg font-bold text-gray-800 bg-white/90 backdrop-blur-sm px-6 py-3 rounded-full border-2 border-gray-300 shadow-lg">
           {currentElement.label}
         </span>
       </motion.div>

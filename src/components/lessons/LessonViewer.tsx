@@ -120,7 +120,7 @@ const LessonViewer: React.FC<LessonViewerProps> = ({ lesson, onBack }) => {
       vertical: 'auto' as const,
       horizontal: 'auto' as const,
     },
-    theme: 'vs-light',
+    theme: 'vs-dark',
     wordWrap: 'on' as const,
     automaticLayout: true,
     readOnly: false,

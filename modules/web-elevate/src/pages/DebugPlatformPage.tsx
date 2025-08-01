@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useWebElevateStore } from '../store/webElevateStore';
-import DebugPlatform from '../components/DebugPlatform';
+import DebugPlatformDashboard from '../components/DebugPlatformDashboard';
 import DebugChallengeViewer from '../components/DebugChallengeViewer';
 
 const DebugPlatformPage: React.FC = () => {
@@ -22,9 +22,9 @@ const DebugPlatformPage: React.FC = () => {
     }
   }, [debugPlatform.challenges.length, initializeDebugPlatform]);
 
-  const handleChallengeSelect = (challenge: any) => {
-    setSelectedChallenge(challenge);
-    selectDebugChallenge(challenge);
+  const handleChallengeSelect = (challengeId: string) => {
+    setSelectedChallenge(challengeId);
+    // selectDebugChallenge can be called with the ID if needed
   };
 
   const handleChallengeComplete = (challengeId: string, xpEarned: number) => {
@@ -45,12 +45,12 @@ const DebugPlatformPage: React.FC = () => {
     <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
       {selectedChallenge ? (
         <DebugChallengeViewer
-          challenge={selectedChallenge}
+          challengeId={selectedChallenge}
           onBack={handleBackToPlatform}
           onComplete={handleChallengeComplete}
         />
       ) : (
-        <DebugPlatform onChallengeSelect={handleChallengeSelect} />
+        <DebugPlatformDashboard onChallengeSelect={handleChallengeSelect} />
       )}
     </div>
   );

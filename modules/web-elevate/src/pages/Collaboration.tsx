@@ -18,7 +18,9 @@ import {
   BookOpen,
   Coffee,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  Construction,
+  Wrench
 } from 'lucide-react';
 
 const Collaboration: React.FC = () => {
@@ -102,9 +104,28 @@ const Collaboration: React.FC = () => {
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Learn Together, Grow Together
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
             Connect with fellow developers, share knowledge, and accelerate your learning through collaboration.
           </p>
+
+          {/* Dev in Progress Banner */}
+          <div className="bg-orange-50 border border-orange-200 rounded-lg p-6 max-w-2xl mx-auto">
+            <div className="flex items-center justify-center space-x-4">
+              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                <Construction className="w-6 h-6 text-orange-500" />
+              </div>
+              <div className="text-center">
+                <h3 className="font-bold text-orange-800 text-lg">🚧 Development in Progress</h3>
+                <p className="text-orange-600 text-sm mt-1">
+                  Collaboration features are currently being built. Expected release: Q3 2024
+                </p>
+                <div className="flex items-center justify-center space-x-2 mt-2">
+                  <Wrench className="w-4 h-4 text-orange-500" />
+                  <span className="text-xs text-orange-600 font-medium">Our team is working hard to bring you these features!</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </motion.div>
 
         {/* Tab Navigation */}

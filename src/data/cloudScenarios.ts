@@ -32,6 +32,36 @@ export const cloudScenarios: CloudScenario[] = [
     description: 'Learn the fundamentals of hosting static websites on AWS with global CDN distribution.'
   },
   {
+    id: 'aws-simple-web-app',
+    title: 'Simple Web Application on AWS',
+    prompt: 'Create a basic web application with database on AWS.',
+    level: 'beginner',
+    provider: 'aws',
+    category: 'web-hosting',
+    services: ['EC2', 'RDS', 'VPC', 'Security Groups', 'ELB'],
+    architecture: 'EC2 instances behind ELB, RDS database, VPC with public/private subnets',
+    exportFormats: ['PNG', 'CloudFormation'],
+    estimatedTime: '30 minutes',
+    costLevel: 'medium',
+    tags: ['web-app', 'database', 'load-balancer', 'vpc'],
+    description: 'Build a traditional 3-tier web application architecture with proper networking and security.'
+  },
+  {
+    id: 'aws-serverless-hello-world',
+    title: 'Serverless Hello World API',
+    prompt: 'Create a simple serverless API that returns Hello World.',
+    level: 'beginner',
+    provider: 'aws',
+    category: 'serverless',
+    services: ['Lambda', 'API Gateway', 'CloudWatch'],
+    architecture: 'API Gateway → Lambda function → CloudWatch logs',
+    exportFormats: ['PNG', 'SAM', 'Terraform'],
+    estimatedTime: '20 minutes',
+    costLevel: 'low',
+    tags: ['serverless', 'api', 'lambda', 'hello-world'],
+    description: 'Get started with serverless computing using AWS Lambda and API Gateway.'
+  },
+  {
     id: 'azure-vm-hosting',
     title: 'Basic VM Hosting on Azure',
     prompt: 'I want to deploy a web server on Azure with basic security and availability.',
@@ -61,8 +91,83 @@ export const cloudScenarios: CloudScenario[] = [
     tags: ['serverless', 'event-driven', 'messaging'],
     description: 'Understand event-driven serverless computing with Google Cloud Functions and Pub/Sub.'
   },
+  {
+    id: 'azure-container-apps',
+    title: 'Azure Container Apps with DAPR',
+    prompt: 'Deploy microservices using Azure Container Apps with DAPR for service communication.',
+    level: 'intermediate',
+    provider: 'azure',
+    category: 'containers',
+    services: ['Container Apps', 'DAPR', 'Service Bus', 'Cosmos DB', 'Key Vault'],
+    architecture: 'Container Apps environment with DAPR sidecars, Service Bus for messaging, Cosmos DB for state',
+    exportFormats: ['PNG', 'Bicep', 'ARM Templates'],
+    estimatedTime: '45 minutes',
+    costLevel: 'medium',
+    tags: ['containers', 'microservices', 'dapr', 'serverless-containers'],
+    description: 'Build cloud-native microservices with Azure Container Apps and DAPR for simplified service communication.'
+  },
+  {
+    id: 'gcp-anthos-hybrid',
+    title: 'Hybrid Cloud with Anthos',
+    prompt: 'Create a hybrid cloud setup with GCP Anthos spanning on-premises and cloud.',
+    level: 'expert',
+    provider: 'hybrid',
+    category: 'enterprise',
+    services: ['Anthos', 'GKE', 'Cloud Run', 'Istio', 'Cloud SQL', 'Cloud Storage'],
+    architecture: 'On-premises Anthos cluster connected to GCP, unified management plane, service mesh across environments',
+    exportFormats: ['PNG', 'Terraform', 'Kubernetes YAML'],
+    estimatedTime: '2 hours',
+    costLevel: 'high',
+    tags: ['hybrid-cloud', 'anthos', 'kubernetes', 'service-mesh', 'enterprise'],
+    description: 'Implement a sophisticated hybrid cloud architecture with Google Anthos for unified application management.'
+  },
 
   // INTERMEDIATE SCENARIOS
+  {
+    id: 'aws-realtime-data-processing',
+    title: 'Real-time Data Processing Pipeline',
+    prompt: 'Create a system to analyze real-time clickstream data from my website.',
+    level: 'intermediate',
+    provider: 'aws',
+    category: 'data',
+    services: ['Kinesis Data Streams', 'Lambda', 'S3', 'IAM', 'CloudWatch'],
+    architecture: 'Data producers → Kinesis Data Stream → Lambda processing → S3 data lake',
+    exportFormats: ['PNG', 'Terraform', 'CloudFormation'],
+    estimatedTime: '30 minutes',
+    costLevel: 'medium',
+    tags: ['real-time', 'data-processing', 'streaming', 'analytics'],
+    description: 'Build an end-to-end serverless pipeline to ingest, process, and store real-time streaming data for analytics.'
+  },
+  {
+    id: 'azure-iot-monitoring',
+    title: 'Azure IoT Data Ingestion and Monitoring',
+    prompt: 'I need to collect temperature data from sensors and show it on a dashboard.',
+    level: 'intermediate',
+    provider: 'azure',
+    category: 'iot',
+    services: ['IoT Hub', 'Stream Analytics', 'Cosmos DB', 'Power BI', 'Event Hubs'],
+    architecture: 'IoT devices → IoT Hub → Stream Analytics → Cosmos DB + Power BI dashboard',
+    exportFormats: ['PNG', 'ARM Templates', 'Bicep'],
+    estimatedTime: '60 minutes',
+    costLevel: 'medium',
+    tags: ['iot', 'real-time', 'monitoring', 'dashboard', 'telemetry'],
+    description: 'Build a scalable IoT solution to ingest telemetry data from millions of devices with real-time visualization.'
+  },
+  {
+    id: 'aws-serverless-data-lake',
+    title: 'AWS Serverless Data Lake Querying',
+    prompt: 'I have TBs of log files in S3. I need an easy way to run SQL queries on them.',
+    level: 'intermediate',
+    provider: 'aws',
+    category: 'data',
+    services: ['S3', 'AWS Glue Crawler', 'AWS Glue Data Catalog', 'Amazon Athena', 'IAM'],
+    architecture: 'S3 data lake → Glue Crawler → Data Catalog → Athena SQL queries',
+    exportFormats: ['PNG', 'Terraform', 'CloudFormation'],
+    estimatedTime: '25 minutes',
+    costLevel: 'low',
+    tags: ['data-lake', 'serverless', 'sql', 'analytics', 'pay-per-query'],
+    description: 'Build a system to catalog raw data in S3 and run complex SQL queries without managing servers.'
+  },
   {
     id: 'gcp-scalable-webapp',
     title: 'Scalable Web App on GCP',
@@ -110,6 +215,51 @@ export const cloudScenarios: CloudScenario[] = [
   },
 
   // EXPERT SCENARIOS
+  {
+    id: 'aws-enterprise-microservices',
+    title: 'Enterprise Microservices Platform',
+    prompt: 'Design a complete enterprise microservices platform with service mesh, monitoring, and CI/CD.',
+    level: 'expert',
+    provider: 'aws',
+    category: 'enterprise',
+    services: ['EKS', 'Istio', 'Prometheus', 'Grafana', 'CodePipeline', 'ECR', 'RDS Aurora', 'ElastiCache', 'CloudWatch'],
+    architecture: 'EKS cluster with Istio service mesh, microservices, Aurora database cluster, Redis cache, full observability stack',
+    exportFormats: ['PNG', 'Helm Charts', 'Terraform', 'CloudFormation'],
+    estimatedTime: '2 hours',
+    costLevel: 'high',
+    tags: ['microservices', 'kubernetes', 'service-mesh', 'enterprise', 'observability'],
+    description: 'Build a production-ready enterprise microservices platform with advanced networking, monitoring, and deployment capabilities.'
+  },
+  {
+    id: 'multi-cloud-disaster-recovery',
+    title: 'Multi-Cloud Disaster Recovery',
+    prompt: 'Create a disaster recovery solution spanning AWS and Azure with automated failover.',
+    level: 'expert',
+    provider: 'multi-cloud',
+    category: 'enterprise',
+    services: ['AWS RDS', 'Azure SQL', 'AWS S3', 'Azure Blob', 'Route 53', 'Azure Traffic Manager', 'Lambda', 'Azure Functions'],
+    architecture: 'Primary AWS region, secondary Azure region, cross-cloud data replication, automated failover mechanisms',
+    exportFormats: ['PNG', 'Terraform', 'ARM Templates'],
+    estimatedTime: '3 hours',
+    costLevel: 'high',
+    tags: ['disaster-recovery', 'multi-cloud', 'high-availability', 'automation', 'enterprise'],
+    description: 'Implement a sophisticated disaster recovery strategy across multiple cloud providers with automated failover and data synchronization.'
+  },
+  {
+    id: 'aws-ml-pipeline',
+    title: 'End-to-End ML Pipeline',
+    prompt: 'Build a complete machine learning pipeline from data ingestion to model deployment.',
+    level: 'expert',
+    provider: 'aws',
+    category: 'ml-ai',
+    services: ['SageMaker', 'Kinesis', 'S3', 'Glue', 'Lambda', 'Step Functions', 'API Gateway', 'CloudWatch'],
+    architecture: 'Data ingestion via Kinesis, ETL with Glue, model training in SageMaker, automated deployment pipeline',
+    exportFormats: ['PNG', 'CloudFormation', 'SageMaker Pipelines'],
+    estimatedTime: '2.5 hours',
+    costLevel: 'high',
+    tags: ['machine-learning', 'data-pipeline', 'automation', 'sagemaker', 'mlops'],
+    description: 'Create a production-grade MLOps pipeline with automated training, validation, and deployment of machine learning models.'
+  },
   {
     id: 'aws-multi-region-dr',
     title: 'Multi-Region Failover (AWS)',
@@ -1012,6 +1162,53 @@ export const cloudScenarios: CloudScenario[] = [
     costLevel: 'low',
     tags: ['s3', 'object-storage', 'file-upload', 'permissions', 'bucket-policy'],
     description: 'Learn the basics of object storage by creating an S3 bucket and uploading files to it. Understand the difference between private and public objects.'
+  },
+
+  // ADDITIONAL COMPREHENSIVE SCENARIOS
+  {
+    id: 'azure-serverless-api',
+    title: 'Scalable Serverless API on Azure',
+    prompt: 'Build a scalable, low-cost API for my mobile app on Azure.',
+    level: 'intermediate',
+    provider: 'azure',
+    category: 'serverless',
+    services: ['Azure Functions', 'API Management', 'Cosmos DB', 'Application Insights'],
+    architecture: 'Mobile App → API Management → Azure Functions → Cosmos DB + Application Insights monitoring',
+    exportFormats: ['PNG', 'ARM Templates', 'Bicep'],
+    estimatedTime: '25 minutes',
+    costLevel: 'low',
+    tags: ['serverless', 'api', 'mobile', 'nosql', 'monitoring'],
+    description: 'Build a highly scalable, event-driven, and cost-efficient REST API backend using Azure serverless components.'
+  },
+  {
+    id: 'gcp-containerized-webapp',
+    title: 'Containerized Web App on GCP Cloud Run',
+    prompt: 'Deploy my Node.js Docker container as a scalable web service on GCP.',
+    level: 'beginner',
+    provider: 'gcp',
+    category: 'containers',
+    services: ['Cloud Run', 'Artifact Registry', 'Cloud Build', 'IAM'],
+    architecture: 'GitHub → Cloud Build → Artifact Registry → Cloud Run service',
+    exportFormats: ['PNG', 'Terraform', 'Cloud Build YAML'],
+    estimatedTime: '15 minutes',
+    costLevel: 'low',
+    tags: ['containers', 'serverless', 'ci-cd', 'docker', 'auto-scaling'],
+    description: 'Deploy a containerized application as a fully managed, auto-scaling serverless web service with zero server management.'
+  },
+  {
+    id: 'aws-multi-region-active-active',
+    title: 'Multi-Region Active-Active Web Application',
+    prompt: 'Build me a bulletproof global application that never goes down.',
+    level: 'expert',
+    provider: 'aws',
+    category: 'enterprise',
+    services: ['Route 53', 'CloudFront', 'ALB', 'EC2 Auto Scaling', 'DynamoDB Global Tables', 'WAF'],
+    architecture: 'Route 53 latency routing → CloudFront → ALB → Auto Scaling Groups in multiple regions → DynamoDB Global Tables',
+    exportFormats: ['PNG', 'Terraform', 'CloudFormation'],
+    estimatedTime: '90 minutes',
+    costLevel: 'high',
+    tags: ['multi-region', 'high-availability', 'global', 'fault-tolerant', 'enterprise'],
+    description: 'Design a highly available architecture that serves traffic from multiple regions simultaneously with automatic failover.'
   }
 ];
 

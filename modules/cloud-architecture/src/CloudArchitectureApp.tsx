@@ -8,6 +8,7 @@ import AIGeneratorPage from './pages/AIGeneratorPage';
 import LearningStudioPage from './pages/LearningStudioPage';
 import CanvasBuilderPage from './pages/CanvasBuilderPage';
 import ScenariosPage from './pages/ScenariosPage';
+import LearningPathsPage from './pages/LearningPathsPage';
 import NotFoundPage from './pages/NotFoundPage';
 import './index.css';
 
@@ -23,8 +24,10 @@ const CloudArchitectureApp: React.FC = () => {
             {/* Feature Pages */}
             <Route path="ai-generator" element={<AIGeneratorPage />} />
             <Route path="studio" element={<LearningStudioPage />} />
+            <Route path="studio/:scenarioId" element={<LearningStudioPage />} />
             <Route path="builder" element={<CanvasBuilderPage />} />
             <Route path="scenarios" element={<ScenariosPage />} />
+            <Route path="paths" element={<LearningPathsPage />} />
 
             {/* Redirects */}
             <Route path="learn" element={<Navigate to="studio" replace />} />

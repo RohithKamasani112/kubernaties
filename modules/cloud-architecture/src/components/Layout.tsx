@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -27,6 +27,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   // const { state } = useCloudArchitecture();
 
+  // Scroll to top when location changes
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }, [location.pathname]);
+
   const navigation = [
     { name: 'Home', href: '/cloud-architecture', icon: Home, description: 'Overview and getting started' },
     { name: 'Learning Studio', href: '/cloud-architecture/studio', icon: BookOpen, description: 'Interactive guided learning' },
@@ -49,8 +58,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             {/* Logo & Breadcrumb */}
             <div className="flex items-center space-x-4">
               <Link to="/cloud-architecture" className="flex items-center space-x-3 group">
-                <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
-                  <Cloud className="w-6 h-6 text-white" />
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
+                  <img src="/icons/cloud-architecture-icon.svg" alt="Cloud Architecture" className="w-10 h-10" />
                 </div>
                 <div className="hidden sm:block">
                   <div className="flex items-center space-x-2">
@@ -217,8 +226,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
-              <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
-                <Cloud className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+                <img src="/icons/cloud-architecture-icon.svg" alt="Cloud Architecture" className="w-8 h-8" />
               </div>
               <div>
                 <h3 className="font-semibold">Cloud Architecture Studio</h3>

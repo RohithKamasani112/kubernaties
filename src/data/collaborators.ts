@@ -30,7 +30,7 @@ export const collaborators: Collaborator[] = [
     name: "Dhruv Maheshwari",
     role: "QA Intern",
     imageUrl: "D",
-    linkedinUrl: "https://www.linkedin.com/in/dhruv-maheshwari-aab98b26",
+    linkedinUrl: "https://www.linkedin.com/in/dhruv-maheshwari-aab98b269",
     bio: "Quality assurance intern contributing to robust testing processes and bug-free experiences"
   },
   {

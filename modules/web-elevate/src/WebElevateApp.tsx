@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
 
@@ -13,10 +13,12 @@ import Playground from './pages/Playground';
 import Portfolio from './pages/Portfolio';
 import Blueprints from './pages/Blueprints';
 import BlueprintDetail from './pages/BlueprintDetail';
+import BlueprintPage from './pages/BlueprintPage';
+import BlueprintDashboard from './components/BlueprintDashboard';
 import Collaboration from './pages/Collaboration';
 import DebugProjects from './pages/DebugProjects';
 import DebugPlayground from './pages/DebugPlayground';
-import DebugChallengeEditor from './pages/DebugChallengeEditor';
+import DebugChallengePage from './pages/DebugChallengePage';
 import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
 
@@ -31,6 +33,17 @@ import LearningModule from './components/LearningModule';
 
 // Store
 import { useWebElevateStore } from './store/webElevateStore';
+
+// Wrapper component for BlueprintDashboard with navigation
+const BlueprintDashboardWrapper: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleBlueprintSelect = (blueprintId: string) => {
+    navigate(`/web-elevate/blueprints/${blueprintId}`);
+  };
+
+  return <BlueprintDashboard onBlueprintSelect={handleBlueprintSelect} />;
+};
 
 const WebElevateApp: React.FC = () => {
   const { isInitialized, initializeApp } = useWebElevateStore();
@@ -78,8 +91,9 @@ const WebElevateApp: React.FC = () => {
           {/* Enhanced Learning Module Routes */}
           <Route path="/learning" element={<SidebarLayout><LearningModule /></SidebarLayout>} />
           <Route path="/learning/:pathId" element={<SidebarLayout><LearningModule /></SidebarLayout>} />
-          <Route path="/blueprints" element={<SidebarLayout><Blueprints /></SidebarLayout>} />
+          <Route path="/blueprints" element={<SidebarLayout><BlueprintDashboardWrapper /></SidebarLayout>} />
           <Route path="/blueprints/:blueprintId" element={<SidebarLayout><BlueprintDetail /></SidebarLayout>} />
+          <Route path="/blueprint-builder" element={<BlueprintPage />} />
           <Route path="/collaboration" element={<SidebarLayout><Collaboration /></SidebarLayout>} />
           <Route path="/playground" element={<SidebarLayout><Playground /></SidebarLayout>} />
           <Route path="/playground/:sessionId" element={<SidebarLayout><Playground /></SidebarLayout>} />
@@ -88,7 +102,7 @@ const WebElevateApp: React.FC = () => {
           {/* Debug Playground Routes */}
           <Route path="/debug-projects" element={<SidebarLayout><DebugProjects /></SidebarLayout>} />
           <Route path="/debug-playground/:projectId" element={<SidebarLayout><DebugPlayground /></SidebarLayout>} />
-          <Route path="/debug-challenge/:challengeId" element={<SidebarLayout><DebugChallengeEditor /></SidebarLayout>} />
+          <Route path="/debug-challenge/:challengeId" element={<SidebarLayout><DebugChallengePage /></SidebarLayout>} />
 
           {/* Additional Sidebar Routes */}
           <Route path="/achievements" element={<SidebarLayout><div className="p-6"><h1 className="text-2xl font-bold">Achievements Coming Soon</h1></div></SidebarLayout>} />

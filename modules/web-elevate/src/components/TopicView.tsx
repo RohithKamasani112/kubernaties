@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Play, CheckCircle, Clock, Trophy, Lightbulb, Target, BookOpen, Code } from 'lucide-react';
+import { ArrowLeft, Play, CheckCircle, Clock, Trophy, Lightbulb, Target, BookOpen, Code, Zap, Star, Award } from 'lucide-react';
 import { LearningTopic, LearningChallenge } from '../data/learningPaths';
+import { detailedReactTopics, DetailedLearningTopic } from '../data/reactTopicsDetailed';
 
 interface TopicViewProps {
   topic: LearningTopic;
@@ -19,6 +20,10 @@ const TopicView: React.FC<TopicViewProps> = ({
   onMarkComplete
 }) => {
   const [showAnimation, setShowAnimation] = useState(false);
+  const [activeTab, setActiveTab] = useState<'concept' | 'examples' | 'playground'>('concept');
+
+  // Find detailed content for this topic
+  const detailedTopic = detailedReactTopics.find(dt => dt.id === topic.id);
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -108,23 +113,153 @@ const TopicView: React.FC<TopicViewProps> = ({
         </div>
       </motion.div>
 
-      {/* Content */}
+      {/* Enhanced Content with Tabs */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Explanation */}
+          {/* Tab Navigation */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-white rounded-xl shadow-lg p-6"
+            className="bg-white rounded-xl shadow-lg overflow-hidden"
           >
-            <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-              <BookOpen className="w-6 h-6 text-blue-600 mr-3" />
-              Explanation
-            </h2>
-            <div className="prose prose-gray max-w-none">
-              <p className="text-gray-700 leading-relaxed whitespace-pre-line">{topic.explanation}</p>
+            <div className="flex border-b border-gray-200">
+              <button
+                onClick={() => setActiveTab('concept')}
+                className={`flex-1 px-6 py-4 text-sm font-medium transition-colors ${
+                  activeTab === 'concept'
+                    ? 'bg-blue-50 text-blue-600 border-b-2 border-blue-600'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                <BookOpen className="w-4 h-4 inline mr-2" />
+                Concept
+              </button>
+              {detailedTopic?.codeExamples && detailedTopic.codeExamples.length > 0 && (
+                <button
+                  onClick={() => setActiveTab('examples')}
+                  className={`flex-1 px-6 py-4 text-sm font-medium transition-colors ${
+                    activeTab === 'examples'
+                      ? 'bg-blue-50 text-blue-600 border-b-2 border-blue-600'
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  <Code className="w-4 h-4 inline mr-2" />
+                  Examples
+                </button>
+              )}
+              {detailedTopic?.playgroundChallenge && (
+                <button
+                  onClick={() => setActiveTab('playground')}
+                  className={`flex-1 px-6 py-4 text-sm font-medium transition-colors ${
+                    activeTab === 'playground'
+                      ? 'bg-blue-50 text-blue-600 border-b-2 border-blue-600'
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  <Play className="w-4 h-4 inline mr-2" />
+                  Playground
+                </button>
+              )}
+            </div>
+
+            <div className="p-6">
+              {/* Concept Tab */}
+              {activeTab === 'concept' && (
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="space-y-6"
+                >
+                  <div className="prose prose-gray max-w-none">
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                      {detailedTopic?.conceptExplanation || topic.explanation}
+                    </p>
+                  </div>
+
+                  {/* Key Points */}
+                  {detailedTopic?.keyPoints && detailedTopic.keyPoints.length > 0 && (
+                    <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                      <h3 className="text-lg font-semibold text-blue-900 mb-3 flex items-center">
+                        <Star className="w-5 h-5 mr-2" />
+                        Key Points
+                      </h3>
+                      <ul className="space-y-2">
+                        {detailedTopic.keyPoints.map((point, index) => (
+                          <li key={index} className="flex items-start space-x-2">
+                            <Zap className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                            <span className="text-blue-800 text-sm">{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+
+              {/* Examples Tab */}
+              {activeTab === 'examples' && detailedTopic?.codeExamples && (
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="space-y-6"
+                >
+                  {detailedTopic.codeExamples.map((example, index) => (
+                    <div key={index} className="space-y-3">
+                      <h3 className="text-lg font-semibold text-gray-900">{example.title}</h3>
+                      {example.explanation && (
+                        <p className="text-gray-600 text-sm">{example.explanation}</p>
+                      )}
+                      <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+                        <pre className="text-sm text-gray-100">
+                          <code>{example.code}</code>
+                        </pre>
+                      </div>
+                    </div>
+                  ))}
+                </motion.div>
+              )}
+
+              {/* Playground Tab */}
+              {activeTab === 'playground' && detailedTopic?.playgroundChallenge && (
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="space-y-6"
+                >
+                  <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                    <h3 className="text-lg font-semibold text-green-900 mb-2 flex items-center">
+                      <Target className="w-5 h-5 mr-2" />
+                      Objective
+                    </h3>
+                    <p className="text-green-800">{detailedTopic.playgroundChallenge.objective}</p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-900">Starter Code:</h4>
+                    <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+                      <pre className="text-sm text-gray-100">
+                        <code>{detailedTopic.playgroundChallenge.starterCode}</code>
+                      </pre>
+                    </div>
+                  </div>
+
+                  {detailedTopic.playgroundChallenge.hints && detailedTopic.playgroundChallenge.hints.length > 0 && (
+                    <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
+                      <h4 className="font-semibold text-yellow-900 mb-2 flex items-center">
+                        <Lightbulb className="w-4 h-4 mr-2" />
+                        Hints
+                      </h4>
+                      <ul className="space-y-1">
+                        {detailedTopic.playgroundChallenge.hints.map((hint, index) => (
+                          <li key={index} className="text-yellow-800 text-sm">• {hint}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </motion.div>
+              )}
             </div>
           </motion.div>
 
