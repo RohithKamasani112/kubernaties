@@ -86,8 +86,8 @@ const DebugPlatformDashboard: React.FC<DebugPlatformDashboardProps> = ({
   const renderChallengeCard = (challenge: DebugChallenge) => (
     <motion.div
       key={challenge.id}
-      className="bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200/50 p-6 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 cursor-pointer group"
-      whileHover={{ y: -4, scale: 1.02 }}
+      className="bg-white/95 backdrop-blur-sm rounded-2xl border border-gray-200/50 p-8 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 cursor-pointer group hover:border-blue-300/50"
+      whileHover={{ y: -6, scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       onClick={() => handleChallengeSelect(challenge.id)}
     >
@@ -99,28 +99,28 @@ const DebugPlatformDashboard: React.FC<DebugPlatformDashboardProps> = ({
           <p className="text-gray-600 text-sm line-clamp-2 leading-relaxed">{challenge.description}</p>
         </div>
         <div className="ml-4 flex flex-col items-end space-y-2">
-          <span className={`px-3 py-1 rounded-full text-xs font-bold shadow-sm ${
-            challenge.difficulty === 'beginner' ? 'bg-gradient-to-r from-green-400 to-green-500 text-white' :
-            challenge.difficulty === 'intermediate' ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white' :
-            'bg-gradient-to-r from-red-400 to-red-500 text-white'
+          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+            challenge.difficulty === 'beginner' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' :
+            challenge.difficulty === 'intermediate' ? 'bg-amber-100 text-amber-700 border border-amber-200' :
+            'bg-rose-100 text-rose-700 border border-rose-200'
           }`}>
             {challenge.difficulty.toUpperCase()}
           </span>
-          <span className="text-sm font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-lg">
+          <span className="text-sm font-medium text-slate-700 bg-slate-100 px-3 py-1 rounded-lg border border-slate-200">
             {challenge.techStack}
           </span>
         </div>
       </div>
 
-      <div className="flex items-center justify-between mt-4">
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2 bg-blue-50 px-3 py-1 rounded-lg">
+      <div className="flex items-center justify-between mt-6">
+        <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 bg-blue-50 px-3 py-2 rounded-xl border border-blue-100">
             <Clock className="w-4 h-4 text-blue-600" />
             <span className="text-sm font-medium text-blue-700">{challenge.estimatedTime}</span>
           </div>
-          <div className="flex items-center space-x-2 bg-gradient-to-r from-yellow-400 to-orange-500 px-3 py-1 rounded-lg">
+          <div className="flex items-center space-x-2 bg-gradient-to-r from-violet-500 to-purple-600 px-3 py-2 rounded-xl shadow-sm">
             <Zap className="w-4 h-4 text-white" />
-            <span className="text-sm font-bold text-white">{challenge.xpReward} XP</span>
+            <span className="text-sm font-semibold text-white">{challenge.xpReward} XP</span>
           </div>
         </div>
 
@@ -129,13 +129,13 @@ const DebugPlatformDashboard: React.FC<DebugPlatformDashboardProps> = ({
             {challenge.tags.slice(0, 2).map((tag, index) => (
               <span
                 key={index}
-                className="px-2 py-1 bg-gradient-to-r from-purple-500 to-blue-600 text-white text-xs rounded-full font-medium"
+                className="px-2 py-1 bg-slate-100 text-slate-700 text-xs rounded-lg font-medium border border-slate-200"
               >
                 {tag}
               </span>
             ))}
             {challenge.tags.length > 2 && (
-              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+              <span className="text-xs text-slate-500 bg-slate-50 px-2 py-1 rounded-lg border border-slate-200">
                 +{challenge.tags.length - 2}
               </span>
             )}
@@ -201,45 +201,55 @@ const DebugPlatformDashboard: React.FC<DebugPlatformDashboardProps> = ({
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-gray-200/50">
+      <div className="bg-white/90 backdrop-blur-sm shadow-lg border-b border-gray-200/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-8">
+          <div className="py-12">
             <div className="flex items-center justify-between">
-              <div>
-                <motion.h1
-                  className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
+              <div className="flex items-center space-x-6">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.6, type: "spring", stiffness: 200 }}
+                  className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl flex items-center justify-center shadow-xl"
                 >
-                  🐛 Debug Challenges
-                </motion.h1>
-                <motion.p
-                  className="text-lg text-gray-600 mt-3 max-w-2xl"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.1 }}
-                >
-                  Master debugging skills with hands-on challenges across React, Angular, and Node.js
-                </motion.p>
+                  <Target className="w-10 h-10 text-white" />
+                </motion.div>
+                <div>
+                  <motion.h1
+                    className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    Debug Challenges
+                  </motion.h1>
+                  <motion.p
+                    className="text-xl text-gray-600 mt-2 max-w-2xl"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.1 }}
+                  >
+                    Master debugging skills with hands-on challenges across React, Angular, and Node.js
+                  </motion.p>
+                </div>
               </div>
 
               <motion.div
-                className="flex items-center space-x-4"
+                className="flex items-center space-x-3"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4 rounded-xl shadow-lg">
-                  <div className="text-sm text-blue-100 font-medium">Available Challenges</div>
-                  <div className="text-3xl font-bold text-white">{allChallenges.length}</div>
+                <div className="bg-white/90 backdrop-blur-sm border border-blue-200/50 px-4 py-3 rounded-xl shadow-sm">
+                  <div className="text-xs text-blue-600 font-medium uppercase tracking-wide">Challenges</div>
+                  <div className="text-2xl font-bold text-slate-900">{allChallenges.length}</div>
                 </div>
-                <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-6 py-4 rounded-xl shadow-lg">
-                  <div className="text-sm text-purple-100 font-medium">Total XP</div>
-                  <div className="text-3xl font-bold text-white">
-                    {allChallenges.reduce((sum, c) => sum + c.xpReward, 0)}
+                <div className="bg-white/90 backdrop-blur-sm border border-purple-200/50 px-4 py-3 rounded-xl shadow-sm">
+                  <div className="text-xs text-purple-600 font-medium uppercase tracking-wide">Total XP</div>
+                  <div className="text-2xl font-bold text-slate-900">
+                    {allChallenges.reduce((sum, c) => sum + c.xpReward, 0).toLocaleString()}
                   </div>
                 </div>
               </motion.div>
@@ -252,7 +262,7 @@ const DebugPlatformDashboard: React.FC<DebugPlatformDashboardProps> = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              <nav className="flex space-x-2 bg-gray-100 p-1 rounded-xl">
+              <nav className="flex space-x-2 bg-gray-100/80 backdrop-blur-sm p-2 rounded-2xl shadow-inner">
                 {[
                   { id: 'challenges', label: 'Challenges', icon: Target },
                   { id: 'categories', label: 'Categories', icon: BookOpen },
@@ -263,10 +273,10 @@ const DebugPlatformDashboard: React.FC<DebugPlatformDashboardProps> = ({
                     <motion.button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id as any)}
-                      className={`flex items-center space-x-2 py-3 px-6 rounded-lg font-medium text-sm transition-all duration-200 ${
+                      className={`flex items-center space-x-2 py-3 px-6 rounded-xl font-medium text-sm transition-all duration-200 ${
                         activeTab === tab.id
-                          ? 'bg-white text-blue-600 shadow-md'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+                          ? 'bg-white text-blue-600 shadow-lg shadow-blue-500/20'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-white/70'
                       }`}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
@@ -287,8 +297,8 @@ const DebugPlatformDashboard: React.FC<DebugPlatformDashboardProps> = ({
         {activeTab === 'challenges' && (
           <div>
             {/* Filters */}
-            <div className="mb-8 bg-white rounded-lg border border-gray-200 p-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="mb-8 bg-white/90 backdrop-blur-sm rounded-2xl border border-gray-200/50 p-8 shadow-lg">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
                   <div className="relative">
@@ -298,7 +308,7 @@ const DebugPlatformDashboard: React.FC<DebugPlatformDashboardProps> = ({
                       placeholder="Search challenges..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
                     />
                   </div>
                 </div>
@@ -308,7 +318,7 @@ const DebugPlatformDashboard: React.FC<DebugPlatformDashboardProps> = ({
                   <select
                     value={selectedTech}
                     onChange={(e) => setSelectedTech(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
                   >
                     <option value="all">All Technologies</option>
                     <option value="React">React</option>
@@ -322,7 +332,7 @@ const DebugPlatformDashboard: React.FC<DebugPlatformDashboardProps> = ({
                   <select
                     value={selectedDifficulty}
                     onChange={(e) => setSelectedDifficulty(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
                   >
                     <option value="all">All Difficulties</option>
                     <option value="beginner">Beginner</option>
@@ -334,17 +344,19 @@ const DebugPlatformDashboard: React.FC<DebugPlatformDashboardProps> = ({
             </div>
 
             {/* Challenges Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-8">
               <AnimatePresence>
                 {filteredChallenges.map(renderChallengeCard)}
               </AnimatePresence>
             </div>
 
             {filteredChallenges.length === 0 && (
-              <div className="text-center py-12">
-                <Target className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No challenges found</h3>
-                <p className="text-gray-600">Try adjusting your search or filter criteria.</p>
+              <div className="text-center py-16 col-span-full">
+                <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Target className="w-10 h-10 text-slate-400" />
+                </div>
+                <h3 className="text-xl font-semibold text-slate-900 mb-3">No challenges found</h3>
+                <p className="text-slate-600 max-w-md mx-auto">Try adjusting your search or filter criteria to discover more challenges.</p>
               </div>
             )}
           </div>
@@ -372,17 +384,17 @@ const DebugPlatformDashboard: React.FC<DebugPlatformDashboardProps> = ({
               earned XP, and skill progression across different technologies.
             </p>
             <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-gradient-to-r from-green-400 to-green-500 p-6 rounded-xl text-white">
-                <div className="text-3xl font-bold">0</div>
-                <div className="text-green-100">Challenges Completed</div>
+              <div className="bg-white/90 backdrop-blur-sm border border-emerald-200/50 p-6 rounded-2xl shadow-sm">
+                <div className="text-3xl font-bold text-emerald-600">0</div>
+                <div className="text-emerald-700 font-medium">Challenges Completed</div>
               </div>
-              <div className="bg-gradient-to-r from-blue-400 to-blue-500 p-6 rounded-xl text-white">
-                <div className="text-3xl font-bold">0</div>
-                <div className="text-blue-100">Total XP Earned</div>
+              <div className="bg-white/90 backdrop-blur-sm border border-blue-200/50 p-6 rounded-2xl shadow-sm">
+                <div className="text-3xl font-bold text-blue-600">0</div>
+                <div className="text-blue-700 font-medium">Total XP Earned</div>
               </div>
-              <div className="bg-gradient-to-r from-purple-400 to-purple-500 p-6 rounded-xl text-white">
-                <div className="text-3xl font-bold">0</div>
-                <div className="text-purple-100">Skills Mastered</div>
+              <div className="bg-white/90 backdrop-blur-sm border border-purple-200/50 p-6 rounded-2xl shadow-sm">
+                <div className="text-3xl font-bold text-purple-600">0</div>
+                <div className="text-purple-700 font-medium">Skills Mastered</div>
               </div>
             </div>
           </motion.div>

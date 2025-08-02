@@ -508,9 +508,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
               semanticHighlighting: { enabled: true },
               // AGGRESSIVELY prevent ALL error visual elements
               glyphMargin: false, // Disable glyph margin to prevent error icons
-              folding: false, // Disable folding to prevent decorations
               lineDecorationsWidth: 0, // No space for line decorations
-              lineNumbersMinChars: 4,
               renderValidationDecorations: 'off', // Completely disable validation decorations
               hideCursorInOverviewRuler: true,
               overviewRulerBorder: false,
@@ -530,22 +528,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
             }}
           />
           
-          {/* Error Indicators */}
-          {syntaxErrors.length > 0 && (
-            <div className="absolute inset-0 pointer-events-none">
-              {syntaxErrors.map((error, index) => (
-                <div
-                  key={index}
-                  className="absolute left-0 right-0 bg-red-100 border-l-4 border-red-500"
-                  style={{
-                    top: `${(error.line - 1) * 28 + 16}px`,
-                    height: '28px'
-                  }}
-                  title={error.message}
-                />
-              ))}
-            </div>
-          )}
+          {/* Error Indicators - REMOVED: Red bars are too distracting */}
 
           {/* Highlighted Lines Overlay */}
           {highlightedLines.length > 0 && (
@@ -585,13 +568,12 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => setShowErrorBanner(!showErrorBanner)}
-                className="flex items-center space-x-1 px-2 py-1 bg-red-100 text-red-700 hover:bg-red-200 rounded transition-colors animate-pulse"
+                className="flex items-center space-x-1 px-2 py-1 bg-orange-50 text-orange-600 hover:bg-orange-100 rounded transition-colors"
                 title="Click to view error details and get help fixing them"
               >
                 <AlertCircle className="w-3 h-3" />
-                <span>{syntaxErrors.length} error{syntaxErrors.length !== 1 ? 's' : ''}</span>
+                <span className="text-xs">{syntaxErrors.length} issue{syntaxErrors.length !== 1 ? 's' : ''}</span>
               </button>
-              <span className="text-xs text-red-600 animate-bounce">← Click for help!</span>
             </div>
           )}
           <span>Ln {cursorPosition.line}, Col {cursorPosition.column}</span>

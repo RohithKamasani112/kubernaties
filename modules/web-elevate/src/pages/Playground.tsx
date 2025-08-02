@@ -1366,63 +1366,87 @@ const Playground: React.FC = () => {
   const loadRepository = async (repo: GitHubRepo) => {
     setIsLoadingRepo(true);
     setSelectedRepo(repo);
-    setTerminalOutput(prev => [...prev, `📦 Loading repository: ${repo.fullName}`, '']);
+    setTerminalOutput(prev => [...prev,
+      `🚀 Cloning repository: ${repo.fullName}`,
+      `📦 Initializing project workspace...`,
+      `🔄 Setting up development environment...`,
+      ''
+    ]);
 
     // Check for existing session
     const existingSession = loadSessionFromStorage(repo.id);
 
-    // Simulate loading repository files
-    setTimeout(() => {
-      if (existingSession) {
-        // Restore existing session
-        setTerminalOutput(prev => [...prev, `🔄 Found existing session, restoring...`, '']);
-        restoreSession(existingSession);
-        setActiveFile(getDefaultFile(existingSession.files));
+    // Simulate realistic cloning process with progress updates
+    const loadingSteps = [
+      { message: '📥 Downloading project files...', delay: 800 },
+      { message: '🔧 Installing dependencies...', delay: 1200 },
+      { message: '⚙️ Configuring development server...', delay: 600 },
+      { message: '🎯 Loading user stories and challenges...', delay: 400 },
+      { message: '✅ Project ready for development!', delay: 200 }
+    ];
+
+    let currentStep = 0;
+    const updateProgress = () => {
+      if (currentStep < loadingSteps.length) {
+        const step = loadingSteps[currentStep];
+        setTerminalOutput(prev => [...prev, step.message]);
+        currentStep++;
+        setTimeout(updateProgress, step.delay);
       } else {
-        // Create new session
-        const mockFiles = generateMockRepoFiles(repo);
-        console.log('Generated mock files:', mockFiles);
+        // Complete the loading process
+        if (existingSession) {
+          // Restore existing session
+          setTerminalOutput(prev => [...prev,
+            `🔄 Found existing session, restoring workspace...`,
+            `📂 Restored ${existingSession.files.length} files`,
+            ''
+          ]);
+          restoreSession(existingSession);
+          setActiveFile(getDefaultFile(existingSession.files));
+        } else {
+          // Create new session with complete project files
+          const mockFiles = generateCompleteProjectFiles(repo);
+          console.log('Generated complete project files:', mockFiles);
 
-        setFiles(mockFiles);
-        const defaultFile = getDefaultFile(mockFiles);
-        console.log('Setting default file:', defaultFile);
-        setActiveFile(defaultFile);
+          setFiles(mockFiles);
+          const defaultFile = getDefaultFile(mockFiles);
+          console.log('Setting default file:', defaultFile);
+          setActiveFile(defaultFile);
 
-        // Verify file content is available
-        setTimeout(() => {
-          const content = getFileContent(defaultFile);
-          console.log('Default file content check:', content.length > 0 ? 'Content loaded' : 'No content');
-        }, 100);
+          // Create playground session
+          const session: PlaygroundSession = {
+            id: `session-${Date.now()}`,
+            repoId: repo.id,
+            userId: githubUser?.login,
+            files: mockFiles,
+            completedStories: [],
+            totalXP: 0,
+            lastSaved: new Date(),
+            isForked: false
+          };
+          setPlaygroundSession(session);
 
-        // Create playground session
-        const session: PlaygroundSession = {
-          id: `session-${Date.now()}`,
-          repoId: repo.id,
-          userId: githubUser?.login,
-          files: mockFiles,
-          completedStories: [],
-          totalXP: 0,
-          lastSaved: new Date(),
-          isForked: false
-        };
-        setPlaygroundSession(session);
+          setTerminalOutput(prev => [...prev,
+            `🎉 ${repo.name} cloned successfully!`,
+            `📁 Generated ${mockFiles.length} project files`,
+            `🎯 ${repo.userStories.length} challenges available`,
+            `📝 Opening: ${defaultFile}`,
+            `💡 Start coding and complete challenges to earn XP!`,
+            ''
+          ]);
+        }
 
-        setTerminalOutput(prev => [...prev,
-          `✅ Repository loaded successfully!`,
-          `📁 ${mockFiles.length} files loaded`,
-          `🎯 ${repo.userStories.length} user stories available`,
-          `📝 Default file: ${defaultFile}`,
-          ''
-        ]);
+        setCurrentView('playground');
+        setIsLoadingRepo(false);
       }
+    };
 
-      setCurrentView('playground');
-      setIsLoadingRepo(false);
-    }, 2000);
+    // Start the loading process
+    setTimeout(updateProgress, 500);
   };
 
-  const generateMockRepoFiles = (repo: GitHubRepo): FileNode[] => {
-    console.log(`Generating files for repo: ${repo.id}, category: ${repo.category}`);
+  const generateCompleteProjectFiles = (repo: GitHubRepo): FileNode[] => {
+    console.log(`Generating complete project files for: ${repo.id}, category: ${repo.category}`);
 
     // Generate complete file structure based on repository type and specific project
     switch (repo.id) {
@@ -1430,7 +1454,87 @@ const Playground: React.FC = () => {
         return generateReactTodoApp(repo);
 
       case 'react-50-projects':
-        return [
+        return generateReact50ProjectsComplete(repo);
+
+      case 'react-weather-app':
+        return generateReactWeatherAppComplete(repo);
+
+      case 'express-blog-api':
+        return generateExpressBlogApiComplete(repo);
+
+      case 'react-85-projects':
+        return generateReact85ProjectsComplete(repo);
+
+      case 'angular-beginner-starter':
+        return generateAngularBeginnerComplete(repo);
+
+      case 'angular-tic-tac-toe':
+        return generateAngularTicTacToeComplete(repo);
+
+      case 'nodejs-10-projects':
+        return generateNodeJs10ProjectsComplete(repo);
+
+      case 'node-realworld-api':
+        return generateNodeRealworldApiComplete(repo);
+
+      case 'vue-beginner-projects':
+        return generateVueBeginnerProjectsComplete(repo);
+
+      case 'html-css-js-projects':
+        return generateHtmlCssJsProjectsComplete(repo);
+
+      case 'fullstack-mern':
+        return generateFullstackMernComplete(repo);
+
+      case 'angular-todo-app':
+        return generateAngularTodoAppComplete(repo);
+
+      case 'nodejs-express-api':
+        return generateNodejsExpressApiComplete(repo);
+
+      case 'react-portfolio':
+        return generateReactPortfolioComplete(repo);
+
+      case 'vue-todo-app':
+        return generateVueTodoAppComplete(repo);
+
+      case 'angular-weather-app':
+        return generateAngularWeatherAppComplete(repo);
+
+      case 'nodejs-chat-app':
+        return generateNodejsChatAppComplete(repo);
+
+      default:
+        console.warn(`No specific generator found for repo: ${repo.id}, using comprehensive generic generator`);
+        return generateComprehensiveProjectFiles(repo);
+    }
+  };
+
+  // Comprehensive project generator for unknown projects
+  const generateComprehensiveProjectFiles = (repo: GitHubRepo): FileNode[] => {
+    console.log(`Generating comprehensive project for: ${repo.name}, category: ${repo.category}`);
+
+    switch (repo.category) {
+      case 'react':
+        return generateReactProjectComplete(repo);
+      case 'nodejs':
+        return generateNodeJsProjectComplete(repo);
+      case 'angular':
+        return generateAngularProjectComplete(repo);
+      case 'vue':
+        return generateVueProjectComplete(repo);
+      case 'html-css-js':
+        return generateHtmlCssJsProjectComplete(repo);
+      case 'fullstack':
+        return generateFullstackProjectComplete(repo);
+      default:
+        return generateBasicProjectComplete(repo);
+    }
+  };
+
+  // Enhanced React 50 Projects generator
+  const generateReact50ProjectsComplete = (repo: GitHubRepo): FileNode[] => {
+    return [
           {
             name: 'src',
             type: 'folder',
@@ -1520,60 +1624,6 @@ const Playground: React.FC = () => {
             content: `# ${repo.name}\n\n${repo.description}\n\n## Getting Started\n\n${repo.setupInstructions.map(step => `- ${step}`).join('\n')}\n\n## User Stories\n\n${repo.userStories.map(story => `### ${story.title}\n${story.description}\n**Difficulty:** ${story.difficulty} | **XP:** ${story.xpReward}`).join('\n\n')}`
           }
         ];
-
-      case 'react-weather-app':
-        return generateReactWeatherApp(repo);
-
-      case 'express-blog-api':
-        return generateExpressBlogApi(repo);
-
-      case 'react-85-projects':
-        return generateReact85Projects(repo);
-
-      case 'angular-beginner-starter':
-        return generateAngularBeginnerStarter(repo);
-
-      case 'angular-tic-tac-toe':
-        return generateAngularTicTacToe(repo);
-
-      case 'nodejs-10-projects':
-        return generateNodeJs10Projects(repo);
-
-      case 'node-realworld-api':
-        return generateNodeRealworldApi(repo);
-
-      case 'vue-beginner-projects':
-        return generateVueProjectFiles(repo, { mainComponent: 'App', components: ['Counter', 'TodoList', 'Calculator'], features: ['Reactive data', 'Event handling', 'Computed properties'] });
-
-      case 'html-css-js-projects':
-        return generateHtmlCssJsProjectFiles(repo, { projects: ['Calculator', 'Todo List', 'Weather App', 'Quiz App'], features: ['DOM manipulation', 'Local storage', 'API calls', 'Responsive design'] });
-
-      case 'fullstack-mern':
-        return generateFullstackProjectFiles(repo, { frontend: 'React', backend: 'Node.js + Express', database: 'MongoDB', features: ['Authentication', 'CRUD operations', 'API integration'] });
-
-      case 'angular-todo-app':
-        return generateAngularProjectFiles(repo, { mainComponent: 'AppComponent', components: ['TodoListComponent', 'TodoItemComponent'], features: ['Two-way binding', 'Services', 'Routing'] });
-
-      case 'nodejs-express-api':
-        return generateNodeJsProjectFiles(repo, { type: 'Express API', features: ['Express server', 'REST endpoints', 'Middleware', 'Error handling'] });
-
-      case 'react-portfolio':
-        return generateReactProjectFiles(repo, { mainComponent: 'App', components: ['Header', 'About', 'Projects', 'Contact'], features: ['Responsive design', 'Smooth scrolling', 'Contact form'] });
-
-      case 'vue-todo-app':
-        return generateVueProjectFiles(repo, { mainComponent: 'App', components: ['TodoList', 'TodoItem', 'AddTodo'], features: ['Vue 3 Composition API', 'Local storage', 'Filtering'] });
-
-      case 'angular-weather-app':
-        return generateAngularProjectFiles(repo, { mainComponent: 'WeatherComponent', components: ['SearchComponent', 'WeatherDisplayComponent'], features: ['HTTP client', 'Services', 'Reactive forms'] });
-
-      case 'nodejs-chat-app':
-        return generateNodeJsProjectFiles(repo, { type: 'Chat App', features: ['Socket.io', 'Real-time messaging', 'User authentication', 'Room management'] });
-
-      default:
-        console.warn(`No specific generator found for repo: ${repo.id}, using generic generator`);
-        // Generate files based on repository category
-        return generateGenericProjectFiles(repo);
-    }
   };
 
   const getDefaultFile = (files: FileNode[]): string => {
@@ -1979,6 +2029,58 @@ const Playground: React.FC = () => {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
   }, [terminalOutput]);
+
+  // Loading Animation Component
+  const LoadingAnimation = () => (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+      <div className="text-center">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          className="w-16 h-16 mx-auto mb-6"
+        >
+          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full"></div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-4"
+        >
+          <h2 className="text-2xl font-bold text-gray-900">
+            🚀 Setting up your playground...
+          </h2>
+          <p className="text-gray-600 max-w-md mx-auto">
+            Cloning repository and preparing your development environment. This may take a few moments.
+          </p>
+
+          <div className="bg-gray-900 text-green-400 p-4 rounded-lg max-w-2xl mx-auto text-left font-mono text-sm">
+            <div className="space-y-1">
+              {terminalOutput.slice(-8).map((line, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="flex items-center space-x-2"
+                >
+                  {line.includes('✅') && <CheckCircle className="w-4 h-4 text-green-400" />}
+                  {line.includes('🔄') && <RefreshCw className="w-4 h-4 text-blue-400 animate-spin" />}
+                  {line.includes('📦') && <Download className="w-4 h-4 text-purple-400" />}
+                  <span>{line}</span>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+
+  // Show loading animation when cloning repository
+  if (isLoadingRepo) {
+    return <LoadingAnimation />;
+  }
 
   // Render Repository Selection or Playground
   if (currentView === 'repo-selection') {
@@ -2946,8 +3048,11 @@ interface LivePreviewProps {
 const LivePreview: React.FC<LivePreviewProps> = ({ repo, files }) => {
   const [previewContent, setPreviewContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
 
   const generatePreviewContent = () => {
+    console.log(`Generating preview for ${repo.name} (${repo.category})`);
+
     switch (repo.category) {
       case 'react':
         return generateReactPreview(files);
@@ -2955,58 +3060,272 @@ const LivePreview: React.FC<LivePreviewProps> = ({ repo, files }) => {
         return generateHTMLPreview(files);
       case 'nodejs':
         return generateNodePreview(files);
+      case 'angular':
+        return generateAngularPreview(files);
+      case 'vue':
+        return generateVuePreview(files);
       default:
-        return '<div style="padding: 20px; text-align: center; color: #666;">Preview not available for this project type</div>';
+        return generateGenericPreview(repo, files);
     }
   };
 
   const generateReactPreview = (files: FileNode[]): string => {
-    // For React projects, we'll create a simple preview
     const appJs = findFileContent(files, 'src/App.js') || '';
     const appCss = findFileContent(files, 'src/App.css') || '';
+    const indexCss = findFileContent(files, 'src/index.css') || '';
 
-    // Simple React-to-HTML conversion for demo purposes
-    // In a real implementation, you'd use a proper React renderer
+    // Extract JSX content and convert to HTML
+    const extractedContent = extractReactContent(appJs);
+
     return `
       <!DOCTYPE html>
       <html>
       <head>
-        <title>React Preview</title>
+        <title>${repo.name} - Live Preview</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
+          /* Base styles */
+          ${indexCss}
+
+          /* App styles */
           ${appCss}
-          body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+
+          /* Preview-specific styles */
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+          }
+
+          .preview-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+          }
+
+          .preview-header {
+            background: #282c34;
+            color: white;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-bottom: 1px solid #444;
+          }
+
+          .preview-content {
+            flex: 1;
+            overflow: auto;
+          }
         </style>
       </head>
       <body>
-        <div id="root">
-          <div class="App">
-            <h1>Todo App</h1>
-            <div>
-              <input placeholder="Add a todo..." />
-              <button>Add Todo</button>
+        <div class="preview-container">
+          <div class="preview-header">
+            🚀 ${repo.name} - Live Preview
+          </div>
+          <div class="preview-content">
+            <div id="root">
+              ${extractedContent}
             </div>
-            <ul>
-              <li>Sample todo item</li>
-            </ul>
           </div>
         </div>
         <script>
-          console.log('React app preview loaded');
+          // Isolated console for this preview
+          const originalConsole = window.console;
+          const previewConsole = {
+            log: (...args) => {
+              originalConsole.log('[${repo.name}]', ...args);
+              window.parent.postMessage({
+                type: 'console',
+                level: 'log',
+                args: args.map(arg => String(arg))
+              }, '*');
+            },
+            error: (...args) => {
+              originalConsole.error('[${repo.name}]', ...args);
+              window.parent.postMessage({
+                type: 'console',
+                level: 'error',
+                args: args.map(arg => String(arg))
+              }, '*');
+            },
+            warn: (...args) => {
+              originalConsole.warn('[${repo.name}]', ...args);
+              window.parent.postMessage({
+                type: 'console',
+                level: 'warn',
+                args: args.map(arg => String(arg))
+              }, '*');
+            }
+          };
+
+          window.console = previewConsole;
+
+          // Initialize the app
+          console.log('${repo.name} preview initialized');
+          console.log('Project description: ${repo.description}');
+
+          // Add interactive functionality
+          document.addEventListener('DOMContentLoaded', function() {
+            // Add click handlers for buttons
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach((button, index) => {
+              button.addEventListener('click', function() {
+                console.log(\`Button \${index + 1} clicked: \${this.textContent}\`);
+              });
+            });
+
+            // Add input handlers
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach((input, index) => {
+              input.addEventListener('input', function() {
+                console.log(\`Input \${index + 1} changed: \${this.value}\`);
+              });
+            });
+
+            console.log('Interactive elements initialized');
+          });
         </script>
       </body>
       </html>
     `;
   };
 
-  const generateHTMLPreview = (files: FileNode[]): string => {
-    const htmlContent = findFileContent(files, 'src/index.html') || findFileContent(files, 'index.html') || '';
-    const cssContent = findFileContent(files, 'src/style.css') || findFileContent(files, 'style.css') || '';
-    const jsContent = findFileContent(files, 'src/script.js') || findFileContent(files, 'script.js') || '';
+  // Helper function to extract React content and convert to HTML
+  const extractReactContent = (appJs: string): string => {
+    // Simple JSX to HTML conversion for preview
+    // This is a basic implementation - in production you'd use a proper JSX parser
 
-    // Inject CSS and JS into HTML
-    return htmlContent
-      .replace('</head>', `<style>${cssContent}</style></head>`)
-      .replace('</body>', `<script>${jsContent}</script></body>`);
+    if (appJs.includes('card-container')) {
+      return `
+        <div class="App">
+          <header class="App-header">
+            <h1>🚀 ${repo.name}</h1>
+            <p>${repo.description}</p>
+          </header>
+          <main class="App-main">
+            <div class="card-container">
+              <div class="card">
+                <h3>Welcome to ${repo.name}!</h3>
+                <p>${repo.description}</p>
+              </div>
+              <div class="card">
+                <h3>Start Building</h3>
+                <p>Modify this component to build your app</p>
+              </div>
+              <div class="card">
+                <h3>Learn React</h3>
+                <p>Check out the React documentation</p>
+              </div>
+            </div>
+            <div class="actions">
+              <button>Get Started</button>
+            </div>
+          </main>
+        </div>
+      `;
+    }
+
+    // Default React app structure
+    return `
+      <div class="App">
+        <header class="App-header">
+          <h1>🚀 ${repo.name}</h1>
+          <p>${repo.description}</p>
+          <div class="app-content">
+            <p>Your React app is running!</p>
+            <button onclick="console.log('Hello from ${repo.name}!')">Click me</button>
+          </div>
+        </header>
+      </div>
+    `;
+  };
+
+  const generateHTMLPreview = (files: FileNode[]): string => {
+    const indexHtml = findFileContent(files, 'index.html');
+    const styles = findFileContent(files, 'styles.css') || findFileContent(files, 'style.css') || '';
+    const script = findFileContent(files, 'script.js') || findFileContent(files, 'main.js') || '';
+
+    if (indexHtml) {
+      // Inject console isolation into existing HTML
+      return indexHtml.replace(
+        '</head>',
+        `
+        <style>
+          ${styles}
+        </style>
+        <script>
+          // Console isolation for HTML/CSS/JS projects
+          const originalConsole = window.console;
+          window.console = {
+            log: (...args) => {
+              originalConsole.log('[${repo.name}]', ...args);
+              window.parent.postMessage({
+                type: 'console',
+                level: 'log',
+                args: args.map(arg => String(arg))
+              }, '*');
+            },
+            error: (...args) => {
+              originalConsole.error('[${repo.name}]', ...args);
+              window.parent.postMessage({
+                type: 'console',
+                level: 'error',
+                args: args.map(arg => String(arg))
+              }, '*');
+            },
+            warn: (...args) => {
+              originalConsole.warn('[${repo.name}]', ...args);
+              window.parent.postMessage({
+                type: 'console',
+                level: 'warn',
+                args: args.map(arg => String(arg))
+              }, '*');
+            }
+          };
+        </script>
+        </head>`
+      ).replace(
+        '</body>',
+        `
+        <script>
+          ${script}
+          console.log('${repo.name} loaded successfully');
+        </script>
+        </body>`
+      );
+    }
+
+    // Generate default HTML structure
+    return `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${repo.name}</title>
+        <style>
+          ${styles}
+          body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1>🚀 ${repo.name}</h1>
+          <p>${repo.description}</p>
+          <div class="content">
+            <p>Your HTML/CSS/JS project is running!</p>
+            <button onclick="console.log('Hello from ${repo.name}!')">Click me</button>
+          </div>
+        </div>
+        <script>
+          ${script}
+          console.log('${repo.name} initialized');
+        </script>
+      </body>
+      </html>
+    `;
   };
 
   const generateNodePreview = (files: FileNode[]): string => {
@@ -3014,25 +3333,257 @@ const LivePreview: React.FC<LivePreviewProps> = ({ repo, files }) => {
       <!DOCTYPE html>
       <html>
       <head>
-        <title>Node.js API Preview</title>
+        <title>${repo.name} - Node.js API Preview</title>
         <style>
-          body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
-          .api-info { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-          .endpoint { margin: 10px 0; padding: 10px; background: #f8f9fa; border-left: 4px solid #007bff; }
+          body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+          }
+          .api-preview {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          }
+          .endpoint {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+          }
+          .method {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: white;
+            font-size: 12px;
+          }
+          .get { background: #28a745; }
+          .post { background: #007bff; }
+          .put { background: #ffc107; color: #000; }
+          .delete { background: #dc3545; }
         </style>
       </head>
       <body>
-        <div class="api-info">
-          <h1>🟢 Node.js API Server</h1>
-          <p>This is a backend API project. In a real environment, the server would be running.</p>
+        <div class="api-preview">
+          <h1>🚀 ${repo.name} - API Documentation</h1>
+          <p>${repo.description}</p>
+
+          <h2>Available Endpoints:</h2>
+
           <div class="endpoint">
-            <strong>GET /posts</strong> - Get all blog posts
+            <span class="method get">GET</span>
+            <strong>/</strong> - Welcome message and API info
           </div>
+
           <div class="endpoint">
-            <strong>POST /posts</strong> - Create a new blog post
+            <span class="method get">GET</span>
+            <strong>/health</strong> - Server health check
           </div>
-          <p><em>Note: Use the terminal to run 'npm start' to start the server.</em></p>
+
+          <div class="endpoint">
+            <span class="method get">GET</span>
+            <strong>/api/users</strong> - Get all users
+          </div>
+
+          <div class="endpoint">
+            <span class="method post">POST</span>
+            <strong>/api/users</strong> - Create new user
+          </div>
+
+          <div class="endpoint">
+            <span class="method post">POST</span>
+            <strong>/auth/login</strong> - User authentication
+          </div>
+
+          <h3>To run this API:</h3>
+          <ol>
+            <li>Run <code>npm install</code> to install dependencies</li>
+            <li>Run <code>npm start</code> or <code>npm run dev</code> to start the server</li>
+            <li>Visit <code>http://localhost:3000</code> to access the API</li>
+          </ol>
+
+          <button onclick="console.log('API documentation viewed')">Test Console</button>
         </div>
+
+        <script>
+          // Console isolation for Node.js projects
+          const originalConsole = window.console;
+          window.console = {
+            log: (...args) => {
+              originalConsole.log('[${repo.name}]', ...args);
+              window.parent.postMessage({
+                type: 'console',
+                level: 'log',
+                args: args.map(arg => String(arg))
+              }, '*');
+            },
+            error: (...args) => {
+              originalConsole.error('[${repo.name}]', ...args);
+              window.parent.postMessage({
+                type: 'console',
+                level: 'error',
+                args: args.map(arg => String(arg))
+              }, '*');
+            }
+          };
+
+          console.log('${repo.name} API documentation loaded');
+          console.log('This is a Node.js backend project');
+        </script>
+      </body>
+      </html>
+    `;
+  };
+
+  // Add missing preview generators
+  const generateAngularPreview = (files: FileNode[]): string => {
+    const appComponent = findFileContent(files, 'src/app/app.component.html') || '';
+    const appStyles = findFileContent(files, 'src/app/app.component.css') || '';
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>${repo.name} - Angular Preview</title>
+        <style>
+          ${appStyles}
+          body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        </style>
+      </head>
+      <body>
+        ${appComponent || `
+          <div class="app-container">
+            <header class="app-header">
+              <h1>🚀 ${repo.name}</h1>
+              <p>${repo.description}</p>
+            </header>
+            <main class="app-main">
+              <div class="card-container">
+                <div class="card">
+                  <h3>Angular Basics</h3>
+                  <p class="completed">✅ Completed</p>
+                </div>
+                <div class="card">
+                  <h3>Components</h3>
+                  <p class="pending">⏳ Pending</p>
+                </div>
+              </div>
+            </main>
+          </div>
+        `}
+        <script>
+          console.log('${repo.name} Angular preview loaded');
+        </script>
+      </body>
+      </html>
+    `;
+  };
+
+  const generateVuePreview = (files: FileNode[]): string => {
+    const appVue = findFileContent(files, 'src/App.vue') || '';
+
+    // Extract styles from Vue file
+    const styleMatch = appVue.match(/<style[^>]*>([\s\S]*?)<\/style>/);
+    const styles = styleMatch ? styleMatch[1] : '';
+
+    // Extract template from Vue file
+    const templateMatch = appVue.match(/<template[^>]*>([\s\S]*?)<\/template>/);
+    const template = templateMatch ? templateMatch[1] : '';
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>${repo.name} - Vue Preview</title>
+        <style>
+          ${styles}
+          body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        </style>
+      </head>
+      <body>
+        ${template || `
+          <div id="app">
+            <header class="app-header">
+              <h1>🚀 ${repo.name}</h1>
+              <p>${repo.description}</p>
+            </header>
+            <main class="app-main">
+              <div class="card-container">
+                <div class="card">
+                  <h3>Vue Basics</h3>
+                  <p class="completed">✅ Completed</p>
+                </div>
+              </div>
+            </main>
+          </div>
+        `}
+        <script>
+          console.log('${repo.name} Vue preview loaded');
+        </script>
+      </body>
+      </html>
+    `;
+  };
+
+  const generateGenericPreview = (repo: GitHubRepo, files: FileNode[]): string => {
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>${repo.name} - Preview</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+          }
+          .preview-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+          }
+          .file-list {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+          }
+          .file-item {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+          }
+        </style>
+      </head>
+      <body>
+        <div class="preview-container">
+          <h1>🚀 ${repo.name}</h1>
+          <p>${repo.description}</p>
+          <p>Category: ${repo.category}</p>
+
+          <div class="file-list">
+            <h3>Project Files:</h3>
+            ${files.map(file => `<div class="file-item">📄 ${file.name}</div>`).join('')}
+          </div>
+
+          <button onclick="console.log('Generic preview loaded for ${repo.name}')">Test Console</button>
+        </div>
+
+        <script>
+          console.log('${repo.name} preview loaded');
+          console.log('Project type: ${repo.category}');
+          console.log('Files available: ${files.length}');
+        </script>
       </body>
       </html>
     `;
@@ -3062,6 +3613,19 @@ const LivePreview: React.FC<LivePreviewProps> = ({ repo, files }) => {
     setIsLoading(false);
   }, [repo, files]);
 
+  // Listen for console messages from iframe
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data.type === 'console') {
+        const { level, args } = event.data;
+        setConsoleOutput(prev => [...prev, `[${level.toUpperCase()}] ${args.join(' ')}`]);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -3074,12 +3638,24 @@ const LivePreview: React.FC<LivePreviewProps> = ({ repo, files }) => {
   }
 
   return (
-    <iframe
-      srcDoc={previewContent}
-      className="w-full h-full border-none"
-      title="Live Preview"
-      sandbox="allow-scripts allow-same-origin"
-    />
+    <div className="h-full flex flex-col">
+      <div className="flex-1">
+        <iframe
+          srcDoc={previewContent}
+          className="w-full h-full border-none"
+          title="Live Preview"
+          sandbox="allow-scripts allow-same-origin allow-modals"
+        />
+      </div>
+      {consoleOutput.length > 0 && (
+        <div className="h-24 bg-gray-900 text-green-400 text-xs font-mono p-2 overflow-y-auto border-t">
+          <div className="text-gray-400 mb-1">Console Output ({repo.name}):</div>
+          {consoleOutput.slice(-10).map((output, index) => (
+            <div key={index}>{output}</div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -3439,6 +4015,301 @@ const generateHtmlCssJsProjectFiles = (repo: GitHubRepo, config: any): FileNode[
   ];
 };
 
+// Comprehensive React Project Generator
+const generateReactProjectComplete = (repo: GitHubRepo): FileNode[] => {
+  return [
+    {
+      name: 'public',
+      type: 'folder',
+      isOpen: false,
+      children: [
+        {
+          name: 'index.html',
+          type: 'file',
+          content: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="${repo.description}" />
+  <title>${repo.name}</title>
+</head>
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+</body>
+</html>`
+        },
+        {
+          name: 'favicon.ico',
+          type: 'file',
+          content: '// Favicon file'
+        }
+      ]
+    },
+    {
+      name: 'src',
+      type: 'folder',
+      isOpen: true,
+      children: [
+        {
+          name: 'App.js',
+          type: 'file',
+          content: `import React, { useState, useEffect } from 'react';
+import './App.css';
+
+function App() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Simulate API call
+    setTimeout(() => {
+      setData([
+        { id: 1, title: 'Welcome to ${repo.name}!', description: '${repo.description}' },
+        { id: 2, title: 'Start Building', description: 'Modify this component to build your app' },
+        { id: 3, title: 'Learn React', description: 'Check out the React documentation' }
+      ]);
+      setLoading(false);
+    }, 1000);
+  }, []);
+
+  if (loading) return <div className="loading">Loading...</div>;
+  if (error) return <div className="error">Error: {error}</div>;
+
+  return (
+    <div className="App">
+      <header className="App-header">
+        <h1>🚀 ${repo.name}</h1>
+        <p>${repo.description}</p>
+      </header>
+
+      <main className="App-main">
+        <div className="card-container">
+          {data.map(item => (
+            <div key={item.id} className="card">
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="actions">
+          <button onClick={() => console.log('Button clicked!')}>
+            Get Started
+          </button>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+export default App;`
+        },
+        {
+          name: 'App.css',
+          type: 'file',
+          content: `.App {
+  text-align: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+}
+
+.App-header {
+  margin-bottom: 40px;
+}
+
+.App-header h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.App-header p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.App-main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 25px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card h3 {
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
+
+.actions button {
+  background: linear-gradient(135deg, #74c0fc, #339af0);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.actions button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.loading, .error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-size: 1.5rem;
+}`
+        },
+        {
+          name: 'index.js',
+          type: 'file',
+          content: `import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);`
+        },
+        {
+          name: 'index.css',
+          type: 'file',
+          content: `body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+* {
+  box-sizing: border-box;
+}`
+        }
+      ]
+    },
+    {
+      name: 'package.json',
+      type: 'file',
+      content: `{
+  "name": "${repo.name.toLowerCase().replace(/\s+/g, '-')}",
+  "version": "0.1.0",
+  "private": true,
+  "description": "${repo.description}",
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}`
+    },
+    {
+      name: 'README.md',
+      type: 'file',
+      content: `# ${repo.name}
+
+${repo.description}
+
+## Getting Started
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Available Scripts
+
+In the project directory, you can run:
+
+### \`npm start\`
+
+Runs the app in the development mode.
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+### \`npm test\`
+
+Launches the test runner in the interactive watch mode.
+
+### \`npm run build\`
+
+Builds the app for production to the \`build\` folder.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+`
+    }
+  ];
+};
+
 const generateFullstackProjectFiles = (repo: GitHubRepo, config: any): FileNode[] => {
   return [
     {
@@ -3566,6 +4437,474 @@ const generateReactApp = (repo: GitHubRepo, components: string[]): string => {
 
 const generateReactCSS = (repo: GitHubRepo): string => {
   return `.App {\n  text-align: center;\n  min-height: 100vh;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n  padding: 20px;\n}\n\n.App-header {\n  margin-bottom: 40px;\n}\n\n.App-header h1 {\n  font-size: 2.5rem;\n  margin-bottom: 10px;\n}\n\n.App-main {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));\n  gap: 30px;\n  max-width: 1200px;\n  margin: 0 auto;\n}\n\n.counter, .todo-list, .user-profile {\n  background: rgba(255, 255, 255, 0.1);\n  border-radius: 15px;\n  padding: 25px;\n  backdrop-filter: blur(10px);\n  border: 1px solid rgba(255, 255, 255, 0.2);\n}\n\nbutton {\n  background: linear-gradient(135deg, #74c0fc, #339af0);\n  color: white;\n  border: none;\n  padding: 10px 20px;\n  border-radius: 8px;\n  cursor: pointer;\n  margin: 5px;\n  transition: all 0.3s ease;\n}\n\nbutton:hover {\n  transform: translateY(-2px);\n  box-shadow: 0 4px 15px rgba(0,0,0,0.2);\n}\n\ninput, textarea {\n  padding: 10px;\n  border: 1px solid rgba(255,255,255,0.3);\n  border-radius: 8px;\n  background: rgba(255,255,255,0.1);\n  color: white;\n  margin: 5px;\n}\n\ninput::placeholder {\n  color: rgba(255,255,255,0.7);\n}`;
+};
+
+// Comprehensive Node.js Project Generator
+const generateNodeJsProjectComplete = (repo: GitHubRepo): FileNode[] => {
+  return [
+    {
+      name: 'src',
+      type: 'folder',
+      isOpen: true,
+      children: [
+        {
+          name: 'server.js',
+          type: 'file',
+          content: `const express = require('express');
+const cors = require('cors');
+const morgan = require('morgan');
+const helmet = require('helmet');
+require('dotenv').config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(helmet()); // Security headers
+app.use(cors()); // Enable CORS
+app.use(morgan('combined')); // Logging
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
+
+// Routes
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Welcome to ${repo.name} API!',
+    description: '${repo.description}',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      api: '/api'
+    }
+  });
+});
+
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
+// API Routes
+app.get('/api/users', (req, res) => {
+  const users = [
+    { id: 1, name: 'John Doe', email: 'john@example.com' },
+    { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
+    { id: 3, name: 'Bob Johnson', email: 'bob@example.com' }
+  ];
+  res.json({ users, total: users.length });
+});
+
+app.post('/api/users', (req, res) => {
+  const { name, email } = req.body;
+  if (!name || !email) {
+    return res.status(400).json({ error: 'Name and email are required' });
+  }
+
+  const newUser = {
+    id: Date.now(),
+    name,
+    email,
+    createdAt: new Date().toISOString()
+  };
+
+  res.status(201).json({ user: newUser, message: 'User created successfully' });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong!' });
+});
+
+// 404 handler
+app.use('*', (req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+
+app.listen(PORT, () => {
+  console.log(\`🚀 Server running on port \${PORT}\`);
+  console.log(\`📖 API Documentation: http://localhost:\${PORT}\`);
+});
+
+module.exports = app;`
+        },
+        {
+          name: 'routes',
+          type: 'folder',
+          isOpen: false,
+          children: [
+            {
+              name: 'auth.js',
+              type: 'file',
+              content: `const express = require('express');
+const router = express.Router();
+
+// Mock user database
+const users = [
+  { id: 1, username: 'admin', password: 'password123', role: 'admin' },
+  { id: 2, username: 'user', password: 'user123', role: 'user' }
+];
+
+// Login endpoint
+router.post('/login', (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username and password are required' });
+  }
+
+  const user = users.find(u => u.username === username && u.password === password);
+
+  if (!user) {
+    return res.status(401).json({ error: 'Invalid credentials' });
+  }
+
+  // In a real app, you'd generate a JWT token here
+  const token = 'mock-jwt-token-' + Date.now();
+
+  res.json({
+    message: 'Login successful',
+    token,
+    user: {
+      id: user.id,
+      username: user.username,
+      role: user.role
+    }
+  });
+});
+
+// Register endpoint
+router.post('/register', (req, res) => {
+  const { username, password, email } = req.body;
+
+  if (!username || !password || !email) {
+    return res.status(400).json({ error: 'Username, password, and email are required' });
+  }
+
+  // Check if user already exists
+  const existingUser = users.find(u => u.username === username);
+  if (existingUser) {
+    return res.status(409).json({ error: 'Username already exists' });
+  }
+
+  const newUser = {
+    id: users.length + 1,
+    username,
+    password, // In a real app, hash this!
+    email,
+    role: 'user',
+    createdAt: new Date().toISOString()
+  };
+
+  users.push(newUser);
+
+  res.status(201).json({
+    message: 'User registered successfully',
+    user: {
+      id: newUser.id,
+      username: newUser.username,
+      email: newUser.email,
+      role: newUser.role
+    }
+  });
+});
+
+// Get current user
+router.get('/me', (req, res) => {
+  // Mock authentication check
+  const token = req.headers.authorization;
+
+  if (!token) {
+    return res.status(401).json({ error: 'No token provided' });
+  }
+
+  // Mock user data
+  res.json({
+    user: {
+      id: 1,
+      username: 'admin',
+      email: 'admin@example.com',
+      role: 'admin'
+    }
+  });
+});
+
+module.exports = router;`
+            },
+            {
+              name: 'api.js',
+              type: 'file',
+              content: `const express = require('express');
+const router = express.Router();
+
+// Mock data
+let todos = [
+  { id: 1, title: 'Learn Node.js', completed: false, createdAt: new Date().toISOString() },
+  { id: 2, title: 'Build an API', completed: true, createdAt: new Date().toISOString() },
+  { id: 3, title: 'Deploy to production', completed: false, createdAt: new Date().toISOString() }
+];
+
+// Get all todos
+router.get('/todos', (req, res) => {
+  const { completed, limit = 10 } = req.query;
+
+  let filteredTodos = todos;
+
+  if (completed !== undefined) {
+    filteredTodos = todos.filter(todo => todo.completed === (completed === 'true'));
+  }
+
+  const limitedTodos = filteredTodos.slice(0, parseInt(limit));
+
+  res.json({
+    todos: limitedTodos,
+    total: filteredTodos.length,
+    showing: limitedTodos.length
+  });
+});
+
+// Get single todo
+router.get('/todos/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const todo = todos.find(t => t.id === id);
+
+  if (!todo) {
+    return res.status(404).json({ error: 'Todo not found' });
+  }
+
+  res.json({ todo });
+});
+
+// Create new todo
+router.post('/todos', (req, res) => {
+  const { title, description } = req.body;
+
+  if (!title) {
+    return res.status(400).json({ error: 'Title is required' });
+  }
+
+  const newTodo = {
+    id: Math.max(...todos.map(t => t.id)) + 1,
+    title,
+    description: description || '',
+    completed: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+
+  todos.push(newTodo);
+
+  res.status(201).json({
+    message: 'Todo created successfully',
+    todo: newTodo
+  });
+});
+
+// Update todo
+router.put('/todos/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const todoIndex = todos.findIndex(t => t.id === id);
+
+  if (todoIndex === -1) {
+    return res.status(404).json({ error: 'Todo not found' });
+  }
+
+  const { title, description, completed } = req.body;
+
+  todos[todoIndex] = {
+    ...todos[todoIndex],
+    title: title || todos[todoIndex].title,
+    description: description !== undefined ? description : todos[todoIndex].description,
+    completed: completed !== undefined ? completed : todos[todoIndex].completed,
+    updatedAt: new Date().toISOString()
+  };
+
+  res.json({
+    message: 'Todo updated successfully',
+    todo: todos[todoIndex]
+  });
+});
+
+// Delete todo
+router.delete('/todos/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const todoIndex = todos.findIndex(t => t.id === id);
+
+  if (todoIndex === -1) {
+    return res.status(404).json({ error: 'Todo not found' });
+  }
+
+  const deletedTodo = todos.splice(todoIndex, 1)[0];
+
+  res.json({
+    message: 'Todo deleted successfully',
+    todo: deletedTodo
+  });
+});
+
+module.exports = router;`
+            }
+          ]
+        },
+        {
+          name: 'middleware',
+          type: 'folder',
+          isOpen: false,
+          children: [
+            {
+              name: 'auth.js',
+              type: 'file',
+              content: `// Authentication middleware
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ error: 'Access token required' });
+  }
+
+  // In a real app, verify JWT token here
+  if (token === 'mock-jwt-token') {
+    req.user = { id: 1, username: 'admin', role: 'admin' };
+    next();
+  } else {
+    res.status(403).json({ error: 'Invalid token' });
+  }
+};
+
+const requireRole = (role) => {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+
+    if (req.user.role !== role) {
+      return res.status(403).json({ error: 'Insufficient permissions' });
+    }
+
+    next();
+  };
+};
+
+module.exports = { authenticateToken, requireRole };`
+            }
+          ]
+        }
+      ]
+    },
+    {
+      name: 'package.json',
+      type: 'file',
+      content: `{
+  "name": "${repo.name.toLowerCase().replace(/\s+/g, '-')}",
+  "version": "1.0.0",
+  "description": "${repo.description}",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^6.1.5",
+    "morgan": "^1.10.0",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22",
+    "jest": "^29.5.0",
+    "supertest": "^6.3.3"
+  },
+  "keywords": ["nodejs", "express", "api"],
+  "author": "Developer",
+  "license": "MIT"
+}`
+    },
+    {
+      name: '.env',
+      type: 'file',
+      content: `# Environment Variables
+PORT=3000
+NODE_ENV=development
+
+# Database (if needed)
+# DB_HOST=localhost
+# DB_PORT=5432
+# DB_NAME=myapp
+# DB_USER=user
+# DB_PASS=password
+
+# JWT Secret (if using JWT)
+# JWT_SECRET=your-secret-key-here`
+    },
+    {
+      name: 'README.md',
+      type: 'file',
+      content: `# ${repo.name}
+
+${repo.description}
+
+## Getting Started
+
+### Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn
+
+### Installation
+
+1. Install dependencies:
+\`\`\`bash
+npm install
+\`\`\`
+
+2. Create environment file:
+\`\`\`bash
+cp .env.example .env
+\`\`\`
+
+3. Start the development server:
+\`\`\`bash
+npm run dev
+\`\`\`
+
+The server will start on http://localhost:3000
+
+## API Endpoints
+
+### Authentication
+- \`POST /auth/login\` - User login
+- \`POST /auth/register\` - User registration
+- \`GET /auth/me\` - Get current user
+
+### Todos
+- \`GET /api/todos\` - Get all todos
+- \`GET /api/todos/:id\` - Get single todo
+- \`POST /api/todos\` - Create new todo
+- \`PUT /api/todos/:id\` - Update todo
+- \`DELETE /api/todos/:id\` - Delete todo
+
+### Health Check
+- \`GET /health\` - Server health status
+
+## Scripts
+
+- \`npm start\` - Start production server
+- \`npm run dev\` - Start development server with nodemon
+- \`npm test\` - Run tests
+- \`npm run test:watch\` - Run tests in watch mode
+
+## Environment Variables
+
+See \`.env\` file for configuration options.
+`
+    }
+  ];
 };
 
 const generateExpressServer = (repo: GitHubRepo): string => {
@@ -3925,6 +5264,71 @@ const generateReactWeatherApp = (repo: GitHubRepo): FileNode[] => {
   ];
 };
 
+// Complete project generators for all supported types
+const generateReactWeatherAppComplete = (repo: GitHubRepo): FileNode[] => {
+  return generateReactProjectComplete(repo);
+};
+
+const generateExpressBlogApiComplete = (repo: GitHubRepo): FileNode[] => {
+  return generateNodeJsProjectComplete(repo);
+};
+
+const generateReact85ProjectsComplete = (repo: GitHubRepo): FileNode[] => {
+  return generateReactProjectComplete(repo);
+};
+
+const generateAngularBeginnerComplete = (repo: GitHubRepo): FileNode[] => {
+  return generateAngularProjectComplete(repo);
+};
+
+const generateAngularTicTacToeComplete = (repo: GitHubRepo): FileNode[] => {
+  return generateAngularProjectComplete(repo);
+};
+
+const generateNodeJs10ProjectsComplete = (repo: GitHubRepo): FileNode[] => {
+  return generateNodeJsProjectComplete(repo);
+};
+
+const generateNodeRealworldApiComplete = (repo: GitHubRepo): FileNode[] => {
+  return generateNodeJsProjectComplete(repo);
+};
+
+const generateVueBeginnerProjectsComplete = (repo: GitHubRepo): FileNode[] => {
+  return generateVueProjectComplete(repo);
+};
+
+const generateHtmlCssJsProjectsComplete = (repo: GitHubRepo): FileNode[] => {
+  return generateHtmlCssJsProjectComplete(repo);
+};
+
+const generateFullstackMernComplete = (repo: GitHubRepo): FileNode[] => {
+  return generateFullstackProjectComplete(repo);
+};
+
+const generateAngularTodoAppComplete = (repo: GitHubRepo): FileNode[] => {
+  return generateAngularProjectComplete(repo);
+};
+
+const generateNodejsExpressApiComplete = (repo: GitHubRepo): FileNode[] => {
+  return generateNodeJsProjectComplete(repo);
+};
+
+const generateReactPortfolioComplete = (repo: GitHubRepo): FileNode[] => {
+  return generateReactProjectComplete(repo);
+};
+
+const generateVueTodoAppComplete = (repo: GitHubRepo): FileNode[] => {
+  return generateVueProjectComplete(repo);
+};
+
+const generateAngularWeatherAppComplete = (repo: GitHubRepo): FileNode[] => {
+  return generateAngularProjectComplete(repo);
+};
+
+const generateNodejsChatAppComplete = (repo: GitHubRepo): FileNode[] => {
+  return generateNodeJsProjectComplete(repo);
+};
+
 // Add placeholder generators for other projects
 const generateExpressBlogApi = (repo: GitHubRepo): FileNode[] => {
   return generateNodeJsProjectFiles(repo, { type: 'Blog API', features: ['CRUD operations', 'Authentication', 'Validation'] });
@@ -3944,6 +5348,598 @@ const generateAngularTicTacToe = (repo: GitHubRepo): FileNode[] => {
 
 const generateNodeRealworldApi = (repo: GitHubRepo): FileNode[] => {
   return generateNodeJsProjectFiles(repo, { type: 'Realworld API', features: ['JWT Authentication', 'User profiles', 'Article CRUD', 'Following system'] });
+};
+
+// Base project generators for different categories
+const generateAngularProjectComplete = (repo: GitHubRepo): FileNode[] => {
+  return [
+    {
+      name: 'src',
+      type: 'folder',
+      isOpen: true,
+      children: [
+        {
+          name: 'app',
+          type: 'folder',
+          isOpen: true,
+          children: [
+            {
+              name: 'app.component.ts',
+              type: 'file',
+              content: `import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = '${repo.name}';
+  description = '${repo.description}';
+
+  items = [
+    { id: 1, name: 'Angular Basics', completed: true },
+    { id: 2, name: 'Components', completed: false },
+    { id: 3, name: 'Services', completed: false }
+  ];
+
+  onItemClick(item: any) {
+    item.completed = !item.completed;
+    console.log('Item clicked:', item);
+  }
+}`
+            },
+            {
+              name: 'app.component.html',
+              type: 'file',
+              content: `<div class="app-container">
+  <header class="app-header">
+    <h1>🚀 {{ title }}</h1>
+    <p>{{ description }}</p>
+  </header>
+
+  <main class="app-main">
+    <div class="card-container">
+      <div class="card" *ngFor="let item of items" (click)="onItemClick(item)">
+        <h3>{{ item.name }}</h3>
+        <p [class]="item.completed ? 'completed' : 'pending'">
+          {{ item.completed ? '✅ Completed' : '⏳ Pending' }}
+        </p>
+      </div>
+    </div>
+  </main>
+</div>`
+            },
+            {
+              name: 'app.component.css',
+              type: 'file',
+              content: `.app-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.app-header h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 25px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.completed {
+  color: #51cf66;
+}
+
+.pending {
+  color: #ffd43b;
+}`
+            },
+            {
+              name: 'app.module.ts',
+              type: 'file',
+              content: `import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }`
+            }
+          ]
+        },
+        {
+          name: 'main.ts',
+          type: 'file',
+          content: `import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { AppModule } from './app/app.module';
+
+platformBrowserDynamic().bootstrapModule(AppModule)
+  .catch(err => console.error(err));`
+        }
+      ]
+    },
+    {
+      name: 'package.json',
+      type: 'file',
+      content: `{
+  "name": "${repo.name.toLowerCase().replace(/\s+/g, '-')}",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "ng test"
+  },
+  "dependencies": {
+    "@angular/animations": "^15.0.0",
+    "@angular/common": "^15.0.0",
+    "@angular/compiler": "^15.0.0",
+    "@angular/core": "^15.0.0",
+    "@angular/forms": "^15.0.0",
+    "@angular/platform-browser": "^15.0.0",
+    "@angular/platform-browser-dynamic": "^15.0.0",
+    "@angular/router": "^15.0.0",
+    "rxjs": "~7.5.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.12.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^15.0.0",
+    "@angular/cli": "~15.0.0",
+    "@angular/compiler-cli": "^15.0.0",
+    "typescript": "~4.8.0"
+  }
+}`
+    }
+  ];
+};
+
+const generateVueProjectComplete = (repo: GitHubRepo): FileNode[] => {
+  return [
+    {
+      name: 'src',
+      type: 'folder',
+      isOpen: true,
+      children: [
+        {
+          name: 'App.vue',
+          type: 'file',
+          content: `<template>
+  <div id="app">
+    <header class="app-header">
+      <h1>🚀 ${repo.name}</h1>
+      <p>${repo.description}</p>
+    </header>
+
+    <main class="app-main">
+      <div class="card-container">
+        <div
+          v-for="item in items"
+          :key="item.id"
+          class="card"
+          @click="toggleItem(item)"
+        >
+          <h3>{{ item.name }}</h3>
+          <p :class="item.completed ? 'completed' : 'pending'">
+            {{ item.completed ? '✅ Completed' : '⏳ Pending' }}
+          </p>
+        </div>
+      </div>
+    </main>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'App',
+  data() {
+    return {
+      items: [
+        { id: 1, name: 'Vue Basics', completed: true },
+        { id: 2, name: 'Components', completed: false },
+        { id: 3, name: 'Reactivity', completed: false }
+      ]
+    }
+  },
+  methods: {
+    toggleItem(item) {
+      item.completed = !item.completed;
+      console.log('Item toggled:', item);
+    }
+  }
+}
+</script>
+
+<style>
+#app {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.app-header h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 25px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.completed {
+  color: #51cf66;
+}
+
+.pending {
+  color: #ffd43b;
+}
+</style>`
+        },
+        {
+          name: 'main.js',
+          type: 'file',
+          content: `import { createApp } from 'vue'
+import App from './App.vue'
+
+createApp(App).mount('#app')`
+        }
+      ]
+    },
+    {
+      name: 'package.json',
+      type: 'file',
+      content: `{
+  "name": "${repo.name.toLowerCase().replace(/\s+/g, '-')}",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "core-js": "^3.8.3",
+    "vue": "^3.2.13"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-vue": "^8.0.3"
+  }
+}`
+    }
+  ];
+};
+
+const generateHtmlCssJsProjectComplete = (repo: GitHubRepo): FileNode[] => {
+  return [
+    {
+      name: 'index.html',
+      type: 'file',
+      content: `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${repo.name}</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🚀 ${repo.name}</h1>
+            <p>${repo.description}</p>
+        </header>
+
+        <main class="main">
+            <div class="card-container" id="cardContainer">
+                <!-- Cards will be generated by JavaScript -->
+            </div>
+
+            <div class="actions">
+                <button id="addBtn" class="btn btn-primary">Add Item</button>
+                <button id="clearBtn" class="btn btn-secondary">Clear All</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>`
+    },
+    {
+      name: 'styles.css',
+      type: 'file',
+      content: `* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.header h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.header p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 25px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card h3 {
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.card p {
+    opacity: 0.8;
+    line-height: 1.6;
+}
+
+.actions {
+    text-align: center;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #74c0fc, #339af0);
+    color: white;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+    color: white;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.completed {
+    color: #51cf66;
+}
+
+.pending {
+    color: #ffd43b;
+}
+
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+
+    .card-container {
+        grid-template-columns: 1fr;
+    }
+
+    .actions {
+        flex-direction: column;
+        align-items: center;
+    }
+}`
+    },
+    {
+      name: 'script.js',
+      type: 'file',
+      content: `// Application state
+let items = [
+    { id: 1, title: 'HTML Structure', description: 'Learn HTML basics and semantic elements', completed: true },
+    { id: 2, title: 'CSS Styling', description: 'Master CSS layouts and animations', completed: false },
+    { id: 3, title: 'JavaScript Logic', description: 'Add interactivity with JavaScript', completed: false }
+];
+
+// DOM elements
+const cardContainer = document.getElementById('cardContainer');
+const addBtn = document.getElementById('addBtn');
+const clearBtn = document.getElementById('clearBtn');
+
+// Render items to the DOM
+function renderItems() {
+    cardContainer.innerHTML = '';
+
+    items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = \`
+            <h3>\${item.title}</h3>
+            <p>\${item.description}</p>
+            <p class="\${item.completed ? 'completed' : 'pending'}">
+                \${item.completed ? '✅ Completed' : '⏳ Pending'}
+            </p>
+        \`;
+
+        // Add click handler to toggle completion
+        card.addEventListener('click', () => toggleItem(item.id));
+
+        cardContainer.appendChild(card);
+    });
+}
+
+// Toggle item completion status
+function toggleItem(id) {
+    const item = items.find(item => item.id === id);
+    if (item) {
+        item.completed = !item.completed;
+        renderItems();
+        console.log('Item toggled:', item);
+    }
+}
+
+// Add new item
+function addItem() {
+    const titles = ['New Feature', 'Bug Fix', 'Enhancement', 'Documentation', 'Testing'];
+    const descriptions = [
+        'Implement new functionality',
+        'Fix reported issues',
+        'Improve existing features',
+        'Update documentation',
+        'Add test coverage'
+    ];
+
+    const randomTitle = titles[Math.floor(Math.random() * titles.length)];
+    const randomDescription = descriptions[Math.floor(Math.random() * descriptions.length)];
+
+    const newItem = {
+        id: Date.now(),
+        title: randomTitle,
+        description: randomDescription,
+        completed: false
+    };
+
+    items.push(newItem);
+    renderItems();
+    console.log('Item added:', newItem);
+}
+
+// Clear all items
+function clearItems() {
+    if (confirm('Are you sure you want to clear all items?')) {
+        items = [];
+        renderItems();
+        console.log('All items cleared');
+    }
+}
+
+// Event listeners
+addBtn.addEventListener('click', addItem);
+clearBtn.addEventListener('click', clearItems);
+
+// Initialize the app
+document.addEventListener('DOMContentLoaded', () => {
+    renderItems();
+    console.log('App initialized with', items.length, 'items');
+});
+
+// Export for potential use in other scripts
+window.AppState = {
+    items,
+    addItem,
+    clearItems,
+    toggleItem
+};`
+    }
+  ];
+};
+
+const generateFullstackProjectComplete = (repo: GitHubRepo): FileNode[] => {
+  return generateFullstackProjectFiles(repo, {});
+};
+
+const generateBasicProjectComplete = (repo: GitHubRepo): FileNode[] => {
+  return generateHtmlCssJsProjectComplete(repo);
 };
 
 export default Playground;

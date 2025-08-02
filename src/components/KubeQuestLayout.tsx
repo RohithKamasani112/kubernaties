@@ -60,11 +60,11 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
   ];
 
   const cloudArchitectureNavigation = [
-    { name: 'Dashboard', href: '/cloud-architecture', icon: Home },
-    { name: 'AI Generator', href: '/cloud-architecture/ai-generator', icon: Zap },
-    { name: 'Learning Studio', href: '/cloud-architecture/studio', icon: BookOpen },
-    { name: 'Canvas Builder', href: '/cloud-architecture/builder', icon: Layers },
-    { name: 'Scenarios', href: '/cloud-architecture/scenarios', icon: Target },
+    { name: 'Dashboard', href: '#', icon: Home, disabled: true },
+    { name: 'AI Generator', href: '#', icon: Zap, disabled: true },
+    { name: 'Learning Studio', href: '#', icon: BookOpen, disabled: true },
+    { name: 'Canvas Builder', href: '#', icon: Layers, disabled: true },
+    { name: 'Scenarios', href: '#', icon: Target, disabled: true },
     { name: 'Kubernetes', href: '/kubernetes', icon: Cloud },
   ];
 
@@ -216,6 +216,43 @@ const KubeQuestLayout: React.FC<KubeQuestLayoutProps> = ({ children }) => {
           {navigation.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href);
+            const isDisabled = item.disabled;
+
+            if (isDisabled) {
+              return (
+                <div
+                  key={item.name}
+                  className={`flex items-center ${isPlaygroundPage ? 'justify-center' : 'justify-between'} px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 group relative cursor-not-allowed opacity-50`}
+                  title={isPlaygroundPage ? `${item.name} - Testing Phase` : `${item.name} - Testing Phase`}
+                >
+                  <div className={`flex items-center ${isPlaygroundPage ? 'justify-center' : 'space-x-3'}`}>
+                    <Icon className="w-5 h-5 text-slate-400" />
+                    <AnimatePresence>
+                      {!isPlaygroundPage && (
+                        <motion.span
+                          initial={{ opacity: 1, width: 'auto' }}
+                          exit={{ opacity: 0, width: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="flex items-center space-x-2"
+                        >
+                          <span>{item.name}</span>
+                          <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                            className="text-xs"
+                          >
+                            ⚙️
+                          </motion.div>
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                  {!isPlaygroundPage && (
+                    <span className="text-xs text-yellow-600 font-medium">Testing</span>
+                  )}
+                </div>
+              );
+            }
 
             return (
               <Link
