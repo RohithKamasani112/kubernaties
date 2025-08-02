@@ -61,7 +61,7 @@ const DebugChallengeInterface: React.FC<DebugChallengeInterfaceProps> = ({
   // Panel visibility states
   const [showExplorer, setShowExplorer] = useState(true);
   const [showProblem, setShowProblem] = useState(true);
-  const [showConsole, setShowConsole] = useState(false);  // Hidden by default
+  const [showConsole, setShowConsole] = useState(true);  // Show by default
   const [isConsoleExpanded, setIsConsoleExpanded] = useState(false);
 
   // File modification tracking
@@ -281,7 +281,7 @@ const DebugChallengeInterface: React.FC<DebugChallengeInterfaceProps> = ({
     setTestResults([]);
     setHintsRevealed(0);
     setSolutionUnlocked(false);
-    setShowConsole(false);  // Hide console on reset
+    setShowConsole(true);  // Keep console visible on reset
   };
 
   const clearConsole = () => {
