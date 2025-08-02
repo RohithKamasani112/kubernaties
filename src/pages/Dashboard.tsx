@@ -18,7 +18,9 @@ import {
   Send,
   Play,
   Layers,
-  FileText
+  FileText,
+  Video,
+  PlayCircle
 } from 'lucide-react';
 import FeedbackModal from '../components/FeedbackModal';
 
@@ -148,6 +150,81 @@ const Dashboard: React.FC = () => {
                 <MessageSquare className="w-4 h-4" />
                 <span>Give Feedback</span>
               </button>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* YouTube Video Section - Compact */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mb-8"
+        >
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="p-6">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg flex items-center justify-center">
+                  <Video className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">Platform Introduction</h3>
+                  <p className="text-sm text-gray-600">Learn how Samwi accelerates your Kubernetes journey</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Video */}
+                <div className="lg:col-span-2">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.8, delay: 0.3 }}
+                    className="relative aspect-video rounded-lg overflow-hidden shadow-md bg-gray-100"
+                  >
+                    <iframe
+                      src="https://www.youtube.com/embed/kymYGrHpboM"
+                      title="Samwi Platform Introduction"
+                      className="absolute inset-0 w-full h-full"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  </motion.div>
+                </div>
+
+                {/* Quick Features */}
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="space-y-3"
+                >
+                  <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
+                    <BookOpen className="w-5 h-5 text-blue-600" />
+                    <div>
+                      <h4 className="font-medium text-blue-900 text-sm">Interactive Learning</h4>
+                      <p className="text-blue-700 text-xs">Hands-on tutorials</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
+                    <Target className="w-5 h-5 text-green-600" />
+                    <div>
+                      <h4 className="font-medium text-green-900 text-sm">Debug Challenges</h4>
+                      <p className="text-green-700 text-xs">Real-world scenarios</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-3 p-3 bg-purple-50 rounded-lg">
+                    <Play className="w-5 h-5 text-purple-600" />
+                    <div>
+                      <h4 className="font-medium text-purple-900 text-sm">Live Playground</h4>
+                      <p className="text-purple-700 text-xs">Safe experimentation</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
             </div>
           </div>
         </motion.div>

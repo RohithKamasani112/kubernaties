@@ -31,11 +31,11 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ isOpen, onClose }) => {
       // Google Form submission URL
       const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdOgGSpUjjnCo_L10sH53Yo_yFoMd9Hevacl0FyUBTgKl65jQ/formResponse';
 
-      // Create form data for Google Forms
+      // Create form data  Google Forms
       const googleFormData = new FormData();
-      googleFormData.append('entry.1508207582', feedbackData.email); // Email Address
-      googleFormData.append('entry.974336969', feedbackData.likedMost); // What did you like the most
-      googleFormData.append('entry.1814072838', feedbackData.improvements); // What we can improve
+      googleFormData.append('entry.1502075822', feedbackData.email); // Email Address
+      googleFormData.append('entry.97433369', feedbackData.likedMost); // What did you like the most
+      googleFormData.append('entry.1018470238', feedbackData.improvements); // What we can improve
       googleFormData.append('entry.96251011', feedbackData.bugs); // Did u face any bugs
 
       // Submit to Google Forms
