@@ -390,15 +390,16 @@ const HomePage: React.FC = () => {
       iconType: 'cloud-architecture',
       title: 'Cloud Architecture Studio',
       description: 'Design scalable solutions across AWS, Azure & GCP. Visual builder with security analysis and real-time collaboration.',
-      status: 'Beta',
-      statusColor: 'bg-blue-100 text-blue-700',
-      betaNote: 'Advanced cloud patterns and AI-powered architecture suggestions coming soon! Experience the future of cloud design.',
-      path: '/cloud-architecture',
+      status: 'Testing Phase',
+      statusColor: 'bg-yellow-100 text-yellow-700',
+      betaNote: 'Currently in testing phase. Advanced features and improvements are being developed. Stay tuned for the official launch!',
+      path: '#',
       gradient: 'from-purple-500 to-pink-500',
       features: ['Visual Builder', 'Multi-Cloud Support', 'Cost Analysis'],
       duration: '60+ Hours',
       students: '3.8K',
-      rating: 4.8
+      rating: 4.8,
+      disabled: true
     },
     {
       icon: Server,
@@ -931,7 +932,7 @@ const HomePage: React.FC = () => {
                 animate={pathsInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                {(path.status === 'Live Now' || path.status === 'Beta Version' || path.status === 'Beta') ? (
+                {(path.status === 'Live Now' || path.status === 'Beta Version' || path.status === 'Beta') && !path.disabled ? (
                   <Link
                     to={path.path}
                     className="group bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-slate-200 p-4 sm:p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] block relative overflow-hidden touch-manipulation"
@@ -1028,6 +1029,118 @@ const HomePage: React.FC = () => {
                       </div>
                     </div>
                   </Link>
+                ) : path.status === 'Testing Phase' ? (
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-yellow-200 p-4 sm:p-6 relative overflow-hidden cursor-not-allowed">
+                    <div className={`absolute inset-0 bg-gradient-to-br ${path.gradient} opacity-5`} />
+
+                    <div className="relative">
+                      <div className="flex items-start justify-between mb-3 sm:mb-4">
+                        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center relative`}>
+                          <CourseIcon iconType={path.iconType} className="w-10 h-10 sm:w-12 sm:h-12 opacity-70" />
+                          {/* Testing Phase Animation */}
+                          <motion.div
+                            className="absolute inset-0 border-2 border-yellow-400 rounded-lg sm:rounded-xl"
+                            animate={{
+                              scale: [1, 1.1, 1],
+                              opacity: [0.3, 0.7, 0.3]
+                            }}
+                            transition={{
+                              duration: 2,
+                              repeat: Infinity,
+                              ease: "easeInOut"
+                            }}
+                          />
+                        </div>
+                        <motion.span
+                          className={`px-2 sm:px-3 py-1 text-xs font-semibold rounded-full ${path.statusColor}`}
+                          animate={{
+                            scale: [1, 1.05, 1],
+                            boxShadow: [
+                              '0 2px 4px rgba(0, 0, 0, 0.1)',
+                              '0 4px 8px rgba(251, 191, 36, 0.3)',
+                              '0 2px 4px rgba(0, 0, 0, 0.1)'
+                            ]
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }}
+                        >
+                          {path.status}
+                        </motion.span>
+                      </div>
+
+                      <h3 className="text-lg sm:text-xl font-semibold text-slate-900 mb-2">{path.title}</h3>
+                      <p className="text-slate-600 mb-3 sm:mb-4 text-sm leading-relaxed">{path.description}</p>
+
+                      {/* Testing Phase Notice */}
+                      {path.betaNote && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-2 mb-4"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <motion.div
+                              className="w-2 h-2 bg-yellow-500 rounded-full"
+                              animate={{
+                                scale: [1, 1.2, 1],
+                                opacity: [0.7, 1, 0.7]
+                              }}
+                              transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                              }}
+                            />
+                            <span className="text-xs font-medium text-yellow-800">
+                              {path.betaNote}
+                            </span>
+                          </div>
+                        </motion.div>
+                      )}
+
+                      {/* Features */}
+                      <div className="space-y-1 mb-3 sm:mb-4">
+                        {path.features.map((feature) => (
+                          <div key={feature} className="flex items-center space-x-2">
+                            <CheckCircle className="w-3 h-3 text-yellow-500 flex-shrink-0" />
+                            <span className="text-xs text-slate-600">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Stats */}
+                      <div className="flex items-center justify-between text-xs text-slate-500 mb-3 sm:mb-4 gap-2">
+                        <div className="flex items-center space-x-1 min-w-0">
+                          <Clock className="w-3 h-3 flex-shrink-0" />
+                          <span className="truncate">{path.duration}</span>
+                        </div>
+                        <div className="flex items-center space-x-1 min-w-0">
+                          <Users className="w-3 h-3 flex-shrink-0" />
+                          <span className="truncate">{path.students}</span>
+                        </div>
+                        {path.rating && (
+                          <div className="flex items-center space-x-1 min-w-0">
+                            <Star className="w-3 h-3 text-yellow-500 fill-current flex-shrink-0" />
+                            <span>{path.rating}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex items-center text-yellow-600 font-medium">
+                        <motion.div
+                          className="w-4 h-4 mr-2"
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                        >
+                          ⚙️
+                        </motion.div>
+                        <span className="text-sm">Currently in Testing</span>
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <div className="bg-white/60 backdrop-blur-sm rounded-2xl border border-slate-200 p-6 relative overflow-hidden">
                     <div className={`absolute inset-0 bg-gradient-to-br ${path.gradient} opacity-5`} />

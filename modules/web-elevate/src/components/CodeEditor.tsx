@@ -508,9 +508,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
               semanticHighlighting: { enabled: true },
               // AGGRESSIVELY prevent ALL error visual elements
               glyphMargin: false, // Disable glyph margin to prevent error icons
-              folding: false, // Disable folding to prevent decorations
               lineDecorationsWidth: 0, // No space for line decorations
-              lineNumbersMinChars: 4,
               renderValidationDecorations: 'off', // Completely disable validation decorations
               hideCursorInOverviewRuler: true,
               overviewRulerBorder: false,

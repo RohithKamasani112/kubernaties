@@ -124,9 +124,12 @@ const CoursesPage: React.FC = () => {
       duration: '60+ Hours',
       students: '3.8K',
       rating: 4.8,
-      path: '/cloud-architecture',
+      path: '#',
       provider: 'multi-cloud',
-      status: 'beta',
+      status: 'testing-phase',
+      statusColor: 'bg-yellow-100 text-yellow-700',
+      testingNote: 'Currently in testing phase. Advanced features and improvements are being developed. Stay tuned for the official launch!',
+      disabled: true,
       features: [
         'Visual Architecture Builder',
         'Multi-Cloud Support (AWS/Azure/GCP)',
@@ -342,8 +345,9 @@ const CoursesPage: React.FC = () => {
     return matchesSearch && matchesLevel && matchesProvider;
   });
 
-  // Separate available and coming soon courses
-  const availableCourses = filteredCourses.filter(course => !course.status || course.status !== 'coming-soon');
+  // Separate available, testing phase, and coming soon courses
+  const availableCourses = filteredCourses.filter(course => !course.status || (course.status !== 'coming-soon' && course.status !== 'testing-phase'));
+  const testingPhaseCourses = filteredCourses.filter(course => course.status === 'testing-phase');
   const comingSoonCourses = filteredCourses.filter(course => course.status === 'coming-soon');
 
   return (
@@ -662,6 +666,188 @@ const CoursesPage: React.FC = () => {
 
           </div>
         </section>
+
+        {/* Testing Phase Courses */}
+        {testingPhaseCourses.length > 0 && (
+          <section className="pb-12">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center mb-8"
+              >
+                <h2 className="text-2xl font-bold text-slate-900 mb-3 flex items-center justify-center space-x-3">
+                  <motion.div
+                    className="w-3 h-3 bg-yellow-500 rounded-full"
+                    animate={{
+                      scale: [1, 1.2, 1],
+                      opacity: [0.7, 1, 0.7]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  />
+                  <span>Testing Phase - Almost Ready!</span>
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  >
+                    ⚙️
+                  </motion.div>
+                </h2>
+                <p className="text-slate-600 mb-4">
+                  These courses are in final testing phase. Advanced features and improvements are being developed!
+                </p>
+              </motion.div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {testingPhaseCourses.map((course, index) => {
+                  const Icon = course.icon;
+                  return (
+                    <motion.div
+                      key={course.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: index * 0.1 }}
+                      className="bg-white/80 backdrop-blur-sm rounded-2xl border border-yellow-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden relative cursor-not-allowed"
+                    >
+                      {/* Testing Phase Indicator */}
+                      <div className="absolute top-4 right-4 z-10">
+                        <motion.span
+                          className={`px-3 py-1 text-xs font-semibold rounded-full ${course.statusColor}`}
+                          animate={{
+                            scale: [1, 1.05, 1],
+                            boxShadow: [
+                              '0 2px 4px rgba(0, 0, 0, 0.1)',
+                              '0 4px 8px rgba(251, 191, 36, 0.3)',
+                              '0 2px 4px rgba(0, 0, 0, 0.1)'
+                            ]
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }}
+                        >
+                          Testing Phase
+                        </motion.span>
+                      </div>
+
+                      {/* Course Header */}
+                      <div className={`${course.bgColor} p-6 relative`}>
+                        <div className={`absolute inset-0 bg-gradient-to-br ${course.gradient} opacity-10`} />
+
+                        <div className="relative flex items-start justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className={`w-12 h-12 bg-gradient-to-r ${course.color} rounded-xl flex items-center justify-center relative`}>
+                              <Icon className="w-6 h-6 text-white" />
+                              {/* Testing Animation */}
+                              <motion.div
+                                className="absolute inset-0 border-2 border-yellow-400 rounded-xl"
+                                animate={{
+                                  scale: [1, 1.1, 1],
+                                  opacity: [0.3, 0.7, 0.3]
+                                }}
+                                transition={{
+                                  duration: 2,
+                                  repeat: Infinity,
+                                  ease: "easeInOut"
+                                }}
+                              />
+                            </div>
+                            <div className="flex-1">
+                              <h3 className="text-xl font-bold text-slate-900 mb-1">
+                                {course.title}
+                              </h3>
+                              <p className="text-slate-600 font-medium text-sm">{course.subtitle}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <p className="text-slate-700 mb-4 text-sm leading-relaxed mt-4">{course.description}</p>
+
+                        {/* Testing Note */}
+                        {course.testingNote && (
+                          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-3 mb-4">
+                            <div className="flex items-start space-x-2">
+                              <motion.div
+                                className="w-2 h-2 bg-yellow-500 rounded-full mt-1.5 flex-shrink-0"
+                                animate={{
+                                  scale: [1, 1.2, 1],
+                                  opacity: [0.7, 1, 0.7]
+                                }}
+                                transition={{
+                                  duration: 2,
+                                  repeat: Infinity,
+                                  ease: "easeInOut"
+                                }}
+                              />
+                              <div>
+                                <p className="text-yellow-800 text-xs font-medium mb-1">Testing Phase</p>
+                                <p className="text-yellow-700 text-xs">{course.testingNote}</p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Features Preview */}
+                        <div className="grid grid-cols-2 gap-2 mb-4">
+                          {course.features.slice(0, 4).map((feature, featureIndex) => (
+                            <motion.div
+                              key={feature}
+                              className="flex items-center space-x-2 bg-white/60 backdrop-blur-sm rounded-lg p-2 text-xs"
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ duration: 0.3, delay: featureIndex * 0.1 }}
+                            >
+                              <div className="w-2 h-2 bg-yellow-500 rounded-full" />
+                              <span className="font-medium text-slate-700">{feature}</span>
+                            </motion.div>
+                          ))}
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex space-x-2">
+                          <motion.button
+                            className="flex-1 bg-yellow-100 text-yellow-700 px-4 py-2 rounded-lg font-medium cursor-not-allowed flex items-center justify-center space-x-2"
+                            whileHover={{ scale: 1.02 }}
+                          >
+                            <motion.div
+                              animate={{ rotate: 360 }}
+                              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                            >
+                              ⚙️
+                            </motion.div>
+                            <span>Testing Phase</span>
+                          </motion.button>
+
+                          <motion.button
+                            onClick={(e) => {
+                              const rect = e.currentTarget.getBoundingClientRect();
+                              setPreviewPosition({
+                                x: rect.left - 320,
+                                y: rect.top
+                              });
+                              setPreviewCourse(course.id);
+                            }}
+                            className="bg-white/80 backdrop-blur-sm border border-slate-200 text-slate-700 px-4 py-2 rounded-lg font-medium hover:bg-white hover:shadow-md transition-all duration-300 flex items-center space-x-1"
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <Eye className="w-4 h-4" />
+                            <span>Preview</span>
+                          </motion.button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Coming Soon Courses */}
         {comingSoonCourses.length > 0 && (
