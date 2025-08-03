@@ -4,6 +4,9 @@ import { Toaster } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Cloud, ArrowLeft } from 'lucide-react';
 
+// Google Analytics
+import { GoogleAnalytics } from './components/GoogleAnalytics';
+
 // Main Platform Pages
 import HomePage from './pages/HomePage';
 import CoursesPage from './pages/CoursesPage';
