@@ -1,6 +1,7 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+@import './styles/kubernetes-theme.css';
 
 /* Global layout constraints - Kubernetes style */
 html, body {

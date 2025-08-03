@@ -6,6 +6,7 @@ import { Toaster } from 'react-hot-toast';
 // Pages
 import Welcome from './pages/Welcome';
 import Dashboard from './pages/Dashboard';
+import KubernetesDashboard from './pages/KubernetesDashboard';
 import LearningPaths from './pages/LearningPaths';
 import PathDetail from './pages/PathDetail';
 import ModuleView from './pages/ModuleView';
@@ -24,6 +25,7 @@ import NotFound from './pages/NotFound';
 
 // Layout and Components
 import WebElevateLayout from './components/Layout/WebElevateLayout';
+import KubernetesLayout from './components/Layout/KubernetesLayout';
 import SidebarLayout from './components/SidebarLayout';
 import NewDashboard from './pages/NewDashboard';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -78,35 +80,41 @@ const WebElevateApp: React.FC = () => {
           {/* Redirect root to dashboard - skip welcome page */}
           <Route path="/" element={<Navigate to="/web-elevate" replace />} />
 
-          {/* Main Web Elevate Routes with Sidebar Layout */}
-          <Route index element={<SidebarLayout><NewDashboard /></SidebarLayout>} />
+          {/* Main Web Elevate Routes with Kubernetes Layout */}
+          <Route index element={<KubernetesLayout><KubernetesDashboard /></KubernetesLayout>} />
+          <Route path="/kubernetes-dashboard" element={<KubernetesLayout><KubernetesDashboard /></KubernetesLayout>} />
           <Route path="/dashboard" element={<Navigate to="/web-elevate" replace />} />
+          <Route path="/old-dashboard" element={<SidebarLayout><NewDashboard /></SidebarLayout>} />
 
           {/* Keep welcome page accessible but not as default */}
           <Route path="/welcome" element={<Welcome />} />
-          <Route path="/paths" element={<SidebarLayout><LearningPaths /></SidebarLayout>} />
-          <Route path="/paths/:pathId" element={<SidebarLayout><PathDetail /></SidebarLayout>} />
-          <Route path="/paths/:pathId/modules/:moduleId" element={<SidebarLayout><ModuleView /></SidebarLayout>} />
+          <Route path="/paths" element={<KubernetesLayout><LearningPaths /></KubernetesLayout>} />
+          <Route path="/paths/:pathId" element={<KubernetesLayout><PathDetail /></KubernetesLayout>} />
+          <Route path="/paths/:pathId/modules/:moduleId" element={<KubernetesLayout><ModuleView /></KubernetesLayout>} />
 
           {/* Enhanced Learning Module Routes */}
-          <Route path="/learning" element={<SidebarLayout><LearningModule /></SidebarLayout>} />
-          <Route path="/learning/:pathId" element={<SidebarLayout><LearningModule /></SidebarLayout>} />
-          <Route path="/blueprints" element={<SidebarLayout><BlueprintDashboardWrapper /></SidebarLayout>} />
-          <Route path="/blueprints/:blueprintId" element={<SidebarLayout><BlueprintDetail /></SidebarLayout>} />
+          <Route path="/learning" element={<KubernetesLayout><LearningModule /></KubernetesLayout>} />
+          <Route path="/learning/:pathId" element={<KubernetesLayout><LearningModule /></KubernetesLayout>} />
+          <Route path="/blueprints" element={<KubernetesLayout><BlueprintDashboardWrapper /></KubernetesLayout>} />
+          <Route path="/blueprints/:blueprintId" element={<KubernetesLayout><BlueprintDetail /></KubernetesLayout>} />
           <Route path="/blueprint-builder" element={<BlueprintPage />} />
-          <Route path="/collaboration" element={<SidebarLayout><Collaboration /></SidebarLayout>} />
-          <Route path="/playground" element={<SidebarLayout><Playground /></SidebarLayout>} />
-          <Route path="/playground/:sessionId" element={<SidebarLayout><Playground /></SidebarLayout>} />
-          <Route path="/portfolio" element={<SidebarLayout><Portfolio /></SidebarLayout>} />
+          <Route path="/collaboration" element={<KubernetesLayout><Collaboration /></KubernetesLayout>} />
+          <Route path="/playground" element={<KubernetesLayout><Playground /></KubernetesLayout>} />
+          <Route path="/playground/:sessionId" element={<KubernetesLayout><Playground /></KubernetesLayout>} />
+          <Route path="/portfolio" element={<KubernetesLayout><Portfolio /></KubernetesLayout>} />
 
           {/* Debug Playground Routes */}
-          <Route path="/debug-projects" element={<SidebarLayout><DebugProjects /></SidebarLayout>} />
-          <Route path="/debug-playground/:projectId" element={<SidebarLayout><DebugPlayground /></SidebarLayout>} />
-          <Route path="/debug-challenge/:challengeId" element={<SidebarLayout><DebugChallengePage /></SidebarLayout>} />
+          <Route path="/debug-projects" element={<KubernetesLayout><DebugProjects /></KubernetesLayout>} />
+          <Route path="/debug-playground/:projectId" element={<KubernetesLayout><DebugPlayground /></KubernetesLayout>} />
+          <Route path="/debug-challenge/:challengeId" element={<KubernetesLayout><DebugChallengePage /></KubernetesLayout>} />
 
-          {/* Additional Sidebar Routes */}
-          <Route path="/achievements" element={<SidebarLayout><div className="p-6"><h1 className="text-2xl font-bold">Achievements Coming Soon</h1></div></SidebarLayout>} />
-          <Route path="/settings" element={<SidebarLayout><Settings /></SidebarLayout>} />
+          {/* Documentation and Examples Routes */}
+          <Route path="/docs" element={<KubernetesLayout><div className="p-6"><h1 className="text-2xl font-bold">Documentation Coming Soon</h1></div></KubernetesLayout>} />
+          <Route path="/examples" element={<KubernetesLayout><div className="p-6"><h1 className="text-2xl font-bold">Code Examples Coming Soon</h1></div></KubernetesLayout>} />
+
+          {/* Additional Routes */}
+          <Route path="/achievements" element={<KubernetesLayout><div className="p-6"><h1 className="text-2xl font-bold">Achievements Coming Soon</h1></div></KubernetesLayout>} />
+          <Route path="/settings" element={<KubernetesLayout><Settings /></KubernetesLayout>} />
 
           {/* Catch all - show 404 page */}
           <Route path="*" element={<NotFound />} />
