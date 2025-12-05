@@ -31,12 +31,12 @@ The collaborators feature displays team members with their photos and LinkedIn p
 2. **Add new collaborator to the array:**
    ```typescript
    {
-     id: "7", // Use next available number
-     name: "John Smith",
+     id: "next-id", // Use next available number
+     name: "Team Member Name",
      role: "Backend Developer",
-     imageUrl: "https://your-s3-bucket.s3.amazonaws.com/collaborators/john-smith.jpg",
-     linkedinUrl: "https://linkedin.com/in/johnsmith",
-     bio: "Full-stack developer with expertise in microservices and cloud architecture"
+     imageUrl: "https://your-s3-bucket.s3.amazonaws.com/collaborators/profile-image.jpg",
+     linkedinUrl: "https://linkedin.com/in/username",
+     bio: "Developer with expertise in cloud technologies and platform development"
    }
    ```
 
@@ -48,11 +48,11 @@ For easier management, use the helper utility:
 import { createCollaborator, validateCollaboratorInput } from '../utils/collaboratorHelper';
 
 const newCollaboratorInput = {
-  name: "John Smith",
+  name: "Team Member Name",
   role: "Backend Developer",
-  linkedinUsername: "johnsmith", // Just the username
-  s3ImageKey: "john-smith.jpg", // Just the filename
-  bio: "Full-stack developer with expertise in microservices"
+  linkedinUsername: "username", // Just the username
+  s3ImageKey: "profile-image.jpg", // Just the filename
+  bio: "Developer with expertise in cloud technologies"
 };
 
 // Validate input

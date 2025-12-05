@@ -2445,7 +2445,7 @@ SELECT
 FROM
   `bigquery-public-data.usa_names.usa_1910_current`
 WHERE
-  name = 'David'
+  name = 'Michael'
 ORDER BY
   year;
 Visualize Results: After running the query, click the "Explore Data" button and choose "Explore with Looker Studio". This will automatically open a new tab with a basic chart of your query results, showing you how to quickly move from raw data to a visualization.

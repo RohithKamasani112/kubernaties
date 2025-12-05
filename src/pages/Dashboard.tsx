@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
@@ -7,7 +7,6 @@ import {
   Clock,
   Star,
   BookOpen,
-  PlayCircle,
   ArrowRight,
   TrendingUp,
   Award,
@@ -16,64 +15,82 @@ import {
   Bug,
   Lightbulb,
   ExternalLink,
-  Send
+  Send,
+  Play,
+  Layers,
+  FileText,
+  Video,
+  PlayCircle
 } from 'lucide-react';
+import FeedbackModal from '../components/FeedbackModal';
 
 const Dashboard: React.FC = () => {
-  const stats = [
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const features = [
     {
-      icon: CheckCircle,
-      value: '3',
-      label: 'Lessons Completed',
-      color: 'text-green-600',
-      bgColor: 'bg-green-50'
+      icon: Play,
+      title: 'Interactive Playground',
+      description: 'Experiment with Kubernetes in a safe environment. Deploy, scale, and manage containers.',
+      color: 'from-blue-500 to-cyan-500',
+      bgColor: 'bg-blue-50',
+      iconColor: 'text-blue-600',
+      link: '/kubernetes/playground',
+      animation: 'hover:scale-105'
     },
-    {
-      icon: Target,
-      value: '1',
-      label: 'Challenges Solved',
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-50'
-    },
-    {
-      icon: Clock,
-      value: '2.5h',
-      label: 'Time Spent',
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50'
-    },
-    {
-      icon: Star,
-      value: 'Beginner',
-      label: 'Current Level',
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50'
-    }
-  ];
-
-  const quickActions = [
     {
       icon: BookOpen,
-      title: 'Continue Learning',
-      description: 'Resume your current lesson',
-      color: 'bg-blue-500',
-      link: '/lessons'
-    },
-    {
-      icon: PlayCircle,
-      title: 'Try Playground',
-      description: 'Experiment with Kubernetes',
-      color: 'bg-green-500',
-      link: '/playground'
+      title: 'Guided Lessons',
+      description: 'Learn Kubernetes step-by-step with interactive tutorials and hands-on exercises.',
+      color: 'from-green-500 to-emerald-500',
+      bgColor: 'bg-green-50',
+      iconColor: 'text-green-600',
+      link: '/kubernetes/lessons',
+      animation: 'hover:scale-105'
     },
     {
       icon: Target,
-      title: 'Take Challenge',
-      description: 'Test your debugging skills',
-      color: 'bg-orange-500',
-      link: '/challenges'
-    }
+      title: 'Debug Challenges',
+      description: 'Test your skills with real-world debugging scenarios and troubleshooting tasks.',
+      color: 'from-orange-500 to-red-500',
+      bgColor: 'bg-orange-50',
+      iconColor: 'text-orange-600',
+      link: '/kubernetes/challenges',
+      animation: 'hover:scale-105'
+    },
+    {
+      icon: Layers,
+      title: 'YAML Examples',
+      description: 'Explore curated Kubernetes manifests and learn best practices through examples.',
+      color: 'from-purple-500 to-pink-500',
+      bgColor: 'bg-purple-50',
+      iconColor: 'text-purple-600',
+      link: '/kubernetes/examples',
+      animation: 'hover:scale-105'
+    },
+    {
+      icon: Bug,
+      title: 'K8s Debugging',
+      description: 'Master debugging techniques with interactive cluster troubleshooting scenarios.',
+      color: 'from-red-500 to-pink-500',
+      bgColor: 'bg-red-50',
+      iconColor: 'text-red-600',
+      link: '/kubernetes/debugging',
+      animation: 'hover:scale-105'
+    },
+    {
+      icon: FileText,
+      title: 'Documentation',
+      description: 'Access comprehensive guides, references, and best practices for Kubernetes.',
+      color: 'from-indigo-500 to-blue-500',
+      bgColor: 'bg-indigo-50',
+      iconColor: 'text-indigo-600',
+      link: '/kubernetes/docs',
+      animation: 'hover:scale-105'
+    },
+
   ];
+
+
 
   const recentActivity = [
     {
@@ -107,7 +124,7 @@ const Dashboard: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-100 p-6">
+    <div className="bg-slate-100 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -127,7 +144,7 @@ const Dashboard: React.FC = () => {
             {/* Quick Feedback CTA */}
             <div className="flex-shrink-0">
               <button
-                onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRRM1ZI7aSogq93y9onzbR2R4vJZkxswPGqV6wqSQyUm0FSA/viewform?usp=dialog', '_blank', 'width=800,height=900,scrollbars=yes,resizable=yes')}
+                onClick={() => setShowFeedbackModal(true)}
                 className="inline-flex items-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
               >
                 <MessageSquare className="w-4 h-4" />
@@ -137,57 +154,132 @@ const Dashboard: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Stats Grid */}
+        {/* YouTube Video Section - Compact */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mb-8"
+        >
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="p-6">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg flex items-center justify-center">
+                  <Video className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">Platform Introduction</h3>
+                  <p className="text-sm text-gray-600">Learn how Samwi accelerates your Kubernetes journey</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Video */}
+                <div className="lg:col-span-2">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.8, delay: 0.3 }}
+                    className="relative aspect-video rounded-lg overflow-hidden shadow-md bg-gray-100"
+                  >
+                    <iframe
+                      src="https://www.youtube.com/embed/kymYGrHpboM"
+                      title="Samwi Platform Introduction"
+                      className="absolute inset-0 w-full h-full"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  </motion.div>
+                </div>
+
+                {/* Quick Features */}
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="space-y-3"
+                >
+                  <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
+                    <BookOpen className="w-5 h-5 text-blue-600" />
+                    <div>
+                      <h4 className="font-medium text-blue-900 text-sm">Interactive Learning</h4>
+                      <p className="text-blue-700 text-xs">Hands-on tutorials</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
+                    <Target className="w-5 h-5 text-green-600" />
+                    <div>
+                      <h4 className="font-medium text-green-900 text-sm">Debug Challenges</h4>
+                      <p className="text-green-700 text-xs">Real-world scenarios</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-3 p-3 bg-purple-50 rounded-lg">
+                    <Play className="w-5 h-5 text-purple-600" />
+                    <div>
+                      <h4 className="font-medium text-purple-900 text-sm">Live Playground</h4>
+                      <p className="text-purple-700 text-xs">Safe experimentation</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Feature Cards */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+          className="mb-8"
         >
-          {stats.map((stat, index) => (
-            <div key={index} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-              <div className="flex items-center justify-between mb-4">
-                <div className={`p-3 rounded-lg ${stat.bgColor}`}>
-                  <stat.icon className={`w-6 h-6 ${stat.color}`} />
-                </div>
-                <TrendingUp className="w-4 h-4 text-gray-400" />
-              </div>
-              <div className="text-2xl font-bold text-gray-900 mb-1">{stat.value}</div>
-              <div className="text-sm text-gray-600">{stat.label}</div>
-            </div>
-          ))}
-        </motion.div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Quick Actions */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="lg:col-span-2"
-          >
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {quickActions.map((action, index) => (
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Explore Features</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 + index * 0.1 }}
+                whileHover={{ y: -5 }}
+                className="group"
+              >
                 <Link
-                  key={index}
-                  to={action.link}
-                  className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 hover:scale-105 group"
+                  to={feature.link}
+                  className={`block bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 ${feature.animation} h-full`}
                 >
-                  <div className={`w-12 h-12 ${action.color} rounded-lg flex items-center justify-center mb-4`}>
-                    <action.icon className="w-6 h-6 text-white" />
+                  {/* Icon with gradient background */}
+                  <div className="relative mb-4">
+                    <div className={`w-12 h-12 bg-gradient-to-r ${feature.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                      <feature.icon className="w-6 h-6 text-white" />
+                    </div>
+                    {/* Animated background effect */}
+                    <div className={`absolute inset-0 w-12 h-12 bg-gradient-to-r ${feature.color} rounded-lg opacity-20 group-hover:scale-125 transition-transform duration-300 -z-10`}></div>
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">{action.title}</h3>
-                  <p className="text-sm text-gray-600 mb-4">{action.description}</p>
+
+                  {/* Content */}
+                  <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-gray-700 transition-colors">
+                    {feature.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                    {feature.description}
+                  </p>
+
+                  {/* Action indicator */}
                   <div className="flex items-center text-blue-600 text-sm font-medium">
-                    <span>Get started</span>
-                    <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                    <span>Explore</span>
+                    <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
                   </div>
                 </Link>
-              ))}
-            </div>
-          </motion.div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
 
+        <div className="grid grid-cols-1 gap-8">
           {/* Recent Activity */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -246,7 +338,7 @@ const Dashboard: React.FC = () => {
                     Something not working as expected? Let us know so we can fix it quickly.
                   </p>
                   <button
-                    onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRRM1ZI7aSogq93y9onzbR2R4vJZkxswPGqV6wqSQyUm0FSA/viewform?usp=dialog', '_blank', 'width=800,height=900,scrollbars=yes,resizable=yes')}
+                    onClick={() => setShowFeedbackModal(true)}
                     className="text-red-600 hover:text-red-700 font-medium text-sm flex items-center justify-center"
                   >
                     Report Bug <ArrowRight className="w-4 h-4 ml-1" />
@@ -264,7 +356,7 @@ const Dashboard: React.FC = () => {
                     Have an idea that could make learning even better? Share it with us!
                   </p>
                   <button
-                    onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRRM1ZI7aSogq93y9onzbR2R4vJZkxswPGqV6wqSQyUm0FSA/viewform?usp=dialog', '_blank', 'width=800,height=900,scrollbars=yes,resizable=yes')}
+                    onClick={() => setShowFeedbackModal(true)}
                     className="text-yellow-600 hover:text-yellow-700 font-medium text-sm flex items-center justify-center"
                   >
                     Share Idea <ArrowRight className="w-4 h-4 ml-1" />
@@ -282,7 +374,7 @@ const Dashboard: React.FC = () => {
                     Share your overall experience and help us understand what's working well.
                   </p>
                   <button
-                    onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRRM1ZI7aSogq93y9onzbR2R4vJZkxswPGqV6wqSQyUm0FSA/viewform?usp=dialog', '_blank', 'width=800,height=900,scrollbars=yes,resizable=yes')}
+                    onClick={() => setShowFeedbackModal(true)}
                     className="text-green-600 hover:text-green-700 font-medium text-sm flex items-center justify-center"
                   >
                     Give Feedback <ArrowRight className="w-4 h-4 ml-1" />
@@ -294,11 +386,11 @@ const Dashboard: React.FC = () => {
             {/* Main CTA */}
             <div className="text-center">
               <button
-                onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRRM1ZI7aSogq93y9onzbR2R4vJZkxswPGqV6wqSQyUm0FSA/viewform?usp=dialog', '_blank', 'width=800,height=900,scrollbars=yes,resizable=yes')}
+                onClick={() => setShowFeedbackModal(true)}
                 className="inline-flex items-center space-x-3 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
               >
-                <ExternalLink className="w-5 h-5" />
-                <span>Open Complete Feedback Form</span>
+                <MessageSquare className="w-5 h-5" />
+                <span>Share Your Feedback</span>
               </button>
               <p className="text-sm text-gray-500 mt-3">
                 Quick & easy • Takes 2-3 minutes • Your input shapes our roadmap
@@ -324,24 +416,12 @@ const Dashboard: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* Floating Feedback Button */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, delay: 1 }}
-        className="fixed bottom-6 right-6 z-50"
-      >
-        <button
-          onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRRM1ZI7aSogq93y9onzbR2R4vJZkxswPGqV6wqSQyUm0FSA/viewform?usp=dialog', '_blank', 'width=800,height=900,scrollbars=yes,resizable=yes')}
-          className="group bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110"
-          title="Give Feedback"
-        >
-          <MessageSquare className="w-6 h-6" />
-          <span className="absolute right-full mr-3 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white text-sm px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
-            Give Feedback
-          </span>
-        </button>
-      </motion.div>
+
+      {/* Feedback Modal */}
+      <FeedbackModal
+        isOpen={showFeedbackModal}
+        onClose={() => setShowFeedbackModal(false)}
+      />
     </div>
   );
 };

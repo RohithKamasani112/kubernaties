@@ -94,7 +94,7 @@ const YamlViewer: React.FC<YamlViewerProps> = ({
             lineNumbers: 'on',
             folding: true,
             wordWrap: 'on',
-            theme: 'vs-light',
+            theme: 'vs-dark',
             padding: { top: 16, bottom: 16 },
             renderLineHighlight: 'none',
             scrollbar: {
@@ -104,7 +104,7 @@ const YamlViewer: React.FC<YamlViewerProps> = ({
               horizontalScrollbarSize: 8
             }
           }}
-          theme="vs-light"
+          theme="vs-dark"
         />
       </div>
 

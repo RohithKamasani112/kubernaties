@@ -38,7 +38,7 @@ import SimulatedTerminal from '../components/debugging/SimulatedTerminal';
 import LogViewer from '../components/debugging/LogViewer';
 import YamlEditor from '../components/debugging/YamlEditor';
 import MetricsDashboard from '../components/debugging/MetricsDashboard';
-import QuickActionButtons from '../components/debugging/QuickActionButtons';
+
 import InlineFixSuggestions from '../components/debugging/InlineFixSuggestions';
 import PodRestartTimeline from '../components/debugging/PodRestartTimeline';
 import AutoDiagnosisPanel from '../components/debugging/AutoDiagnosisPanel';
@@ -59,9 +59,11 @@ const K8sDebugging: React.FC = () => {
     currentScenario,
     clusterState,
     simulationStatus,
+    selectedResource,
     startScenario,
     pauseSimulation,
     resetScenario,
+    executeCommand,
     isLoading
   } = useDebuggingStore();
 
@@ -134,17 +136,11 @@ const K8sDebugging: React.FC = () => {
         return <YamlAutoFix />;
       case 'suggestions':
         return (
-          <div className="space-y-6">
-            <InlineFixSuggestions
-              logs={clusterState.logs}
-              events={clusterState.events}
-              selectedResource={selectedResource}
-            />
-            <QuickActionButtons
-              selectedResource={selectedResource}
-              onCommandExecute={executeCommand}
-            />
-          </div>
+          <InlineFixSuggestions
+            logs={clusterState.logs}
+            events={clusterState.events}
+            selectedResource={selectedResource}
+          />
         );
       default:
         return <ClusterExplorer />;
@@ -152,7 +148,7 @@ const K8sDebugging: React.FC = () => {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 overflow-hidden">
+    <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       {/* Loading Overlay */}
       <AnimatePresence>
         {isLoading && (
@@ -180,55 +176,55 @@ const K8sDebugging: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Header - Optimized for 100% zoom */}
+      {/* Header - Mobile Responsive */}
       <motion.div
-        className="bg-white border-b border-slate-200 px-4 py-3 shadow-sm"
+        className="bg-white border-b border-slate-200 px-3 sm:px-4 py-2 sm:py-3 shadow-sm"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-red-600 rounded-lg flex items-center justify-center">
-                <Bug className="w-4 h-4 text-white" />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0">
+          <div className="flex items-center space-x-2 sm:space-x-3 overflow-x-auto">
+            <div className="flex items-center space-x-2 flex-shrink-0">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-red-500 to-red-600 rounded-lg flex items-center justify-center">
+                <Bug className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
               </div>
-              <div>
-                <h1 className="text-lg font-bold text-slate-900">K8s Debugging Lab</h1>
-                <p className="text-xs text-slate-600">Production-grade debugging simulation</p>
+              <div className="min-w-0">
+                <h1 className="text-base sm:text-lg font-bold text-slate-900 truncate">K8s Debugging Lab</h1>
+                <p className="text-xs text-slate-600 hidden sm:block">Production-grade debugging simulation</p>
               </div>
             </div>
 
             {currentScenario && (
-              <div className="flex items-center space-x-1 px-2 py-1 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-md border border-blue-200">
+              <div className="flex items-center space-x-1 px-2 py-1 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-md border border-blue-200 flex-shrink-0">
                 <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
-                <span className="text-xs font-medium text-blue-700">{currentScenario.name}</span>
-                <span className="text-xs text-blue-600 bg-blue-100 px-1.5 py-0.5 rounded-full">
+                <span className="text-xs font-medium text-blue-700 truncate">{currentScenario.name}</span>
+                <span className="text-xs text-blue-600 bg-blue-100 px-1.5 py-0.5 rounded-full flex-shrink-0">
                   {currentScenario.difficulty}
                 </span>
               </div>
             )}
 
-            <div className="flex items-center space-x-1 px-2 py-1 bg-green-50 rounded-md border border-green-200">
+            <div className="flex items-center space-x-1 px-2 py-1 bg-green-50 rounded-md border border-green-200 flex-shrink-0 hidden sm:flex">
               <span className="text-xs font-medium text-green-700">43 Scenarios Available</span>
               <span className="text-xs text-green-600">🎯</span>
             </div>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1 sm:space-x-2 overflow-x-auto">
             {/* Simulation Controls */}
             <div className="flex items-center space-x-1">
               <button
                 onClick={handleSimulationToggle}
                 disabled={!selectedScenario}
-                className={`flex items-center space-x-1 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+                className={`flex items-center space-x-1 px-2 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all min-h-[32px] touch-manipulation ${
                   isSimulationRunning
                     ? 'bg-orange-500 hover:bg-orange-600 text-white'
                     : 'bg-green-500 hover:bg-green-600 text-white disabled:bg-slate-300 disabled:text-slate-500'
                 }`}
               >
                 {isSimulationRunning ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
-                <span>{isSimulationRunning ? 'Pause' : 'Start'}</span>
+                <span className="hidden sm:inline">{isSimulationRunning ? 'Pause' : 'Start'}</span>
               </button>
 
               <button
@@ -274,7 +270,7 @@ const K8sDebugging: React.FC = () => {
         </div>
       </motion.div>
 
-      <div className="flex h-[calc(100vh-64px)]">
+      <div className="flex min-h-[600px]">
         {/* Scenario Selector Sidebar */}
         {false && (
           <motion.div
@@ -318,24 +314,63 @@ const K8sDebugging: React.FC = () => {
         <div className="flex-1 flex flex-col">
           {selectedScenario && (
             <>
-              {/* Panel Navigation - Compact */}
-              <div className="bg-white border-b border-slate-200 px-4 py-2">
-                <div className="flex items-center space-x-1">
-                  {panels.map((panel) => {
+              {/* Panel Navigation - Mobile Responsive with Discovery Animation */}
+              <div className="bg-white border-b border-slate-200 px-2 sm:px-4 py-2 relative">
+                {/* Animated discovery hint */}
+                <motion.div
+                  className="absolute -top-1 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-green-500 opacity-60"
+                  animate={{
+                    x: ['-100%', '100%'],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    repeatType: 'loop',
+                    ease: 'easeInOut',
+                  }}
+                />
+                <div className="flex items-center space-x-1 overflow-x-auto">
+                  {panels.map((panel, index) => {
                     const Icon = panel.icon;
                     return (
-                      <button
+                      <motion.button
                         key={panel.id}
                         onClick={() => handlePanelChange(panel.id)}
-                        className={`flex items-center space-x-1 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+                        className={`flex items-center space-x-1 px-2 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all flex-shrink-0 min-h-[36px] touch-manipulation relative ${
                           activePanel === panel.id
                             ? 'bg-blue-50 text-blue-700 border border-blue-200'
                             : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                         }`}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1, duration: 0.3 }}
+                        whileHover={{
+                          scale: 1.05,
+                          y: -2,
+                          transition: { duration: 0.2 }
+                        }}
+                        whileTap={{ scale: 0.95 }}
                       >
+                        {/* Pulsing ring animation for inactive tabs */}
+                        {activePanel !== panel.id && (
+                          <motion.div
+                            className="absolute inset-0 rounded-md border-2 border-blue-400 opacity-0"
+                            animate={{
+                              opacity: [0, 0.6, 0],
+                              scale: [1, 1.1, 1],
+                            }}
+                            transition={{
+                              duration: 2,
+                              repeat: Infinity,
+                              delay: index * 0.5,
+                              repeatType: 'loop',
+                            }}
+                          />
+                        )}
                         <Icon className={`w-3 h-3 ${activePanel === panel.id ? panel.color : ''}`} />
-                        <span>{panel.label}</span>
-                      </button>
+                        <span className="hidden sm:inline">{panel.label}</span>
+                        <span className="sm:hidden">{panel.label.split(' ')[0]}</span>
+                      </motion.button>
                     );
                   })}
                 </div>

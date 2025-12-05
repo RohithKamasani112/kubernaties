@@ -65,7 +65,7 @@ const Examples: React.FC = () => {
   const loadDesignIntoPlayground = async (design: PerfectDesign) => {
     try {
       // Navigate to playground with YAML parameter (same approach as documentation)
-      const playgroundUrl = `/playground?yaml=${encodeURIComponent(design.yaml)}`;
+      const playgroundUrl = `/kubernetes/playground?yaml=${encodeURIComponent(design.yaml)}`;
       navigate(playgroundUrl);
 
       // Show a brief notification since the user is navigating away

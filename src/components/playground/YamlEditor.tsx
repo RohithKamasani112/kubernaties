@@ -185,8 +185,7 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
 
       // Show consolidated success notification after a brief delay
       setTimeout(() => {
-        toast.success('✅ YAML applied successfully! Canvas updated.', {
-          icon: '✅',
+        toast.success('YAML applied successfully! Canvas updated.', {
           duration: 3000,
         });
       }, 800);
@@ -287,16 +286,24 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
     lineNumbers: 'on' as const,
     roundedSelection: false,
     scrollbar: {
-      vertical: 'auto' as const,
-      horizontal: 'auto' as const,
+      vertical: 'visible' as const,
+      horizontal: 'visible' as const,
+      verticalScrollbarSize: 12,
+      horizontalScrollbarSize: 12,
+      useShadows: false,
+      verticalHasArrows: true,
+      horizontalHasArrows: true,
+      alwaysConsumeMouseWheel: false
     },
-    theme: 'vs-light',
+    theme: 'vs-dark',
     wordWrap: 'on' as const,
     automaticLayout: true,
     readOnly: false,
     folding: true,
     foldingStrategy: 'indentation' as const,
     showFoldingControls: 'always' as const,
+    mouseWheelZoom: false,
+    smoothScrolling: true
   };
 
   if (!isVisible) {
@@ -328,7 +335,7 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
   return (
     <motion.div
       className={`bg-white border-t border-slate-200 flex flex-col relative ${
-        isExpanded ? 'fixed inset-0 z-50' : ''
+        isExpanded ? 'fixed inset-0 z-50 bg-white shadow-2xl' : ''
       }`}
       style={{ height: isExpanded ? '100vh' : `${currentHeight}px` }}
       initial={{ y: 100, opacity: 0 }}
@@ -350,17 +357,18 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
           </div>
         </div>
       )}
-      {/* Header - Enhanced with gradient and highlighting */}
-      <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-blue-50 to-indigo-50 border-b-2 border-blue-200 flex-shrink-0">
-        <div className="flex items-center space-x-3">
-          <div className="p-2 bg-blue-100 rounded-lg">
-            <FileText className="w-5 h-5 text-blue-600" />
+      {/* Header - Mobile Responsive */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between px-2 sm:px-3 lg:px-4 py-2 sm:py-3 bg-gradient-to-r from-blue-50 to-indigo-50 border-b-2 border-blue-200 flex-shrink-0 space-y-2 sm:space-y-0">
+        <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
+          <div className="p-1.5 sm:p-2 bg-blue-100 rounded-lg flex-shrink-0">
+            <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
           </div>
-          <div>
-            <h3 className="text-sm font-bold text-slate-900">
+          <div className="min-w-0">
+            <h3 className="text-xs sm:text-sm font-bold text-slate-900 truncate">
               {isManualEdit ? '✏️ Custom YAML Manifest' : '🚀 Generated YAML Manifest'}
+              {isExpanded && ' (Expanded View)'}
             </h3>
-            <p className="text-xs text-slate-600">
+            <p className="text-xs text-slate-600 hidden sm:block">
               {isManualEdit ? 'Manually edited - click Apply to visualize' : 'Live-generated from your architecture'}
             </p>
           </div>
@@ -415,37 +423,45 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
           )}
         </div>
         
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-1 sm:space-x-2 overflow-x-auto">
           <button
             onClick={() => setIsVisible(false)}
-            className="p-2 text-slate-600 hover:text-slate-900 hover:bg-white rounded-lg transition-colors"
+            className="p-1.5 sm:p-2 text-slate-600 hover:text-slate-900 hover:bg-white rounded-lg transition-colors touch-manipulation"
             title="Hide YAML"
           >
-            <EyeOff className="w-4 h-4" />
+            <EyeOff className="w-3 h-3 sm:w-4 sm:h-4" />
           </button>
           <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="p-2 text-slate-600 hover:text-slate-900 hover:bg-white rounded-lg transition-colors"
+            onClick={() => {
+              setIsExpanded(!isExpanded);
+              // Prevent body scroll when expanded
+              if (!isExpanded) {
+                document.body.style.overflow = 'hidden';
+              } else {
+                document.body.style.overflow = 'auto';
+              }
+            }}
+            className="p-1.5 sm:p-2 text-slate-600 hover:text-slate-900 hover:bg-white rounded-lg transition-colors touch-manipulation"
             title={isExpanded ? "Minimize" : "Expand"}
           >
-            {isExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+            {isExpanded ? <Minimize2 className="w-3 h-3 sm:w-4 sm:h-4" /> : <Maximize2 className="w-3 h-3 sm:w-4 sm:h-4" />}
           </button>
           <button
             onClick={handleCopyYaml}
-            className="p-2 text-slate-600 hover:text-slate-900 hover:bg-white rounded-lg transition-colors"
+            className="p-1.5 sm:p-2 text-slate-600 hover:text-slate-900 hover:bg-white rounded-lg transition-colors touch-manipulation"
             title="Copy YAML"
           >
-            <Copy className="w-4 h-4" />
+            <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
           </button>
           <button
             onClick={handleDownloadYaml}
-            className="p-2 text-slate-600 hover:text-slate-900 hover:bg-white rounded-lg transition-colors"
+            className="p-1.5 sm:p-2 text-slate-600 hover:text-slate-900 hover:bg-white rounded-lg transition-colors touch-manipulation hidden sm:block"
             title="Download YAML"
           >
-            <Download className="w-4 h-4" />
+            <Download className="w-3 h-3 sm:w-4 sm:h-4" />
           </button>
-          <label className="p-2 text-slate-600 hover:text-slate-900 hover:bg-white rounded-lg transition-colors cursor-pointer" title="Upload YAML file">
-            <Upload className="w-4 h-4" />
+          <label className="p-1.5 sm:p-2 text-slate-600 hover:text-slate-900 hover:bg-white rounded-lg transition-colors cursor-pointer touch-manipulation hidden sm:block" title="Upload YAML file">
+            <Upload className="w-3 h-3 sm:w-4 sm:h-4" />
             <input
               type="file"
               accept=".yaml,.yml"
@@ -456,27 +472,29 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
           {isManualEdit && (
             <button
               onClick={() => setIsManualEdit(false)}
-              className="flex items-center space-x-2 px-3 py-2 bg-emerald-500 text-white text-sm rounded-lg hover:bg-emerald-600 transition-colors"
+              className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-emerald-500 text-white text-xs sm:text-sm rounded-lg hover:bg-emerald-600 transition-colors touch-manipulation"
               title="Switch back to auto-generation mode"
             >
-              <RefreshCw className="w-4 h-4" />
-              <span>Auto-Sync</span>
+              <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Auto-Sync</span>
             </button>
           )}
           <button
             onClick={handleApplyYaml}
             disabled={isUpdating}
-            className="flex items-center space-x-2 px-3 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-blue-500 text-white text-xs sm:text-sm rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors touch-manipulation"
           >
             {isUpdating ? (
               <>
-                <RefreshCw className="w-4 h-4 animate-spin" />
-                <span>Applying...</span>
+                <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />
+                <span className="hidden sm:inline">Applying...</span>
+                <span className="sm:hidden">...</span>
               </>
             ) : (
               <>
-                <Upload className="w-4 h-4" />
-                <span>Apply Changes</span>
+                <Upload className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Apply Changes</span>
+                <span className="sm:hidden">Apply</span>
               </>
             )}
           </button>
@@ -578,46 +596,9 @@ const YamlEditor: React.FC<YamlEditorProps> = ({ height = 224, onHeightChange, i
         </div>
       )}
 
-      {/* Validation Warnings */}
-      {validationWarnings.length > 0 && (
-        <div className="px-4 py-3 bg-yellow-50 border-t border-yellow-200 flex-shrink-0">
-          <div className="flex items-start space-x-2">
-            <AlertTriangle className="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0" />
-            <div className="flex-1">
-              <h4 className="text-sm font-medium text-yellow-800 mb-1">Best Practice Suggestions</h4>
-              <ul className="text-xs text-yellow-700 space-y-1">
-                {validationWarnings.map((warning, index) => (
-                  <li key={index} className="flex items-start space-x-1">
-                    <span className="text-yellow-500">•</span>
-                    <span>{warning}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <button
-              onClick={() => setValidationWarnings([])}
-              className="w-6 h-6 flex items-center justify-center text-yellow-500 hover:text-yellow-700 hover:bg-yellow-100 rounded-full transition-colors"
-              title="Close validation warnings"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Best Practice Suggestions section removed - suggestions are provided elsewhere */}
 
-      {/* Footer with YAML Stats */}
-      {yamlContent && (
-        <div className="px-4 py-2 bg-slate-50 border-t border-slate-200 text-xs text-slate-600 flex-shrink-0">
-          <div className="flex items-center justify-between">
-            <span>
-              {nodes.length} components • {yamlContent.split('---').length - 1} resources
-            </span>
-            <span>
-              Last updated: {new Date().toLocaleTimeString()}
-            </span>
-          </div>
-        </div>
-      )}
+
     </motion.div>
   );
 };

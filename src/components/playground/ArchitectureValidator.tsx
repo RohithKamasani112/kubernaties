@@ -165,20 +165,44 @@ const ArchitectureValidator: React.FC = () => {
   const errorCount = issues.filter(i => i.type === 'error').length;
   const warningCount = issues.filter(i => i.type === 'warning').length;
 
-  if (issues.length === 0) {
+  // Only show "Architecture looks good!" if there are actually components and no issues
+  if (issues.length === 0 && nodes.length > 0) {
     return (
       <motion.div
-        className="fixed top-20 right-4 bg-emerald-50 border border-emerald-200 rounded-lg p-3 shadow-sm z-40"
+        className="fixed top-24 right-6 bg-emerald-50 border border-emerald-200 rounded-lg p-3 shadow-sm z-40"
         initial={{ x: 100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: 100, opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        style={{ marginTop: '60px' }} // Extra margin to avoid header overlap
       >
-        <div className="flex items-center space-x-2 text-emerald-700">
-          <CheckCircle className="w-4 h-4" />
-          <span className="text-sm font-medium">Architecture looks good!</span>
+        <div className="flex items-center justify-between space-x-2 text-emerald-700">
+          <div className="flex items-center space-x-2">
+            <CheckCircle className="w-4 h-4" />
+            <span className="text-sm font-medium">Architecture looks good!</span>
+          </div>
+          <button
+            onClick={() => {
+              // Auto-dismiss after showing for 3 seconds
+              setTimeout(() => {
+                const element = document.querySelector('[data-architecture-success]');
+                if (element) {
+                  element.remove();
+                }
+              }, 3000);
+            }}
+            className="text-emerald-500 hover:text-emerald-600 ml-2"
+          >
+            <X className="w-3 h-3" />
+          </button>
         </div>
       </motion.div>
     );
+  }
+
+  // Don't show anything if no components are present
+  if (nodes.length === 0) {
+    return null;
   }
 
   return (
@@ -187,14 +211,15 @@ const ArchitectureValidator: React.FC = () => {
       {!isVisible && (
         <motion.button
           onClick={() => setIsVisible(true)}
-          className={`fixed top-20 right-4 p-3 rounded-lg shadow-lg z-40 ${
-            errorCount > 0 ? 'bg-red-500 text-white' : 
-            warningCount > 0 ? 'bg-yellow-500 text-white' : 
+          className={`fixed top-24 right-6 p-3 rounded-lg shadow-lg z-40 ${
+            errorCount > 0 ? 'bg-red-500 text-white' :
+            warningCount > 0 ? 'bg-yellow-500 text-white' :
             'bg-blue-500 text-white'
           }`}
           initial={{ x: 100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           whileHover={{ scale: 1.05 }}
+          style={{ marginTop: '60px' }} // Extra margin to avoid header overlap
         >
           <div className="flex items-center space-x-2">
             <Shield className="w-4 h-4" />
@@ -211,10 +236,11 @@ const ArchitectureValidator: React.FC = () => {
       <AnimatePresence>
         {isVisible && (
           <motion.div
-            className="fixed top-20 right-4 w-96 bg-white rounded-xl shadow-xl border border-slate-200 z-40 max-h-96 overflow-hidden"
+            className="fixed top-24 right-6 w-96 bg-white rounded-xl shadow-xl border border-slate-200 z-40 max-h-96 overflow-hidden"
             initial={{ x: 100, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: 100, opacity: 0 }}
+            style={{ marginTop: '60px' }} // Extra margin to avoid header overlap
           >
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-slate-200">

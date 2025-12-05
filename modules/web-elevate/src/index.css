@@ -1,0 +1,108 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Global layout constraints - Kubernetes style */
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+#root {
+  height: 100%;
+}
+
+/* Custom styles for Web Elevate module */
+.web-elevate-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.code-editor-theme {
+  background: #1e1e1e;
+  color: #d4d4d4;
+}
+
+.terminal-theme {
+  background: #0d1117;
+  color: #58a6ff;
+  font-family: 'Fira Code', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
+}
+
+/* Animation utilities */
+.float-animation {
+  animation: float 6s ease-in-out infinite;
+}
+
+.float-delay-1 {
+  animation-delay: 2s;
+}
+
+.float-delay-2 {
+  animation-delay: 4s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+/* Playground layout utilities */
+.playground-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: 1fr 300px;
+  gap: 1px;
+  height: 100vh;
+  background: #f1f5f9;
+}
+
+.playground-panel {
+  background: white;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+/* Monaco editor customizations */
+.monaco-editor {
+  border-radius: 8px;
+}
+
+/* File tree styles */
+.file-tree {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+}
+
+.file-tree-item {
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.file-tree-item:hover {
+  background-color: #f1f5f9;
+}
+
+.file-tree-item.active {
+  background-color: #e0e7ff;
+  color: #3730a3;
+}
+
+/* Progress indicators */
+.progress-ring {
+  transform: rotate(-90deg);
+}
+
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.35s;
+  transform-origin: 50% 50%;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .playground-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: 200px 1fr 250px;
+  }
+}

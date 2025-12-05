@@ -577,52 +577,52 @@ const SimulatedTerminal: React.FC = () => {
         maxHeight: isFullscreen ? '100vh' : '100%'
       }}
     >
-      {/* Terminal Header - Fixed */}
-      <div className="flex-shrink-0 bg-slate-800 px-4 py-2 flex items-center justify-between border-b border-slate-700">
-        <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-2">
-            <Terminal className="w-4 h-4 text-green-400" />
-            <span className="text-sm font-medium text-slate-300">kubectl Terminal</span>
+      {/* Terminal Header - Mobile Responsive */}
+      <div className="flex-shrink-0 bg-slate-800 px-2 sm:px-4 py-2 flex items-center justify-between border-b border-slate-700">
+        <div className="flex items-center space-x-2 sm:space-x-3">
+          <div className="flex items-center space-x-1 sm:space-x-2">
+            <Terminal className="w-3 h-3 sm:w-4 sm:h-4 text-green-400" />
+            <span className="text-xs sm:text-sm font-medium text-slate-300">kubectl Terminal</span>
           </div>
 
-          <div className="flex items-center space-x-1">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+          <div className="flex items-center space-x-1 hidden sm:flex">
+            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-500 rounded-full"></div>
+            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-yellow-500 rounded-full"></div>
+            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full"></div>
           </div>
         </div>
         
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-1 sm:space-x-2">
           <button
             onClick={copyToClipboard}
-            className="p-1 text-slate-400 hover:text-slate-200 transition-colors"
+            className="p-1 sm:p-1.5 text-slate-400 hover:text-slate-200 transition-colors touch-manipulation"
             title="Copy terminal content"
           >
-            <Copy className="w-4 h-4" />
+            <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
           </button>
-          
+
           <button
             onClick={downloadLogs}
-            className="p-1 text-slate-400 hover:text-slate-200 transition-colors"
+            className="p-1 sm:p-1.5 text-slate-400 hover:text-slate-200 transition-colors touch-manipulation hidden sm:block"
             title="Download session log"
           >
-            <Download className="w-4 h-4" />
+            <Download className="w-3 h-3 sm:w-4 sm:h-4" />
           </button>
-          
+
           <button
             onClick={clearTerminal}
-            className="p-1 text-slate-400 hover:text-slate-200 transition-colors"
+            className="p-1 sm:p-1.5 text-slate-400 hover:text-slate-200 transition-colors touch-manipulation"
             title="Clear terminal"
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4" />
           </button>
-          
+
           <button
             onClick={() => setIsFullscreen(!isFullscreen)}
-            className="p-1 text-slate-400 hover:text-slate-200 transition-colors"
+            className="p-1 sm:p-1.5 text-slate-400 hover:text-slate-200 transition-colors touch-manipulation"
             title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
           >
-            {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+            {isFullscreen ? <Minimize2 className="w-3 h-3 sm:w-4 sm:h-4" /> : <Maximize2 className="w-3 h-3 sm:w-4 sm:h-4" />}
           </button>
         </div>
       </div>
@@ -689,10 +689,10 @@ const SimulatedTerminal: React.FC = () => {
           </div>
         )}
 
-        {/* Compact input area - always at bottom */}
+        {/* Compact input area - always at bottom - Mobile Responsive */}
         <div className="bg-gradient-to-r from-slate-800 via-slate-750 to-slate-800 border-t border-slate-600 shadow-xl">
-          <form onSubmit={handleCommandSubmit} className="px-4 py-2">
-            <div className="flex items-center space-x-2">
+          <form onSubmit={handleCommandSubmit} className="px-2 sm:px-4 py-2">
+            <div className="flex items-center space-x-1 sm:space-x-2">
               <span className="text-green-400 font-mono text-sm font-bold">$</span>
               <div className="flex-1 relative">
                 <input
@@ -702,7 +702,7 @@ const SimulatedTerminal: React.FC = () => {
                   onChange={handleInputChange}
                   onKeyDown={handleKeyDown}
                   disabled={isExecuting}
-                  className="w-full bg-slate-900 border border-slate-600 rounded px-3 py-2 text-green-400 font-mono text-sm outline-none placeholder-slate-500 focus:border-green-400 focus:ring-1 focus:ring-green-400/20 transition-all duration-200"
+                  className="w-full bg-slate-900 border border-slate-600 rounded px-2 sm:px-3 py-2 text-green-400 font-mono text-xs sm:text-sm outline-none placeholder-slate-500 focus:border-green-400 focus:ring-1 focus:ring-green-400/20 transition-all duration-200"
                   placeholder="Enter kubectl command..."
                   autoComplete="off"
                 />
